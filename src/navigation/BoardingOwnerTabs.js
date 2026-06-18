@@ -2,9 +2,10 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
-import BoardingDashboardScreen from "../screens/boardingOwner/BoardingDashboardScreen";
-import BoardingBookingsScreen from "../screens/boardingOwner/BoardingBookingsScreen";
-import BoardingProfileScreen from "../screens/boardingOwner/BoardingProfileScreen";
+import BoardingDashboardScreen from "../screens/boardingOwner/components/BoardingDashboardScreen";
+import BoardingBookingsScreen from "../screens/boardingOwner/components/BoardingBookingsScreen";
+import BoardingCentersScreen from "../screens/boardingOwner/components/BoardingCentersScreen";
+import BoardingProfileScreen from "../screens/boardingOwner/components/BoardingProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -21,6 +22,8 @@ export default function BoardingOwnerTabs() {
             iconName = "home-outline";
           } else if (route.name === "Bookings") {
             iconName = "calendar-outline";
+          } else if (route.name === "Centers") {
+            iconName = "business-outline";
           } else {
             iconName = "person-outline";
           }
@@ -46,6 +49,11 @@ export default function BoardingOwnerTabs() {
       <Tab.Screen
         name="Bookings"
         component={BoardingBookingsScreen}
+      />
+
+      <Tab.Screen
+        name="Centers"
+        component={BoardingCentersScreen}
       />
 
       <Tab.Screen
