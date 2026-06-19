@@ -8,11 +8,18 @@ import {
   Image,
   Alert,
   TextInput,
+  FlatList,
+  Dimensions,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { getCenterDetails, updateCenter } from "../services/boardingOwnerService";
+import styles from "../styles/CenterDetailsStyles";
+import {
+  getCenterDetails,
+  updateCenter,
+} from "../services/boardingOwnerService";
 
 export default function CenterDetailsScreen() {
+  const { width } = Dimensions.get("window");
   const navigation = useNavigation();
   const route = useRoute();
   const { centerId } = route.params || {};
@@ -21,6 +28,7 @@ export default function CenterDetailsScreen() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [editable, setEditable] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [form, setForm] = useState({
     center_name: "",
     description: "",
@@ -120,28 +128,88 @@ export default function CenterDetailsScreen() {
         <Text style={styles.title}>{center.center_name}</Text>
       </View>
 
-      <Image
-        source={{
-          uri:
-            center.center_photos?.[0] ||
-            "https://via.placeholder.com/600x300",
-        }}
-        style={styles.image}
-      />
+      <View style={styles.imageContainer}>
+        <FlatList
+          data={center?.center_photos || []}
+          horizontal
+          pagingEnabled
+          nestedScrollEnabled
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
+          onMomentumScrollEnd={(event) => {
+            const screenWidth = event.nativeEvent.layoutMeasurement.width;
 
+            const index = Math.round(
+              event.nativeEvent.contentOffset.x / screenWidth,
+            );
+
+            setActiveIndex(index);
+          }}
+          renderItem={({ item }) => (
+            <Image
+              source={{ uri: item }}
+              style={styles.sliderImage}
+              resizeMode="cover"
+            />
+          )}
+        />
+
+        {center?.center_photos?.length > 0 && (
+          <View style={styles.counterContainer}>
+            <Text style={styles.counterText}>
+              {activeIndex + 1} / {center.center_photos.length}
+            </Text>
+          </View>
+        )}
+      </View>
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>Center Information</Text>
 
         {editable ? (
           <>
-            <Input label="Center Name" value={form.center_name} onChangeText={(v) => updateField("center_name", v)} />
-            <Input label="Description" value={form.description} onChangeText={(v) => updateField("description", v)} multiline />
-            <Input label="Price per day" value={form.price_per_day} onChangeText={(v) => updateField("price_per_day", v)} keyboardType="numeric" />
-            <Input label="Total capacity" value={form.total_capacity} onChangeText={(v) => updateField("total_capacity", v)} keyboardType="numeric" />
-            <Input label="Address" value={form.address} onChangeText={(v) => updateField("address", v)} />
-            <Input label="City" value={form.city} onChangeText={(v) => updateField("city", v)} />
-            <Input label="State" value={form.state} onChangeText={(v) => updateField("state", v)} />
-            <Input label="Zip code" value={form.zip_code} onChangeText={(v) => updateField("zip_code", v)} />
+            <Input
+              label="Center Name"
+              value={form.center_name}
+              onChangeText={(v) => updateField("center_name", v)}
+            />
+            <Input
+              label="Description"
+              value={form.description}
+              onChangeText={(v) => updateField("description", v)}
+              multiline
+            />
+            <Input
+              label="Price per day"
+              value={form.price_per_day}
+              onChangeText={(v) => updateField("price_per_day", v)}
+              keyboardType="numeric"
+            />
+            <Input
+              label="Total capacity"
+              value={form.total_capacity}
+              onChangeText={(v) => updateField("total_capacity", v)}
+              keyboardType="numeric"
+            />
+            <Input
+              label="Address"
+              value={form.address}
+              onChangeText={(v) => updateField("address", v)}
+            />
+            <Input
+              label="City"
+              value={form.city}
+              onChangeText={(v) => updateField("city", v)}
+            />
+            <Input
+              label="State"
+              value={form.state}
+              onChangeText={(v) => updateField("state", v)}
+            />
+            <Input
+              label="Zip code"
+              value={form.zip_code}
+              onChangeText={(v) => updateField("zip_code", v)}
+            />
           </>
         ) : (
           <>
@@ -181,7 +249,13 @@ const Info = ({ label, value }) => (
   </View>
 );
 
-const Input = ({ label, value, onChangeText, multiline = false, keyboardType = "default" }) => (
+const Input = ({
+  label,
+  value,
+  onChangeText,
+  multiline = false,
+  keyboardType = "default",
+}) => (
   <View style={styles.inputContainer}>
     <Text style={styles.label}>{label}</Text>
     <TextInput
@@ -193,84 +267,3 @@ const Input = ({ label, value, onChangeText, multiline = false, keyboardType = "
     />
   </View>
 );
-
-const styles = {
-  container: {
-    flex: 1,
-    backgroundColor: "#f8fafc",
-  },
-  loader: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  header: {
-    paddingHorizontal: 16,
-    paddingTop: 18,
-    paddingBottom: 8,
-  },
-  backText: {
-    color: "#6b21a8",
-    fontWeight: "700",
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "700",
-    marginTop: 10,
-  },
-  image: {
-    width: "100%",
-    height: 220,
-  },
-  card: {
-    backgroundColor: "#fff",
-    margin: 16,
-    borderRadius: 16,
-    padding: 16,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#6b21a8",
-    marginBottom: 12,
-  },
-  infoRow: {
-    marginBottom: 12,
-  },
-  label: {
-    color: "#6b7280",
-    fontSize: 13,
-  },
-  value: {
-    color: "#111827",
-    fontWeight: "600",
-    marginTop: 4,
-  },
-  inputContainer: {
-    marginBottom: 12,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#d1d5db",
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginTop: 4,
-  },
-  multilineInput: {
-    minHeight: 90,
-    textAlignVertical: "top",
-  },
-  editButton: {
-    backgroundColor: "#6b21a8",
-    marginHorizontal: 16,
-    marginBottom: 20,
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-  editButtonText: {
-    color: "#fff",
-    fontWeight: "700",
-  },
-};
