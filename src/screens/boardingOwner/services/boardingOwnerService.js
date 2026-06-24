@@ -33,7 +33,7 @@ export const updateOwnerProfile = async (formData) => {
         ...headers,
         "Content-Type": "multipart/form-data",
       },
-    }
+    },
   );
 
   return response.data;
@@ -59,19 +59,56 @@ export const getCenterDetails = async (centerId) => {
   return response.data;
 };
 
-export const updateCenter = async (centerId, payload) => {
+export const createCenter = async (formData) => {
   const headers = await getAuthHeaders();
 
-  const response = await axios.put(
-    `${BASE_URL}/api/centers/${centerId}`,
-    payload,
+  const response = await axios.post(
+    `${BASE_URL}/api/centers/create`,
+    formData,
     {
       headers: {
         ...headers,
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
-    }
+    },
   );
+
+  return response.data;
+};
+
+export const updateCenter = async (formData) => {
+  const headers = await getAuthHeaders();
+
+  const response = await axios.post(
+    `${BASE_URL}/api/centers/update`,
+    formData,
+    {
+      headers: {
+        ...headers,
+        "Content-Type": "multipart/form-data",
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const getOwnerBookings = async () => {
+  const headers = await getAuthHeaders();
+
+  const response = await axios.get(`${BASE_URL}/api/bookings/owner`, {
+    headers,
+  });
+
+  return response.data;
+};
+
+export const getBookingDetails = async (bookingId) => {
+  const headers = await getAuthHeaders();
+
+  const response = await axios.get(`${BASE_URL}/api/bookings/${bookingId}`, {
+    headers,
+  });
 
   return response.data;
 };

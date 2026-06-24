@@ -8,7 +8,9 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { getCenters } from "../services/boardingOwnerService";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function BoardingCentersScreen() {
   const navigation = useNavigation();
@@ -33,63 +35,80 @@ export default function BoardingCentersScreen() {
 
   if (loading) {
     return (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#6b21a8" />
-      </View>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color="#6b21a8" />
+        </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Your Centers</Text>
-      </View>
-
-      {centers.length === 0 ? (
-        <View style={styles.emptyState}>
-          <Text style={styles.emptyText}>No centers found</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+            <Text style={styles.title}>Your Centers</Text>
+            <TouchableOpacity
+              style={styles.createButton}
+              onPress={() => navigation.navigate("CreateCenter")}
+            >
+              <Ionicons name="add-circle-outline" size={18} color="#fff" />
+              <Text style={styles.createButtonText}>Create</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      ) : (
-        centers.map((center) => (
-          <TouchableOpacity
-            key={center.id}
-            activeOpacity={0.85}
-            onPress={() =>
-              navigation.navigate("CenterDetails", {
-                centerId: center.id,
-              })
-            }
-          >
-            <View style={styles.card}>
-              <Image
-                source={{
-                  uri:
-                    center.center_photos?.[0] ||
-                    "https://via.placeholder.com/300x180",
-                }}
-                style={styles.image}
-              />
 
-              <View style={styles.infoSection}>
-                <Text style={styles.centerName}>{center.center_name}</Text>
-                <Text style={styles.location}>
-                  {center.city}, {center.state}
-                </Text>
-                <Text style={styles.price}>₹{center.price_per_day}/day</Text>
-              </View>
+        {centers.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyText}>No centers found</Text>
+          </View>
+        ) : (
+          centers.map((center) => (
+            <TouchableOpacity
+              key={center.id}
+              activeOpacity={0.85}
+              onPress={() =>
+                navigation.navigate("CenterDetails", {
+                  centerId: center.id,
+                })
+              }
+            >
+              <View style={styles.card}>
+                <Image
+                  source={{
+                    uri:
+                      center.center_photos?.[0] ||
+                      "https://via.placeholder.com/300x180",
+                  }}
+                  style={styles.image}
+                />
 
-              <View style={styles.button}>
-                <Text style={styles.buttonText}>View more</Text>
+                <View style={styles.infoSection}>
+                  <Text style={styles.centerName}>{center.center_name}</Text>
+                  <Text style={styles.location}>
+                    {center.city}, {center.state}
+                  </Text>
+                  <Text style={styles.price}>₹{center.price_per_day}/day</Text>
+                </View>
+
+                <View style={styles.button}>
+                  <Text style={styles.buttonText}>View more</Text>
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        ))
-      )}
-    </ScrollView>
+            </TouchableOpacity>
+          ))
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = {
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#f8fafc",
+  },
   container: {
     flex: 1,
     backgroundColor: "#f8fafc",
@@ -101,13 +120,26 @@ const styles = {
   },
   header: {
     paddingHorizontal: 16,
-    paddingTop: 18,
+    paddingTop: 0,
     paddingBottom: 10,
   },
   title: {
     fontSize: 22,
     fontWeight: "700",
     color: "#111827",
+  },
+  createButton: {
+    backgroundColor: "#6b21a8",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  createButtonText: {
+    color: "#fff",
+    fontWeight: "700",
   },
   emptyState: {
     padding: 30,

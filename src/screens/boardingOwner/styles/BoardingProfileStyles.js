@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#f4f6f9",
   },
 
   loader: {
@@ -12,152 +12,162 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  header: {
-    backgroundColor: "#6b21a8",
+  profileCard: {
+    backgroundColor: "#ffffff",
+    marginHorizontal: 16,
+    marginTop: 3,
+    borderRadius: 24,
+    paddingVertical: 24,
+    paddingHorizontal: 20,
     alignItems: "center",
-    paddingVertical: 35,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+
+    elevation: 5,
   },
 
   avatar: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: "#ffffff",
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: "#6b21a8",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: 15,
   },
 
   avatarText: {
-    fontSize: 34,
+    color: "#fff",
+    fontSize: 38,
     fontWeight: "bold",
-    color: "#6b21a8",
   },
 
   name: {
-    color: "#ffffff",
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "700",
+    color: "#111827",
   },
 
   email: {
-    color: "#ddd6fe",
-    marginTop: 5,
+    fontSize: 14,
+    color: "#6b7280",
+    marginTop: 4,
+  },
+
+  roleBadge: {
+    marginTop: 12,
+    backgroundColor: "#f3e8ff",
+    paddingHorizontal: 18,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+
+  roleText: {
+    color: "#6b21a8",
+    fontWeight: "700",
+    fontSize: 13,
   },
 
   card: {
     backgroundColor: "#ffffff",
     marginHorizontal: 16,
     marginTop: 16,
+    borderRadius: 20,
     padding: 18,
-    borderRadius: 18,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.08,
+    shadowRadius: 5,
+
     elevation: 3,
   },
 
   sectionTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#6b21a8",
+    color: "#111827",
     marginBottom: 15,
   },
 
   infoRow: {
-    marginBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eef2f7",
+    paddingVertical: 12,
   },
 
   label: {
-    color: "#6b7280",
+    color: "#64748b",
     fontSize: 13,
+    marginBottom: 4,
   },
 
   value: {
+    color: "#111827",
     fontSize: 15,
-    color: "#111827",
-    fontWeight: "600",
-    marginTop: 3,
-  },
-
-  chipsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-
-  chip: {
-    backgroundColor: "#f3e8ff",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 50,
-    marginRight: 8,
-    marginBottom: 8,
-  },
-
-  chipText: {
-    color: "#6b21a8",
     fontWeight: "600",
   },
 
-  photo: {
-    width: 160,
-    height: 120,
+  documentBtn: {
+    backgroundColor: "#6b21a8",
+    paddingVertical: 14,
     borderRadius: 12,
-    marginRight: 12,
+    alignItems: "center",
   },
 
-  centerCard: {
-    borderWidth: 1,
-    borderColor: "#e5e7eb",
-    borderRadius: 14,
-    padding: 14,
-    marginBottom: 12,
-  },
-
-  centerName: {
-    fontSize: 16,
+  documentBtnText: {
+    color: "#ffffff",
+    fontSize: 15,
     fontWeight: "700",
-    color: "#111827",
   },
 
-  centerLocation: {
-    color: "#6b7280",
-    marginTop: 4,
-  },
-
-  centerPrice: {
-    color: "#6b21a8",
-    fontWeight: "700",
-    marginTop: 6,
+  profileImage: {
+    width: 130,
+    height: 130,
+    borderRadius: 65,
+    alignSelf: "center",
   },
 
   myCentersBtn: {
-    backgroundColor: "#f3e8ff",
-    margin: 5,
-    borderRadius: 15,
+    backgroundColor: "#ffffff",
+    marginHorizontal: 16,
+    marginTop: 20,
+    borderRadius: 14,
     paddingVertical: 16,
     alignItems: "center",
+    borderWidth: 1,
     borderColor: "#6b21a8",
-    borderWidth: 0.2,
   },
 
   myCentersText: {
     color: "#6b21a8",
-    fontWeight: "700",
     fontSize: 16,
+    fontWeight: "700",
   },
 
   editBtn: {
     backgroundColor: "#6b21a8",
-    margin: 5,
-    borderRadius: 15,
+    marginHorizontal: 16,
+    marginTop: 12,
+    marginBottom: 30,
+    borderRadius: 14,
     paddingVertical: 16,
     alignItems: "center",
   },
 
   editText: {
     color: "#ffffff",
-    fontWeight: "700",
     fontSize: 16,
+    fontWeight: "700",
   },
 });
 
