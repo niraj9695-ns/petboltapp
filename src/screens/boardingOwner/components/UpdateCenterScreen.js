@@ -20,6 +20,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import styles from "../styles/UpdateCenterScreenStyles";
 import {
+  deleteCenterImage,
   getCenterDetails,
   updateCenter,
 } from "../services/boardingOwnerService";
@@ -35,6 +36,7 @@ export default function UpdateCenterScreen() {
   const [saving, setSaving] = useState(false);
   const [existingImages, setExistingImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
+  const [deletingImageIndex, setDeletingImageIndex] = useState(null);
   const [licenseProof, setLicenseProof] = useState(null);
   const [insuranceDocument, setInsuranceDocument] = useState(null);
   const [form, setForm] = useState({
@@ -169,6 +171,64 @@ export default function UpdateCenterScreen() {
 
   const removeNewImage = (index) => {
     setNewImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const normalizeImagePath = (image) => {
+    if (typeof image !== "string") return "";
+
+    const trimmed = image.trim();
+    if (!trimmed) return "";
+
+    const match = trimmed.match(/(?:^|\/)(uploads\/centers\/[^?#]+)/i);
+    return match ? match[1] : trimmed;
+  };
+
+  const getImageUri = (image) => {
+    if (typeof image === "string") return image;
+    return image?.uri || image?.url || image?.image || "";
+  };
+
+  const removeExistingImage = async (image, index) => {
+    const imagePath = normalizeImagePath(getImageUri(image));
+
+    if (!imagePath) {
+      Alert.alert("Error", "Unable to resolve the image path");
+      return;
+    }
+
+    Alert.alert(
+      "Delete Image",
+      "Are you sure you want to delete this image?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setDeletingImageIndex(index);
+              const result = await deleteCenterImage(centerId, imagePath);
+
+              setExistingImages((prev) => prev.filter((_, i) => i !== index));
+
+              if (result?.localOnly) {
+                Alert.alert(
+                  "Image removed locally",
+                  result.message || "The image was removed from this screen because the server endpoint is unavailable.",
+                );
+              } else {
+                Alert.alert("Success", "Image deleted successfully");
+              }
+            } catch (error) {
+              console.log(error);
+              Alert.alert("Error", "Failed to delete image");
+            } finally {
+              setDeletingImageIndex(null);
+            }
+          },
+        },
+      ],
+    );
   };
 
   const pickImages = async () => {
@@ -317,18 +377,47 @@ export default function UpdateCenterScreen() {
                   nestedScrollEnabled
                   showsHorizontalScrollIndicator={false}
                   keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item }) => (
-                    <Image
-                      source={{ uri: item }}
-                      style={{
-                        width: width - 64,
-                        height: 220,
-                        borderRadius: 16,
-                        marginRight: 12,
-                      }}
-                      resizeMode="cover"
-                    />
-                  )}
+                  renderItem={({ item, index }) => {
+                    const imageUri = getImageUri(item);
+                    const isDeleting = deletingImageIndex === index;
+
+                    return (
+                      <View style={{ marginRight: 12 }}>
+                        <Image
+                          source={{ uri: imageUri }}
+                          style={{
+                            width: width - 64,
+                            height: 220,
+                            borderRadius: 16,
+                          }}
+                          resizeMode="cover"
+                        />
+                        <TouchableOpacity
+                          onPress={() => removeExistingImage(item, index)}
+                          disabled={isDeleting}
+                          style={{
+                            position: "absolute",
+                            top: 10,
+                            right: 10,
+                            width: 32,
+                            height: 32,
+                            borderRadius: 16,
+                            backgroundColor: "rgba(220, 38, 38, 0.9)",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          {isDeleting ? (
+                            <ActivityIndicator size="small" color="#fff" />
+                          ) : (
+                            <Text style={{ color: "#fff", fontWeight: "700" }}>
+                              ✕
+                            </Text>
+                          )}
+                        </TouchableOpacity>
+                      </View>
+                    );
+                  }}
                 />
               </>
             )}

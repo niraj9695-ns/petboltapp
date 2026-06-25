@@ -93,6 +93,38 @@ export const updateCenter = async (formData) => {
   return response.data;
 };
 
+export const deleteCenterImage = async (centerId, imagePath) => {
+  const headers = await getAuthHeaders();
+
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/api/centers/delete-image`,
+      {
+        center_id: centerId,
+        image: imagePath,
+      },
+      {
+        headers: {
+          ...headers,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return {
+        success: false,
+        localOnly: true,
+        message: "The delete-image endpoint is not available on the server right now.",
+      };
+    }
+
+    throw error;
+  }
+};
+
 export const getOwnerBookings = async () => {
   const headers = await getAuthHeaders();
 

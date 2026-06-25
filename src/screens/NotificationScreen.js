@@ -74,60 +74,61 @@ export default function NotificationScreen() {
               const isExpanded = expandedNotification === n.id;
 
               return (
-                <LinearGradient
+                <Pressable
                   key={n.id}
-                  colors={n.bg}
-                  style={styles.notificationCard}
+                  style={styles.notificationItem}
+                  onPress={() => toggleNotification(n.id)}
                 >
-                  <Pressable onPress={() => toggleNotification(n.id)}>
-                    <View style={styles.row}>
-                      <MaterialIcons
-                        name="notifications"
-                        size={22}
+                  <View style={styles.row}>
+                    <View
+                      style={[
+                        styles.iconContainer,
+                        { backgroundColor: `${n.color}15` },
+                      ]}
+                    >
+                      <Ionicons
+                        name="notifications-outline"
+                        size={20}
                         color={n.color}
-                        style={{ marginRight: 10 }}
                       />
-
-                      <View style={{ flex: 1 }}>
-                        <Text style={styles.title}>{n.title}</Text>
-
-                        <Text style={styles.desc}>
-                          {isExpanded
-                            ? n.message
-                            : `${n.message.slice(0, 60)}...`}
-                        </Text>
-
-                        <Text style={styles.date}>{n.timestamp}</Text>
-                      </View>
-
-                      <TouchableOpacity onPress={() => dismissAlert(n.id)}>
-                        <Ionicons name="close" size={20} color="#555" />
-                      </TouchableOpacity>
                     </View>
-                  </Pressable>
+
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.title}>{n.title}</Text>
+
+                      <Text
+                        style={styles.desc}
+                        numberOfLines={isExpanded ? undefined : 2}
+                      >
+                        {n.message}
+                      </Text>
+
+                      <Text style={styles.date}>{n.timestamp}</Text>
+                    </View>
+
+                    <TouchableOpacity onPress={() => dismissAlert(n.id)}>
+                      <Ionicons name="close" size={20} color="#9ca3af" />
+                    </TouchableOpacity>
+                  </View>
 
                   {isExpanded && (
-                    <View style={styles.expandedBox}>
-                      <Text style={styles.fullText}>{n.message}</Text>
-
-                      <View style={styles.actionRow}>
-                        <TouchableOpacity style={styles.secondaryBtn}>
-                          <Text>Contact</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.primaryBtn}>
-                          <Text style={{ color: "#fff" }}>Message</Text>
-                        </TouchableOpacity>
-                      </View>
+                    <View style={styles.expandedContent}>
+                      <TouchableOpacity style={styles.actionBtn}>
+                        <Text style={styles.actionText}>View Details</Text>
+                      </TouchableOpacity>
                     </View>
                   )}
-                </LinearGradient>
+                </Pressable>
               );
             })
           ) : (
             <View style={styles.emptyBox}>
-              <Ionicons name="notifications-off" size={40} color="#ccc" />
-              <Text style={styles.emptyText}>All notifications cleared!</Text>
+              <Ionicons
+                name="notifications-off-outline"
+                size={50}
+                color="#d1d5db"
+              />
+              <Text style={styles.emptyText}>No notifications available</Text>
             </View>
           )}
         </View>
@@ -137,102 +138,108 @@ export default function NotificationScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: {
+    flex: 1,
+    backgroundColor: "#f8fafc",
+  },
 
   scroll: {
     padding: 16,
   },
 
   heading: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#1f2937",
-    marginBottom: 6,
+    fontSize: 26,
+    fontWeight: "700",
+    color: "#111827",
   },
 
   subHeading: {
     color: "#6b7280",
-    marginBottom: 16,
+    marginTop: 4,
+    marginBottom: 20,
   },
 
   card: {
-    backgroundColor: "#fff",
-    padding: 16,
-    borderRadius: 24,
-    borderWidth: 2,
-    borderColor: "#e5e7eb",
+    gap: 12,
   },
 
-  notificationCard: {
-    borderRadius: 20,
-    padding: 14,
-    marginBottom: 12,
+  notificationItem: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 16,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+
+    elevation: 3,
   },
 
   row: {
     flexDirection: "row",
+    alignItems: "flex-start",
+  },
+
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: "center",
     alignItems: "center",
+    marginRight: 12,
   },
 
   title: {
-    fontWeight: "bold",
     fontSize: 15,
-    marginBottom: 2,
+    fontWeight: "600",
+    color: "#111827",
   },
 
   desc: {
     fontSize: 13,
-    color: "#555",
+    color: "#6b7280",
+    marginTop: 4,
+    lineHeight: 18,
   },
 
   date: {
     fontSize: 12,
-    color: "#888",
-    marginTop: 2,
+    color: "#9ca3af",
+    marginTop: 8,
   },
 
-  expandedBox: {
-    marginTop: 10,
+  expandedContent: {
+    marginTop: 12,
+    paddingTop: 12,
     borderTopWidth: 1,
-    borderColor: "#ddd",
-    paddingTop: 10,
+    borderTopColor: "#f1f5f9",
   },
 
-  fullText: {
-    color: "#374151",
-    marginBottom: 10,
-  },
-
-  actionRow: {
-    flexDirection: "row",
-    marginTop: 5,
-  },
-
-  primaryBtn: {
-    flex: 1,
-    backgroundColor: "#3b82f6",
-    padding: 10,
-    borderRadius: 12,
+  actionBtn: {
+    backgroundColor: "#2563eb",
+    paddingVertical: 10,
+    borderRadius: 10,
     alignItems: "center",
-    marginLeft: 5,
   },
 
-  secondaryBtn: {
-    flex: 1,
-    backgroundColor: "#e5e7eb",
-    padding: 10,
-    borderRadius: 12,
-    alignItems: "center",
-    marginRight: 5,
+  actionText: {
+    color: "#fff",
+    fontWeight: "600",
   },
 
   emptyBox: {
     alignItems: "center",
-    paddingVertical: 40,
+    justifyContent: "center",
+    paddingVertical: 60,
   },
 
   emptyText: {
-    color: "#999",
-    marginTop: 10,
+    marginTop: 12,
+    color: "#9ca3af",
+    fontSize: 14,
   },
 });
