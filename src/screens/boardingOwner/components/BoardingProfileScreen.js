@@ -19,15 +19,13 @@ const BASE_URL = "https://www.cgpisoftware.com/cheerytail";
 export default function BoardingProfileScreen({ navigation }) {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [expandedSection, setExpandedSection] = useState("personal");
 
   const fetchProfile = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
 
-      console.log("TOKEN =>", token);
-
       if (!token) {
-        console.log("Token not found");
         setLoading(false);
         return;
       }
@@ -38,8 +36,6 @@ export default function BoardingProfileScreen({ navigation }) {
           Accept: "application/json",
         },
       });
-
-      console.log("PROFILE RESPONSE =>", response.data);
 
       if (response.data.status === "success") {
         setProfile(response.data.data);
@@ -81,7 +77,28 @@ export default function BoardingProfileScreen({ navigation }) {
     );
   }
 
-  const centers = profile?.centers || [];
+  const toggleSection = (section) => {
+    setExpandedSection((prev) => (prev === section ? "" : section));
+  };
+
+  const renderSection = (sectionKey, title, content) => {
+    const isExpanded = expandedSection === sectionKey;
+
+    return (
+      <View style={styles.card}>
+        <TouchableOpacity
+          style={styles.sectionHeader}
+          onPress={() => toggleSection(sectionKey)}
+          activeOpacity={0.9}
+        >
+          <Text style={styles.sectionTitle}>{title}</Text>
+          <Text style={styles.sectionChevron}>{isExpanded ? "−" : "+"}</Text>
+        </TouchableOpacity>
+
+        {isExpanded ? <View style={styles.sectionBody}>{content}</View> : null}
+      </View>
+    );
+  };
 
   const openDocument = async (url) => {
     try {
@@ -89,8 +106,6 @@ export default function BoardingProfileScreen({ navigation }) {
         Alert.alert("Error", "Document not found");
         return;
       }
-
-      console.log("Opening Document:", url);
 
       const supported = await Linking.canOpenURL(url);
 
@@ -118,10 +133,7 @@ export default function BoardingProfileScreen({ navigation }) {
             </Text>
           </View>
 
-          <Text style={styles.name}>
-            {profile?.full_name || "Boarding Owner"}
-          </Text>
-
+          <Text style={styles.name}>{profile?.full_name || "Boarding Owner"}</Text>
           <Text style={styles.email}>{profile?.email}</Text>
 
           <View style={styles.roleBadge}>
@@ -129,115 +141,99 @@ export default function BoardingProfileScreen({ navigation }) {
           </View>
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Profile Information</Text>
-
-          <Info label="Full Name" value={profile.full_name} />
-          <Info label="Email" value={profile.email} />
-
-          <Info label="Mobile Number" value={profile.mobile_number} />
-          <Info
-            label="Alternate Contact Number"
-            value={profile.alternate_contact_number}
-          />
-
-          <Info
-            label="Emergency Contact Name"
-            value={profile.emergency_contact_name}
-          />
-
-          <Info
-            label="Emergency Contact Number"
-            value={profile.emergency_contact_number}
-          />
-
-          <Info label="Residential Address" value={profile.residential_address} />
-
-          <Info label="Business Name" value={profile.business_name} />
-
-          <Info
-            label="Authorized Person Name"
-            value={profile.authorized_person_name}
-          />
-
-          <Info label="Digital Signature" value={profile.digital_signature} />
-
-          <Info label="Signature Date" value={profile.signature_date} />
-
-          <Info label="Role" value={profile.role} />
-
-          <Info
-            label="Email Verified"
-            value={profile.email_verified === "1" ? "Yes" : "No"}
-          />
-
-          <Info
-            label="Phone Verified"
-            value={profile.phone_verified === "1" ? "Yes" : "No"}
-          />
-
-          <Info
-            label="Terms Accepted"
-            value={profile.terms_accepted === "1" ? "Yes" : "No"}
-          />
-
-          <Info label="Created At" value={profile.created_at} />
-
-          <Info label="Updated At" value={profile.updated_at} />
-        </View>
-
-        {/* Aadhaar File */}
-        {profile?.aadhar_file ? (
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Documents</Text>
-
-            <TouchableOpacity
-              style={styles.documentBtn}
-              onPress={() => openDocument(profile.aadhar_file)}
-            >
-              <Text style={styles.documentBtnText}>View Aadhaar Document</Text>
-            </TouchableOpacity>
-
-            <Text
-              style={{
-                marginTop: 10,
-                color: "#6b7280",
-                fontSize: 12,
-                textAlign: "center",
-              }}
-            >
-              File Type: PDF
-            </Text>
-          </View>
-        ) : (
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Documents</Text>
-            <Text>No Aadhaar document uploaded.</Text>
-          </View>
+        {renderSection(
+          "personal",
+          "Personal Details",
+          <>
+            <Info label="Full Name" value={profile.full_name} />
+            <Info label="Email" value={profile.email} />
+            <Info label="Mobile Number" value={profile.mobile_number} />
+            <Info
+              label="Alternate Contact Number"
+              value={profile.alternate_contact_number}
+            />
+            <Info
+              label="Emergency Contact Name"
+              value={profile.emergency_contact_name}
+            />
+            <Info
+              label="Emergency Contact Number"
+              value={profile.emergency_contact_number}
+            />
+          </>,
         )}
 
-        {/* Profile Image */}
-        {profile.profile_image ? (
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Profile Image</Text>
-
-            <Image
-              source={{ uri: profile.profile_image }}
-              style={{
-                width: 120,
-                height: 120,
-                borderRadius: 60,
-                alignSelf: "center",
-              }}
+        {renderSection(
+          "business",
+          "Business & Legal",
+          <>
+            <Info label="Business Name" value={profile.business_name} />
+            <Info
+              label="Authorized Person"
+              value={profile.authorized_person_name}
             />
-          </View>
-        ) : null}
-        <TouchableOpacity
-          style={styles.myCentersBtn}
-          onPress={() => navigation.navigate("Centers")}
-        >
-          <Text style={styles.myCentersText}>My Centers</Text>
-        </TouchableOpacity>
+            <Info label="Digital Signature" value={profile.digital_signature} />
+            <Info label="Signature Date" value={profile.signature_date} />
+            <Info
+              label="Registration License Number"
+              value={profile.registration_license_number}
+            />
+            <Info
+              label="Insurance Policy Number"
+              value={profile.insurance_policy_number}
+            />
+            <Info
+              label="Insurance Provider"
+              value={profile.insurance_provider_name}
+            />
+            <Info
+              label="Insurance Expiry Date"
+              value={profile.insurance_expiry_date}
+            />
+          </>,
+        )}
+
+        {renderSection(
+          "operations",
+          "Vet & Operations",
+          <>
+            <Info label="Vet Clinic Name" value={profile.vet_clinic_name} />
+            <Info label="Vet Clinic Address" value={profile.vet_clinic_address} />
+            <Info label="Vet Clinic Contact" value={profile.vet_clinic_contact} />
+            <Info label="Opening Time" value={profile.opening_time} />
+            <Info label="Closing Time" value={profile.closing_time} />
+            <Info
+              label="Special Instructions"
+              value={profile.special_instructions}
+            />
+          </>,
+        )}
+
+        {renderSection(
+          "documents",
+          "Documents",
+          profile?.aadhar_file ? (
+            <>
+              <TouchableOpacity
+                style={styles.documentBtn}
+                onPress={() => openDocument(profile.aadhar_file)}
+              >
+                <Text style={styles.documentBtnText}>View Aadhaar Document</Text>
+              </TouchableOpacity>
+              <Text style={styles.documentHint}>File Type: PDF</Text>
+            </>
+          ) : (
+            <Text style={styles.emptyText}>No Aadhaar document uploaded.</Text>
+          ),
+        )}
+
+        {profile.profile_image
+          ? renderSection(
+              "image",
+              "Profile Image",
+              <Image source={{ uri: profile.profile_image }} style={styles.profileImage} />,
+            )
+          : null}
 
         <TouchableOpacity
           style={styles.editBtn}

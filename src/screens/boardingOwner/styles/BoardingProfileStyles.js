@@ -20,15 +20,10 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     paddingHorizontal: 20,
     alignItems: "center",
-
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.12,
     shadowRadius: 8,
-
     elevation: 5,
   },
 
@@ -79,24 +74,38 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 16,
     borderRadius: 20,
-    padding: 18,
-
+    padding: 0,
+    overflow: "hidden",
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 5,
-
     elevation: 3,
   },
 
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 18,
+    paddingVertical: 16,
+  },
+
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "700",
     color: "#111827",
-    marginBottom: 15,
+  },
+
+  sectionChevron: {
+    fontSize: 20,
+    color: "#6b21a8",
+    fontWeight: "700",
+  },
+
+  sectionBody: {
+    paddingHorizontal: 18,
+    paddingBottom: 16,
   },
 
   infoRow: {
@@ -130,28 +139,23 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 
+  documentHint: {
+    marginTop: 10,
+    color: "#6b7280",
+    fontSize: 12,
+    textAlign: "center",
+  },
+
+  emptyText: {
+    color: "#6b7280",
+    fontSize: 14,
+  },
+
   profileImage: {
-    width: 130,
-    height: 130,
-    borderRadius: 65,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     alignSelf: "center",
-  },
-
-  myCentersBtn: {
-    backgroundColor: "#ffffff",
-    marginHorizontal: 16,
-    marginTop: 20,
-    borderRadius: 14,
-    paddingVertical: 16,
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#6b21a8",
-  },
-
-  myCentersText: {
-    color: "#6b21a8",
-    fontSize: 16,
-    fontWeight: "700",
   },
 
   editBtn: {
