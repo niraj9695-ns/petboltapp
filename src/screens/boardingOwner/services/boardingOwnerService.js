@@ -39,6 +39,92 @@ export const updateOwnerProfile = async (formData) => {
   return response.data;
 };
 
+const CENTER_FIELDS = [
+  "center_name",
+  "address",
+  "city",
+  "state",
+  "zip_code",
+  "center_type",
+  "registration_license_number",
+  "address_line_2",
+  "latitude",
+  "longitude",
+  "service_area_radius",
+  "total_capacity",
+  "daily_capacity",
+  "description",
+  "price_per_day",
+  "property_type",
+  "fencing_status",
+  "supervision_level",
+  "accepted_pet_types",
+  "size_weight_restrictions",
+  "age_preferences",
+  "vaccination_policy",
+  "required_vaccines",
+  "vet_clinic_name",
+  "vet_clinic_address",
+  "vet_clinic_contact",
+  "insurance_policy_number",
+  "insurance_provider_name",
+  "insurance_expiry_date",
+  "boarding_services",
+  "opening_time",
+  "closing_time",
+  "primary_contact_number",
+  "email_address",
+  "website_url",
+  "amenities",
+  "special_instructions",
+  "prices",
+  "is_active",
+];
+
+const appendCenterValue = (formData, key, value) => {
+  if (value === undefined || value === null || value === "") {
+    return;
+  }
+
+  if (Array.isArray(value) || (typeof value === "object" && value !== null)) {
+    formData.append(key, JSON.stringify(value));
+    return;
+  }
+
+  formData.append(key, String(value));
+};
+
+export const buildCenterFormData = (payload = {}, options = {}) => {
+  const formData = new FormData();
+  const { centerId, licenseProof, centerPhotos = [] } = options;
+
+  if (centerId) {
+    formData.append("center_id", String(centerId));
+  }
+
+  CENTER_FIELDS.forEach((key) => {
+    appendCenterValue(formData, key, payload[key]);
+  });
+
+  if (licenseProof) {
+    formData.append("license_proof", {
+      uri: licenseProof.uri,
+      name: licenseProof.name,
+      type: licenseProof.mimeType || "application/pdf",
+    });
+  }
+
+  centerPhotos.forEach((img) => {
+    formData.append("center_photos[]", {
+      uri: img.uri,
+      name: img.fileName || img.name || `photo_${Date.now()}.jpg`,
+      type: img.mimeType || "image/jpeg",
+    });
+  });
+
+  return formData;
+};
+
 export const getCenters = async () => {
   const headers = await getAuthHeaders();
 

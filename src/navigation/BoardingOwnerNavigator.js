@@ -154,6 +154,13 @@ export default function BoardingOwnerNavigator() {
         headerStyle: {
           backgroundColor: theme.background,
         },
+        headerTitleAlign: "center",
+        headerTitleContainerStyle: {
+          left: 0,
+          right: 0,
+          alignItems: "center",
+          justifyContent: "center",
+        },
 
         headerTitle: () => (
           <Image

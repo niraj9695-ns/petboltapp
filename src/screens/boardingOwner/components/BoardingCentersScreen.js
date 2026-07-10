@@ -89,7 +89,7 @@ export default function BoardingCentersScreen() {
                   <Text style={styles.location}>
                     {center.city}, {center.state}
                   </Text>
-                  <Text style={styles.price}>₹{center.price_per_day}/day</Text>
+
                 </View>
 
                 <View style={styles.button}>

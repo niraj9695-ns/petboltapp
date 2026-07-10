@@ -70,6 +70,37 @@ export default StyleSheet.create({
     color: "#6b21a8",
     marginBottom: 15,
   },
+  sectionCard: {
+    borderWidth: 1,
+    borderColor: "#f1e8ff",
+    borderRadius: 16,
+    padding: 12,
+    marginBottom: 12,
+    backgroundColor: "#fcfaff",
+  },
+  sectionHeaderButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  sectionHeaderTextWrap: {
+    flex: 1,
+  },
+  sectionSubtitle: {
+    color: "#6b7280",
+    fontSize: 12,
+    marginTop: 2,
+    marginBottom: 4,
+  },
+  sectionChevron: {
+    color: "#6b21a8",
+    fontSize: 20,
+    fontWeight: "700",
+    marginLeft: 10,
+  },
+  sectionBody: {
+    marginTop: 10,
+  },
   infoRow: {
     marginBottom: 14,
   },

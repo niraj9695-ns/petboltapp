@@ -23,12 +23,23 @@ export default function CenterDetailsScreen() {
   const [center, setCenter] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [expandedSections, setExpandedSections] = useState({
+    basic: true,
+    operations: false,
+    health: false,
+    amenities: false,
+    documents: false,
+  });
 
   useEffect(() => {
     if (centerId) {
       loadCenter();
     }
   }, [centerId, refreshKey]);
+
+  const toggleSection = (key) => {
+    setExpandedSections((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const loadCenter = async () => {
     try {
@@ -99,47 +110,75 @@ export default function CenterDetailsScreen() {
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Center Information</Text>
-          <Info label="Center Name" value={center.center_name} />
-          <Info label="Description" value={center.description} />
-          <Info label="Center Type" value={center.center_type} />
-          <Info label="Price Per Day" value={`₹${center.price_per_day}`} />
-          <Info label="Daily Capacity" value={center.daily_capacity} />
-          <Info label="Total Capacity" value={center.total_capacity} />
-          <Info label="Address" value={center.address} />
-          <Info label="Address Line 2" value={center.address_line_2} />
-          <Info label="City" value={center.city} />
-          <Info label="State" value={center.state} />
-          <Info label="Zip Code" value={center.zip_code} />
-          <Info label="Primary Contact" value={center.primary_contact_number} />
-          <Info label="Email Address" value={center.email_address} />
-          <Info label="Registration License Number" value={center.registration_license_number} />
-          <Info label="Property Type" value={center.property_type} />
-          <Info label="Fencing Status" value={center.fencing_status} />
-          <Info label="Supervision Level" value={center.supervision_level} />
-          <Info label="Vaccination Policy" value={center.vaccination_policy} />
-          <Info label="Vet Clinic Name" value={center.vet_clinic_name} />
-          <Info label="Vet Clinic Address" value={center.vet_clinic_address} />
-          <Info label="Vet Clinic Contact" value={center.vet_clinic_contact} />
-          <Info label="Insurance Policy Number" value={center.insurance_policy_number} />
-          <Info label="Insurance Provider" value={center.insurance_provider_name} />
-          <Info label="Insurance Expiry Date" value={center.insurance_expiry_date} />
-          <Info label="Special Instructions" value={center.special_instructions} />
-          <Info label="Opening Time" value={center.opening_time} />
-          <Info label="Closing Time" value={center.closing_time} />
-          <Info label="Latitude" value={center.latitude} />
-          <Info label="Longitude" value={center.longitude} />
-          <Info label="Status" value={center.is_active === "1" ? "🟢 Active" : "🔴 Inactive"} />
+          <SectionBlock id="basic" title="Basic Details" subtitle="Core center info" expanded={expandedSections.basic} onToggle={toggleSection}>
+            <Info label="Center Name" value={center.center_name} />
+            <Info label="Description" value={center.description} />
+            <Info label="Center Type" value={center.center_type} />
+            <Info label="Base Price Per Day" value={center.price_per_day ? `₹${center.price_per_day}` : null} />
+            <Info label="Daily Capacity" value={center.daily_capacity} />
+            <Info label="Total Capacity" value={center.total_capacity} />
+            <Info label="Address" value={center.address} />
+            <Info label="Address Line 2" value={center.address_line_2} />
+            <Info label="City" value={center.city} />
+            <Info label="State" value={center.state} />
+            <Info label="Zip Code" value={center.zip_code} />
+            <Info label="Primary Contact" value={center.primary_contact_number} />
+            <Info label="Email Address" value={center.email_address} />
+            <Info label="Status" value={center.is_active === "1" ? "🟢 Active" : "🔴 Inactive"} />
+          </SectionBlock>
 
-          <Text style={styles.sectionTitle}>Documents</Text>
-          {center.license_proof ? (
-            <TouchableOpacity
-              style={{ backgroundColor: "#f3f4f6", padding: 14, borderRadius: 12, marginBottom: 12 }}
-              onPress={() => Linking.openURL(center.license_proof)}
-            >
-              <Text style={{ color: "#6b21a8", fontWeight: "700" }}>📄 View License Document</Text>
-            </TouchableOpacity>
-          ) : null}
+          <SectionBlock id="operations" title="Operations & Contacts" subtitle="Hours and contact details" expanded={expandedSections.operations} onToggle={toggleSection}>
+            <Info label="Registration License Number" value={center.registration_license_number} />
+            <Info label="Property Type" value={center.property_type} />
+            <Info label="Fencing Status" value={center.fencing_status} />
+            <Info label="Supervision Level" value={center.supervision_level} />
+            <Info label="Vaccination Policy" value={center.vaccination_policy} />
+            <Info label="Opening Time" value={center.opening_time} />
+            <Info label="Closing Time" value={center.closing_time} />
+            <Info label="Latitude" value={center.latitude} />
+            <Info label="Longitude" value={center.longitude} />
+            <Info label="Service Area Radius" value={center.service_area_radius} />
+            {center?.pet_type_prices && Object.keys(center.pet_type_prices).length > 0 ? (
+              <View style={{ marginTop: 8, marginBottom: 4 }}>
+                <Text style={styles.sectionTitle}>Pet Type Prices</Text>
+                {Object.entries(center.pet_type_prices).map(([petType, price]) => (
+                  <View key={petType} style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: "#f3f4f6" }}>
+                    <Text style={{ color: "#374151", textTransform: "capitalize" }}>{petType}</Text>
+                    <Text style={{ color: "#6b21a8", fontWeight: "700" }}>{price ? `₹${price}` : "Not set"}</Text>
+                  </View>
+                ))}
+              </View>
+            ) : null}
+          </SectionBlock>
+
+          <SectionBlock id="health" title="Health & Insurance" subtitle="Vet and policy details" expanded={expandedSections.health} onToggle={toggleSection}>
+            <Info label="Vet Clinic Name" value={center.vet_clinic_name} />
+            <Info label="Vet Clinic Address" value={center.vet_clinic_address} />
+            <Info label="Vet Clinic Contact" value={center.vet_clinic_contact} />
+            <Info label="Insurance Policy Number" value={center.insurance_policy_number} />
+            <Info label="Insurance Provider" value={center.insurance_provider_name} />
+            <Info label="Insurance Expiry Date" value={center.insurance_expiry_date} />
+          </SectionBlock>
+
+          <SectionBlock id="amenities" title="Amenities & Services" subtitle="Special notes and service options" expanded={expandedSections.amenities} onToggle={toggleSection}>
+            <Info label="Special Instructions" value={center.special_instructions} />
+            <Info label="Amenities" value={Array.isArray(center.amenities) ? center.amenities.join(", ") : center.amenities} />
+            <Info label="Accepted Pet Types" value={Array.isArray(center.accepted_pet_types) ? center.accepted_pet_types.join(", ") : center.accepted_pet_types} />
+            <Info label="Size Weight Restrictions" value={center.size_weight_restrictions} />
+            <Info label="Age Preferences" value={center.age_preferences} />
+            <Info label="Required Vaccines" value={Array.isArray(center.required_vaccines) ? center.required_vaccines.join(", ") : center.required_vaccines} />
+            <Info label="Boarding Services" value={Array.isArray(center.boarding_services) ? center.boarding_services.join(", ") : center.boarding_services} />
+          </SectionBlock>
+
+          <SectionBlock id="documents" title="Documents & Files" subtitle="License and supporting docs" expanded={expandedSections.documents} onToggle={toggleSection}>
+            {center.license_proof ? (
+              <TouchableOpacity style={{ backgroundColor: "#f3f4f6", padding: 14, borderRadius: 12, marginTop: 4 }} onPress={() => Linking.openURL(center.license_proof)}>
+                <Text style={{ color: "#6b21a8", fontWeight: "700" }}>📄 View License Document</Text>
+              </TouchableOpacity>
+            ) : (
+              <Text style={styles.value}>No document uploaded</Text>
+            )}
+          </SectionBlock>
         </View>
 
         <TouchableOpacity
@@ -152,6 +191,19 @@ export default function CenterDetailsScreen() {
     </SafeAreaView>
   );
 }
+
+const SectionBlock = ({ id, title, subtitle, expanded, onToggle, children }) => (
+  <View style={styles.sectionCard}>
+    <TouchableOpacity style={styles.sectionHeaderButton} onPress={() => onToggle(id)} activeOpacity={0.9}>
+      <View style={styles.sectionHeaderTextWrap}>
+        <Text style={styles.sectionTitle}>{title}</Text>
+        <Text style={styles.sectionSubtitle}>{subtitle}</Text>
+      </View>
+      <Text style={styles.sectionChevron}>{expanded ? "−" : "+"}</Text>
+    </TouchableOpacity>
+    {expanded ? <View style={styles.sectionBody}>{children}</View> : null}
+  </View>
+);
 
 const Info = ({ label, value }) => (
   <View style={styles.infoRow}>

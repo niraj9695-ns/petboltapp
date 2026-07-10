@@ -37,7 +37,7 @@ export default function BoardingOwnerTabs() {
           );
         },
 
-        tabBarActiveTintColor: "#f97316",
+        tabBarActiveTintColor: "#6b21a8",
         tabBarInactiveTintColor: "gray",
       })}
     >
