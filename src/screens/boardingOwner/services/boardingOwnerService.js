@@ -221,6 +221,23 @@ export const getOwnerBookings = async () => {
   return response.data;
 };
 
+export const rejectBooking = async (bookingId, rejectReason) => {
+  const headers = await getAuthHeaders();
+  const formData = new FormData();
+
+  formData.append("booking_id", String(bookingId));
+  formData.append("reject_reason", rejectReason);
+
+  const response = await axios.post(`${BASE_URL}/api/bookings/reject`, formData, {
+    headers: {
+      ...headers,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data;
+};
+
 export const getBookingDetails = async (bookingId) => {
   const headers = await getAuthHeaders();
 

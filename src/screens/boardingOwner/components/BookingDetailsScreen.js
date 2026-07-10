@@ -1,11 +1,44 @@
-import React from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import styles from "../styles/BookingDetailsScreen";
+import { rejectBooking } from "../services/boardingOwnerService";
 
 export default function BookingDetailsScreen({ route, navigation }) {
-  const { booking } = route.params;
+  const [booking, setBooking] = useState(route.params.booking);
+  const [rejectReason, setRejectReason] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleReject = async () => {
+    if (!rejectReason.trim()) {
+      Alert.alert("Reason required", "Please enter a reason for rejecting this booking.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await rejectBooking(booking.id, rejectReason.trim());
+
+      if (response.status === "success") {
+        setBooking({ ...booking, status: "rejected" });
+        Alert.alert("Booking rejected", "The booking request has been rejected successfully.", [
+          { text: "OK", onPress: () => navigation.goBack() },
+        ]);
+        return;
+      }
+
+      throw new Error(response.message || "Unable to reject booking.");
+    } catch (error) {
+      Alert.alert("Reject failed", error.message || "Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const bookingStatus = String(booking.status || booking.booking_status || "").trim().toLowerCase();
+  const canReject = !["accepted", "rejected", "cancelled", "completed"].includes(bookingStatus);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -17,6 +50,37 @@ export default function BookingDetailsScreen({ route, navigation }) {
         <View style={styles.heroCard}>
           <Text style={styles.heroTitle}>{booking.pet_name}</Text>
           <Text style={styles.heroSubtitle}>{booking.center_name}</Text>
+        </View>
+
+        <View style={styles.actionPanel}>
+          <Text style={styles.sectionTitle}>Reject Booking</Text>
+          <Text style={styles.helperText}>
+            {canReject
+              ? "If this request cannot be accepted, provide a clear reason and reject it now."
+              : "This booking cannot be rejected because it has already been finalized."}
+          </Text>
+          <TextInput
+            style={[styles.rejectInput, !canReject && styles.disabledInput]}
+            value={rejectReason}
+            onChangeText={setRejectReason}
+            placeholder="Enter rejection reason"
+            placeholderTextColor="#9ca3af"
+            multiline
+            numberOfLines={4}
+            textAlignVertical="top"
+            editable={canReject && !loading}
+          />
+          <TouchableOpacity
+            style={[styles.rejectButton, !canReject && styles.disabledButton]}
+            onPress={handleReject}
+            disabled={!canReject || loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.rejectButtonText}>{canReject ? "Reject Booking" : "Cannot Reject"}</Text>
+            )}
+          </TouchableOpacity>
         </View>
 
         <View style={styles.card}>
@@ -57,12 +121,52 @@ export default function BookingDetailsScreen({ route, navigation }) {
           <View
             style={[
               styles.statusBadge,
-              booking.status === "accepted" ? styles.accepted : styles.pending,
+              booking.status === "accepted"
+                ? styles.accepted
+                : booking.status === "rejected"
+                ? styles.rejected
+                : styles.pending,
             ]}
           >
             <Text style={styles.statusText}>{booking.status}</Text>
           </View>
+
+          {canReject && (
+            <TouchableOpacity style={styles.rejectActionButton} onPress={handleReject} disabled={loading}>
+              <Text style={styles.rejectActionButtonText}>Reject Booking</Text>
+            </TouchableOpacity>
+          )}
         </View>
+
+        {canReject && (
+          <View style={styles.actionPanel}>
+            <Text style={styles.sectionTitle}>Reject Booking</Text>
+            <Text style={styles.helperText}>
+              Let the owner know why this request cannot be accepted.
+            </Text>
+            <TextInput
+              style={styles.rejectInput}
+              value={rejectReason}
+              onChangeText={setRejectReason}
+              placeholder="Enter rejection reason"
+              placeholderTextColor="#9ca3af"
+              multiline
+              numberOfLines={4}
+              textAlignVertical="top"
+            />
+            <TouchableOpacity
+              style={styles.rejectButton}
+              onPress={handleReject}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.rejectButtonText}>Reject Booking</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

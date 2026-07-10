@@ -89,6 +89,68 @@ export default StyleSheet.create({
   pending: {
     backgroundColor: "#FEF3C7",
   },
+  rejected: {
+    backgroundColor: "#FECACA",
+  },
+  rejectActionButton: {
+    marginTop: 16,
+    borderRadius: 16,
+    backgroundColor: "#dc2626",
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+  rejectActionButtonText: {
+    color: COLORS.white,
+    fontWeight: "700",
+    fontSize: 15,
+  },
+  actionPanel: {
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 18,
+    marginTop: 24,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 1,
+  },
+  helperText: {
+    fontSize: 13,
+    color: COLORS.gray,
+    marginBottom: 12,
+    lineHeight: 18,
+  },
+  rejectInput: {
+    minHeight: 110,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 16,
+    padding: 14,
+    fontSize: 15,
+    color: COLORS.text,
+    backgroundColor: COLORS.lightPurple,
+    marginBottom: 14,
+  },
+  rejectButton: {
+    backgroundColor: COLORS.secondary,
+    borderRadius: 16,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  disabledButton: {
+    backgroundColor: "#cbd5e1",
+  },
+  disabledInput: {
+    backgroundColor: "#f1f5f9",
+  },
+  rejectButtonText: {
+    color: COLORS.white,
+    fontSize: 15,
+    fontWeight: "700",
+  },
   statusText: {
     fontWeight: "700",
     textTransform: "capitalize",
