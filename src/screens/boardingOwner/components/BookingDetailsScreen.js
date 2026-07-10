@@ -130,43 +130,7 @@ export default function BookingDetailsScreen({ route, navigation }) {
           >
             <Text style={styles.statusText}>{booking.status}</Text>
           </View>
-
-          {canReject && (
-            <TouchableOpacity style={styles.rejectActionButton} onPress={handleReject} disabled={loading}>
-              <Text style={styles.rejectActionButtonText}>Reject Booking</Text>
-            </TouchableOpacity>
-          )}
         </View>
-
-        {canReject && (
-          <View style={styles.actionPanel}>
-            <Text style={styles.sectionTitle}>Reject Booking</Text>
-            <Text style={styles.helperText}>
-              Let the owner know why this request cannot be accepted.
-            </Text>
-            <TextInput
-              style={styles.rejectInput}
-              value={rejectReason}
-              onChangeText={setRejectReason}
-              placeholder="Enter rejection reason"
-              placeholderTextColor="#9ca3af"
-              multiline
-              numberOfLines={4}
-              textAlignVertical="top"
-            />
-            <TouchableOpacity
-              style={styles.rejectButton}
-              onPress={handleReject}
-              disabled={loading}
-            >
-              {loading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.rejectButtonText}>Reject Booking</Text>
-              )}
-            </TouchableOpacity>
-          </View>
-        )}
       </ScrollView>
     </SafeAreaView>
   );

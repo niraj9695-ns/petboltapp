@@ -92,17 +92,52 @@ export default StyleSheet.create({
   rejected: {
     backgroundColor: "#FECACA",
   },
-  rejectActionButton: {
-    marginTop: 16,
+  rejectContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 18,
+    marginTop: 24,
+    borderWidth: 1,
+    borderColor: "#e5d0ff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  rejectInput: {
+    minHeight: 120,
+    borderWidth: 1,
+    borderColor: COLORS.border,
     borderRadius: 16,
-    backgroundColor: "#dc2626",
-    paddingVertical: 12,
+    padding: 14,
+    fontSize: 15,
+    color: COLORS.text,
+    backgroundColor: COLORS.lightPurple,
+    marginBottom: 14,
+  },
+  disabledInput: {
+    backgroundColor: "#f3f4f6",
+  },
+  rejectButton: {
+    backgroundColor: COLORS.secondary,
+    borderRadius: 16,
+    paddingVertical: 14,
     alignItems: "center",
   },
-  rejectActionButtonText: {
+  disabledButton: {
+    backgroundColor: "#cbd5e1",
+  },
+  rejectButtonText: {
     color: COLORS.white,
-    fontWeight: "700",
     fontSize: 15,
+    fontWeight: "700",
+  },
+  disabledNotes: {
+    marginTop: 12,
+    color: COLORS.gray,
+    fontSize: 13,
+    lineHeight: 18,
   },
   actionPanel: {
     backgroundColor: "#fff",
