@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import BoardingDashboardScreen from "../screens/boardingOwner/components/BoardingDashboardScreen";
 import BoardingBookingsScreen from "../screens/boardingOwner/components/BoardingBookingsScreen";
 import BoardingCentersScreen from "../screens/boardingOwner/components/BoardingCentersScreen";
+import BoardingCouponsScreen from "../screens/boardingOwner/components/BoardingCouponsScreen";
 import BoardingProfileScreen from "../screens/boardingOwner/components/BoardingProfileScreen";
 
 const Tab = createBottomTabNavigator();
@@ -24,6 +25,8 @@ export default function BoardingOwnerTabs() {
             iconName = "calendar-outline";
           } else if (route.name === "Centers") {
             iconName = "business-outline";
+          } else if (route.name === "Coupons") {
+            iconName = "ticket-outline";
           } else {
             iconName = "person-outline";
           }
@@ -54,6 +57,11 @@ export default function BoardingOwnerTabs() {
       <Tab.Screen
         name="Centers"
         component={BoardingCentersScreen}
+      />
+
+      <Tab.Screen
+        name="Coupons"
+        component={BoardingCouponsScreen}
       />
 
       <Tab.Screen

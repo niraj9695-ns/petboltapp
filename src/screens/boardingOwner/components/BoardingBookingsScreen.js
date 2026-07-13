@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,19 +7,20 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 
+import { useRefresh } from "../../../context/RefreshContext";
 import styles from "../styles/BoardingBookingsStyles";
 import { getOwnerBookings } from "../services/boardingOwnerService";
 
 export default function BoardingBookingsScreen({ navigation }) {
+  const { refreshKey } = useRefresh();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadBookings();
-  }, []);
+  const loadBookings = useCallback(async () => {
+    setLoading(true);
 
-  const loadBookings = async () => {
     try {
       const response = await getOwnerBookings();
 
@@ -31,7 +32,17 @@ export default function BoardingBookingsScreen({ navigation }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadBookings();
+    }, [loadBookings])
+  );
+
+  useEffect(() => {
+    loadBookings();
+  }, [refreshKey, loadBookings]);
 
   const renderBooking = ({ item }) => (
     <TouchableOpacity

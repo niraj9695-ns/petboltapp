@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { useRefresh } from "../../../context/RefreshContext";
 import styles from "../styles/BookingDetailsScreen";
 import { rejectBooking } from "../services/boardingOwnerService";
 
 export default function BookingDetailsScreen({ route, navigation }) {
+  const { triggerRefresh } = useRefresh();
   const [booking, setBooking] = useState(route.params.booking);
   const [rejectReason, setRejectReason] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,6 +25,7 @@ export default function BookingDetailsScreen({ route, navigation }) {
 
       if (response.status === "success") {
         setBooking({ ...booking, status: "rejected" });
+        triggerRefresh();
         Alert.alert("Booking rejected", "The booking request has been rejected successfully.", [
           { text: "OK", onPress: () => navigation.goBack() },
         ]);

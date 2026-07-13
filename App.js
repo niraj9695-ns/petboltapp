@@ -15,6 +15,7 @@ import AuthNavigator from "./src/navigation/AuthNavigator";
 import BoardingOwnerNavigator from "./src/navigation/BoardingOwnerNavigator";
 
 import { ThemeProvider, useTheme } from "./src/context/ThemeContext";
+import { RefreshProvider } from "./src/context/RefreshContext";
 
 import { View, ActivityIndicator } from "react-native";
 
@@ -142,7 +143,9 @@ const [guestRole, setGuestRole] =
 export default function App() {
   return (
     <ThemeProvider>
-      <MainApp />
+      <RefreshProvider>
+        <MainApp />
+      </RefreshProvider>
     </ThemeProvider>
   );
 }

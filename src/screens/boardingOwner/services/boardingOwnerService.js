@@ -135,6 +135,79 @@ export const getCenters = async () => {
   return response.data;
 };
 
+export const getDateDiscounts = async (centerId) => {
+  const headers = await getAuthHeaders();
+
+  const response = await axios.get(
+    `${BASE_URL}/api/owner/date-discounts?center_id=${centerId}`,
+    {
+      headers,
+    },
+  );
+
+  return response.data;
+};
+
+export const createDateDiscount = async (payload) => {
+  const headers = await getAuthHeaders();
+
+  const response = await axios.post(
+    `${BASE_URL}/api/owner/date-discounts`,
+    payload,
+    {
+      headers: {
+        ...headers,
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const getDateDiscountDetails = async (discountId) => {
+  const headers = await getAuthHeaders();
+
+  const response = await axios.get(
+    `${BASE_URL}/api/owner/date-discounts/${discountId}`,
+    {
+      headers,
+    },
+  );
+
+  return response.data;
+};
+
+export const updateDateDiscount = async (discountId, payload) => {
+  const headers = await getAuthHeaders();
+
+  const response = await axios.put(
+    `${BASE_URL}/api/owner/date-discounts/${discountId}`,
+    payload,
+    {
+      headers: {
+        ...headers,
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const deleteDateDiscount = async (discountId) => {
+  const headers = await getAuthHeaders();
+
+  const response = await axios.delete(
+    `${BASE_URL}/api/owner/date-discounts/${discountId}`,
+    {
+      headers,
+    },
+  );
+
+  return response.data;
+};
+
 export const getCenterDetails = async (centerId) => {
   const headers = await getAuthHeaders();
 

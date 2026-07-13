@@ -6,6 +6,8 @@ import UpdateBoardingProfileScreen from "../screens/boardingOwner/components/Upd
 import CenterDetailsScreen from "../screens/boardingOwner/components/CenterDetailsScreen";
 import UpdateCenterScreen from "../screens/boardingOwner/components/UpdateCenterScreen";
 import CreateCenterScreen from "../screens/boardingOwner/components/CreateCenterScreen";
+import CreateCouponScreen from "../screens/boardingOwner/components/CreateCouponScreen";
+import UpdateCouponScreen from "../screens/boardingOwner/components/UpdateCouponScreen";
 import BookingDetailsScreen from "../screens/boardingOwner/components/BookingDetailsScreen";
 
 const Stack = createNativeStackNavigator();
@@ -23,6 +25,8 @@ export default function BoardingOwnerStack() {
       <Stack.Screen name="CenterDetails" component={CenterDetailsScreen} />
       <Stack.Screen name="UpdateCenter" component={UpdateCenterScreen} />
       <Stack.Screen name="CreateCenter" component={CreateCenterScreen} />
+      <Stack.Screen name="CreateCoupon" component={CreateCouponScreen} />
+      <Stack.Screen name="UpdateCoupon" component={UpdateCouponScreen} />
       <Stack.Screen name="BookingDetails" component={BookingDetailsScreen} />
     </Stack.Navigator>
   );
