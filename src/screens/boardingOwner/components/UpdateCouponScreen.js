@@ -23,6 +23,7 @@ const buildForm = (discount) => ({
   discount_value: String(discount?.discount_value ?? ""),
   min_days: String(discount?.min_days ?? ""),
   expiry_date: discount?.expiry_date ? discount.expiry_date.slice(0, 10) : "",
+  is_active: Number(discount?.is_active ?? 1),
 });
 
 const formatDateValue = (date) => {
@@ -67,6 +68,7 @@ export default function UpdateCouponScreen() {
       discount_value: Number(form.discount_value),
       min_days: Number(form.min_days),
       expiry_date: form.expiry_date,
+      is_active: Number(form.is_active),
     };
 
     setSaving(true);
@@ -153,6 +155,44 @@ export default function UpdateCouponScreen() {
                     {form.expiry_date || "Select expiry date"}
                   </Text>
                   <Text style={styles.dateButtonIcon}>📅</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={styles.fieldGroup}>
+              <Label label="Status" required={false} error={false} />
+              <View style={styles.toggleRow}>
+                <TouchableOpacity
+                  style={[
+                    styles.toggleButton,
+                    form.is_active === 1 && styles.toggleButtonActive,
+                  ]}
+                  onPress={() => setForm((current) => ({ ...current, is_active: 1 }))}
+                >
+                  <Text
+                    style={[
+                      styles.toggleButtonText,
+                      form.is_active === 1 && styles.toggleButtonTextActive,
+                    ]}
+                  >
+                    Active
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.toggleButton,
+                    form.is_active === 0 && styles.toggleButtonActive,
+                  ]}
+                  onPress={() => setForm((current) => ({ ...current, is_active: 0 }))}
+                >
+                  <Text
+                    style={[
+                      styles.toggleButtonText,
+                      form.is_active === 0 && styles.toggleButtonTextActive,
+                    ]}
+                  >
+                    Inactive
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

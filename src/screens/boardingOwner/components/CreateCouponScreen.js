@@ -237,17 +237,39 @@ export default function CreateCouponScreen() {
 
             <View style={styles.fieldGroup}>
               <Label label="Status" required={false} error={false} />
-              <View style={styles.pickerWrap}>
-                <Picker
-                  selectedValue={String(form.is_active)}
-                  onValueChange={(value) =>
-                    setForm((current) => ({ ...current, is_active: Number(value) }))
-                  }
-                  dropdownIconColor="#6d28d9"
+              <View style={styles.toggleRow}>
+                <TouchableOpacity
+                  style={[
+                    styles.toggleButton,
+                    form.is_active === 1 && styles.toggleButtonActive,
+                  ]}
+                  onPress={() => setForm((current) => ({ ...current, is_active: 1 }))}
                 >
-                  <Picker.Item label="Active" value="1" />
-                  <Picker.Item label="Inactive" value="0" />
-                </Picker>
+                  <Text
+                    style={[
+                      styles.toggleButtonText,
+                      form.is_active === 1 && styles.toggleButtonTextActive,
+                    ]}
+                  >
+                    Active
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.toggleButton,
+                    form.is_active === 0 && styles.toggleButtonActive,
+                  ]}
+                  onPress={() => setForm((current) => ({ ...current, is_active: 0 }))}
+                >
+                  <Text
+                    style={[
+                      styles.toggleButtonText,
+                      form.is_active === 0 && styles.toggleButtonTextActive,
+                    ]}
+                  >
+                    Inactive
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
 
