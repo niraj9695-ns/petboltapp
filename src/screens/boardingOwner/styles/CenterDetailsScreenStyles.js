@@ -54,7 +54,6 @@ export default StyleSheet.create({
   },
   card: {
     backgroundColor: "#fff",
-    marginHorizontal: 16,
     marginTop: 16,
     padding: 18,
     borderRadius: 18,

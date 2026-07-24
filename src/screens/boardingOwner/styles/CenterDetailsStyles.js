@@ -19,6 +19,7 @@ export default StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 12,
     backgroundColor: "#fff",
+    borderRadius: 18,
   },
 
   backButton: {
@@ -63,8 +64,8 @@ export default StyleSheet.create({
   },
 
   card: {
+    width: "100%",
     backgroundColor: "#fff",
-    marginHorizontal: 16,
     marginTop: 16,
     padding: 18,
     borderRadius: 18,
@@ -76,7 +77,6 @@ export default StyleSheet.create({
     },
     shadowOpacity: 0.08,
     shadowRadius: 4,
-
     elevation: 4,
   },
 
@@ -124,6 +124,8 @@ export default StyleSheet.create({
   },
 
   editButton: {
+    backgroundColor: "#6b21a8",
+    marginVertical: 20,
     backgroundColor: "#6b21a8",
     marginHorizontal: 16,
     marginVertical: 20,

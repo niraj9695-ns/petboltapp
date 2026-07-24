@@ -169,6 +169,16 @@ export default StyleSheet.create({
     backgroundColor: COLORS.lightPurple,
     marginBottom: 14,
   },
+  errorInput: {
+    borderColor: "#dc2626",
+    backgroundColor: "#fef2f2",
+  },
+  errorText: {
+    color: "#b91c1c",
+    fontSize: 12,
+    marginBottom: 12,
+    marginTop: -4,
+  },
   rejectButton: {
     backgroundColor: COLORS.secondary,
     borderRadius: 16,
@@ -189,5 +199,85 @@ export default StyleSheet.create({
   statusText: {
     fontWeight: "700",
     textTransform: "capitalize",
+  },
+  switchRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+
+  dateButton: {
+    padding: 14,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "#e9d8fd",
+    marginBottom: 10,
+    backgroundColor: "#faf5ff",
+  },
+
+  input: {
+    borderWidth: 1,
+    borderColor: "#e9d8fd",
+    borderRadius: 14,
+    padding: 14,
+    marginBottom: 12,
+    backgroundColor: "#fff",
+  },
+
+  primaryButton: {
+    backgroundColor: "#6b21a8",
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: "center",
+  },
+
+  primaryButtonText: {
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 15,
+  },
+
+  dateButton: {
+    borderWidth: 1,
+    borderColor: "#e9d8fd",
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 10,
+    backgroundColor: "#faf5ff",
+  },
+
+  input: {
+    borderWidth: 1,
+    borderColor: "#e9d8fd",
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+    backgroundColor: "#fff",
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  expandIcon: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#6b21a8",
+  },
+
+  completedBox: {
+    marginTop: 12,
+    padding: 14,
+    borderRadius: 12,
+    backgroundColor: "#DCFCE7",
+    borderWidth: 1,
+    borderColor: "#86EFAC",
+  },
+
+  completedText: {
+    color: "#166534",
+    fontWeight: "600",
   },
 });

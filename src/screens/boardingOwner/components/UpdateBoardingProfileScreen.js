@@ -80,7 +80,6 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
         special_instructions: profile.special_instructions || "",
       });
     } catch (error) {
-      console.log(error);
       Alert.alert("Error", "Unable to load profile");
     } finally {
       setLoading(false);
@@ -143,7 +142,6 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
         Alert.alert("Error", response.message);
       }
     } catch (error) {
-      console.log(error);
       Alert.alert("Error", "Update Failed");
     } finally {
       setSaving(false);
@@ -240,7 +238,9 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
               <Input
                 label="Registration License Number"
                 value={form.registration_license_number}
-                onChangeText={(v) => updateField("registration_license_number", v)}
+                onChangeText={(v) =>
+                  updateField("registration_license_number", v)
+                }
               />
               <Input
                 label="Insurance Policy Number"

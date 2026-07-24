@@ -139,8 +139,6 @@ export default function PetScreen({ navigation }) {
 
       setPetImages(imagesObj);
     } catch (error) {
-      console.log(error);
-
       Alert.alert("Error", "Failed to fetch pets");
     } finally {
       setLoading(false);
@@ -154,16 +152,10 @@ export default function PetScreen({ navigation }) {
     try {
       const image = selectedImages[indexToRemove];
 
-      console.log("DELETE IMAGE =", image);
-
       if (image?.isExisting) {
         const imageId = image.image_id || image.id;
 
-        console.log("IMAGE ID =", imageId);
-
         const success = await deletePetImageApi(imageId);
-
-        console.log("DELETE RESPONSE =", success);
 
         if (!success) {
           Alert.alert("Error", "Failed to delete image");
@@ -175,7 +167,6 @@ export default function PetScreen({ navigation }) {
         prev.filter((_, index) => index !== indexToRemove),
       );
     } catch (error) {
-      console.log("REMOVE ERROR =", error);
       Alert.alert("Error", "Failed to remove image");
     }
   };
@@ -202,8 +193,6 @@ export default function PetScreen({ navigation }) {
         setSelectedImages((prev) => [...prev, ...result.assets]);
       }
     } catch (error) {
-      console.log(error);
-
       Alert.alert("Error", "Image picker failed");
     }
   };
@@ -333,9 +322,7 @@ export default function PetScreen({ navigation }) {
             const json = JSON.parse(response.data);
 
             petId = json?.data?.pet_id || json?.data?.id || json?.pet_id;
-          } catch (e) {
-            console.log(e);
-          }
+          } catch (e) {}
 
           // UPLOAD IMAGES
           if (petId && selectedImages.length > 0) {
@@ -352,8 +339,6 @@ export default function PetScreen({ navigation }) {
         }
       }
     } catch (error) {
-      console.log(error);
-
       Alert.alert("Error", "Something went wrong");
     } finally {
       setLoading(false);
@@ -381,8 +366,6 @@ export default function PetScreen({ navigation }) {
               loadPets();
             }
           } catch (error) {
-            console.log(error);
-
             Alert.alert("Error", "Delete failed");
           }
         },
@@ -400,8 +383,6 @@ export default function PetScreen({ navigation }) {
 
       // FETCH FULL PET DETAILS
       const fullPet = await fetchPetByIdApi(id);
-
-      console.log("FULL PET =", fullPet);
 
       setEditingId(id);
 
@@ -537,8 +518,6 @@ export default function PetScreen({ navigation }) {
 
       setShowForm(true);
     } catch (error) {
-      console.log(error);
-
       Alert.alert("Error", "Failed to load pet details");
     } finally {
       setLoading(false);

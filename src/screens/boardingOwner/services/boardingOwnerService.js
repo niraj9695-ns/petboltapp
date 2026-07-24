@@ -276,7 +276,8 @@ export const deleteCenterImage = async (centerId, imagePath) => {
       return {
         success: false,
         localOnly: true,
-        message: "The delete-image endpoint is not available on the server right now.",
+        message:
+          "The delete-image endpoint is not available on the server right now.",
       };
     }
 
@@ -294,21 +295,37 @@ export const getOwnerBookings = async () => {
   return response.data;
 };
 
-export const rejectBooking = async (bookingId, rejectReason) => {
-  const headers = await getAuthHeaders();
+export const updateBookingStatus = async (
+  bookingId,
+  status,
+  rejectReason = "",
+) => {
+  const token = await AsyncStorage.getItem("token");
+
   const formData = new FormData();
+  formData.append("booking_id", bookingId);
+  formData.append("status", status);
 
-  formData.append("booking_id", String(bookingId));
-  formData.append("reject_reason", rejectReason);
+  if (rejectReason) {
+    formData.append("reject_reason", rejectReason);
+  }
 
-  const response = await axios.post(`${BASE_URL}/api/bookings/reject`, formData, {
-    headers: {
-      ...headers,
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/api/bookings/update-status`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const getBookingDetails = async (bookingId) => {
@@ -317,6 +334,23 @@ export const getBookingDetails = async (bookingId) => {
   const response = await axios.get(`${BASE_URL}/api/bookings/${bookingId}`, {
     headers,
   });
+
+  return response.data;
+};
+
+export const setPickupDropTime = async (payload) => {
+  const headers = await getAuthHeaders();
+
+  const response = await axios.post(
+    `${BASE_URL}/api/bookings/set-pickup-drop`,
+    payload,
+    {
+      headers: {
+        ...headers,
+        "Content-Type": "application/json",
+      },
+    },
+  );
 
   return response.data;
 };

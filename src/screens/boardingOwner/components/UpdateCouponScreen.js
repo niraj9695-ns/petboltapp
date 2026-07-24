@@ -17,7 +17,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { useRefresh } from "../../../context/RefreshContext";
 import { updateDateDiscount } from "../services/boardingOwnerService";
-import styles from "../styles/BoardingCouponsStyles";
+import styles from "../styles/UpdateCouponStyles";
 
 const buildForm = (discount) => ({
   discount_value: String(discount?.discount_value ?? ""),
@@ -27,7 +27,11 @@ const buildForm = (discount) => ({
 });
 
 const formatDateValue = (date) => {
-  const normalized = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const normalized = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+  );
   const year = normalized.getFullYear();
   const month = String(normalized.getMonth() + 1).padStart(2, "0");
   const day = String(normalized.getDate()).padStart(2, "0");
@@ -79,7 +83,6 @@ export default function UpdateCouponScreen() {
       Alert.alert("Success", "Coupon updated successfully.");
       navigation.goBack();
     } catch (error) {
-      console.log(error);
       Alert.alert("Error", "Unable to update coupon right now.");
     } finally {
       setSaving(false);
@@ -102,23 +105,38 @@ export default function UpdateCouponScreen() {
         style={styles.flexOne}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.backButton}
+            >
               <Ionicons name="arrow-back" size={22} color="#111827" />
             </TouchableOpacity>
 
             <View style={{ flex: 1, marginLeft: 10 }}>
               <Text style={styles.title}>Update Coupon</Text>
-              <Text style={styles.subtitle}>Edit the selected date discount</Text>
+              <Text style={styles.subtitle}>
+                Edit the selected date discount
+              </Text>
             </View>
           </View>
 
           <View style={styles.formCard}>
             <View style={styles.fieldGroup}>
-              <Label label="Discount value" required error={showFieldError(form.discount_value)} />
+              <Label
+                label="Discount value"
+                required
+                error={showFieldError(form.discount_value)}
+              />
               <TextInput
-                style={[styles.input, showFieldError(form.discount_value) && styles.inputError]}
+                style={[
+                  styles.input,
+                  showFieldError(form.discount_value) && styles.inputError,
+                ]}
                 keyboardType="numeric"
                 placeholder="15"
                 value={form.discount_value}
@@ -131,9 +149,16 @@ export default function UpdateCouponScreen() {
 
             <View style={styles.rowFields}>
               <View style={[styles.fieldGroup, styles.flexHalf]}>
-                <Label label="Min stay (days)" required error={showFieldError(form.min_days)} />
+                <Label
+                  label="Min stay (days)"
+                  required
+                  error={showFieldError(form.min_days)}
+                />
                 <TextInput
-                  style={[styles.input, showFieldError(form.min_days) && styles.inputError]}
+                  style={[
+                    styles.input,
+                    showFieldError(form.min_days) && styles.inputError,
+                  ]}
                   keyboardType="numeric"
                   placeholder="3"
                   value={form.min_days}
@@ -145,13 +170,25 @@ export default function UpdateCouponScreen() {
               </View>
 
               <View style={[styles.fieldGroup, styles.flexHalf]}>
-                <Label label="Expiry date" required error={showFieldError(form.expiry_date)} />
+                <Label
+                  label="Expiry date"
+                  required
+                  error={showFieldError(form.expiry_date)}
+                />
                 <TouchableOpacity
                   onPress={() => setShowDatePicker(true)}
                   activeOpacity={0.8}
-                  style={[styles.dateButton, showFieldError(form.expiry_date) && styles.inputError]}
+                  style={[
+                    styles.dateButton,
+                    showFieldError(form.expiry_date) && styles.inputError,
+                  ]}
                 >
-                  <Text style={[styles.dateButtonText, !form.expiry_date && styles.dateButtonPlaceholder]}>
+                  <Text
+                    style={[
+                      styles.dateButtonText,
+                      !form.expiry_date && styles.dateButtonPlaceholder,
+                    ]}
+                  >
                     {form.expiry_date || "Select expiry date"}
                   </Text>
                   <Text style={styles.dateButtonIcon}>📅</Text>
@@ -167,7 +204,9 @@ export default function UpdateCouponScreen() {
                     styles.toggleButton,
                     form.is_active === 1 && styles.toggleButtonActive,
                   ]}
-                  onPress={() => setForm((current) => ({ ...current, is_active: 1 }))}
+                  onPress={() =>
+                    setForm((current) => ({ ...current, is_active: 1 }))
+                  }
                 >
                   <Text
                     style={[
@@ -183,7 +222,9 @@ export default function UpdateCouponScreen() {
                     styles.toggleButton,
                     form.is_active === 0 && styles.toggleButtonActive,
                   ]}
-                  onPress={() => setForm((current) => ({ ...current, is_active: 0 }))}
+                  onPress={() =>
+                    setForm((current) => ({ ...current, is_active: 0 }))
+                  }
                 >
                   <Text
                     style={[
@@ -199,7 +240,9 @@ export default function UpdateCouponScreen() {
 
             {showDatePicker ? (
               <DateTimePicker
-                value={form.expiry_date ? new Date(form.expiry_date) : new Date()}
+                value={
+                  form.expiry_date ? new Date(form.expiry_date) : new Date()
+                }
                 mode="date"
                 display={Platform.OS === "ios" ? "spinner" : "default"}
                 onChange={(event, selectedDate) => {
@@ -216,7 +259,11 @@ export default function UpdateCouponScreen() {
               />
             ) : null}
 
-            <TouchableOpacity style={styles.primaryButton} onPress={submitCoupon} disabled={saving}>
+            <TouchableOpacity
+              style={styles.primaryButton}
+              onPress={submitCoupon}
+              disabled={saving}
+            >
               {saving ? (
                 <ActivityIndicator color="#fff" size="small" />
               ) : (

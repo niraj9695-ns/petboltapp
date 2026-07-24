@@ -23,11 +23,8 @@ export default function PetDetailsScreen({ route }) {
     try {
       const data = await fetchPetByIdApi(petId);
 
-      console.log("PET DETAILS =>", JSON.stringify(data, null, 2));
-
       setPetData(data);
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
     }

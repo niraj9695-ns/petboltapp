@@ -41,7 +41,6 @@ export default function BoardingProfileScreen({ navigation }) {
         setProfile(response.data.data);
       }
     } catch (error) {
-      console.log("PROFILE ERROR =>", error.response?.data || error.message);
     } finally {
       setLoading(false);
     }
@@ -118,7 +117,6 @@ export default function BoardingProfileScreen({ navigation }) {
         );
       }
     } catch (error) {
-      console.log("DOCUMENT OPEN ERROR =>", error);
       Alert.alert("Error", "Failed to open document");
     }
   };
@@ -133,7 +131,9 @@ export default function BoardingProfileScreen({ navigation }) {
             </Text>
           </View>
 
-          <Text style={styles.name}>{profile?.full_name || "Boarding Owner"}</Text>
+          <Text style={styles.name}>
+            {profile?.full_name || "Boarding Owner"}
+          </Text>
           <Text style={styles.email}>{profile?.email}</Text>
 
           <View style={styles.roleBadge}>
@@ -198,8 +198,14 @@ export default function BoardingProfileScreen({ navigation }) {
           "Vet & Operations",
           <>
             <Info label="Vet Clinic Name" value={profile.vet_clinic_name} />
-            <Info label="Vet Clinic Address" value={profile.vet_clinic_address} />
-            <Info label="Vet Clinic Contact" value={profile.vet_clinic_contact} />
+            <Info
+              label="Vet Clinic Address"
+              value={profile.vet_clinic_address}
+            />
+            <Info
+              label="Vet Clinic Contact"
+              value={profile.vet_clinic_contact}
+            />
             <Info label="Opening Time" value={profile.opening_time} />
             <Info label="Closing Time" value={profile.closing_time} />
             <Info
@@ -218,7 +224,9 @@ export default function BoardingProfileScreen({ navigation }) {
                 style={styles.documentBtn}
                 onPress={() => openDocument(profile.aadhar_file)}
               >
-                <Text style={styles.documentBtnText}>View Aadhaar Document</Text>
+                <Text style={styles.documentBtnText}>
+                  View Aadhaar Document
+                </Text>
               </TouchableOpacity>
               <Text style={styles.documentHint}>File Type: PDF</Text>
             </>
@@ -231,7 +239,10 @@ export default function BoardingProfileScreen({ navigation }) {
           ? renderSection(
               "image",
               "Profile Image",
-              <Image source={{ uri: profile.profile_image }} style={styles.profileImage} />,
+              <Image
+                source={{ uri: profile.profile_image }}
+                style={styles.profileImage}
+              />,
             )
           : null}
 

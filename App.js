@@ -59,7 +59,7 @@ const [guestRole, setGuestRole] =
     setGuestRole(guestRole);
 
   } catch (error) {
-    console.log(error);
+    
   } finally {
     setLoading(false);
   }

@@ -75,8 +75,6 @@ export default function BoardingBookingScreen({ route, navigation }) {
 
       const data = await response.json();
 
-      console.log("PETS RESPONSE:", JSON.stringify(data, null, 2));
-
       const petList = data.data || [];
 
       setPets(petList);
@@ -84,9 +82,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
       if (petList.length > 0) {
         setSelectedPetId(petList[0].pet_id || petList[0].id);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const getCapacity = async () => {
@@ -99,11 +95,8 @@ export default function BoardingBookingScreen({ route, navigation }) {
 
       const data = await response.json();
 
-      console.log("Capacity:", data);
-
       setCapacity(data);
     } catch (error) {
-      console.log(error);
     } finally {
       setLoadingCapacity(false);
     }
@@ -130,12 +123,8 @@ export default function BoardingBookingScreen({ route, navigation }) {
 
       const data = await response.json();
 
-      console.log("Availability:", data);
-
       setAvailable(data);
     } catch (error) {
-      console.log(error);
-
       Alert.alert("Error", "Failed to check availability");
     } finally {
       setCheckingAvailability(false);
@@ -178,8 +167,6 @@ export default function BoardingBookingScreen({ route, navigation }) {
 
       const data = await response.json();
 
-      console.log("Booking:", data);
-
       if (data.status === "success") {
         Alert.alert("Success", "Booking created successfully");
 
@@ -188,8 +175,6 @@ export default function BoardingBookingScreen({ route, navigation }) {
         Alert.alert("Failed", data.message || "Booking creation failed");
       }
     } catch (error) {
-      console.log(error);
-
       Alert.alert("Error", "Unable to create booking");
     } finally {
       setBookingLoading(false);

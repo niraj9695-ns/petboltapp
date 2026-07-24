@@ -16,99 +16,63 @@ const API_URL = "https://www.cgpisoftware.com/cheerytail";
 export default function ProfileScreen({ navigation }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-const [isGuest, setIsGuest] =
-  useState(false);
+  const [isGuest, setIsGuest] = useState(false);
   useEffect(() => {
     fetchProfile();
   }, []);
 
   const fetchProfile = async () => {
-  try {
-    const token =
-      await AsyncStorage.getItem(
-        "token"
-      );
+    try {
+      const token = await AsyncStorage.getItem("token");
 
-    const guestRole =
-      await AsyncStorage.getItem(
-        "guestRole"
-      );
+      const guestRole = await AsyncStorage.getItem("guestRole");
 
-    console.log(
-      "TOKEN =>",
-      token
-    );
+      // GUEST USER
+      if (!token) {
+        if (guestRole) {
+          setIsGuest(true);
+        }
 
-    console.log(
-      "GUEST ROLE =>",
-      guestRole
-    );
-
-    // GUEST USER
-    if (!token) {
-      if (guestRole) {
-        setIsGuest(true);
+        return;
       }
 
-      return;
-    }
-
-      const response = await fetch(
-        `${API_URL}/api/user/profile`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${API_URL}/api/user/profile`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
 
       const result = await response.json();
 
-      console.log(
-        "PROFILE RESPONSE =>",
-        JSON.stringify(result, null, 2)
-      );
+      if (response.ok && result.status === "success") {
+        const details = result.data.owner_details || {};
 
-     if (response.ok && result.status === "success") {
-  const details = result.data.owner_details || {};
+        setUser({
+          id: result.data.id,
+          role: result.data.role,
+          email_verified: result.data.email_verified,
 
-  setUser({
-    id: result.data.id,
-    role: result.data.role,
-    email_verified: result.data.email_verified,
+          full_name: details.full_name || "",
+          email: details.email || "",
+          phone: details.mobile_number || "",
+          alternate_phone: details.alternate_contact_number || "",
 
-    full_name: details.full_name || "",
-    email: details.email || "",
-    phone: details.mobile_number || "",
-    alternate_phone:
-      details.alternate_contact_number || "",
+          address: details.residential_address || "",
 
-    address:
-      details.residential_address || "",
+          emergency_name: details.emergency_contact_name || "",
 
-    emergency_name:
-      details.emergency_contact_name || "",
+          emergency_number: details.emergency_contact_number || "",
 
-    emergency_number:
-      details.emergency_contact_number || "",
+          aadhar_file: details.aadhar_file || "",
 
-    aadhar_file:
-      details.aadhar_file || "",
+          created_at: result.data.created_at || "",
 
-    created_at:
-      result.data.created_at || "",
-
-    updated_at:
-      result.data.updated_at || "",
-  });
-}
+          updated_at: result.data.updated_at || "",
+        });
+      }
     } catch (error) {
-      console.log(
-        "PROFILE ERROR =>",
-        error
-      );
     } finally {
       setLoading(false);
     }
@@ -117,83 +81,76 @@ const [isGuest, setIsGuest] =
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator
-          size="large"
-          color="#6b21a8"
-        />
+        <ActivityIndicator size="large" color="#6b21a8" />
       </View>
     );
   }
-if (isGuest) {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 20,
-      }}
-    >
-      <Image
-        source={{
-          uri: "https://i.pravatar.cc/150?img=12",
-        }}
+  if (isGuest) {
+    return (
+      <View
         style={{
-          width: 100,
-          height: 100,
-          borderRadius: 50,
-          marginBottom: 20,
-        }}
-      />
-
-      <Text
-        style={{
-          fontSize: 24,
-          fontWeight: "bold",
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
         }}
       >
-        Guest User
-      </Text>
+        <Image
+          source={{
+            uri: "https://i.pravatar.cc/150?img=12",
+          }}
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 50,
+            marginBottom: 20,
+          }}
+        />
 
-      <Text
-        style={{
-          textAlign: "center",
-          marginTop: 10,
-          color: "#666",
-        }}
-      >
-        Sign in or create an account
-        to view your profile,
-        pets, bookings and other
-        personal information.
-      </Text>
-
-      <TouchableOpacity
-        style={{
-          backgroundColor: "#6b21a8",
-          paddingHorizontal: 30,
-          paddingVertical: 14,
-          borderRadius: 12,
-          marginTop: 25,
-        }}
-        onPress={async () => {
-          await AsyncStorage.removeItem(
-            "guestRole"
-          );
-        }}
-      >
         <Text
           style={{
-            color: "#fff",
+            fontSize: 24,
             fontWeight: "bold",
           }}
         >
-          Sign In / Sign Up
+          Guest User
         </Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
+
+        <Text
+          style={{
+            textAlign: "center",
+            marginTop: 10,
+            color: "#666",
+          }}
+        >
+          Sign in or create an account to view your profile, pets, bookings and
+          other personal information.
+        </Text>
+
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#6b21a8",
+            paddingHorizontal: 30,
+            paddingVertical: 14,
+            borderRadius: 12,
+            marginTop: 25,
+          }}
+          onPress={async () => {
+            await AsyncStorage.removeItem("guestRole");
+          }}
+        >
+          <Text
+            style={{
+              color: "#fff",
+              fontWeight: "bold",
+            }}
+          >
+            Sign In / Sign Up
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
   return (
     <ScrollView
       style={styles.wrapper}
@@ -202,19 +159,14 @@ if (isGuest) {
       }}
     >
       <LinearGradient
-        colors={[
-          "#fff1e6",
-          "#ffe4f0",
-          "#f3e8ff",
-        ]}
+        colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
         style={styles.container}
       >
         {/* Profile Image */}
         <View style={styles.avatarWrapper}>
           <Image
             source={{
-              uri:
-                "https://i.pravatar.cc/150?img=12",
+              uri: "https://i.pravatar.cc/150?img=12",
             }}
             style={styles.avatar}
           />
@@ -230,126 +182,71 @@ if (isGuest) {
         </View>
 
         {/* Name */}
-       <Text style={styles.name}>
-  {user?.full_name || "User"}
-</Text>
+        <Text style={styles.name}>{user?.full_name || "User"}</Text>
 
-<View style={styles.infoCard}>
-  <Text style={styles.label}>Email</Text>
-  <Text style={styles.value}>
-    {user?.email}
-  </Text>
+        <View style={styles.infoCard}>
+          <Text style={styles.label}>Email</Text>
+          <Text style={styles.value}>{user?.email}</Text>
 
-  <Text style={styles.label}>
-    Mobile Number
-  </Text>
-  <Text style={styles.value}>
-    {user?.phone}
-  </Text>
+          <Text style={styles.label}>Mobile Number</Text>
+          <Text style={styles.value}>{user?.phone}</Text>
 
-  <Text style={styles.label}>
-    Alternate Contact Number
-  </Text>
-  <Text style={styles.value}>
-    {user?.alternate_phone}
-  </Text>
+          <Text style={styles.label}>Alternate Contact Number</Text>
+          <Text style={styles.value}>{user?.alternate_phone}</Text>
 
-  <Text style={styles.label}>
-    Residential Address
-  </Text>
-  <Text style={styles.value}>
-    {user?.address}
-  </Text>
+          <Text style={styles.label}>Residential Address</Text>
+          <Text style={styles.value}>{user?.address}</Text>
 
-  <Text style={styles.label}>
-    Emergency Contact Name
-  </Text>
-  <Text style={styles.value}>
-    {user?.emergency_name}
-  </Text>
+          <Text style={styles.label}>Emergency Contact Name</Text>
+          <Text style={styles.value}>{user?.emergency_name}</Text>
 
-  <Text style={styles.label}>
-    Emergency Contact Number
-  </Text>
-  <Text style={styles.value}>
-    {user?.emergency_number}
-  </Text>
+          <Text style={styles.label}>Emergency Contact Number</Text>
+          <Text style={styles.value}>{user?.emergency_number}</Text>
 
-  <Text style={styles.label}>Role</Text>
-  <Text style={styles.value}>
-    {user?.role}
-  </Text>
+          <Text style={styles.label}>Role</Text>
+          <Text style={styles.value}>{user?.role}</Text>
 
-  <Text style={styles.label}>
-    Email Verification
-  </Text>
-  <Text style={styles.value}>
-    {user?.email_verified
-      ? "Verified ✅"
-      : "Not Verified ❌"}
-  </Text>
+          <Text style={styles.label}>Email Verification</Text>
+          <Text style={styles.value}>
+            {user?.email_verified ? "Verified ✅" : "Not Verified ❌"}
+          </Text>
 
-  <Text style={styles.label}>
-    Account Created
-  </Text>
-  <Text style={styles.value}>
-    {user?.created_at}
-  </Text>
+          <Text style={styles.label}>Account Created</Text>
+          <Text style={styles.value}>{user?.created_at}</Text>
 
-  <Text style={styles.label}>
-    Last Updated
-  </Text>
-  <Text style={styles.value}>
-    {user?.updated_at}
-  </Text>
-</View>
+          <Text style={styles.label}>Last Updated</Text>
+          <Text style={styles.value}>{user?.updated_at}</Text>
+        </View>
 
-{user?.aadhar_file ? (
-  <>
-    <Text style={styles.docTitle}>
-      Aadhaar Document
-    </Text>
+        {user?.aadhar_file ? (
+          <>
+            <Text style={styles.docTitle}>Aadhaar Document</Text>
 
-    <Image
-      source={{
-        uri: user.aadhar_file,
-      }}
-      style={styles.aadharImage}
-      resizeMode="cover"
-    />
-  </>
-) : null}
+            <Image
+              source={{
+                uri: user.aadhar_file,
+              }}
+              style={styles.aadharImage}
+              resizeMode="cover"
+            />
+          </>
+        ) : null}
         {/* Description */}
         <Text style={styles.desc}>
-          Manage your pets, bookings,
-          and preferences in one place.
+          Manage your pets, bookings, and preferences in one place.
         </Text>
 
         {/* Buttons */}
         <View style={styles.btnRow}>
-          <TouchableOpacity
-            style={styles.primaryBtn}
-          >
-            <Text
-              style={styles.primaryBtnText}
-            >
-              Edit Profile
-            </Text>
+          <TouchableOpacity style={styles.primaryBtn}>
+            <Text style={styles.primaryBtnText}>Edit Profile</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.secondaryBtn}
-            onPress={() =>
-              navigation.navigate("Pets")
-            }
+            onPress={() => navigation.navigate("Pets")}
           >
-            <Text
-              style={
-                styles.secondaryBtnText
-              }
-            >
-              My Pets
-            </Text>
+            <Text style={styles.secondaryBtnText}>My Pets</Text>
           </TouchableOpacity>
         </View>
       </LinearGradient>
@@ -471,38 +368,38 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   infoCard: {
-  width: "100%",
-  backgroundColor: "#fff",
-  borderRadius: 15,
-  padding: 16,
-  marginTop: 20,
-  marginBottom: 20,
-},
+    width: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 15,
+    padding: 16,
+    marginTop: 20,
+    marginBottom: 20,
+  },
 
-label: {
-  fontSize: 12,
-  color: "#888",
-  fontWeight: "600",
-  marginTop: 10,
-},
+  label: {
+    fontSize: 12,
+    color: "#888",
+    fontWeight: "600",
+    marginTop: 10,
+  },
 
-value: {
-  fontSize: 15,
-  color: "#222",
-  marginTop: 4,
-},
+  value: {
+    fontSize: 15,
+    color: "#222",
+    marginTop: 4,
+  },
 
-docTitle: {
-  fontSize: 16,
-  fontWeight: "bold",
-  marginBottom: 10,
-  alignSelf: "flex-start",
-},
+  docTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+    alignSelf: "flex-start",
+  },
 
-aadharImage: {
-  width: "100%",
-  height: 220,
-  borderRadius: 15,
-  marginBottom: 20,
-},
+  aadharImage: {
+    width: "100%",
+    height: 220,
+    borderRadius: 15,
+    marginBottom: 20,
+  },
 });

@@ -67,8 +67,6 @@ function BoardingOwnerDrawerContent({ navigation }) {
 
       Alert.alert("Success", "Logged out successfully");
     } catch (error) {
-      console.log(error);
-
       Alert.alert("Error", "Logout failed");
     }
   };

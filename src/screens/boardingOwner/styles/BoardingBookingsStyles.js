@@ -41,6 +41,7 @@ export default StyleSheet.create({
     borderRadius: 18,
     padding: 16,
     marginBottom: 14,
+    alignSelf: "center",
     borderWidth: 1,
     borderColor: COLORS.border,
     elevation: 3,

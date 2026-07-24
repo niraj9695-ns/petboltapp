@@ -83,8 +83,6 @@ function CustomDrawerContent({ navigation }) {
       //   routes: [{ name: "Auth" }],
       // });
     } catch (error) {
-      console.log(error);
-
       Alert.alert("Error", "Logout failed");
     }
   };

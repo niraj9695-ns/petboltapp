@@ -37,8 +37,6 @@ export default function BoardingCentersScreen({ navigation, route }) {
 
       const url = `https://www.cgpisoftware.com/cheerytail/api/boarding/list?${queryParams.toString()}`;
 
-      console.log("Boarding API:", url);
-
       const response = await fetch(url);
       const data = await response.json();
 
@@ -48,7 +46,6 @@ export default function BoardingCentersScreen({ navigation, route }) {
         setCenters([]);
       }
     } catch (error) {
-      console.log("Boarding List Error:", error);
       setCenters([]);
     } finally {
       setLoading(false);

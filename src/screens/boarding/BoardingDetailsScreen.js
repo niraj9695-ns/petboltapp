@@ -40,7 +40,6 @@ export default function BoardingDetailsScreen({ route, navigation }) {
         setCenter(data.data);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
     }

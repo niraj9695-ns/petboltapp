@@ -153,7 +153,6 @@ export default function UpdateCenterScreen() {
           : data?.boarding_services || "",
       });
     } catch (error) {
-      console.log(error);
       Alert.alert("Error", "Unable to load center details");
     } finally {
       setLoading(false);
@@ -268,7 +267,7 @@ export default function UpdateCenterScreen() {
       });
 
       const response = await updateCenter(formData);
-      console.log("Update Response:", response);
+
       Alert.alert("Success", "Center updated successfully", [
         {
           text: "OK",
@@ -280,7 +279,6 @@ export default function UpdateCenterScreen() {
         },
       ]);
     } catch (error) {
-      console.log(error);
       Alert.alert("Error", "Failed to update center");
     } finally {
       setSaving(false);
@@ -336,7 +334,6 @@ export default function UpdateCenterScreen() {
               Alert.alert("Success", "Image deleted successfully");
             }
           } catch (error) {
-            console.log(error);
             Alert.alert("Error", "Failed to delete image");
           } finally {
             setDeletingImageIndex(null);
@@ -379,9 +376,7 @@ export default function UpdateCenterScreen() {
           setInsuranceDocument(file);
         }
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   if (loading) {

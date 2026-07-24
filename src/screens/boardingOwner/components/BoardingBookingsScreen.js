@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
@@ -18,6 +19,17 @@ export default function BoardingBookingsScreen({ navigation }) {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const { width } = useWindowDimensions();
+
+  const numColumns = width >= 1200 ? 3 : width >= 768 ? 2 : 1;
+
+  const cardWidth =
+    numColumns === 1
+      ? width - 32
+      : numColumns === 2
+        ? (width - 48) / 2
+        : (width - 64) / 3;
+
   const loadBookings = useCallback(async () => {
     setLoading(true);
 
@@ -28,7 +40,6 @@ export default function BoardingBookingsScreen({ navigation }) {
         setBookings(response.data);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -37,7 +48,7 @@ export default function BoardingBookingsScreen({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       loadBookings();
-    }, [loadBookings])
+    }, [loadBookings]),
   );
 
   useEffect(() => {
@@ -46,7 +57,12 @@ export default function BoardingBookingsScreen({ navigation }) {
 
   const renderBooking = ({ item }) => (
     <TouchableOpacity
-      style={styles.card}
+      style={[
+        styles.card,
+        {
+          width: cardWidth,
+        },
+      ]}
       onPress={() =>
         navigation.navigate("BookingDetails", {
           booking: item,
@@ -91,12 +107,24 @@ export default function BoardingBookingsScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Bookings</Text>
-        <Text style={styles.headerSubtitle}>Manage upcoming requests and stays</Text>
+        <Text style={styles.headerSubtitle}>
+          Manage upcoming requests and stays
+        </Text>
       </View>
       <FlatList
         data={bookings}
+        key={numColumns}
+        numColumns={numColumns}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderBooking}
+        columnWrapperStyle={
+          numColumns > 1
+            ? {
+                justifyContent: "space-between",
+                marginBottom: 12,
+              }
+            : undefined
+        }
         contentContainerStyle={styles.list}
         ListEmptyComponent={
           <Text style={styles.emptyText}>No bookings found</Text>
