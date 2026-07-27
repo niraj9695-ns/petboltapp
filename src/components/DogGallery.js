@@ -5,12 +5,8 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  StyleSheet,
-  Dimensions,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-const screenWidth = Dimensions.get("window").width;
+import dogGalleryStyles from "../styles/DogGalleryStyles";
 
 export default function DogGallery() {
   const services = [
@@ -52,13 +48,13 @@ export default function DogGallery() {
   ];
 
   return (
-    <View style={styles.section}>
+    <View style={dogGalleryStyles.section}>
       {/* Heading */}
-      <Text style={styles.title}>
-        <Text style={{ color: "#f97316" }}>Happy Dogs Gallery</Text>
+      <Text style={dogGalleryStyles.title}>
+        <Text style={{ color: "#6b21a8" }}>Happy Dogs Gallery</Text>
       </Text>
 
-      <Text style={styles.subtitle}>
+      <Text style={dogGalleryStyles.subtitle}>
         Real moments from our boarding & care 🐾
       </Text>
 
@@ -66,19 +62,19 @@ export default function DogGallery() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scroll}
+        contentContainerStyle={dogGalleryStyles.scroll}
       >
         {services.map((item, index) => (
-          <TouchableOpacity key={index} style={styles.card}>
+          <TouchableOpacity key={index} style={dogGalleryStyles.card}>
             {/* Image */}
-            <Image source={{ uri: item.img }} style={styles.image} />
+            <Image source={{ uri: item.img }} style={dogGalleryStyles.image} />
 
             {/* Content */}
-            <View style={styles.content}>
-              <Text style={styles.name}>{item.title}</Text>
-              <Text style={styles.desc}>{item.desc}</Text>
+            <View style={dogGalleryStyles.content}>
+              <Text style={dogGalleryStyles.name}>{item.title}</Text>
+              <Text style={dogGalleryStyles.desc}>{item.desc}</Text>
 
-              <Text style={styles.link}>View More →</Text>
+              <Text style={dogGalleryStyles.link}>View More →</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -86,68 +82,3 @@ export default function DogGallery() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  section: {
-    paddingVertical: 20,
-    backgroundColor: "#fff",
-  },
-
-  title: {
-    fontSize: 26,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-
-  subtitle: {
-    textAlign: "center",
-    color: "#666",
-    marginTop: 8,
-    marginBottom: 15,
-  },
-
-  scroll: {
-    paddingHorizontal: 15,
-  },
-
-  card: {
-    width: screenWidth * 0.75,
-    backgroundColor: "#fff",
-    borderRadius: 25,
-    marginRight: 15,
-    marginBottom: 10,
-    marginTop: 10,
-    overflow: "hidden",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
-  },
-
-  image: {
-    width: "100%",
-    height: 180,
-  },
-
-  content: {
-    padding: 15,
-  },
-
-  name: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
-
-  desc: {
-    fontSize: 13,
-    color: "#666",
-    marginBottom: 10,
-  },
-
-  link: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#f97316",
-  },
-});

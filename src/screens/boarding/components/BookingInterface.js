@@ -1,19 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   ScrollView,
   Alert,
   TextInput,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import styles from "../styles/BookingInterface";
 
-export default function BookingInterface() {
+export default function BookingInterface({ navigation }) {
   const [pets, setPets] = useState(["Buddy", "Luna", "Max", "Bella"]);
   const [selectedPet, setSelectedPet] = useState("Buddy");
 
@@ -25,10 +26,10 @@ export default function BookingInterface() {
   const [showPicker, setShowPicker] = useState(false);
   const [pickerMode, setPickerMode] = useState("checkin");
 
-  // ✅ NEW STATES FOR ADD PET FORM
   const [showAddPet, setShowAddPet] = useState(false);
   const [newPetName, setNewPetName] = useState("");
   const [newPetType, setNewPetType] = useState("Dog");
+  const [isGuest, setIsGuest] = useState(false);
 
   const pricePerDay = 45;
 
@@ -39,11 +40,38 @@ export default function BookingInterface() {
     return diff > 0 ? diff : 1;
   };
 
+  useEffect(() => {
+    const loadGuestStatus = async () => {
+      const guestRole = await AsyncStorage.getItem("guestRole");
+      setIsGuest(!!guestRole);
+    };
+
+    loadGuestStatus();
+  }, []);
+
+  const promptSignIn = () => {
+    Alert.alert(
+      "Sign in required",
+      "Please sign in or create an account to continue.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Sign In / Sign Up",
+          onPress: () => navigation.navigate("Auth"),
+        },
+      ],
+    );
+  };
+
   const totalDays = calculateDays();
   const totalCost = totalDays * pricePerDay;
 
-  // ✅ ADD PET WITH FORM DATA
   const handleAddPet = () => {
+    if (isGuest) {
+      promptSignIn();
+      return;
+    }
+
     if (!newPetName.trim()) {
       Alert.alert("Error", "Please enter pet name");
       return;
@@ -52,13 +80,17 @@ export default function BookingInterface() {
     setPets([...pets, newPetName]);
     setSelectedPet(newPetName);
 
-    // reset form
     setNewPetName("");
     setNewPetType("Dog");
     setShowAddPet(false);
   };
 
   const handleBooking = () => {
+    if (isGuest) {
+      promptSignIn();
+      return;
+    }
+
     if (checkOutDate <= checkInDate) {
       Alert.alert("Invalid Dates", "Check-out must be after check-in");
       return;
@@ -73,17 +105,17 @@ export default function BookingInterface() {
   return (
     <LinearGradient
       colors={["#faf5ff", "#fdf2f8", "#fff7ed"]}
-      style={styles.container}
+      style={styles.bookingInterfaceContainer}
     >
-      <ScrollView contentContainerStyle={{ padding: 16 }}>
+      <ScrollView contentContainerStyle={styles.bookingInterfaceScroll}>
         {/* TITLE */}
-        <Text style={styles.title}>
-          Book Your Pet's <Text style={styles.gradientText}>Perfect Stay</Text>
+        <Text style={styles.bookingInterfaceTitle}>
+          Book Your Pet's <Text style={styles.bookingInterfaceGradientText}>Perfect Stay</Text>
         </Text>
 
         {/* PET CARD */}
-        <View style={[styles.card, { borderColor: "#e9d5ff" }]}>
-          <Text style={styles.heading}>Select Your Pet</Text>
+        <View style={[styles.bookingInterfaceCard, { borderColor: "#e9d5ff" }]}>
+          <Text style={styles.bookingInterfaceHeading}>Select Your Pet</Text>
 
           {/* Picker */}
           <Picker
@@ -96,22 +128,22 @@ export default function BookingInterface() {
           </Picker>
 
           {/* Chips */}
-          <View style={styles.petRow}>
+          <View style={styles.bookingInterfacePetRow}>
             {pets.map((pet) => (
               <TouchableOpacity key={pet} onPress={() => setSelectedPet(pet)}>
                 <LinearGradient
                   colors={
                     selectedPet === pet
-                      ? ["#fb923c", "#ec4899"]
+                      ? ["#8b5cf6", "#ec4899"]
                       : ["#f1f5f9", "#f1f5f9"]
                   }
-                  style={styles.petChip}
+                  style={styles.bookingInterfacePetChip}
                 >
                   <Text
-                    style={{
-                      color: selectedPet === pet ? "#fff" : "#374151",
-                      fontWeight: "600",
-                    }}
+                    style={[
+                      styles.bookingInterfacePetLabel,
+                      selectedPet === pet && styles.bookingInterfacePetLabelActive,
+                    ]}
                   >
                     {pet}
                   </Text>
@@ -120,13 +152,21 @@ export default function BookingInterface() {
             ))}
 
             {/* ➕ Toggle Add Pet Form */}
-            <TouchableOpacity onPress={() => setShowAddPet(!showAddPet)}>
+            <TouchableOpacity
+              onPress={() => {
+                if (isGuest) {
+                  promptSignIn();
+                  return;
+                }
+                setShowAddPet(!showAddPet);
+              }}
+            >
               <LinearGradient
                 colors={["#e0e7ff", "#c7d2fe"]}
-                style={styles.addPetChip}
+                style={styles.bookingInterfaceAddPetChip}
               >
-                <Text style={{ fontWeight: "bold", color: "#4338ca" }}>
-                  + Add Pet
+                <Text style={styles.bookingInterfaceAddPetLabel}>
+                  {isGuest ? "Sign in to add pet" : "+ Add Pet"}
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
@@ -134,12 +174,12 @@ export default function BookingInterface() {
 
           {/* ✅ ADD PET FORM */}
           {showAddPet && (
-            <View style={styles.addPetBox}>
+            <View style={styles.bookingInterfaceAddPetBox}>
               <TextInput
                 placeholder="Pet name"
                 value={newPetName}
                 onChangeText={setNewPetName}
-                style={styles.input}
+                style={styles.bookingInterfaceInput}
               />
 
               <Picker
@@ -152,8 +192,8 @@ export default function BookingInterface() {
                 <Picker.Item label="Other" value="Other" />
               </Picker>
 
-              <TouchableOpacity style={styles.addButton} onPress={handleAddPet}>
-                <Text style={{ color: "#fff", fontWeight: "bold" }}>
+              <TouchableOpacity style={styles.bookingInterfaceAddButton} onPress={handleAddPet}>
+                <Text style={styles.bookingInterfaceButtonText}>
                   Add Pet
                 </Text>
               </TouchableOpacity>
@@ -162,11 +202,11 @@ export default function BookingInterface() {
         </View>
 
         {/* DATE CARD */}
-        <View style={[styles.card, { borderColor: "#fed7aa" }]}>
-          <Text style={styles.heading}>Choose Dates</Text>
+        <View style={[styles.bookingInterfaceCard, { borderColor: "#e9d5ff" }]}>
+          <Text style={styles.bookingInterfaceHeading}>Choose Dates</Text>
 
           <TouchableOpacity
-            style={styles.dateInput}
+            style={styles.bookingInterfaceDateInput}
             onPress={() => {
               setPickerMode("checkin");
               setShowPicker(true);
@@ -177,7 +217,7 @@ export default function BookingInterface() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.dateInput}
+            style={styles.bookingInterfaceDateInput}
             onPress={() => {
               setPickerMode("checkout");
               setShowPicker(true);
@@ -211,33 +251,29 @@ export default function BookingInterface() {
           {/* SUMMARY */}
           <LinearGradient
             colors={["#fff7ed", "#fdf2f8"]}
-            style={styles.summaryBox}
+            style={styles.bookingInterfaceSummaryBox}
           >
-            <View style={styles.row}>
-              <Text>Total Days</Text>
-              <Text style={{ fontWeight: "bold", color: "#ea580c" }}>
-                {totalDays}
-              </Text>
+            <View style={styles.bookingInterfaceRow}>
+              <Text style={styles.bookingInterfaceSummaryLabel}>Total Days</Text>
+              <Text style={styles.bookingInterfaceSummaryValue}>{totalDays}</Text>
             </View>
 
-            <View style={styles.row}>
-              <Text>₹ {pricePerDay} / day</Text>
-              <Text style={{ color: "#db2777", fontWeight: "bold" }}>
-                ₹{pricePerDay}
-              </Text>
+            <View style={styles.bookingInterfaceRow}>
+              <Text style={styles.bookingInterfaceSummaryLabel}>₹ {pricePerDay} / day</Text>
+              <Text style={styles.bookingInterfaceSummaryAmount}>₹{pricePerDay}</Text>
             </View>
 
-            <View style={styles.row}>
-              <Text style={{ fontWeight: "bold" }}>Total</Text>
-              <Text style={styles.totalText}>₹{totalCost}</Text>
+            <View style={styles.bookingInterfaceRow}>
+              <Text style={styles.bookingInterfaceSummaryLabelBold}>Total</Text>
+              <Text style={styles.bookingInterfaceTotalText}>₹{totalCost}</Text>
             </View>
           </LinearGradient>
         </View>
 
         {/* BUTTON */}
         <TouchableOpacity onPress={handleBooking}>
-          <LinearGradient colors={["#f97316", "#ec4899"]} style={styles.button}>
-            <Text style={styles.buttonText}>Book Now →</Text>
+          <LinearGradient colors={["#6b21a8", "#ec4899"]} style={styles.bookingInterfaceButton}>
+            <Text style={styles.bookingInterfaceButtonText}>Book Now →</Text>
           </LinearGradient>
         </TouchableOpacity>
       </ScrollView>
@@ -245,117 +281,3 @@ export default function BookingInterface() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#1f2937",
-  },
-
-  gradientText: { color: "#f97316" },
-
-  card: {
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 24,
-    marginBottom: 16,
-    borderWidth: 2,
-  },
-
-  heading: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 12,
-    color: "#1f2937",
-  },
-
-  petRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 10,
-    marginTop: 10,
-  },
-
-  petChip: {
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-  },
-
-  addPetChip: {
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-  },
-
-  addPetBox: {
-    marginTop: 12,
-    padding: 12,
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: "#c7d2fe",
-    backgroundColor: "#eef2ff",
-  },
-
-  input: {
-    borderWidth: 2,
-    borderColor: "#c7d2fe",
-    borderRadius: 12,
-    padding: 10,
-    marginBottom: 10,
-  },
-
-  addButton: {
-    backgroundColor: "#f97316",
-    padding: 12,
-    borderRadius: 12,
-    alignItems: "center",
-    marginTop: 10,
-  },
-
-  dateInput: {
-    flexDirection: "row",
-    gap: 10,
-    alignItems: "center",
-    padding: 14,
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: "#fed7aa",
-    marginBottom: 10,
-  },
-
-  summaryBox: {
-    marginTop: 15,
-    padding: 16,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "#fed7aa",
-  },
-
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
-
-  totalText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#ea580c",
-  },
-
-  button: {
-    padding: 18,
-    borderRadius: 20,
-    alignItems: "center",
-  },
-
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-});

@@ -1,66 +1,35 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 
 import * as DocumentPicker from "expo-document-picker";
 import { PasswordInput } from "../inputs/PasswordInput";
 import FloatingInput from "../inputs/FloatingInput";
-export default function PetOwnerRegister({
-  setStep,
-  setOtpType,
-  setEmail,
-}) {
-  const [loading, setLoading] =
-    useState(false);
+import petOwnerRegisterStyles from "../../styles/PetOwnerRegisterStyles";
+export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
+  const [loading, setLoading] = useState(false);
 
-  const [fullName, setFullName] =
-    useState("");
+  const [fullName, setFullName] = useState("");
 
   const [formEmail, setFormEmail] = useState("");
 
-  const [password, setPassword] =
-    useState("");
+  const [password, setPassword] = useState("");
 
-  const [mobileNumber, setMobileNumber] =
-    useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
 
-  const [
-    alternateContactNumber,
-    setAlternateContactNumber,
-  ] = useState("");
+  const [alternateContactNumber, setAlternateContactNumber] = useState("");
 
-  const [
-    residentialAddress,
-    setResidentialAddress,
-  ] = useState("");
+  const [residentialAddress, setResidentialAddress] = useState("");
 
-  const [
-    emergencyContactName,
-    setEmergencyContactName,
-  ] = useState("");
+  const [emergencyContactName, setEmergencyContactName] = useState("");
 
-  const [
-    emergencyContactNumber,
-    setEmergencyContactNumber,
-  ] = useState("");
+  const [emergencyContactNumber, setEmergencyContactNumber] = useState("");
 
-  const [aadharFile, setAadharFile] =
-    useState(null);
+  const [aadharFile, setAadharFile] = useState(null);
 
   const pickAadhar = async () => {
-    const result =
-      await DocumentPicker.getDocumentAsync({
-        type: [
-          "image/*",
-          "application/pdf",
-        ],
-      });
+    const result = await DocumentPicker.getDocumentAsync({
+      type: ["image/*", "application/pdf"],
+    });
 
     if (!result.canceled) {
       setAadharFile(result.assets[0]);
@@ -77,10 +46,7 @@ export default function PetOwnerRegister({
       !emergencyContactName ||
       !emergencyContactNumber
     ) {
-      Alert.alert(
-        "Validation",
-        "Fill all required fields"
-      );
+      Alert.alert("Validation", "Fill all required fields");
       return;
     }
 
@@ -89,124 +55,65 @@ export default function PetOwnerRegister({
 
       const formData = new FormData();
 
-      formData.append(
-        "full_name",
-        fullName
-      );
+      formData.append("full_name", fullName);
 
-      formData.append(
-        "email",
-        formEmail
-      );
+      formData.append("email", formEmail);
 
-      formData.append(
-        "password",
-        password
-      );
+      formData.append("password", password);
 
-      formData.append(
-        "mobile_number",
-        mobileNumber
-      );
+      formData.append("mobile_number", mobileNumber);
 
-      formData.append(
-        "alternate_contact_number",
-        alternateContactNumber
-      );
+      formData.append("alternate_contact_number", alternateContactNumber);
 
-      formData.append(
-        "residential_address",
-        residentialAddress
-      );
+      formData.append("residential_address", residentialAddress);
 
-      formData.append(
-        "emergency_contact_name",
-        emergencyContactName
-      );
+      formData.append("emergency_contact_name", emergencyContactName);
 
-      formData.append(
-        "emergency_contact_number",
-        emergencyContactNumber
-      );
+      formData.append("emergency_contact_number", emergencyContactNumber);
 
-      formData.append(
-        "role",
-        "pet_owner"
-      );
+      formData.append("role", "pet_owner");
 
       if (aadharFile) {
-        formData.append(
-          "aadhar_file",
-          {
-            uri: aadharFile.uri,
-            name:
-              aadharFile.name ||
-              "aadhar.jpg",
-            type:
-              aadharFile.mimeType ||
-              "image/jpeg",
-          }
-        );
+        formData.append("aadhar_file", {
+          uri: aadharFile.uri,
+          name: aadharFile.name || "aadhar.jpg",
+          type: aadharFile.mimeType || "image/jpeg",
+        });
       }
 
-     const response = await fetch(
-       "https://www.cgpisoftware.com/cheerytail/api/auth/register",
-  {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "User-Agent": "PostmanRuntime/7.29.0"
-    },
-    body: formData,
-  }
+      const response = await fetch(
+        "https://www.cgpisoftware.com/cheerytail/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "User-Agent": "PostmanRuntime/7.29.0",
+          },
+          body: formData,
+        },
       );
 
-     const text = await response.text();
+      const text = await response.text();
 
-console.log("=== RAW RESPONSE START ===");
-console.log(text);
-console.log("=== RAW RESPONSE END ===");
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch (e) {
+        Alert.alert("Server Error");
+        return;
+      }
 
-let result;
-try {
-  result = JSON.parse(text);
-} catch (e) {
-  console.log("❌ NOT JSON RESPONSE");
-  Alert.alert("Server Error", "Check console for HTML response");
-  return;
-}
+      if (result.status === true || result.status === "success") {
+        Alert.alert("Success", "OTP sent to your email");
 
-      console.log(
-        "PET OWNER REGISTER =>",
-        result
-      );
-
-   if (
-  result.status === true ||
-  result.status === "success"
-) {
-  Alert.alert(
-    "Success",
-    "OTP sent to your email"
-  );
-
-  setEmail(formEmail);
-  setOtpType("register");
-  setStep("otp");
-} else {
-        Alert.alert(
-          "Error",
-          result.message ||
-            "Registration Failed"
-        );
+        setEmail(formEmail);
+        setOtpType("register");
+        setStep("otp");
+      } else {
+        Alert.alert("Error", result.message || "Registration Failed");
       }
     } catch (error) {
-      console.log(error);
-
-      Alert.alert(
-        "Error",
-        "Something went wrong"
-      );
+      Alert.alert("Error", "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -214,111 +121,79 @@ try {
 
   return (
     <View>
+      <FloatingInput
+        label="Full Name *"
+        value={fullName}
+        onChangeText={setFullName}
+      />
 
       <FloatingInput
-  label="Full Name *"
-  value={fullName}
-  onChangeText={setFullName}
-/>
-
-     <FloatingInput
-  label="Email *"
-  value={formEmail}
-  onChangeText={setFormEmail}
-  keyboardType="email-address"
-  autoCapitalize="none"
-/>
+        label="Email *"
+        value={formEmail}
+        onChangeText={setFormEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
 
       <PasswordInput
-  label="Password"
-  value={password}
-  onChangeText={setPassword}
-/>
+        label="Password"
+        value={password}
+        onChangeText={setPassword}
+      />
 
       <FloatingInput
-  label="Mobile Number *"
-  value={mobileNumber}
-  onChangeText={setMobileNumber}
-  keyboardType="phone-pad"
-/>
+        label="Mobile Number *"
+        value={mobileNumber}
+        onChangeText={setMobileNumber}
+        keyboardType="phone-pad"
+      />
 
       <FloatingInput
-  label="Alternate Contact Number"
-  value={alternateContactNumber}
-  onChangeText={setAlternateContactNumber}
-  keyboardType="phone-pad"
-/>
+        label="Alternate Contact Number"
+        value={alternateContactNumber}
+        onChangeText={setAlternateContactNumber}
+        keyboardType="phone-pad"
+      />
 
       <FloatingInput
-  label="Residential Address *"
-  value={residentialAddress}
-  onChangeText={setResidentialAddress}
-  multiline
-  height={100}
-/>
+        label="Residential Address *"
+        value={residentialAddress}
+        onChangeText={setResidentialAddress}
+        multiline
+        height={100}
+      />
 
-     <FloatingInput
-  label="Emergency Contact Name *"
-  value={emergencyContactName}
-  onChangeText={setEmergencyContactName}
-/>
+      <FloatingInput
+        label="Emergency Contact Name *"
+        value={emergencyContactName}
+        onChangeText={setEmergencyContactName}
+      />
 
-    <FloatingInput
-  label="Emergency Contact Number *"
-  value={emergencyContactNumber}
-  onChangeText={setEmergencyContactNumber}
-  keyboardType="phone-pad"
-/>
-
-    <TouchableOpacity style={styles.fileButton} onPress={pickAadhar}>
-  <Text>
-    {aadharFile ? aadharFile.name : "Upload Aadhar File (optional)"}
-  </Text>
-</TouchableOpacity>
+      <FloatingInput
+        label="Emergency Contact Number *"
+        value={emergencyContactNumber}
+        onChangeText={setEmergencyContactNumber}
+        keyboardType="phone-pad"
+      />
 
       <TouchableOpacity
-        style={styles.button}
-        onPress={handleRegister}
-        disabled={loading}
+        style={petOwnerRegisterStyles.fileButton}
+        onPress={pickAadhar}
       >
-        <Text style={styles.btnText}>
-          {loading
-            ? "Registering..."
-            : "Register Pet Owner"}
+        <Text>
+          {aadharFile ? aadharFile.name : "Upload Aadhar File (optional)"}
         </Text>
       </TouchableOpacity>
 
+      <TouchableOpacity
+        style={petOwnerRegisterStyles.button}
+        onPress={handleRegister}
+        disabled={loading}
+      >
+        <Text style={petOwnerRegisterStyles.btnText}>
+          {loading ? "Registering..." : "Register Pet Owner"}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  input: {
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 12,
-  },
-
-  fileButton: {
-    padding: 14,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 12,
-    marginBottom: 15,
-  },
-
-  button: {
-    backgroundColor: "#6b21a8",
-    padding: 15,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-
-  btnText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-});

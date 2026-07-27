@@ -4,15 +4,17 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  StyleSheet,
-  Dimensions,
+  useWindowDimensions,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-
-const screenWidth = Dimensions.get("window").width;
+import styles from "../styles/CategoriesStyles";
 
 export default function Categories() {
+  const { width } = useWindowDimensions();
+
+  const cardWidth = width >= 1200 ? 320 : width >= 768 ? 280 : width * 0.72;
+
   const categories = [
     {
       icon: "home-outline",
@@ -31,7 +33,7 @@ export default function Categories() {
       emoji: "🐕",
     },
     {
-      icon: "shopping-outline",
+      icon: "shopping",
       name: "Buy & Sell",
       description: "Quality pet supplies",
       gradient: ["#c084fc", "#9333ea"],
@@ -66,7 +68,6 @@ export default function Categories() {
 
   return (
     <View style={styles.section}>
-      {/* TITLE */}
       <Text style={styles.title}>
         Explore Our <Text style={styles.gradientText}>Services</Text>
       </Text>
@@ -75,7 +76,6 @@ export default function Categories() {
         Everything your pet needs, all in one place
       </Text>
 
-      {/* SCROLL */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -84,10 +84,14 @@ export default function Categories() {
         {categories.map((item, index) => (
           <TouchableOpacity
             key={index}
-            style={[styles.card, { backgroundColor: item.bgColor }]}
-            activeOpacity={0.9}
+            style={[
+              styles.card,
+              {
+                backgroundColor: item.bgColor,
+                width: cardWidth,
+              },
+            ]}
           >
-            {/* ICON + GRADIENT */}
             <View style={styles.iconWrapper}>
               <LinearGradient colors={item.gradient} style={styles.iconBox}>
                 <MaterialCommunityIcons
@@ -100,11 +104,9 @@ export default function Categories() {
               <Text style={styles.emoji}>{item.emoji}</Text>
             </View>
 
-            {/* TEXT */}
             <Text style={styles.name}>{item.name}</Text>
             <Text style={styles.desc}>{item.description}</Text>
 
-            {/* BUTTON */}
             <LinearGradient colors={item.gradient} style={styles.button}>
               <Text style={styles.buttonText}>Explore</Text>
             </LinearGradient>
@@ -114,95 +116,3 @@ export default function Categories() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  section: {
-    paddingVertical: 30,
-    paddingHorizontal: 15,
-    backgroundColor: "#fff",
-  },
-
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 6,
-    color: "#1f2937",
-  },
-
-  gradientText: {
-    color: "#f97316",
-  },
-
-  subtitle: {
-    textAlign: "center",
-    color: "#6b7280",
-    marginBottom: 25,
-    fontSize: 14,
-  },
-
-  scrollContainer: {
-    paddingHorizontal: 10,
-  },
-
-  card: {
-    width: screenWidth * 0.72,
-    borderRadius: 28,
-    padding: 22,
-    marginRight: 18,
-    marginTop: 10,
-    marginBottom: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 15,
-    elevation: 6,
-    alignItems: "center",
-  },
-
-  iconWrapper: {
-    position: "relative",
-    marginBottom: 14,
-  },
-
-  iconBox: {
-    width: 85,
-    height: 85,
-    borderRadius: 22,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  emoji: {
-    position: "absolute",
-    top: -6,
-    right: -6,
-    fontSize: 22,
-  },
-
-  name: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#1f2937",
-    marginBottom: 4,
-  },
-
-  desc: {
-    fontSize: 13,
-    color: "#6b7280",
-    textAlign: "center",
-    marginBottom: 16,
-  },
-
-  button: {
-    width: "100%",
-    paddingVertical: 12,
-    borderRadius: 14,
-  },
-
-  buttonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "600",
-    fontSize: 14,
-  },
-});

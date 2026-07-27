@@ -3,13 +3,13 @@ import React from "react";
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
 
 import { useNavigation } from "@react-navigation/native";
+import heroStyles from "../styles/HeroStyles";
 
 export default function Hero() {
 
@@ -17,7 +17,7 @@ export default function Hero() {
 
   return (
 
-    <View style={styles.wrapper}>
+    <View style={heroStyles.wrapper}>
 
       <LinearGradient
         colors={[
@@ -25,17 +25,17 @@ export default function Hero() {
           "#ffe4f0",
           "#f3e8ff",
         ]}
-        style={styles.container}
+        style={heroStyles.container}
       >
 
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>
+        <View style={heroStyles.badge}>
+          <Text style={heroStyles.badgeText}>
             ✨ Trusted by 10,000+ Pet Parents
           </Text>
         </View>
 
-        <Text style={styles.title}>
-          <Text style={styles.gradientText}>
+        <Text style={heroStyles.title}>
+          <Text style={heroStyles.gradientText}>
             Your Pet's{"\n"}
           </Text>
 
@@ -44,32 +44,32 @@ export default function Hero() {
           </Text>
         </Text>
 
-        <Text style={styles.desc}>
+        <Text style={heroStyles.desc}>
           Premium pet care services at your fingertips.
           Boarding, grooming, and more for your furry friends.
         </Text>
 
-        <View style={styles.btnRow}>
+        <View style={heroStyles.btnRow}>
 
           {/* BOOK BOARDING BUTTON */}
           <TouchableOpacity
-            style={styles.primaryBtn}
+            style={heroStyles.primaryBtn}
             onPress={() =>
              navigation.navigate("Boarding")
             }
           >
 
-            <Text style={styles.primaryBtnText}>
+            <Text style={heroStyles.primaryBtnText}>
               🐾 Book Boarding →
             </Text>
 
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.secondaryBtn}
+            style={heroStyles.secondaryBtn}
           >
 
-            <Text style={styles.secondaryBtnText}>
+            <Text style={heroStyles.secondaryBtnText}>
               Explore Services
             </Text>
 
@@ -77,34 +77,34 @@ export default function Hero() {
 
         </View>
 
-        <View style={styles.statsRow}>
+        <View style={heroStyles.statsRow}>
 
-          <View style={styles.statBox}>
-            <Text style={styles.statNum}>
+          <View style={heroStyles.statBox}>
+            <Text style={heroStyles.statNum}>
               5000+
             </Text>
 
-            <Text style={styles.statLabel}>
+            <Text style={heroStyles.statLabel}>
               Happy Pets
             </Text>
           </View>
 
-          <View style={styles.statBox}>
-            <Text style={styles.statNum}>
+          <View style={heroStyles.statBox}>
+            <Text style={heroStyles.statNum}>
               500+
             </Text>
 
-            <Text style={styles.statLabel}>
+            <Text style={heroStyles.statLabel}>
               Caregivers
             </Text>
           </View>
 
-          <View style={styles.statBox}>
-            <Text style={styles.statNum}>
+          <View style={heroStyles.statBox}>
+            <Text style={heroStyles.statNum}>
               4.9★
             </Text>
 
-            <Text style={styles.statLabel}>
+            <Text style={heroStyles.statLabel}>
               Rating
             </Text>
           </View>
@@ -117,97 +117,3 @@ export default function Hero() {
   );
 }
 
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-  },
-
-  container: {
-    padding: 20,
-    borderRadius: 20,
-    margin: 15,
-  },
-
-  badge: {
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 50,
-    alignSelf: "flex-start",
-    marginBottom: 15,
-  },
-
-  badgeText: {
-    fontSize: 12,
-    fontWeight: "600",
-  },
-
-  title: {
-    fontSize: 34,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 10,
-  },
-
-  gradientText: {
-    color: "#f97316",
-  },
-
-  desc: {
-    fontSize: 14,
-    color: "#555",
-    marginBottom: 20,
-  },
-
-  btnRow: {
-    flexDirection: "column",
-    gap: 10,
-    marginBottom: 20,
-  },
-
-  primaryBtn: {
-    backgroundColor: "#f97316",
-    padding: 14,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-
-  primaryBtnText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-
-  secondaryBtn: {
-    backgroundColor: "#fff",
-    padding: 14,
-    borderRadius: 12,
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#ddd",
-  },
-
-  secondaryBtnText: {
-    color: "#6b21a8",
-    fontWeight: "bold",
-  },
-
-  statsRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 15,
-  },
-
-  statBox: {
-    alignItems: "center",
-    flex: 1,
-  },
-
-  statNum: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-
-  statLabel: {
-    fontSize: 12,
-    color: "#666",
-  },
-});

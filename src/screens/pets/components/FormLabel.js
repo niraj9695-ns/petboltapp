@@ -1,17 +1,13 @@
 import React from "react";
 import { Text } from "react-native";
+import formLabelStyles from "../styles/FormLabelStyles";
 
-export default function FormLabel({ title, required }) {
+export default function FormLabel({ title, required, error }) {
   return (
-    <Text
-      style={{
-        marginBottom: 5,
-        fontWeight: "600",
-        color: "#374151",
-      }}
-    >
+    <Text style={[formLabelStyles.formLabel, error && formLabelStyles.formLabelError]}>
       {title}
-      {required && <Text style={{ color: "red" }}> *</Text>}
+      {required && <Text style={formLabelStyles.formLabelRequired}> *</Text>}
     </Text>
   );
 }
+
