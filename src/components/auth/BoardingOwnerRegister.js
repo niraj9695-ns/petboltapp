@@ -54,9 +54,7 @@ export default function BoardingOwnerRegister({
   const [stateName, setStateName] = useState("");
 
   const [pinCode, setPinCode] = useState("");
-  const [latitude, setLatitude] = useState("");
 
-  const [longitude, setLongitude] = useState("");
   const [propertyType, setPropertyType] = useState("");
 
   const [fencingStatus, setFencingStatus] = useState("");
@@ -110,9 +108,17 @@ export default function BoardingOwnerRegister({
 
   const [insuranceExpiryDate, setInsuranceExpiryDate] = useState(null);
 
-  const [openingTime, setOpeningTime] = useState(new Date());
+  const [openingTime, setOpeningTime] = useState(() => {
+    const date = new Date();
+    date.setHours(10, 0, 0, 0);
+    return date;
+  });
 
-  const [closingTime, setClosingTime] = useState(new Date());
+  const [closingTime, setClosingTime] = useState(() => {
+    const date = new Date();
+    date.setHours(22, 0, 0, 0);
+    return date;
+  });
 
   const [showOpeningPicker, setShowOpeningPicker] = useState(false);
 
@@ -195,7 +201,8 @@ export default function BoardingOwnerRegister({
       }
 
       if (cleanAlternate && cleanAlternate === cleanMobile) {
-        newErrors.alternate = "Alternate number should be different from mobile";
+        newErrors.alternate =
+          "Alternate number should be different from mobile";
       }
 
       if (!emergencyContactName.trim()) {
@@ -207,7 +214,8 @@ export default function BoardingOwnerRegister({
       }
 
       if (cleanEmergency === cleanMobile) {
-        newErrors.emergencyNumber = "Emergency number should be different from mobile";
+        newErrors.emergencyNumber =
+          "Emergency number should be different from mobile";
       }
 
       if (Object.keys(newErrors).length > 0) {
@@ -225,14 +233,27 @@ export default function BoardingOwnerRegister({
       if (!address) newErrors.address = "Address is required";
       if (!city) newErrors.city = "City is required";
       if (!stateName) newErrors.stateName = "State is required";
-      if (!/^[0-9]{6}$/.test(pinCode)) newErrors.pinCode = "Enter valid 6-digit pin code";
+      if (!/^[0-9]{6}$/.test(pinCode))
+        newErrors.pinCode = "Enter valid 6-digit pin code";
       if (!propertyType) newErrors.propertyType = "Property type is required";
-      if (!fencingStatus) newErrors.fencingStatus = "Fencing status is required";
-      if (!supervisionLevel) newErrors.supervisionLevel = "Supervision level is required";
-      if (!totalCapacity) newErrors.totalCapacity = "Total capacity is required";
+      if (!fencingStatus)
+        newErrors.fencingStatus = "Fencing status is required";
+      if (!supervisionLevel)
+        newErrors.supervisionLevel = "Supervision level is required";
+      if (!totalCapacity)
+        newErrors.totalCapacity = "Total capacity is required";
 
-      if (petPriceRows.some((row) => !row.petType || !row.price)) {
-        newErrors.prices = "Please add prices for all pet types or remove empty rows";
+      if (
+        petPriceRows.some(
+          (row) =>
+            !row.petType ||
+            !row.price ||
+            Number.isNaN(Number(row.price)) ||
+            Number(row.price) <= 0,
+        )
+      ) {
+        newErrors.prices =
+          "Please add valid pet prices for all selected pet types";
       }
 
       if (Object.keys(newErrors).length > 0) {
@@ -250,7 +271,8 @@ export default function BoardingOwnerRegister({
         newErrors.acceptedPetTypes = "Select at least one accepted pet type";
       }
       if (!vaccinationPolicy || vaccinationPolicy.trim().length < 10) {
-        newErrors.vaccinationPolicy = "Provide vaccination policy details (min 10 chars)";
+        newErrors.vaccinationPolicy =
+          "Provide vaccination policy details (min 10 chars)";
       }
 
       if (Object.keys(newErrors).length > 0) {
@@ -278,9 +300,17 @@ export default function BoardingOwnerRegister({
     }
 
     if (currentStep === 5) {
-      if (!digitalSignature || !digitalSignature.trim()) newErrors.digitalSignature = "Digital signature is required";
-      if (!signatureDate) newErrors.signatureDate = "Signature date is required";
-      if (!termsAccepted) newErrors.terms = "Accept terms and conditions to continue";
+      if (!digitalSignature || !digitalSignature.trim())
+        newErrors.digitalSignature = "Digital signature is required";
+      if (!signatureDate)
+        newErrors.signatureDate = "Signature date is required";
+      if (!openingTime) newErrors.openingTime = "Opening time is required";
+      if (!closingTime) newErrors.closingTime = "Closing time is required";
+      if (openingTime && closingTime && closingTime <= openingTime) {
+        newErrors.closingTime = "Closing time must be after opening time";
+      }
+      if (!termsAccepted)
+        newErrors.terms = "Accept terms and conditions to continue";
 
       if (Object.keys(newErrors).length > 0) {
         newErrors.stepError = "Please fix the highlighted fields";
@@ -340,10 +370,6 @@ export default function BoardingOwnerRegister({
       formData.append("state", stateName);
 
       formData.append("pin_code", pinCode);
-
-      formData.append("latitude", latitude);
-
-      formData.append("longitude", longitude);
 
       formData.append("property_type", propertyType);
 
@@ -505,7 +531,10 @@ export default function BoardingOwnerRegister({
           const ext = getExtension(uri) || "jpg";
           name = `${fallbackName}.${ext}`;
         }
-        const type = file.mimeType || file.type || (name.endsWith(".pdf") ? "application/pdf" : "image/jpeg");
+        const type =
+          file.mimeType ||
+          file.type ||
+          (name.endsWith(".pdf") ? "application/pdf" : "image/jpeg");
         return { uri, name, type };
       };
 
@@ -576,7 +605,9 @@ export default function BoardingOwnerRegister({
             setServerError(otpResult.message || "Failed to send OTP");
           }
         } catch (err) {
-          setServerError(err.message || "Something went wrong while sending OTP");
+          setServerError(
+            err.message || "Something went wrong while sending OTP",
+          );
         }
       } else {
         setServerError(result.message || "Registration Failed");
@@ -779,94 +810,119 @@ STEP 2 - CENTER DETAILS
         <View>
           <Text style={styles.heading}>Boarding Center Details</Text>
 
-              {errors.stepError ? (
-                <Text style={styles.errorTopText}>{errors.stepError}</Text>
-              ) : null}
+          {errors.stepError ? (
+            <Text style={styles.errorTopText}>{errors.stepError}</Text>
+          ) : null}
 
-              <FloatingInput
-                label="Center Name"
-                value={centerName}
-                onChangeText={setCenterName}
-              />
+          <FloatingInput
+            label="Center Name"
+            value={centerName}
+            onChangeText={setCenterName}
+          />
 
-              {errors.address ? (
-                <Text style={styles.errorTopText}>{errors.address}</Text>
-              ) : null}
-              <FloatingInput
-                label="Boarding Center Address *"
-                value={address}
-                onChangeText={(text) => {
-                  setAddress(text);
-                  setErrors((prev) => ({ ...prev, address: "" }));
-                }}
-                multiline
-                height={100}
-              />
+          {errors.address ? (
+            <Text style={styles.errorTopText}>{errors.address}</Text>
+          ) : null}
+          <FloatingInput
+            label="Boarding Center Address *"
+            value={address}
+            onChangeText={(text) => {
+              setAddress(text);
+              setErrors((prev) => ({ ...prev, address: "" }));
+            }}
+            multiline
+            height={100}
+          />
 
-              <FloatingInput
-                label="Address Line 2"
-                value={addressLine2}
-                onChangeText={setAddressLine2}
-              />
+          <FloatingInput
+            label="Address Line 2"
+            value={addressLine2}
+            onChangeText={setAddressLine2}
+          />
 
-              {errors.city ? (
-                <Text style={styles.errorTopText}>{errors.city}</Text>
-              ) : null}
-              <FloatingInput label="City *" value={city} onChangeText={(text) => {setCity(text); setErrors((prev)=>({...prev, city: ""}));}} />
+          {errors.city ? (
+            <Text style={styles.errorTopText}>{errors.city}</Text>
+          ) : null}
+          <FloatingInput
+            label="City *"
+            value={city}
+            onChangeText={(text) => {
+              setCity(text);
+              setErrors((prev) => ({ ...prev, city: "" }));
+            }}
+          />
 
-              {errors.stateName ? (
-                <Text style={styles.errorTopText}>{errors.stateName}</Text>
-              ) : null}
-              <FloatingInput
-                label="State *"
-                value={stateName}
-                onChangeText={(text)=>{setStateName(text); setErrors((prev)=>({...prev, stateName: ""}));}}
-              />
+          {errors.stateName ? (
+            <Text style={styles.errorTopText}>{errors.stateName}</Text>
+          ) : null}
+          <FloatingInput
+            label="State *"
+            value={stateName}
+            onChangeText={(text) => {
+              setStateName(text);
+              setErrors((prev) => ({ ...prev, stateName: "" }));
+            }}
+          />
 
-              {errors.pinCode ? (
-                <Text style={styles.errorTopText}>{errors.pinCode}</Text>
-              ) : null}
-              <FloatingInput
-                label="Pin Code *"
-                value={pinCode}
-                onChangeText={(text)=>{setPinCode(text); setErrors((prev)=>({...prev, pinCode: ""}));}}
+          {errors.pinCode ? (
+            <Text style={styles.errorTopText}>{errors.pinCode}</Text>
+          ) : null}
+          <FloatingInput
+            label="Pin Code *"
+            value={pinCode}
+            onChangeText={(text) => {
+              setPinCode(text);
+              setErrors((prev) => ({ ...prev, pinCode: "" }));
+            }}
             keyboardType="number-pad"
           />
 
-          <FloatingInput
-            label="Latitude"
-            value={latitude}
-            onChangeText={setLatitude}
-          />
-
-          <FloatingInput
-            label="Longitude"
-            value={longitude}
-            onChangeText={setLongitude}
-          />
-
+          {errors.propertyType ? (
+            <Text style={styles.errorTopText}>{errors.propertyType}</Text>
+          ) : null}
           <FloatingInput
             label="Property Type *"
             value={propertyType}
-            onChangeText={setPropertyType}
+            onChangeText={(text) => {
+              setPropertyType(text);
+              setErrors((prev) => ({ ...prev, propertyType: "" }));
+            }}
           />
 
+          {errors.fencingStatus ? (
+            <Text style={styles.errorTopText}>{errors.fencingStatus}</Text>
+          ) : null}
           <FloatingInput
             label="Fencing Status *"
             value={fencingStatus}
-            onChangeText={setFencingStatus}
+            onChangeText={(text) => {
+              setFencingStatus(text);
+              setErrors((prev) => ({ ...prev, fencingStatus: "" }));
+            }}
           />
 
+          {errors.supervisionLevel ? (
+            <Text style={styles.errorTopText}>{errors.supervisionLevel}</Text>
+          ) : null}
           <FloatingInput
             label="Supervision Level *"
             value={supervisionLevel}
-            onChangeText={setSupervisionLevel}
+            onChangeText={(text) => {
+              setSupervisionLevel(text);
+              setErrors((prev) => ({ ...prev, supervisionLevel: "" }));
+            }}
           />
 
+          {errors.totalCapacity ? (
+            <Text style={styles.errorTopText}>{errors.totalCapacity}</Text>
+          ) : null}
           <FloatingInput
             label="Total Capacity *"
             value={totalCapacity}
-            onChangeText={setTotalCapacity}
+            onChangeText={(text) => {
+              setTotalCapacity(text);
+              setErrors((prev) => ({ ...prev, totalCapacity: "" }));
+            }}
             keyboardType="number-pad"
           />
 
@@ -882,6 +938,10 @@ STEP 2 - CENTER DETAILS
             Add pet prices for each animal type
           </Text>
 
+          {errors.prices ? (
+            <Text style={styles.errorTopText}>{errors.prices}</Text>
+          ) : null}
+
           {petPriceRows.map((row, index) => (
             <View key={index} style={styles.priceRow}>
               <View style={styles.pickerContainer}>
@@ -891,6 +951,7 @@ STEP 2 - CENTER DETAILS
                     const updatedRows = [...petPriceRows];
                     updatedRows[index].petType = value;
                     setPetPriceRows(updatedRows);
+                    setErrors((prev) => ({ ...prev, prices: "", stepError: "" }));
                   }}
                 >
                   <Picker.Item label="Select Pet Type" value="" />
@@ -912,6 +973,7 @@ STEP 2 - CENTER DETAILS
                   const updatedRows = [...petPriceRows];
                   updatedRows[index].price = value;
                   setPetPriceRows(updatedRows);
+                  setErrors((prev) => ({ ...prev, prices: "", stepError: "" }));
                 }}
               />
 
@@ -927,6 +989,7 @@ STEP 2 - CENTER DETAILS
                         ? updatedRows
                         : [{ petType: "", price: "" }],
                     );
+                    setErrors((prev) => ({ ...prev, prices: "", stepError: "" }));
                   }}
                 >
                   <Text style={styles.removeRowText}>-</Text>
@@ -937,9 +1000,10 @@ STEP 2 - CENTER DETAILS
 
           <TouchableOpacity
             style={styles.addRowButton}
-            onPress={() =>
-              setPetPriceRows([...petPriceRows, { petType: "", price: "" }])
-            }
+            onPress={() => {
+              setPetPriceRows([...petPriceRows, { petType: "", price: "" }]);
+              setErrors((prev) => ({ ...prev, prices: "", stepError: "" }));
+            }}
           >
             <Text style={styles.addRowText}>+ Add More</Text>
           </TouchableOpacity>
@@ -1050,7 +1114,10 @@ STEP 3 - SERVICES & AMENITIES
           <FloatingInput
             label="Vaccination Policy *"
             value={vaccinationPolicy}
-            onChangeText={(text)=>{setVaccinationPolicy(text); setErrors((prev)=>({...prev, vaccinationPolicy: ""}));}}
+            onChangeText={(text) => {
+              setVaccinationPolicy(text);
+              setErrors((prev) => ({ ...prev, vaccinationPolicy: "" }));
+            }}
             multiline
             height={100}
           />
@@ -1163,7 +1230,8 @@ STEP 4 - DOCUMENTS
                 color: "#444",
               }}
             >
-              I accept Terms & Conditions <Text style={{color: '#DC2626'}}>*</Text>
+              I accept Terms & Conditions{" "}
+              <Text style={{ color: "#DC2626" }}>*</Text>
             </Text>
           </TouchableOpacity>
 
@@ -1243,9 +1311,19 @@ STEP 5 - EXTRA DETAILS & SUBMIT
             onChange={(date) => setInsuranceExpiryDate(date)}
           />
 
+          {errors.openingTime ? (
+            <Text style={styles.errorTopText}>{errors.openingTime}</Text>
+          ) : null}
           <TouchableOpacity
             style={styles.timePickerButton}
-            onPress={() => setShowOpeningPicker(true)}
+            onPress={() => {
+              setShowOpeningPicker(true);
+              setErrors((prev) => ({
+                ...prev,
+                openingTime: "",
+                stepError: "",
+              }));
+            }}
           >
             <Text style={styles.timePickerLabel}>Opening Time</Text>
             <Text style={styles.timePickerValue}>
@@ -1271,9 +1349,19 @@ STEP 5 - EXTRA DETAILS & SUBMIT
             />
           )}
 
+          {errors.closingTime ? (
+            <Text style={styles.errorTopText}>{errors.closingTime}</Text>
+          ) : null}
           <TouchableOpacity
             style={styles.timePickerButton}
-            onPress={() => setShowClosingPicker(true)}
+            onPress={() => {
+              setShowClosingPicker(true);
+              setErrors((prev) => ({
+                ...prev,
+                closingTime: "",
+                stepError: "",
+              }));
+            }}
           >
             <Text style={styles.timePickerLabel}>Closing Time</Text>
             <Text style={styles.timePickerValue}>
@@ -1336,7 +1424,6 @@ STEP 5 - EXTRA DETAILS & SUBMIT
               setErrors((prev) => ({ ...prev, signatureDate: "" }));
             }}
           />
-
 
           <View
             style={{
