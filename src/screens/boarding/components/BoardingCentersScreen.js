@@ -19,58 +19,51 @@ export default function BoardingCentersScreen({ navigation, route }) {
 
   const [centers, setCenters] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const { width } = useWindowDimensions();
 
-  const numColumns = width >= 1000 ? 3 : width >= 600 ? 2 : 1;
+  const numColumns = width >= 1200 ? 3 : width >= 768 ? 2 : 1;
   const spacing = 16;
 
   const cardWidth =
     numColumns === 1
-      ? Math.min(width - 32, 500)
+      ? width - 32
       : numColumns === 2
-        ? Math.min((width - 64) / 2, 420)
-        : Math.min((width - 96) / 3, 360);
+        ? (width - 56) / 2
+        : (width - 80) / 3;
 
   useEffect(() => {
     setCurrentPage(1);
     setTotalPages(1);
-    fetchCenters(1, false);
+    fetchCenters(1);
   }, [city, type]);
 
-  const fetchCenters = async (pageToLoad = 1, append = false) => {
+  const fetchCenters = async (pageToLoad = 1) => {
     try {
-      if (append) {
-        setLoadingMore(true);
-      } else {
-        setLoading(true);
-      }
+      setLoading(true);
 
       const result = await fetchBoardingCentersApi(city, type, pageToLoad, 20);
-      const nextCenters = Array.isArray(result?.centers)
-        ? result.centers
-        : [];
+      const nextCenters = Array.isArray(result?.centers) ? result.centers : [];
       const pagination = result?.pagination || {};
 
-      setCenters((prevCenters) =>
-        append ? [...prevCenters, ...nextCenters] : nextCenters,
-      );
+      setCenters(nextCenters);
       setCurrentPage(Number(pagination.page || pageToLoad));
       setTotalPages(Number(pagination.total_pages || 1));
     } catch (error) {
-      if (!append) {
-        setCenters([]);
-      }
+      setCenters([]);
+      setCurrentPage(1);
+      setTotalPages(1);
     } finally {
       setLoading(false);
-      setLoadingMore(false);
     }
   };
 
-  const hasMorePages = currentPage < totalPages;
+  const goToPage = (page) => {
+    if (page < 1 || page > totalPages || page === currentPage) return;
+    fetchCenters(page);
+  };
 
   const renderCenter = ({ item }) => (
     <CenterCard
@@ -84,6 +77,58 @@ export default function BoardingCentersScreen({ navigation, route }) {
       }
     />
   );
+
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    const pages = [];
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+
+    for (let page = startPage; page <= endPage; page += 1) {
+      pages.push(page);
+    }
+
+    return (
+      <View style={styles.paginationFooter}>
+        <TouchableOpacity
+          style={styles.paginationButton}
+          onPress={() => goToPage(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          <Text style={styles.paginationButtonText}>Prev</Text>
+        </TouchableOpacity>
+
+        {pages.map((page) => (
+          <TouchableOpacity
+            key={page}
+            style={[
+              styles.pageNumberButton,
+              currentPage === page && styles.activePageNumberButton,
+            ]}
+            onPress={() => goToPage(page)}
+          >
+            <Text
+              style={[
+                styles.pageNumberButtonText,
+                currentPage === page && styles.activePageNumberButtonText,
+              ]}
+            >
+              {page}
+            </Text>
+          </TouchableOpacity>
+        ))}
+
+        <TouchableOpacity
+          style={styles.paginationButton}
+          onPress={() => goToPage(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          <Text style={styles.paginationButtonText}>Next</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   if (loading) {
     return (
@@ -162,25 +207,7 @@ export default function BoardingCentersScreen({ navigation, route }) {
           contentContainerStyle={styles.listContent}
           columnWrapperStyle={numColumns > 1 ? styles.row : undefined}
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={
-            hasMorePages ? (
-              <View style={styles.paginationFooter}>
-                <TouchableOpacity
-                  style={styles.nextPageButton}
-                  onPress={() => fetchCenters(currentPage + 1, true)}
-                  disabled={loadingMore}
-                >
-                  {loadingMore ? (
-                    <ActivityIndicator size="small" color="#ffffff" />
-                  ) : (
-                    <Text style={styles.nextPageButtonText}>
-                      Next Page {currentPage + 1}
-                    </Text>
-                  )}
-                </TouchableOpacity>
-              </View>
-            ) : null
-          }
+          ListFooterComponent={renderPagination()}
         />
       )}
     </View>

@@ -117,20 +117,56 @@ export default StyleSheet.create({
     alignItems: "center",
     paddingTop: 8,
     paddingBottom: 16,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: 8,
   },
 
-  nextPageButton: {
-    backgroundColor: "#6b21a8",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+  paginationButton: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
     borderRadius: 999,
-    minWidth: 180,
+    backgroundColor: "#6b21a8",
     alignItems: "center",
+    justifyContent: "center",
   },
 
-  nextPageButtonText: {
+  paginationButtonText: {
     color: "#ffffff",
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "700",
+  },
+
+  pageNumberButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  activePageNumberButton: {
+    backgroundColor: "#6b21a8",
+    borderColor: "#6b21a8",
+  },
+
+  pageNumberButtonText: {
+    color: "#6b21a8",
+    fontWeight: "700",
+    fontSize: 13,
+  },
+
+  activePageNumberButtonText: {
+    color: "#ffffff",
+  },
+
+  row: {
+    justifyContent: "center",
+    alignItems: "stretch",
+    gap: 16,
   },
 });

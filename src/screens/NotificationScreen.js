@@ -19,6 +19,7 @@ import {
   deleteNotification,
   deleteAllNotifications,
 } from "../utils/notifications";
+import styles from "../styles/NotificationScreenStyles";
 
 const PAGE_SIZE = 20;
 
@@ -37,7 +38,10 @@ export default function NotificationScreen() {
     setError("");
 
     try {
-      const items = await fetchNotificationsFromApi({ limit: PAGE_SIZE, offset: 0 });
+      const items = await fetchNotificationsFromApi({
+        limit: PAGE_SIZE,
+        offset: 0,
+      });
       setNotifications(items);
       setHasMore(items.length === PAGE_SIZE);
     } catch (err) {
@@ -50,7 +54,10 @@ export default function NotificationScreen() {
   const refreshNotifications = useCallback(async () => {
     setRefreshing(true);
     try {
-      const items = await fetchNotificationsFromApi({ limit: PAGE_SIZE, offset: 0 });
+      const items = await fetchNotificationsFromApi({
+        limit: PAGE_SIZE,
+        offset: 0,
+      });
       setNotifications(items);
       setHasMore(items.length === PAGE_SIZE);
       setError("");
@@ -93,7 +100,8 @@ export default function NotificationScreen() {
   }, [loadNotifications]);
 
   const unreadCount = notifications.reduce(
-    (count, item) => count + ((item.is_read === "1" || item.is_read === 1) ? 0 : 1),
+    (count, item) =>
+      count + (item.is_read === "1" || item.is_read === 1 ? 0 : 1),
     0,
   );
 
@@ -196,22 +204,31 @@ export default function NotificationScreen() {
           </View>
 
           <View style={styles.headerActions}>
-            <TouchableOpacity style={styles.markAllBtn} onPress={handleMarkAllRead}>
-              <Text style={styles.markAllText}>Mark all read</Text>
-            </TouchableOpacity>
             <TouchableOpacity
-              style={styles.deleteAllBtn}
+              style={styles.iconButtonPurple}
+              onPress={handleMarkAllRead}
+            >
+              <Ionicons name="checkmark-done-outline" size={22} color="#fff" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.iconButtonRed}
               onPress={handleDeleteAllNotifications}
             >
-              <Text style={styles.deleteAllText}>Delete all</Text>
+              <Ionicons name="trash-outline" size={22} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
 
         <View style={styles.infoCard}>
-          <Ionicons name="information-circle-outline" size={18} color="#4338ca" />
+          <Ionicons
+            name="information-circle-outline"
+            size={18}
+            color="#4338ca"
+          />
           <Text style={styles.infoText}>
-            Swipe left to delete a notification, or tap it to expand the message.
+            Swipe left to delete a notification, or tap it to expand the
+            message.
           </Text>
         </View>
 
@@ -259,7 +276,11 @@ export default function NotificationScreen() {
                     >
                       <View style={styles.row}>
                         <View style={styles.iconDot}>
-                          <MaterialIcons name="notifications" size={18} color="#fff" />
+                          <MaterialIcons
+                            name="notifications"
+                            size={18}
+                            color="#fff"
+                          />
                         </View>
 
                         <View style={styles.notificationContent}>
@@ -301,10 +322,17 @@ export default function NotificationScreen() {
             </>
           ) : (
             <View style={styles.emptyBox}>
-              <Ionicons name="notifications-off-outline" size={50} color="#c7d2fe" />
-              <Text style={styles.emptyText}>You have no notifications yet</Text>
+              <Ionicons
+                name="notifications-off-outline"
+                size={50}
+                color="#c7d2fe"
+              />
+              <Text style={styles.emptyText}>
+                You have no notifications yet
+              </Text>
               <Text style={styles.emptySubText}>
-                Notifications will appear here as your boarding activity updates.
+                Notifications will appear here as your boarding activity
+                updates.
               </Text>
             </View>
           )}
@@ -313,218 +341,3 @@ export default function NotificationScreen() {
     </LinearGradient>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-
-  scroll: {
-    padding: 18,
-    paddingBottom: 32,
-  },
-
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 16,
-  },
-
-  headerActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-
-  heading: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#111827",
-  },
-
-  subHeading: {
-    fontSize: 14,
-    color: "#6b7280",
-    marginTop: 4,
-  },
-
-  markAllBtn: {
-    backgroundColor: "#6b21a8",
-    borderRadius: 14,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-
-  deleteAllBtn: {
-    backgroundColor: "#ef4444",
-    borderRadius: 14,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-
-  markAllText: {
-    color: "#ffffff",
-    fontWeight: "700",
-    fontSize: 13,
-  },
-
-  deleteAllText: {
-    color: "#ffffff",
-    fontWeight: "700",
-    fontSize: 13,
-  },
-
-  infoCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#eef2ff",
-    borderRadius: 18,
-    padding: 14,
-    marginBottom: 16,
-  },
-
-  infoText: {
-    marginLeft: 10,
-    color: "#4338ca",
-    fontSize: 14,
-    lineHeight: 20,
-    flex: 1,
-  },
-
-  card: {
-    gap: 12,
-  },
-
-  notificationItem: {
-    borderRadius: 18,
-    padding: 18,
-    backgroundColor: "#ffffff",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 14,
-    elevation: 4,
-  },
-
-  unreadCard: {
-    borderWidth: 1,
-    borderColor: "#c7d2fe",
-  },
-
-  readCard: {
-    borderWidth: 1,
-    borderColor: "#e5e7eb",
-  },
-
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  iconDot: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    backgroundColor: "#6366f1",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 14,
-  },
-
-  notificationContent: {
-    flex: 1,
-  },
-
-  title: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#111827",
-  },
-
-  date: {
-    color: "#6b7280",
-    fontSize: 13,
-    marginTop: 6,
-  },
-
-  expandedBodyWrap: {
-    marginTop: 12,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: "#e5e7eb",
-  },
-
-  bodyText: {
-    color: "#111827",
-    fontSize: 14,
-    lineHeight: 20,
-  },
-
-  loadMoreBtn: {
-    alignSelf: "center",
-    backgroundColor: "#ede9fe",
-    borderRadius: 999,
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-    marginTop: 4,
-  },
-
-  loadMoreText: {
-    color: "#6b21a8",
-    fontWeight: "700",
-    fontSize: 13,
-  },
-
-  unreadDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 999,
-    backgroundColor: "#6b21a8",
-    marginLeft: 10,
-  },
-
-  actionHint: {
-    color: "#6b7280",
-    fontSize: 12,
-    marginTop: 4,
-  },
-
-  swipeAction: {
-    width: 96,
-    backgroundColor: "#dc2626",
-    justifyContent: "center",
-    alignItems: "center",
-    borderTopRightRadius: 18,
-    borderBottomRightRadius: 18,
-  },
-
-  swipeActionText: {
-    color: "#ffffff",
-    fontSize: 12,
-    fontWeight: "700",
-    marginTop: 6,
-  },
-
-  emptyBox: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 60,
-  },
-
-  emptyText: {
-    marginTop: 14,
-    color: "#111827",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-
-  emptySubText: {
-    marginTop: 10,
-    color: "#6b7280",
-    fontSize: 14,
-    textAlign: "center",
-    maxWidth: 260,
-    lineHeight: 20,
-  },
-});

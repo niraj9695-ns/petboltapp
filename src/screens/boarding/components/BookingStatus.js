@@ -7,13 +7,14 @@ import {
   Image,
   TouchableOpacity,
   useWindowDimensions,
+  Linking,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BASE_URL from "../constants/api";
 import styles from "../styles/BookingStatus";
-
 import { fetchMyBookingsApi } from "../services/boardingService";
 import { fetchPetImagesApi } from "../../pets/services/imageService";
 
@@ -37,6 +38,19 @@ const getBookingPetId = (booking) => {
     booking?.pet_details?.pet_id ||
     booking?.pet_data?.pet_id
   );
+};
+
+const handleCallCenter = async (phoneNumber) => {
+  if (!phoneNumber) {
+    Alert.alert("Error", "Phone number not available");
+    return;
+  }
+
+  try {
+    await Linking.openURL(`tel:${phoneNumber}`);
+  } catch (error) {
+    Alert.alert("Contact Center", `Call on: ${phoneNumber}`);
+  }
 };
 
 const getBookingPetImageUrl = (booking) => {
@@ -123,10 +137,6 @@ const getBookingPetImageUrl = (booking) => {
 
 export default function BookingStatus() {
   const { width } = useWindowDimensions();
-
-  const numColumns = width >= 1200 ? 3 : width >= 768 ? 2 : 1;
-
-  const isTablet = width >= 768;
 
   const cardWidth = width >= 1200 ? 450 : width >= 768 ? 380 : width * 0.85;
 
@@ -298,9 +308,7 @@ export default function BookingStatus() {
                   {loadingMore ? (
                     <ActivityIndicator size="small" color="#ffffff" />
                   ) : (
-                    <Text style={styles.nextPageButtonText}>
-                      Next Page {currentPage + 1}
-                    </Text>
+                    <Text style={styles.nextPageButtonText}>Load More</Text>
                   )}
                 </TouchableOpacity>
               </View>
@@ -571,7 +579,12 @@ export default function BookingStatus() {
 
                 {/* ACTION BUTTONS */}
                 <View style={styles.actionButtonsRow}>
-                  <TouchableOpacity style={styles.secondaryButton}>
+                  <TouchableOpacity
+                    style={styles.secondaryButton}
+                    onPress={() =>
+                      handleCallCenter(booking.center?.primary_contact_number)
+                    }
+                  >
                     <MaterialCommunityIcons
                       name="phone"
                       size={18}

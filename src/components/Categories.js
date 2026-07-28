@@ -6,15 +6,26 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "../styles/CategoriesStyles";
 
 export default function Categories() {
   const { width } = useWindowDimensions();
-
   const cardWidth = width >= 1200 ? 320 : width >= 768 ? 280 : width * 0.72;
 
+  const navigation = useNavigation();
+
+  const handleCategoryPress = (item) => {
+    if (item.comingSoon) {
+      return;
+    }
+
+    navigation.navigate("Boarding", {
+      screen: "BoardingCenters",
+    });
+  };
   const categories = [
     {
       icon: "home-outline",
@@ -23,6 +34,8 @@ export default function Categories() {
       gradient: ["#fb923c", "#ea580c"],
       bgColor: "#fff7ed",
       emoji: "🏠",
+      comingSoon: false,
+      screen: "BoardingCenters",
     },
     {
       icon: "heart-outline",
@@ -31,6 +44,7 @@ export default function Categories() {
       gradient: ["#f472b6", "#db2777"],
       bgColor: "#fdf2f8",
       emoji: "🐕",
+      comingSoon: true,
     },
     {
       icon: "shopping",
@@ -39,6 +53,7 @@ export default function Categories() {
       gradient: ["#c084fc", "#9333ea"],
       bgColor: "#faf5ff",
       emoji: "🛍️",
+      comingSoon: true,
     },
     {
       icon: "account-group-outline",
@@ -47,6 +62,7 @@ export default function Categories() {
       gradient: ["#60a5fa", "#2563eb"],
       bgColor: "#eff6ff",
       emoji: "💝",
+      comingSoon: true,
     },
     {
       icon: "content-cut",
@@ -55,6 +71,7 @@ export default function Categories() {
       gradient: ["#2dd4bf", "#0d9488"],
       bgColor: "#f0fdfa",
       emoji: "✂️",
+      comingSoon: true,
     },
     {
       icon: "stethoscope",
@@ -63,6 +80,7 @@ export default function Categories() {
       gradient: ["#818cf8", "#4f46e5"],
       bgColor: "#eef2ff",
       emoji: "👨‍⚕️",
+      comingSoon: true,
     },
   ];
 
@@ -84,11 +102,14 @@ export default function Categories() {
         {categories.map((item, index) => (
           <TouchableOpacity
             key={index}
+            activeOpacity={0.9}
+            onPress={() => handleCategoryPress(item)}
             style={[
               styles.card,
               {
                 backgroundColor: item.bgColor,
                 width: cardWidth,
+                opacity: item.comingSoon ? 0.85 : 1,
               },
             ]}
           >
@@ -107,8 +128,13 @@ export default function Categories() {
             <Text style={styles.name}>{item.name}</Text>
             <Text style={styles.desc}>{item.description}</Text>
 
-            <LinearGradient colors={item.gradient} style={styles.button}>
-              <Text style={styles.buttonText}>Explore</Text>
+            <LinearGradient
+              colors={item.comingSoon ? ["#9ca3af", "#6b7280"] : item.gradient}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>
+                {item.comingSoon ? "Coming Soon" : "Explore"}
+              </Text>
             </LinearGradient>
           </TouchableOpacity>
         ))}

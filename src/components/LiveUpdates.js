@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import liveUpdatesStyles from "../styles/LiveUpdatesStyles";
 
@@ -100,11 +95,7 @@ export default function LiveUpdates() {
           >
             {item.isVideo && (
               <View style={liveUpdatesStyles.playBtn}>
-                <MaterialCommunityIcons
-                  name="play"
-                  size={30}
-                  color="white"
-                />
+                <MaterialCommunityIcons name="play" size={30} color="white" />
               </View>
             )}
 

@@ -133,19 +133,6 @@ function CustomDrawerContent({ navigation }) {
         </Text>
       </Pressable>
 
-      {/* Theme Toggle */}
-      <Pressable style={drawerStyles.item} onPress={toggleTheme}>
-        <Ionicons
-          name={isDark ? "moon" : "sunny"}
-          size={22}
-          color={theme.text}
-        />
-
-        <Text style={[drawerStyles.text, { color: theme.text }]}>
-          {isDark ? "Dark Mode" : "Light Mode"}
-        </Text>
-      </Pressable>
-
       {/* Privacy Policy */}
       <Pressable
         style={drawerStyles.item}

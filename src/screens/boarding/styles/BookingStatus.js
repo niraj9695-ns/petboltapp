@@ -374,19 +374,20 @@ export default StyleSheet.create({
   },
 
   paginationFooter: {
+    width: 250,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    marginLeft: 8,
+    alignSelf: "center",
+    marginHorizontal: 16,
   },
 
   nextPageButton: {
+    width: 200,
+    marginTop: 200,
+    height: 56,
     backgroundColor: "#6b21a8",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 999,
-    minWidth: 180,
+    borderRadius: 16,
+    justifyContent: "center",
     alignItems: "center",
   },
 

@@ -14,20 +14,14 @@ import { LinearGradient } from "expo-linear-gradient";
 import petDetailsScreenStyles from "../styles/PetDetailsScreenStyles";
 
 import { fetchPetByIdApi } from "../services/petService";
-import { fetchPetImagesApi } from "../services/imageService";
+import {
+  fetchPetImagesApi,
+  extractImageUrlFromPayload,
+} from "../services/imageService";
 
 const getImageUrl = (image) => {
   if (!image) return null;
-  if (typeof image === "string") return image;
-  return (
-    image.image_url ||
-    image.url ||
-    image.image ||
-    image.pet_image ||
-    image.profile_image ||
-    image.image_path ||
-    null
-  );
+  return extractImageUrlFromPayload(image) || null;
 };
 
 const formatSubtitle = (type, breed) => {

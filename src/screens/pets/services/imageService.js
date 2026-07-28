@@ -4,7 +4,7 @@ import { Platform } from "react-native";
 
 import BASE_URL, { IMAGE_API_URL } from "../constants/api";
 
-const normalizeImageUrl = (url) => {
+export const normalizeImageUrl = (url) => {
   if (!url) return "";
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
   if (url.startsWith("//")) return `https:${url}`;
@@ -12,10 +12,108 @@ const normalizeImageUrl = (url) => {
   return `${BASE_URL}/${url}`;
 };
 
+const collectImageCandidates = (payload, seen = new Set()) => {
+  if (!payload) return [];
+
+  if (typeof payload === "string") {
+    return [payload];
+  }
+
+  if (Array.isArray(payload)) {
+    return payload.flatMap((item) => collectImageCandidates(item, seen));
+  }
+
+  if (typeof payload !== "object") return [];
+  if (seen.has(payload)) return [];
+  seen.add(payload);
+
+  const candidateFields = [
+    "image_url",
+    "url",
+    "uri",
+    "path",
+    "pet_image",
+    "image",
+    "profile_image",
+    "photo",
+    "photo_url",
+    "avatar",
+    "thumbnail",
+    "thumbnail_url",
+  ];
+
+  const values = [];
+
+  for (const field of candidateFields) {
+    const value = payload[field];
+    if (value !== undefined && value !== null) {
+      values.push(value);
+    }
+  }
+
+  if (payload.file && typeof payload.file === "object") {
+    for (const field of ["uri", "url", "path"]) {
+      const value = payload.file[field];
+      if (value !== undefined && value !== null) {
+        values.push(value);
+      }
+    }
+  }
+
+  Object.values(payload).forEach((value) => {
+    if (value !== null && typeof value === "object") {
+      values.push(...collectImageCandidates(value, seen));
+    }
+  });
+
+  return values;
+};
+
+export const extractImageUrlFromPayload = (payload) => {
+  const candidates = collectImageCandidates(payload);
+
+  for (const candidate of candidates) {
+    if (typeof candidate === "string") {
+      const trimmed = candidate.trim();
+      if (trimmed) {
+        return normalizeImageUrl(trimmed);
+      }
+    }
+  }
+
+  return "";
+};
+
+const extractImagesFromResponse = (payload) => {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.data)) return payload.data;
+  if (Array.isArray(payload?.images)) return payload.images;
+  if (Array.isArray(payload?.data?.data)) return payload.data.data;
+  if (Array.isArray(payload?.data?.images)) return payload.data.images;
+  if (Array.isArray(payload?.data?.image)) return payload.data.image;
+  if (Array.isArray(payload?.data?.items)) return payload.data.items;
+  if (Array.isArray(payload?.data?.result)) return payload.data.result;
+
+  if (payload?.data && typeof payload.data === "object") {
+    const nested = payload.data;
+    if (Array.isArray(nested.data)) return nested.data;
+    if (Array.isArray(nested.images)) return nested.images;
+    if (Array.isArray(nested.image)) return nested.image;
+    if (Array.isArray(nested.items)) return nested.items;
+    if (Array.isArray(nested.result)) return nested.result;
+  }
+
+  return [];
+};
+
 export const fetchPetImagesApi = async (petId) => {
   const token = await AsyncStorage.getItem("token");
+  const query = new URLSearchParams({
+    page: "1",
+    per_page: "20",
+  });
 
-  const response = await fetch(`${IMAGE_API_URL}/${petId}`, {
+  const response = await fetch(`${IMAGE_API_URL}/${petId}?${query.toString()}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -31,40 +129,12 @@ export const fetchPetImagesApi = async (petId) => {
 
   const json = JSON.parse(text);
 
-  let images = [];
+  const images = extractImagesFromResponse(json);
 
-  if (Array.isArray(json)) {
-    images = json;
-  } else if (Array.isArray(json.data)) {
-    images = json.data;
-  } else if (Array.isArray(json.images)) {
-    images = json.images;
-  }
-
-  return images.map((img) => {
-    let imageUrl = "";
-
-    if (img.image_url) {
-      imageUrl = normalizeImageUrl(img.image_url);
-    } else if (img.url) {
-      imageUrl = normalizeImageUrl(img.url);
-    } else if (img.pet_image) {
-      imageUrl = normalizeImageUrl(img.pet_image);
-    } else if (img.image) {
-      const imageValue = String(img.image).trim();
-      imageUrl =
-        imageValue.startsWith("http://") || imageValue.startsWith("https://")
-          ? normalizeImageUrl(imageValue)
-          : normalizeImageUrl(`uploads/pets/${imageValue}`);
-    } else if (img.image_path) {
-      imageUrl = normalizeImageUrl(img.image_path);
-    }
-
-    return {
-      ...img,
-      image_url: imageUrl,
-    };
-  });
+  return images.map((img) => ({
+    ...img,
+    image_url: extractImageUrlFromPayload(img),
+  }));
 };
 
 export const uploadPetImagesApi = async (petId, selectedImages) => {

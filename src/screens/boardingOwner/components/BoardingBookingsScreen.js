@@ -1,0 +1,281 @@
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
+  useWindowDimensions,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
+
+import { useRefresh } from "../../../context/RefreshContext";
+import styles from "../styles/BoardingBookingsStyles";
+import { getOwnerBookings } from "../services/boardingOwnerService";
+
+export default function BoardingBookingsScreen({ navigation }) {
+  const { refreshKey } = useRefresh();
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const { width } = useWindowDimensions();
+
+  const numColumns = width >= 1200 ? 3 : width >= 768 ? 2 : 1;
+
+  const cardWidth =
+    numColumns === 1
+      ? width - 32
+      : numColumns === 2
+        ? (width - 48) / 2
+        : (width - 64) / 3;
+
+  const loadBookings = useCallback(async (page = 1) => {
+    setLoading(true);
+
+    try {
+      const response = await getOwnerBookings(page, 20);
+      const payload = response?.data || response || {};
+
+      const data = Array.isArray(payload?.data)
+        ? payload.data
+        : Array.isArray(payload?.bookings)
+          ? payload.bookings
+          : Array.isArray(payload)
+            ? payload
+            : [];
+
+      const pagination = payload?.pagination || response?.pagination || {};
+      const backendTotalPages = Number(
+        pagination?.total_pages ||
+          payload?.total_pages ||
+          response?.total_pages ||
+          1,
+      );
+
+      setBookings(data);
+      setCurrentPage(Number(pagination?.page || page || 1));
+      setTotalPages(
+        Number.isFinite(backendTotalPages) && backendTotalPages > 0
+          ? backendTotalPages
+          : 1,
+      );
+      setTotalItems(
+        Number(
+          pagination?.total ||
+            payload?.total ||
+            response?.total ||
+            data.length ||
+            0,
+        ),
+      );
+    } catch (error) {
+      setBookings([]);
+      setCurrentPage(1);
+      setTotalPages(1);
+      setTotalItems(0);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const goToPage = async (page) => {
+    if (page < 1 || page > totalPages) return;
+
+    setCurrentPage(page);
+    setLoading(true);
+
+    try {
+      const response = await getOwnerBookings(page, 20);
+      const payload = response?.data || response || {};
+      const data = Array.isArray(payload?.data)
+        ? payload.data
+        : Array.isArray(payload?.bookings)
+          ? payload.bookings
+          : Array.isArray(payload)
+            ? payload
+            : [];
+      const pagination = payload?.pagination || response?.pagination || {};
+      const backendTotalPages = Number(
+        pagination?.total_pages ||
+          payload?.total_pages ||
+          response?.total_pages ||
+          1,
+      );
+
+      setBookings(data);
+      setCurrentPage(Number(pagination?.page || page || 1));
+      setTotalPages(
+        Number.isFinite(backendTotalPages) && backendTotalPages > 0
+          ? backendTotalPages
+          : 1,
+      );
+      setTotalItems(
+        Number(
+          pagination?.total ||
+            payload?.total ||
+            response?.total ||
+            data.length ||
+            0,
+        ),
+      );
+    } catch (error) {
+      setBookings([]);
+      setCurrentPage(1);
+      setTotalPages(1);
+      setTotalItems(0);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      loadBookings();
+    }, [loadBookings]),
+  );
+
+  useEffect(() => {
+    loadBookings();
+  }, [refreshKey, loadBookings]);
+
+  const renderBooking = ({ item }) => (
+    <TouchableOpacity
+      style={[
+        styles.card,
+        {
+          width: cardWidth,
+        },
+      ]}
+      onPress={() =>
+        navigation.navigate("BookingDetails", {
+          booking: item,
+        })
+      }
+    >
+      <View style={styles.row}>
+        <Text style={styles.petName}>
+          {item.pet_name || item.pet?.pet_name || "Booking"}
+        </Text>
+
+        <View
+          style={[
+            styles.statusBadge,
+            (item.status || item.booking_status || "pending") === "accepted"
+              ? styles.accepted
+              : styles.pending,
+          ]}
+        >
+          <Text style={styles.statusText}>
+            {item.status || item.booking_status || "pending"}
+          </Text>
+        </View>
+      </View>
+
+      <Text style={styles.info}>
+        Owner: {item.user_name || item.owner_name || "-"}
+      </Text>
+      <Text style={styles.info}>
+        Pet Type: {item.pet_type || item.pet?.pet_type || "-"}
+      </Text>
+      <Text style={styles.info}>
+        Center: {item.center_name || item.center?.center_name || "-"}
+      </Text>
+
+      <View style={styles.priceRow}>
+        <Text style={styles.priceText}>
+          ₹{item.total_price || item.price || 0}
+        </Text>
+        <Text style={styles.date}>
+          {item.start_date || item.check_in_date || "-"} →{" "}
+          {item.end_date || item.check_out_date || "-"}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.loaderContainer}>
+        <ActivityIndicator size="large" />
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Bookings</Text>
+        <Text style={styles.headerSubtitle}>
+          Manage upcoming requests and stays
+        </Text>
+      </View>
+      <FlatList
+        data={bookings}
+        key={numColumns}
+        numColumns={numColumns}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderBooking}
+        columnWrapperStyle={
+          numColumns > 1
+            ? {
+                justifyContent: "space-between",
+                marginBottom: 12,
+              }
+            : undefined
+        }
+        contentContainerStyle={styles.list}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>No bookings found</Text>
+        }
+      />
+      <View style={styles.paginationContainer}>
+        <TouchableOpacity
+          style={[
+            styles.paginationButton,
+            currentPage === 1 && styles.paginationButtonDisabled,
+          ]}
+          disabled={currentPage === 1}
+          onPress={() => goToPage(currentPage - 1)}
+        >
+          <Text style={styles.paginationButtonText}>Prev</Text>
+        </TouchableOpacity>
+
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <TouchableOpacity
+            key={page}
+            style={[
+              styles.pageNumberButton,
+              currentPage === page && styles.activePageNumberButton,
+            ]}
+            onPress={() => goToPage(page)}
+          >
+            <Text
+              style={[
+                styles.pageNumberButtonText,
+                currentPage === page && styles.activePageNumberButtonText,
+              ]}
+            >
+              {page}
+            </Text>
+          </TouchableOpacity>
+        ))}
+
+        <TouchableOpacity
+          style={[
+            styles.paginationButton,
+            currentPage === totalPages && styles.paginationButtonDisabled,
+          ]}
+          disabled={currentPage === totalPages}
+          onPress={() => goToPage(currentPage + 1)}
+        >
+          <Text style={styles.paginationButtonText}>Next</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+}

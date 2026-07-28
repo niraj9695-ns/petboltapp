@@ -9,15 +9,15 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
-import BoardingOwnerTabs from "./BoardingOwnerTabs";
+import BoardingOwnerStack from "./BoardingOwnerStack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Ionicons } from "@expo/vector-icons";
 
 import { useTheme } from "../context/ThemeContext";
 
+import BoardingOwnerHomeScreen from "../screens/boardingOwner/components/BoardingOwnerHomeScreen";
 import NotificationScreen from "../screens/NotificationScreen";
-import BoardingOwnerHomeScreen from "../screens/boardingOwner/BoardingOwnerHomeScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -67,16 +67,6 @@ function BoardingOwnerDrawerContent({ navigation }) {
 
       setGuestRole(null);
 
-      const parentNav = navigation.getParent?.();
-      if (parentNav) {
-        parentNav.reset({
-          index: 0,
-          routes: [{ name: "Auth" }],
-        });
-      } else {
-        navigation.navigate("Auth");
-      }
-
       Alert.alert("Success", "Logged out successfully");
     } catch (error) {
       Alert.alert("Error", "Logout failed");
@@ -95,34 +85,16 @@ function BoardingOwnerDrawerContent({ navigation }) {
         style={styles.item}
         onPress={() =>
           navigation.navigate("Main", {
-            screen: "Dashboard",
+            screen: "BoardingTabs",
+            params: {
+              screen: "Dashboard",
+            },
           })
         }
       >
         <Ionicons name="home-outline" size={22} color={theme.text} />
 
         <Text style={[styles.text, { color: theme.text }]}>Dashboard</Text>
-      </Pressable>
-
-      <Pressable style={styles.item} onPress={toggleTheme}>
-        <Ionicons
-          name={isDark ? "moon" : "sunny"}
-          size={22}
-          color={theme.text}
-        />
-
-        <Text style={[styles.text, { color: theme.text }]}>
-          {isDark ? "Dark Mode" : "Light Mode"}
-        </Text>
-      </Pressable>
-
-      <Pressable
-        style={styles.item}
-        onPress={() => navigation.navigate("Notifications")}
-      >
-        <Ionicons name="notifications-outline" size={22} color="#6b21a8" />
-
-        <Text style={[styles.text, { color: "#6b21a8" }]}>Notifications</Text>
       </Pressable>
 
       {/* Logout */}
@@ -170,6 +142,13 @@ export default function BoardingOwnerNavigator() {
         headerStyle: {
           backgroundColor: theme.background,
         },
+        headerTitleAlign: "center",
+        headerTitleContainerStyle: {
+          left: 0,
+          right: 0,
+          alignItems: "center",
+          justifyContent: "center",
+        },
 
         headerTitle: () => (
           <Image
@@ -199,18 +178,11 @@ export default function BoardingOwnerNavigator() {
     >
       <Drawer.Screen
         name="Main"
-        component={BoardingOwnerTabs}
+        component={BoardingOwnerStack}
         options={{
           drawerItemStyle: {
             display: "none",
           },
-        }}
-      />
-      <Drawer.Screen
-        name="Notifications"
-        component={NotificationScreen}
-        options={{
-          title: "Notifications",
         }}
       />
     </Drawer.Navigator>

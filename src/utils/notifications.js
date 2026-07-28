@@ -132,15 +132,12 @@ export async function fetchNotificationsFromApi({
   const authToken = await AsyncStorage.getItem("token");
 
   if (!authToken) {
-    console.log("No auth token found");
     return [];
   }
 
   const page = Math.floor(offset / limit) + 1;
 
   const url = `${API_BASE_URL}/notifications?page=${page}&per_page=${limit}`;
-
-  console.log("Notifications URL:", url);
 
   const response = await fetch(url, {
     headers: {
@@ -151,13 +148,9 @@ export async function fetchNotificationsFromApi({
 
   const payload = await response.json();
 
-  console.log("Notifications Response:", JSON.stringify(payload, null, 2));
-
   if (!response.ok) {
     throw new Error(payload?.message || "Unable to load notifications");
   }
-
-  console.log("Notifications Response:", JSON.stringify(payload, null, 2));
 
   const notifications =
     payload?.data?.data ?? payload?.data ?? payload?.notifications ?? [];
