@@ -10,13 +10,39 @@ export default StyleSheet.create({
     color: "#666",
     marginBottom: 20,
   },
-  input: {
+  otpContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 24,
+  },
+
+  otpBox: {
+    width: 50,
+    height: 58,
+
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 12,
-    backgroundColor: "#fff",
+    borderColor: "#E5E7EB",
+
+    borderRadius: 16,
+
+    backgroundColor: "#FFFFFF",
+
+    textAlign: "center",
+
+    fontSize: 22,
+    fontWeight: "700",
+
+    color: "#6B21A8",
+
+    shadowColor: "#B79FFF",
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+
+  otpBoxActive: {
+    borderColor: "#6B21A8",
+    borderWidth: 2,
   },
   resendText: {
     color: "#6b21a8",

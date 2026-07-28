@@ -14,7 +14,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as DocumentPicker from "expo-document-picker";
 import { LinearGradient } from "expo-linear-gradient";
-import profileStyles from "../styles/ProfileScreenStyles";
+import profileEditStyles from "../styles/ProfileEditScreenStyles";
 
 const API_URL = "https://www.cgpisoftware.com/cheerytail";
 
@@ -176,7 +176,7 @@ export default function ProfileEditScreen({ navigation }) {
 
   if (loading) {
     return (
-      <View style={profileStyles.loaderContainer}>
+      <View style={profileEditStyles.loaderContainer}>
         <ActivityIndicator size="large" color="#6b21a8" />
       </View>
     );
@@ -184,13 +184,13 @@ export default function ProfileEditScreen({ navigation }) {
 
   return (
     <ScrollView
-      style={profileStyles.wrapper}
+      style={profileEditStyles.wrapper}
       contentContainerStyle={{ paddingBottom: 30 }}
     >
       <LinearGradient
         colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
         style={[
-          profileStyles.container,
+          profileEditStyles.container,
           {
             maxWidth: isTablet ? 700 : "100%",
             alignSelf: "center",
@@ -198,127 +198,115 @@ export default function ProfileEditScreen({ navigation }) {
           },
         ]}
       >
-        <View style={profileStyles.headerRow}>
+        <View style={profileEditStyles.headerRow}>
           <TouchableOpacity
-            style={profileStyles.backButton}
+            style={profileEditStyles.backButton}
             onPress={() => navigation.goBack()}
           >
-            <Text style={profileStyles.backButtonText}>← Back</Text>
+            <Text style={profileEditStyles.backButtonText}>← Back</Text>
           </TouchableOpacity>
-          <Text style={profileStyles.editTitle}>Update Profile</Text>
+          <Text style={profileEditStyles.editTitle}>Update Profile</Text>
         </View>
 
-        <View style={profileStyles.editCard}>
-          <Text style={profileStyles.formLabel}>Full Name</Text>
+        <View style={profileEditStyles.editCard}>
+          <Text style={profileEditStyles.formLabel}>Full Name</Text>
           <TextInput
             value={fullName}
             onChangeText={setFullName}
-            style={profileStyles.input}
+            style={profileEditStyles.input}
           />
 
-          <Text style={profileStyles.formLabel}>Mobile Number</Text>
+          <Text style={profileEditStyles.formLabel}>Mobile Number</Text>
           <TextInput
             value={phone}
             onChangeText={setPhone}
-            style={profileStyles.input}
+            style={profileEditStyles.input}
             keyboardType="phone-pad"
           />
 
-          <Text style={profileStyles.formLabel}>Alternate Contact Number</Text>
+          <Text style={profileEditStyles.formLabel}>Alternate Contact Number</Text>
           <TextInput
             value={alternatePhone}
             onChangeText={setAlternatePhone}
-            style={profileStyles.input}
+            style={profileEditStyles.input}
             keyboardType="phone-pad"
           />
 
-          <Text style={profileStyles.formLabel}>Residential Address</Text>
+          <Text style={profileEditStyles.formLabel}>Residential Address</Text>
           <TextInput
             value={address}
             onChangeText={setAddress}
-            style={[profileStyles.input, profileStyles.multiLineInput]}
+            style={[profileEditStyles.input, profileEditStyles.multiLineInput]}
             multiline
           />
 
-          <Text style={profileStyles.formLabel}>Emergency Contact Name</Text>
+          <Text style={profileEditStyles.formLabel}>Emergency Contact Name</Text>
           <TextInput
             value={emergencyName}
             onChangeText={setEmergencyName}
-            style={profileStyles.input}
+            style={profileEditStyles.input}
           />
 
-          <Text style={profileStyles.formLabel}>Emergency Contact Number</Text>
+          <Text style={profileEditStyles.formLabel}>Emergency Contact Number</Text>
           <TextInput
             value={emergencyNumber}
             onChangeText={setEmergencyNumber}
-            style={profileStyles.input}
+            style={profileEditStyles.input}
             keyboardType="phone-pad"
           />
 
           <TouchableOpacity
-            style={profileStyles.fileButton}
+            style={profileEditStyles.fileButton}
             onPress={pickAadhar}
           >
-            <Text style={profileStyles.fileButtonText}>
+            <Text style={profileEditStyles.fileButtonText}>
               Choose Aadhaar File
             </Text>
           </TouchableOpacity>
 
-          {aadharFile ? (
-            <Text style={profileStyles.fileName}>{aadharFile.name}</Text>
-          ) : user?.aadhar_file ? (
+          <View style={profileEditStyles.btnRow}>
             <TouchableOpacity
-              style={profileStyles.fileAction}
-              onPress={() => Linking.openURL(user.aadhar_file)}
-            >
-              <Text style={profileStyles.fileActionText}>
-                {currentAadharIsPdf
-                  ? "View current Aadhaar PDF"
-                  : "View current Aadhaar image"}
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-
-          <View style={profileStyles.btnRow}>
-            <TouchableOpacity
-              style={profileStyles.primaryBtn}
+              style={profileEditStyles.primaryBtn}
               onPress={handleSaveProfile}
               disabled={saving}
             >
-              <Text style={profileStyles.primaryBtnText}>
+              <Text style={profileEditStyles.primaryBtnText}>
                 {saving ? "Saving..." : "Save Changes"}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[profileStyles.secondaryBtn, profileStyles.cancelBtn]}
+              style={[profileEditStyles.secondaryBtn, profileEditStyles.cancelBtn]}
               onPress={() => navigation.goBack()}
             >
-              <Text style={profileStyles.secondaryBtnText}>Cancel</Text>
+              <Text style={profileEditStyles.secondaryBtnText}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         {user?.aadhar_file ? (
-          <>
-            <Text style={profileStyles.docTitle}>Aadhaar Document</Text>
-            {currentAadharIsPdf ? (
-              <TouchableOpacity
-                style={profileStyles.fileAction}
-                onPress={() => Linking.openURL(user.aadhar_file)}
-              >
-                <Text style={profileStyles.fileActionText}>
-                  View Aadhaar PDF
+          <View style={profileEditStyles.documentCard}>
+            <View style={profileEditStyles.documentInfo}>
+              <Text style={profileEditStyles.documentIcon}>🪪</Text>
+
+              <View style={{ flex: 1 }}>
+                <Text style={profileEditStyles.documentTitle}>
+                  Aadhaar Document
                 </Text>
-              </TouchableOpacity>
-            ) : (
-              <Image
-                source={{ uri: user.aadhar_file }}
-                style={profileStyles.aadharImage}
-                resizeMode="cover"
-              />
-            )}
-          </>
+
+                <Text style={profileEditStyles.documentSubTitle}>
+                  Uploaded and verified document
+                </Text>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={profileEditStyles.viewDocumentBtn}
+              onPress={() => Linking.openURL(user.aadhar_file)}
+            >
+              <Text style={profileEditStyles.viewDocumentText}>View Aadhaar</Text>
+            </TouchableOpacity>
+          </View>
         ) : null}
       </LinearGradient>
     </ScrollView>

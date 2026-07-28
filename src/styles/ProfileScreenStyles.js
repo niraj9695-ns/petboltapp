@@ -114,6 +114,59 @@ export default StyleSheet.create({
     marginBottom: 10,
     alignSelf: "flex-start",
   },
+  documentCard: {
+    width: "100%",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 18,
+    padding: 18,
+    marginTop: 15,
+    marginBottom: 20,
+
+    shadowColor: "#6b21a8",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 4,
+  },
+
+  documentInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  documentIcon: {
+    fontSize: 28,
+    marginRight: 12,
+  },
+
+  documentTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#111827",
+  },
+
+  documentSubTitle: {
+    fontSize: 13,
+    color: "#6B7280",
+    marginTop: 3,
+  },
+
+  viewDocumentBtn: {
+    marginTop: 15,
+    backgroundColor: "#6b21a8",
+    borderRadius: 14,
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+
+  viewDocumentText: {
+    color: "#FFFFFF",
+    fontWeight: "700",
+    fontSize: 14,
+  },
   aadharImage: {
     width: "100%",
     maxWidth: 500,
@@ -122,56 +175,7 @@ export default StyleSheet.create({
     marginBottom: 20,
     alignSelf: "center",
   },
-  editCard: {
-    width: "100%",
-    backgroundColor: "#fff",
-    borderRadius: 15,
-    padding: 16,
-    marginBottom: 20,
-    marginTop: 10,
-  },
-  editTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 12,
-    color: "#1f2937",
-  },
-  formLabel: {
-    fontSize: 13,
-    color: "#4b5563",
-    marginTop: 12,
-    marginBottom: 6,
-  },
-  input: {
-    width: "100%",
-    backgroundColor: "#f9fafb",
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#e5e7eb",
-    padding: 12,
-    color: "#111827",
-  },
-  multiLineInput: {
-    minHeight: 80,
-    textAlignVertical: "top",
-  },
-  fileButton: {
-    marginTop: 12,
-    backgroundColor: "#eef2ff",
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    alignItems: "center",
-  },
-  fileButtonText: {
-    color: "#1d4ed8",
-    fontWeight: "600",
-  },
-  fileName: {
-    marginTop: 10,
-    fontSize: 14,
-    color: "#374151",
-  },
+  
   fileAction: {
     marginTop: 10,
     paddingVertical: 12,

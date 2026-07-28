@@ -356,6 +356,7 @@ export default StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 32,
+    margin: 10,
   },
 
   emptyStateText: {

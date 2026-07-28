@@ -91,6 +91,10 @@ export default function BoardingOwnerRegister({
 
   const [centerPhotos, setCenterPhotos] = useState([]);
 
+  // error state for inline validation messages (shown above inputs)
+  const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState("");
+
   const [vetClinicName, setVetClinicName] = useState("");
 
   const [vetClinicAddress, setVetClinicAddress] = useState("");
@@ -120,7 +124,8 @@ export default function BoardingOwnerRegister({
 
   const [digitalSignature, setDigitalSignature] = useState("");
 
-  const [signatureDate, setSignatureDate] = useState(null);
+  // default signature date to today
+  const [signatureDate, setSignatureDate] = useState(new Date());
 
   const [termsAccepted, setTermsAccepted] = useState(false);
 
@@ -133,6 +138,7 @@ export default function BoardingOwnerRegister({
 
     if (!result.canceled) {
       setAadharFile(result.assets[0]);
+      setErrors((prev) => ({ ...prev, aadhar: "", stepError: "" }));
     }
   };
 
@@ -143,6 +149,7 @@ export default function BoardingOwnerRegister({
 
     if (!result.canceled) {
       setLicenseProof(result.assets[0]);
+      setErrors((prev) => ({ ...prev, license: "", stepError: "" }));
     }
   };
 
@@ -158,51 +165,131 @@ export default function BoardingOwnerRegister({
   };
 
   const validateStep = () => {
+    const newErrors = {};
+
     if (currentStep === 1) {
-      if (
-        !fullName ||
-        !email ||
-        !password ||
-        !mobileNumber ||
-        !emergencyContactName ||
-        !emergencyContactNumber
-      ) {
-        Alert.alert("Validation", "Please fill all owner details");
+      const cleanMobile = mobileNumber.replace(/\D/g, "");
+      const cleanAlternate = (alternateContactNumber || "").replace(/\D/g, "");
+      const cleanEmergency = (emergencyContactNumber || "").replace(/\D/g, "");
+
+      if (!fullName.trim()) {
+        newErrors.fullName = "Full name is required";
+      } else if (fullName.trim().length < 3) {
+        newErrors.fullName = "Minimum 3 characters required";
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email || "").trim())) {
+        newErrors.email = "Enter a valid email address";
+      }
+
+      if (!password || password.length < 8) {
+        newErrors.password = "Minimum 8 characters required";
+      }
+
+      if (!/^[6-9]\d{9}$/.test(cleanMobile)) {
+        newErrors.mobile = "Please enter a valid 10-digit mobile number";
+      }
+
+      if (cleanAlternate && !/^[6-9]\d{9}$/.test(cleanAlternate)) {
+        newErrors.alternate = "Invalid alternate number";
+      }
+
+      if (cleanAlternate && cleanAlternate === cleanMobile) {
+        newErrors.alternate = "Alternate number should be different from mobile";
+      }
+
+      if (!emergencyContactName.trim()) {
+        newErrors.emergencyName = "Emergency contact name is required";
+      }
+
+      if (!/^[6-9]\d{9}$/.test(cleanEmergency)) {
+        newErrors.emergencyNumber = "Invalid emergency contact number";
+      }
+
+      if (cleanEmergency === cleanMobile) {
+        newErrors.emergencyNumber = "Emergency number should be different from mobile";
+      }
+
+      if (Object.keys(newErrors).length > 0) {
+        newErrors.stepError = "Please fix the highlighted fields";
+        setErrors(newErrors);
         return false;
       }
 
-      if (!/^\d{10}$/.test(mobileNumber)) {
-        Alert.alert("Validation", "Mobile number must be exactly 10 digits");
-        return false;
-      }
+      // clear step errors
+      setErrors({});
+      return true;
     }
 
     if (currentStep === 2) {
-      if (
-        !address ||
-        !city ||
-        !stateName ||
-        !pinCode ||
-        !propertyType ||
-        !fencingStatus ||
-        !supervisionLevel ||
-        !totalCapacity ||
-        petPriceRows.some((row) => !row.petType || !row.price)
-      ) {
-        Alert.alert("Validation", "Please fill all boarding center details");
+      if (!address) newErrors.address = "Address is required";
+      if (!city) newErrors.city = "City is required";
+      if (!stateName) newErrors.stateName = "State is required";
+      if (!/^[0-9]{6}$/.test(pinCode)) newErrors.pinCode = "Enter valid 6-digit pin code";
+      if (!propertyType) newErrors.propertyType = "Property type is required";
+      if (!fencingStatus) newErrors.fencingStatus = "Fencing status is required";
+      if (!supervisionLevel) newErrors.supervisionLevel = "Supervision level is required";
+      if (!totalCapacity) newErrors.totalCapacity = "Total capacity is required";
+
+      if (petPriceRows.some((row) => !row.petType || !row.price)) {
+        newErrors.prices = "Please add prices for all pet types or remove empty rows";
+      }
+
+      if (Object.keys(newErrors).length > 0) {
+        newErrors.stepError = "Please fix the highlighted fields";
+        setErrors(newErrors);
         return false;
       }
+
+      setErrors({});
+      return true;
     }
 
     if (currentStep === 3) {
-      if (
-        !acceptedPetTypes ||
-        acceptedPetTypes.length === 0 ||
-        !vaccinationPolicy
-      ) {
-        Alert.alert("Validation", "Please fill required service details");
+      if (!acceptedPetTypes || acceptedPetTypes.length === 0) {
+        newErrors.acceptedPetTypes = "Select at least one accepted pet type";
+      }
+      if (!vaccinationPolicy || vaccinationPolicy.trim().length < 10) {
+        newErrors.vaccinationPolicy = "Provide vaccination policy details (min 10 chars)";
+      }
+
+      if (Object.keys(newErrors).length > 0) {
+        newErrors.stepError = "Please fix the highlighted fields";
+        setErrors(newErrors);
         return false;
       }
+
+      setErrors({});
+      return true;
+    }
+
+    if (currentStep === 4) {
+      if (!aadharFile) newErrors.aadhar = "Aadhar file is required";
+      if (!licenseProof) newErrors.license = "License proof is required";
+
+      if (Object.keys(newErrors).length > 0) {
+        newErrors.stepError = "Please upload required documents";
+        setErrors(newErrors);
+        return false;
+      }
+
+      setErrors({});
+      return true;
+    }
+
+    if (currentStep === 5) {
+      if (!digitalSignature || !digitalSignature.trim()) newErrors.digitalSignature = "Digital signature is required";
+      if (!signatureDate) newErrors.signatureDate = "Signature date is required";
+      if (!termsAccepted) newErrors.terms = "Accept terms and conditions to continue";
+
+      if (Object.keys(newErrors).length > 0) {
+        newErrors.stepError = "Please fix the highlighted fields";
+        setErrors(newErrors);
+        return false;
+      }
+
+      setErrors({});
+      return true;
     }
 
     return true;
@@ -219,11 +306,8 @@ export default function BoardingOwnerRegister({
   };
 
   const handleRegister = async () => {
-    if (!termsAccepted) {
-      Alert.alert("Validation", "Please accept terms and conditions");
-
-      return;
-    }
+    // validate final step before submitting
+    if (!validateStep()) return;
 
     try {
       setLoading(true);
@@ -404,28 +488,53 @@ export default function BoardingOwnerRegister({
 
       formData.append("terms_accepted", "1");
 
+      // Helper to deduce file name and type when DocumentPicker returns minimal info
+      const getExtension = (uri) => {
+        try {
+          const parts = uri.split(".");
+          return parts.length > 1 ? parts.pop().split(/[#?]/)[0] : null;
+        } catch (e) {
+          return null;
+        }
+      };
+
+      const normalizeFile = (file, fallbackName) => {
+        const uri = file.uri || file;
+        let name = file.name;
+        if (!name) {
+          const ext = getExtension(uri) || "jpg";
+          name = `${fallbackName}.${ext}`;
+        }
+        const type = file.mimeType || file.type || (name.endsWith(".pdf") ? "application/pdf" : "image/jpeg");
+        return { uri, name, type };
+      };
+
       if (aadharFile) {
+        const f = normalizeFile(aadharFile, "aadhar");
         formData.append("aadhar_file", {
-          uri: aadharFile.uri,
-          name: aadharFile.name,
-          type: aadharFile.mimeType || "image/jpeg",
+          uri: f.uri,
+          name: f.name,
+          type: f.type,
         });
       }
 
       if (licenseProof) {
+        const f = normalizeFile(licenseProof, "license");
         formData.append("license_proof", {
-          uri: licenseProof.uri,
-          name: licenseProof.name,
-          type: licenseProof.mimeType || "image/jpeg",
+          uri: f.uri,
+          name: f.name,
+          type: f.type,
         });
       }
 
       if (centerPhotos && centerPhotos.length > 0) {
-        centerPhotos.forEach((photo) => {
+        centerPhotos.forEach((photo, idx) => {
+          const f = normalizeFile(photo, `center_photo_${idx + 1}`);
+          // Some backends accept repeated 'center_photos[]', others 'center_photos'. Keep []
           formData.append("center_photos[]", {
-            uri: photo.uri,
-            name: photo.name,
-            type: photo.mimeType || "image/jpeg",
+            uri: f.uri,
+            name: f.name,
+            type: f.type,
           });
         });
       }
@@ -443,15 +552,37 @@ export default function BoardingOwnerRegister({
       const result = await response.json();
 
       if (result.status === true || result.status === "success") {
-        setGlobalEmail(email); // store globally
+        // After successful registration, send OTP to email (ensure first-time send works)
+        try {
+          const otpResponse = await fetch(
+            "https://www.cgpisoftware.com/cheerytail/api/auth/send-email-otp",
+            {
+              method: "POST",
+              body: (() => {
+                const f = new FormData();
+                f.append("email", email);
+                return f;
+              })(),
+            },
+          );
 
-        setOtpType("register");
-        setStep("otp"); // navigate to OTP screen
+          const otpResult = await otpResponse.json();
+
+          if (otpResult.status === true || otpResult.status === "success") {
+            setGlobalEmail(email); // store globally
+            setOtpType("register");
+            setStep("otp"); // navigate to OTP screen
+          } else {
+            setServerError(otpResult.message || "Failed to send OTP");
+          }
+        } catch (err) {
+          setServerError(err.message || "Something went wrong while sending OTP");
+        }
       } else {
-        Alert.alert("Error", result.message || "Registration Failed");
+        setServerError(result.message || "Registration Failed");
       }
     } catch (error) {
-      Alert.alert("Error", "Something went wrong");
+      setServerError(error.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -492,6 +623,13 @@ export default function BoardingOwnerRegister({
       >
         Step {currentStep} of 5
       </Text>
+
+      {serverError ? (
+        <View style={styles.errorBanner}>
+          <Text style={styles.errorBannerTitle}>Registration Error</Text>
+          <Text style={styles.errorBannerText}>{serverError}</Text>
+        </View>
+      ) : null}
       {/* =====================================
 STEP 1 - OWNER DETAILS
 ===================================== */}
@@ -499,52 +637,127 @@ STEP 1 - OWNER DETAILS
       {currentStep === 1 && (
         <View>
           <Text style={styles.heading}>Owner Details</Text>
+
+          {errors.fullName ? (
+            <Text style={styles.errorTopText}>{errors.fullName}</Text>
+          ) : null}
           <FloatingInput
             label="Full Name *"
             value={fullName}
-            onChangeText={setFullName}
+            onChangeText={(text) => {
+              setFullName(text);
+              setErrors((prev) => ({ ...prev, fullName: "" }));
+            }}
           />
 
+          {errors.email ? (
+            <Text style={styles.errorTopText}>{errors.email}</Text>
+          ) : null}
           <FloatingInput
             label="Email *"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(text) => {
+              setEmail(text);
+              setErrors((prev) => ({ ...prev, email: "" }));
+            }}
             keyboardType="email-address"
             autoCapitalize="none"
           />
 
+          {errors.password ? (
+            <Text style={styles.errorTopText}>{errors.password}</Text>
+          ) : null}
           <PasswordInput
             label="Password *"
             value={password}
-            onChangeText={setPassword}
+            onChangeText={(text) => {
+              setPassword(text);
+              setErrors((prev) => ({ ...prev, password: "" }));
+            }}
           />
 
-          <FloatingInput
-            label="Mobile Number *"
-            value={mobileNumber}
-            onChangeText={setMobileNumber}
-            keyboardType="phone-pad"
-          />
+          {errors.mobile ? (
+            <Text style={styles.errorTopText}>{errors.mobile}</Text>
+          ) : null}
 
-          <FloatingInput
-            label="Alternate Contact Number"
-            value={alternateContactNumber}
-            onChangeText={setAlternateContactNumber}
-            keyboardType="phone-pad"
-          />
+          <View style={styles.phoneWrapper}>
+            <View style={styles.countryPicker}>
+              <Text style={styles.countryText}>+91</Text>
+            </View>
 
+            <TextInput
+              style={styles.phoneInput}
+              placeholder="Enter mobile number"
+              placeholderTextColor="#9CA3AF"
+              keyboardType="number-pad"
+              maxLength={10}
+              value={mobileNumber}
+              onChangeText={(text) => {
+                const cleaned = text.replace(/\D/g, "").slice(0, 10);
+                setMobileNumber(cleaned);
+                setErrors((prev) => ({ ...prev, mobile: "" }));
+              }}
+            />
+          </View>
+
+          {errors.alternate ? (
+            <Text style={styles.errorTopText}>{errors.alternate}</Text>
+          ) : null}
+
+          <View style={styles.phoneWrapper}>
+            <View style={styles.countryPicker}>
+              <Text style={styles.countryText}>+91</Text>
+            </View>
+
+            <TextInput
+              style={styles.phoneInput}
+              placeholder="Alternate Contact Number"
+              placeholderTextColor="#9CA3AF"
+              keyboardType="number-pad"
+              maxLength={10}
+              value={alternateContactNumber}
+              onChangeText={(text) => {
+                const cleaned = text.replace(/\D/g, "").slice(0, 10);
+                setAlternateContactNumber(cleaned);
+                setErrors((prev) => ({ ...prev, alternate: "" }));
+              }}
+            />
+          </View>
+
+          {errors.emergencyName ? (
+            <Text style={styles.errorTopText}>{errors.emergencyName}</Text>
+          ) : null}
           <FloatingInput
             label="Emergency Contact Name *"
             value={emergencyContactName}
-            onChangeText={setEmergencyContactName}
+            onChangeText={(text) => {
+              setEmergencyContactName(text);
+              setErrors((prev) => ({ ...prev, emergencyName: "" }));
+            }}
           />
 
-          <FloatingInput
-            label="Emergency Contact Number *"
-            value={emergencyContactNumber}
-            onChangeText={setEmergencyContactNumber}
-            keyboardType="phone-pad"
-          />
+          {errors.emergencyNumber ? (
+            <Text style={styles.errorTopText}>{errors.emergencyNumber}</Text>
+          ) : null}
+          <View style={styles.phoneWrapper}>
+            <View style={styles.countryPicker}>
+              <Text style={styles.countryText}>+91</Text>
+            </View>
+
+            <TextInput
+              style={styles.phoneInput}
+              placeholder="Emergency Contact Number"
+              placeholderTextColor="#9CA3AF"
+              keyboardType="number-pad"
+              maxLength={10}
+              value={emergencyContactNumber}
+              onChangeText={(text) => {
+                const cleaned = text.replace(/\D/g, "").slice(0, 10);
+                setEmergencyContactNumber(cleaned);
+                setErrors((prev) => ({ ...prev, emergencyNumber: "" }));
+              }}
+            />
+          </View>
 
           <FloatingInput
             label="Business Name"
@@ -566,38 +779,57 @@ STEP 2 - CENTER DETAILS
         <View>
           <Text style={styles.heading}>Boarding Center Details</Text>
 
-          <FloatingInput
-            label="Center Name"
-            value={centerName}
-            onChangeText={setCenterName}
-          />
+              {errors.stepError ? (
+                <Text style={styles.errorTopText}>{errors.stepError}</Text>
+              ) : null}
 
-          <FloatingInput
-            label="Boarding Center Address *"
-            value={address}
-            onChangeText={setAddress}
-            multiline
-            height={100}
-          />
+              <FloatingInput
+                label="Center Name"
+                value={centerName}
+                onChangeText={setCenterName}
+              />
 
-          <FloatingInput
-            label="Address Line 2"
-            value={addressLine2}
-            onChangeText={setAddressLine2}
-          />
+              {errors.address ? (
+                <Text style={styles.errorTopText}>{errors.address}</Text>
+              ) : null}
+              <FloatingInput
+                label="Boarding Center Address *"
+                value={address}
+                onChangeText={(text) => {
+                  setAddress(text);
+                  setErrors((prev) => ({ ...prev, address: "" }));
+                }}
+                multiline
+                height={100}
+              />
 
-          <FloatingInput label="City *" value={city} onChangeText={setCity} />
+              <FloatingInput
+                label="Address Line 2"
+                value={addressLine2}
+                onChangeText={setAddressLine2}
+              />
 
-          <FloatingInput
-            label="State *"
-            value={stateName}
-            onChangeText={setStateName}
-          />
+              {errors.city ? (
+                <Text style={styles.errorTopText}>{errors.city}</Text>
+              ) : null}
+              <FloatingInput label="City *" value={city} onChangeText={(text) => {setCity(text); setErrors((prev)=>({...prev, city: ""}));}} />
 
-          <FloatingInput
-            label="Pin Code *"
-            value={pinCode}
-            onChangeText={setPinCode}
+              {errors.stateName ? (
+                <Text style={styles.errorTopText}>{errors.stateName}</Text>
+              ) : null}
+              <FloatingInput
+                label="State *"
+                value={stateName}
+                onChangeText={(text)=>{setStateName(text); setErrors((prev)=>({...prev, stateName: ""}));}}
+              />
+
+              {errors.pinCode ? (
+                <Text style={styles.errorTopText}>{errors.pinCode}</Text>
+              ) : null}
+              <FloatingInput
+                label="Pin Code *"
+                value={pinCode}
+                onChangeText={(text)=>{setPinCode(text); setErrors((prev)=>({...prev, pinCode: ""}));}}
             keyboardType="number-pad"
           />
 
@@ -737,9 +969,17 @@ STEP 3 - SERVICES & AMENITIES
         <View>
           <Text style={styles.heading}>Services & Amenities</Text>
 
+          {errors.stepError ? (
+            <Text style={styles.errorTopText}>{errors.stepError}</Text>
+          ) : null}
+
           <Text style={styles.helperText}>
             Tap to toggle accepted pet types
           </Text>
+
+          {errors.acceptedPetTypes ? (
+            <Text style={styles.errorTopText}>{errors.acceptedPetTypes}</Text>
+          ) : null}
 
           <View
             style={{ flexDirection: "row", flexWrap: "wrap", marginBottom: 12 }}
@@ -803,10 +1043,14 @@ STEP 3 - SERVICES & AMENITIES
             onChangeText={setAmenities}
           />
 
+          {errors.vaccinationPolicy ? (
+            <Text style={styles.errorTopText}>{errors.vaccinationPolicy}</Text>
+          ) : null}
+
           <FloatingInput
             label="Vaccination Policy *"
             value={vaccinationPolicy}
-            onChangeText={setVaccinationPolicy}
+            onChangeText={(text)=>{setVaccinationPolicy(text); setErrors((prev)=>({...prev, vaccinationPolicy: ""}));}}
             multiline
             height={100}
           />
@@ -836,8 +1080,15 @@ STEP 4 - DOCUMENTS
         <View>
           <Text style={styles.heading}>Documents Upload</Text>
 
+          {errors.stepError ? (
+            <Text style={styles.errorTopText}>{errors.stepError}</Text>
+          ) : null}
+
           {/* AADHAR */}
 
+          {errors.aadhar ? (
+            <Text style={styles.errorTopText}>{errors.aadhar}</Text>
+          ) : null}
           <TouchableOpacity style={styles.uploadButton} onPress={pickAadhar}>
             <Text style={styles.uploadText}>
               {aadharFile ? aadharFile.name : "Upload Aadhar File"}
@@ -846,6 +1097,9 @@ STEP 4 - DOCUMENTS
 
           {/* LICENSE */}
 
+          {errors.license ? (
+            <Text style={styles.errorTopText}>{errors.license}</Text>
+          ) : null}
           <TouchableOpacity style={styles.uploadButton} onPress={pickLicense}>
             <Text style={styles.uploadText}>
               {licenseProof ? licenseProof.name : "Upload License Proof"}
@@ -874,7 +1128,10 @@ STEP 4 - DOCUMENTS
               marginTop: 20,
               marginBottom: 25,
             }}
-            onPress={() => setTermsAccepted(!termsAccepted)}
+            onPress={() => {
+              setTermsAccepted(!termsAccepted);
+              setErrors((prev) => ({ ...prev, terms: "", stepError: "" }));
+            }}
           >
             <View
               style={{
@@ -906,9 +1163,13 @@ STEP 4 - DOCUMENTS
                 color: "#444",
               }}
             >
-              I accept Terms & Conditions
+              I accept Terms & Conditions <Text style={{color: '#DC2626'}}>*</Text>
             </Text>
           </TouchableOpacity>
+
+          {errors.terms ? (
+            <Text style={styles.errorTopText}>{errors.terms}</Text>
+          ) : null}
 
           <View
             style={{
@@ -934,6 +1195,10 @@ STEP 5 - EXTRA DETAILS & SUBMIT
       {currentStep === 5 && (
         <View>
           <Text style={styles.heading}>Additional Details</Text>
+
+          {errors.stepError ? (
+            <Text style={styles.errorTopText}>{errors.stepError}</Text>
+          ) : null}
 
           <FloatingInput
             label="Vet Clinic Name"
@@ -1048,17 +1313,30 @@ STEP 5 - EXTRA DETAILS & SUBMIT
             onChangeText={setAuthorizedPersonName}
           />
 
+          {errors.digitalSignature ? (
+            <Text style={styles.errorTopText}>{errors.digitalSignature}</Text>
+          ) : null}
           <FloatingInput
             label="Digital Signature"
             value={digitalSignature}
-            onChangeText={setDigitalSignature}
+            onChangeText={(text) => {
+              setDigitalSignature(text);
+              setErrors((prev) => ({ ...prev, digitalSignature: "" }));
+            }}
           />
 
+          {errors.signatureDate ? (
+            <Text style={styles.errorTopText}>{errors.signatureDate}</Text>
+          ) : null}
           <DateInput
             label="Signature Date"
             value={signatureDate}
-            onChange={(date) => setSignatureDate(date)}
+            onChange={(date) => {
+              setSignatureDate(date);
+              setErrors((prev) => ({ ...prev, signatureDate: "" }));
+            }}
           />
+
 
           <View
             style={{

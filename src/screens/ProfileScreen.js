@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
-import profileStyles from "../styles/ProfileScreenStyles";
+import styles from "../styles/ProfileScreenStyles";
 
 const API_URL = "https://www.cgpisoftware.com/cheerytail";
 
@@ -237,42 +237,32 @@ export default function ProfileScreen({ navigation }) {
           <Text style={styles.label}>Emergency Contact Number</Text>
           <Text style={styles.value}>{user?.emergency_number}</Text>
 
-          <Text style={styles.label}>Role</Text>
-          <Text style={styles.value}>{user?.role}</Text>
-
           <Text style={styles.label}>Email Verification</Text>
           <Text style={styles.value}>
             {user?.email_verified ? "Verified ✅" : "Not Verified ❌"}
           </Text>
-
-          <Text style={styles.label}>Account Created</Text>
-          <Text style={styles.value}>{user?.created_at}</Text>
-
-          <Text style={styles.label}>Last Updated</Text>
-          <Text style={styles.value}>{user?.updated_at}</Text>
         </View>
 
         {user?.aadhar_file ? (
-          <>
-            <Text style={styles.docTitle}>Aadhaar Document</Text>
+          <View style={styles.documentCard}>
+            <View style={styles.documentInfo}>
+              <Text style={styles.documentIcon}>🪪</Text>
 
-            {currentAadharIsPdf ? (
-              <TouchableOpacity
-                style={styles.fileAction}
-                onPress={() => Linking.openURL(user.aadhar_file)}
-              >
-                <Text style={styles.fileActionText}>View Aadhaar PDF</Text>
-              </TouchableOpacity>
-            ) : (
-              <Image
-                source={{
-                  uri: user.aadhar_file,
-                }}
-                style={styles.aadharImage}
-                resizeMode="cover"
-              />
-            )}
-          </>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.documentTitle}>Aadhaar Document</Text>
+                <Text style={styles.documentSubTitle}>
+                  Identity document uploaded
+                </Text>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={styles.viewDocumentBtn}
+              onPress={() => Linking.openURL(user.aadhar_file)}
+            >
+              <Text style={styles.viewDocumentText}>View Aadhaar</Text>
+            </TouchableOpacity>
+          </View>
         ) : null}
         {/* Description */}
         <Text style={styles.desc}>
@@ -300,5 +290,3 @@ export default function ProfileScreen({ navigation }) {
     </ScrollView>
   );
 }
-
-const styles = profileStyles;

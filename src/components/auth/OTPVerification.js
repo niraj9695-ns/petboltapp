@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import {
   View,
@@ -24,9 +24,41 @@ export default function OTPVerification({
 }) {
   const [otp, setOtp] = useState("");
 
+  const [otpDigits, setOtpDigits] = useState(["", "", "", "", "", ""]);
+
+  const [focusedIndex, setFocusedIndex] = useState(null);
+
+  const inputRefs = useRef([]);
+
   const [newPassword, setNewPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
+
+  const [countdown, setCountdown] = useState(30);
+
+  useEffect(() => {
+    if (countdown <= 0) return;
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [countdown]);
+
+  const handleOtpChange = (value, index) => {
+    if (!/^\d*$/.test(value)) return;
+
+    const updatedOtp = [...otpDigits];
+    updatedOtp[index] = value;
+
+    setOtpDigits(updatedOtp);
+    setOtp(updatedOtp.join(""));
+
+    if (value && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
 
   const handleVerifyOtp = async () => {
     if (!otp) {
@@ -171,6 +203,7 @@ export default function OTPVerification({
         "OTP not returned";
 
       Alert.alert("Success", "OTP Resent Successfully");
+      setCountdown(30);
     } catch (error) {
       Alert.alert("Error", "Failed to resend OTP");
     } finally {
@@ -187,14 +220,29 @@ export default function OTPVerification({
         {email}
       </Text>
 
-      <TextInput
-        style={otpVerificationStyles.input}
-        placeholder="Enter OTP"
-        keyboardType="number-pad"
-        maxLength={6}
-        value={otp}
-        onChangeText={setOtp}
-      />
+      <View style={otpVerificationStyles.otpContainer}>
+        {otpDigits.map((digit, index) => (
+          <TextInput
+            key={index}
+            ref={(ref) => (inputRefs.current[index] = ref)}
+            style={[
+              otpVerificationStyles.otpBox,
+              focusedIndex === index && otpVerificationStyles.otpBoxActive,
+            ]}
+            keyboardType="number-pad"
+            maxLength={1}
+            value={digit}
+            onFocus={() => setFocusedIndex(index)}
+            onBlur={() => setFocusedIndex(null)}
+            onChangeText={(value) => handleOtpChange(value, index)}
+            onKeyPress={({ nativeEvent }) => {
+              if (nativeEvent.key === "Backspace" && !digit && index > 0) {
+                inputRefs.current[index - 1]?.focus();
+              }
+            }}
+          />
+        ))}
+      </View>
 
       {otpType === "reset_password" && (
         <PasswordInput
@@ -204,9 +252,15 @@ export default function OTPVerification({
         />
       )}
 
-      <TouchableOpacity onPress={handleResendOtp}>
-        <Text style={otpVerificationStyles.resendText}>Resend OTP</Text>
-      </TouchableOpacity>
+      {countdown > 0 ? (
+        <Text style={otpVerificationStyles.resendText}>
+          Resend OTP in {countdown}s
+        </Text>
+      ) : (
+        <TouchableOpacity onPress={handleResendOtp}>
+          <Text style={otpVerificationStyles.resendText}>Resend OTP</Text>
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity
         style={otpVerificationStyles.button}
