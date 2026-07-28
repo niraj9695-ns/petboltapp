@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { View, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TextInput, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import passwordInputStyles from "../../styles/PasswordInputStyles";
 
 export function PasswordInput({ value, onChangeText, label }) {
   const [secure, setSecure] = useState(true);
 
   return (
-    <View style={styles.container}>
+    <View style={passwordInputStyles.container}>
       <TextInput
-        style={styles.input}
+        style={passwordInputStyles.input}
         placeholder={label}
         secureTextEntry={secure}
         value={value}
@@ -16,7 +17,7 @@ export function PasswordInput({ value, onChangeText, label }) {
       />
 
       <TouchableOpacity
-        style={styles.icon}
+        style={passwordInputStyles.icon}
         onPress={() => setSecure(!secure)}
       >
         <Icon name={secure ? "eye-off" : "eye"} size={22} color="#666" />
@@ -24,23 +25,3 @@ export function PasswordInput({ value, onChangeText, label }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    position: "relative",
-    marginBottom: 14,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 12,
-    padding: 10,
-    paddingRight: 45,
-    backgroundColor: "#fff",
-  },
-  icon: {
-    position: "absolute",
-    right: 12,
-    top: 12,
-  },
-});

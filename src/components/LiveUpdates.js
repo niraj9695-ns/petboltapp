@@ -1,16 +1,7 @@
 import React from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-const screenWidth = Dimensions.get("window").width;
+import liveUpdatesStyles from "../styles/LiveUpdatesStyles";
 
 export default function LiveUpdates() {
   const statusUpdates = [
@@ -32,7 +23,7 @@ export default function LiveUpdates() {
       comments: 12,
       shares: 8,
       isVideo: false,
-      color: "#fb923c",
+      color: "#8b5cf6",
     },
     {
       id: 2,
@@ -61,32 +52,32 @@ export default function LiveUpdates() {
   ];
 
   return (
-    <ScrollView style={styles.section}>
+    <ScrollView style={liveUpdatesStyles.section}>
       {/* TITLE */}
-      <Text style={styles.title}>
+      <Text style={liveUpdatesStyles.title}>
         Stay Connected With Your Pet 🐶❤️
       </Text>
 
-      <Text style={styles.subtitle}>
+      <Text style={liveUpdatesStyles.subtitle}>
         Real-time updates and daily moments
       </Text>
 
       {/* STORIES */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.storyRow}>
+        <View style={liveUpdatesStyles.storyRow}>
           {statusUpdates.map((item) => (
-            <View key={item.id} style={styles.storyItem}>
+            <View key={item.id} style={liveUpdatesStyles.storyItem}>
               <View
                 style={[
-                  styles.storyCircle,
+                  liveUpdatesStyles.storyCircle,
                   {
                     borderColor: item.isViewed ? "#ddd" : "#3b82f6",
                   },
                 ]}
               >
-                <Text style={styles.emoji}>{item.petEmoji}</Text>
+                <Text style={liveUpdatesStyles.emoji}>{item.petEmoji}</Text>
               </View>
-              <Text style={styles.storyName}>{item.petName}</Text>
+              <Text style={liveUpdatesStyles.storyName}>{item.petName}</Text>
             </View>
           ))}
         </View>
@@ -94,186 +85,48 @@ export default function LiveUpdates() {
 
       {/* FEED */}
       {feedUpdates.map((item) => (
-        <View key={item.id} style={styles.card}>
+        <View key={item.id} style={liveUpdatesStyles.card}>
           {/* image placeholder */}
           <View
             style={[
-              styles.imageBox,
+              liveUpdatesStyles.imageBox,
               { backgroundColor: item.color },
             ]}
           >
             {item.isVideo && (
-              <View style={styles.playBtn}>
-                <MaterialCommunityIcons
-                  name="play"
-                  size={30}
-                  color="white"
-                />
+              <View style={liveUpdatesStyles.playBtn}>
+                <MaterialCommunityIcons name="play" size={30} color="white" />
               </View>
             )}
 
-            <Text style={styles.bigEmoji}>{item.petEmoji}</Text>
+            <Text style={liveUpdatesStyles.bigEmoji}>{item.petEmoji}</Text>
 
-            <Text style={styles.time}>{item.timestamp}</Text>
+            <Text style={liveUpdatesStyles.time}>{item.timestamp}</Text>
           </View>
 
           {/* content */}
-          <View style={styles.content}>
-            <Text style={styles.name}>{item.petName}</Text>
-            <Text style={styles.caption}>{item.caption}</Text>
+          <View style={liveUpdatesStyles.content}>
+            <Text style={liveUpdatesStyles.name}>{item.petName}</Text>
+            <Text style={liveUpdatesStyles.caption}>{item.caption}</Text>
 
             {/* actions */}
-            <View style={styles.actions}>
+            <View style={liveUpdatesStyles.actions}>
               <Text>❤️ {item.likes}</Text>
               <Text>💬 {item.comments}</Text>
               <Text>🔁 {item.shares}</Text>
             </View>
 
-            <TouchableOpacity style={styles.btn}>
-              <Text style={styles.btnText}>View Full Update</Text>
+            <TouchableOpacity style={liveUpdatesStyles.btn}>
+              <Text style={liveUpdatesStyles.btnText}>View Full Update</Text>
             </TouchableOpacity>
           </View>
         </View>
       ))}
 
       {/* bottom button */}
-      <TouchableOpacity style={styles.bottomBtn}>
-        <Text style={styles.bottomText}>View All Updates</Text>
+      <TouchableOpacity style={liveUpdatesStyles.bottomBtn}>
+        <Text style={liveUpdatesStyles.bottomText}>View All Updates</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  section: {
-    flex: 1,
-    backgroundColor: "#f8fafc",
-    padding: 15,
-  },
-
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginTop: 10,
-  },
-
-  subtitle: {
-    textAlign: "center",
-    color: "#666",
-    marginBottom: 15,
-  },
-
-  storyRow: {
-    flexDirection: "row",
-    paddingVertical: 10,
-    gap: 15,
-  },
-
-  storyItem: {
-    alignItems: "center",
-    marginRight: 15,
-  },
-
-  storyCircle: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    borderWidth: 3,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-
-  emoji: {
-    fontSize: 28,
-  },
-
-  storyName: {
-    fontSize: 12,
-    marginTop: 5,
-  },
-
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 20,
-    marginBottom: 15,
-    overflow: "hidden",
-  },
-
-  imageBox: {
-    height: 200,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  bigEmoji: {
-    fontSize: 50,
-  },
-
-  playBtn: {
-    position: "absolute",
-    backgroundColor: "rgba(0,0,0,0.4)",
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  time: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    backgroundColor: "#fff",
-    padding: 5,
-    borderRadius: 10,
-    fontSize: 10,
-  },
-
-  content: {
-    padding: 15,
-  },
-
-  name: {
-    fontWeight: "bold",
-    fontSize: 16,
-    marginBottom: 5,
-  },
-
-  caption: {
-    color: "#555",
-    marginBottom: 10,
-  },
-
-  actions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 10,
-  },
-
-  btn: {
-    backgroundColor: "#6366f1",
-    padding: 10,
-    borderRadius: 12,
-  },
-
-  btnText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-
-  bottomBtn: {
-    backgroundColor: "#f97316",
-    padding: 15,
-    borderRadius: 15,
-    marginVertical: 20,
-  },
-
-  bottomText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-});

@@ -124,4 +124,59 @@ export default StyleSheet.create({
     color: COLORS.gray,
     fontSize: 15,
   },
+
+  summaryText: {
+    marginTop: 8,
+    color: COLORS.gray,
+    fontSize: 13,
+  },
+
+  paginationContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 8,
+    marginBottom: 16,
+    flexWrap: "wrap",
+    gap: 8,
+  },
+
+  paginationButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: COLORS.white,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+
+  paginationButtonText: {
+    color: COLORS.primary,
+    fontWeight: "700",
+  },
+
+  pageNumberButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.white,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+
+  activePageNumberButton: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+  },
+
+  pageNumberButtonText: {
+    color: COLORS.primary,
+    fontWeight: "700",
+  },
+
+  activePageNumberButtonText: {
+    color: COLORS.white,
+  },
 });

@@ -158,4 +158,50 @@ export default StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  summaryText: {
+    marginTop: 8,
+    color: "#6b7280",
+    fontSize: 12,
+  },
+  paginationContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  paginationButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: "#f5f3ff",
+    borderWidth: 1,
+    borderColor: "#ddd6fe",
+  },
+  paginationButtonText: {
+    color: "#6d28d9",
+    fontWeight: "700",
+  },
+  pageNumberButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#ddd6fe",
+  },
+  activePageNumberButton: {
+    backgroundColor: "#6d28d9",
+    borderColor: "#6d28d9",
+  },
+  pageNumberButtonText: {
+    color: "#6d28d9",
+    fontWeight: "700",
+  },
+  activePageNumberButtonText: {
+    color: "#fff",
+  },
 });

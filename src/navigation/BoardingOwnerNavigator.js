@@ -17,6 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../context/ThemeContext";
 
 import BoardingOwnerHomeScreen from "../screens/boardingOwner/components/BoardingOwnerHomeScreen";
+import NotificationScreen from "../screens/NotificationScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -46,6 +47,7 @@ function BoardingOwnerDrawerContent({ navigation }) {
     await AsyncStorage.removeItem("guestRole");
 
     setGuestRole(null);
+    navigation.navigate("Auth");
   };
   const handleLogout = async () => {
     try {
@@ -93,18 +95,6 @@ function BoardingOwnerDrawerContent({ navigation }) {
         <Ionicons name="home-outline" size={22} color={theme.text} />
 
         <Text style={[styles.text, { color: theme.text }]}>Dashboard</Text>
-      </Pressable>
-
-      <Pressable style={styles.item} onPress={toggleTheme}>
-        <Ionicons
-          name={isDark ? "moon" : "sunny"}
-          size={22}
-          color={theme.text}
-        />
-
-        <Text style={[styles.text, { color: theme.text }]}>
-          {isDark ? "Dark Mode" : "Light Mode"}
-        </Text>
       </Pressable>
 
       {/* Logout */}

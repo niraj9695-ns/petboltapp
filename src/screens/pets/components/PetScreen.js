@@ -11,14 +11,16 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LinearGradient } from "expo-linear-gradient";
 
 import * as ImagePicker from "expo-image-picker";
 
-import PetCard from "./pets/components/PetCard";
+import PetCard from "./PetCard";
 
-import PetFormModal from "./pets/components/PetFormModal";
+import PetFormModal from "./PetFormModal";
 
-import styles from "./pets/styles/petStyles";
+import petScreenStyles from "../styles/PetScreenStyles";
 
 import {
   fetchPetByIdApi,
@@ -26,28 +28,34 @@ import {
   addPetApi,
   updatePetApi,
   deletePetApi,
-} from "./pets/services/petService";
+} from "../services/petService";
 
 import {
   fetchPetImagesApi,
   uploadPetImagesApi,
   deletePetImageApi,
-} from "./pets/services/imageService";
+  setPetProfileImageApi,
+} from "../services/imageService";
 
-export default function PetScreen({ navigation }) {
+export default function PetScreen({ navigation, route, initialEditPetId }) {
   const [pets, setPets] = useState([]);
 
   const [petImages, setPetImages] = useState({});
 
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [refreshing, setRefreshing] = useState(false);
 
   const [showForm, setShowForm] = useState(false);
 
   const [editingId, setEditingId] = useState(null);
+  const [hasOpenedInitialEdit, setHasOpenedInitialEdit] = useState(false);
 
   const [selectedImages, setSelectedImages] = useState([]);
+  const [profileImageIndex, setProfileImageIndex] = useState(null);
 
   const [step, setStep] = useState(1);
 
@@ -72,6 +80,7 @@ export default function PetScreen({ navigation }) {
     vaccination_status: "",
     vaccination_details: "",
     vaccination_notes: "",
+    vaccination_certificate: null,
 
     deworming_date: "",
     flea_tick_treatment_date: "",
@@ -113,19 +122,68 @@ export default function PetScreen({ navigation }) {
   };
 
   const [petData, setPetData] = useState(initialPetData);
+  const [isGuest, setIsGuest] = useState(false);
+
+  const promptSignIn = () => {
+    Alert.alert(
+      "Sign in required",
+      "Please sign in or create an account to continue.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Sign In / Sign Up",
+          onPress: () => navigation.navigate("Auth"),
+        },
+      ],
+    );
+  };
 
   useEffect(() => {
-    loadPets();
+    const loadGuestStatus = async () => {
+      const guestRole = await AsyncStorage.getItem("guestRole");
+      const isGuestUser = !!guestRole;
+      setIsGuest(isGuestUser);
+
+      if (isGuestUser) {
+        Alert.alert(
+          "Sign in required",
+          "Please sign in or create an account to manage pets.",
+          [
+            {
+              text: "Cancel",
+              style: "cancel",
+              onPress: () => navigation.goBack(),
+            },
+            {
+              text: "Sign In / Sign Up",
+              onPress: () => navigation.navigate("Auth"),
+            },
+          ],
+        );
+        return;
+      }
+
+      loadPets();
+    };
+
+    loadGuestStatus();
   }, []);
 
-  // LOAD PETS
-  const loadPets = async () => {
+  const loadPets = async (pageToLoad = 1, append = false) => {
     try {
-      setLoading(true);
+      if (append) {
+        setLoadingMore(true);
+      } else {
+        setLoading(true);
+      }
 
-      const petList = await fetchPetsApi();
+      const result = await fetchPetsApi(pageToLoad, 20);
+      const petList = Array.isArray(result?.pets) ? result.pets : [];
+      const pagination = result?.pagination || {};
 
-      setPets(petList);
+      setPets((prevPets) => (append ? [...prevPets, ...petList] : petList));
+      setCurrentPage(Number(pagination.page || pageToLoad));
+      setTotalPages(Number(pagination.total_pages || 1));
 
       const imagesObj = {};
 
@@ -137,17 +195,18 @@ export default function PetScreen({ navigation }) {
         imagesObj[petId] = images;
       }
 
-      setPetImages(imagesObj);
+      setPetImages((prevImages) => ({ ...prevImages, ...imagesObj }));
     } catch (error) {
       Alert.alert("Error", "Failed to fetch pets");
     } finally {
       setLoading(false);
-
+      setLoadingMore(false);
       setRefreshing(false);
     }
   };
 
-  // REMOVE IMAGE
+  const hasMorePages = currentPage < totalPages;
+
   const removeImage = async (indexToRemove) => {
     try {
       const image = selectedImages[indexToRemove];
@@ -166,12 +225,18 @@ export default function PetScreen({ navigation }) {
       setSelectedImages((prev) =>
         prev.filter((_, index) => index !== indexToRemove),
       );
+
+      setProfileImageIndex((currentIndex) => {
+        if (currentIndex === null) return null;
+        if (indexToRemove === currentIndex) return null;
+        if (indexToRemove < currentIndex) return currentIndex - 1;
+        return currentIndex;
+      });
     } catch (error) {
       Alert.alert("Error", "Failed to remove image");
     }
   };
 
-  // IMAGE PICKER
   const pickImages = async () => {
     try {
       const permission =
@@ -197,17 +262,26 @@ export default function PetScreen({ navigation }) {
     }
   };
 
-  // CLOSE MODAL
   const closeModal = () => {
     setShowForm(false);
 
     setEditingId(null);
 
     setSelectedImages([]);
+    setProfileImageIndex(null);
 
     setStep(1);
 
     setPetData(initialPetData);
+  };
+
+  const handleModalClose = () => {
+    if (initialEditPetId && navigation.canGoBack()) {
+      navigation.goBack();
+      return;
+    }
+
+    closeModal();
   };
 
   const validateForm = () => {
@@ -254,7 +328,6 @@ export default function PetScreen({ navigation }) {
     return true;
   };
 
-  // ADD / UPDATE PET
   const handleAddOrUpdate = async () => {
     if (!validateForm()) {
       return;
@@ -264,6 +337,8 @@ export default function PetScreen({ navigation }) {
 
       const payload = {
         ...petData,
+
+        vaccination_certificate: petData.vaccination_certificate || null,
 
         pet_type: petData.pet_type,
         gender: petData.gender,
@@ -286,37 +361,73 @@ export default function PetScreen({ navigation }) {
         food_allergies: Boolean(petData.food_allergies),
       };
 
-      // UPDATE
       if (editingId) {
-        const response = await updatePetApi({
-          pet_id: Number(editingId),
-          ...payload,
-        });
+        const response = await updatePetApi(Number(editingId), payload);
 
         if (response.ok) {
-          // UPLOAD ONLY NEW IMAGES
           const newImages = selectedImages.filter(
             (img) => img.fileName || img.mimeType || img.type,
           );
 
+          let uploadResult = { ok: true, data: null };
+
           if (newImages.length > 0) {
-            await uploadPetImagesApi(editingId, newImages);
+            uploadResult = await uploadPetImagesApi(editingId, newImages);
+          }
+
+          const selectedProfileImage =
+            profileImageIndex !== null && selectedImages[profileImageIndex]
+              ? selectedImages[profileImageIndex]
+              : null;
+
+          if (selectedProfileImage) {
+            let profileImageId =
+              selectedProfileImage.image_id ||
+              selectedProfileImage.id ||
+              selectedProfileImage.imageId ||
+              null;
+
+            if (!profileImageId && !selectedProfileImage.isExisting) {
+              const uploadedImages =
+                uploadResult?.data?.data || uploadResult?.data?.images || [];
+
+              const newIndex = newImages.findIndex(
+                (img) =>
+                  img.uri === selectedProfileImage.uri ||
+                  img.name === selectedProfileImage.name,
+              );
+
+              const matched = uploadedImages[newIndex];
+
+              profileImageId =
+                matched?.image_id ||
+                matched?.id ||
+                matched?.imageId ||
+                profileImageId;
+            }
+
+            if (profileImageId) {
+              await setPetProfileImageApi(editingId, profileImageId);
+            }
           }
 
           Alert.alert("Success", "Pet updated successfully");
 
           closeModal();
-
           loadPets();
+
+          if (initialEditPetId && navigation.canGoBack()) {
+            navigation.goBack();
+          }
         } else {
           Alert.alert("Error", response.data || "Update failed");
         }
       } else {
-        // ADD PET
         const response = await addPetApi(payload);
 
         if (response.ok) {
           let petId = null;
+          let uploadResult = { ok: true, data: null };
 
           try {
             const json = JSON.parse(response.data);
@@ -324,15 +435,49 @@ export default function PetScreen({ navigation }) {
             petId = json?.data?.pet_id || json?.data?.id || json?.pet_id;
           } catch (e) {}
 
-          // UPLOAD IMAGES
           if (petId && selectedImages.length > 0) {
-            await uploadPetImagesApi(petId, selectedImages);
+            uploadResult = await uploadPetImagesApi(petId, selectedImages);
+          }
+
+          const selectedProfileImage =
+            profileImageIndex !== null && selectedImages[profileImageIndex]
+              ? selectedImages[profileImageIndex]
+              : null;
+
+          if (petId && selectedProfileImage) {
+            let profileImageId =
+              selectedProfileImage.image_id ||
+              selectedProfileImage.id ||
+              selectedProfileImage.imageId ||
+              null;
+
+            if (!profileImageId) {
+              const uploadedImages =
+                uploadResult?.data?.data || uploadResult?.data?.images || [];
+
+              const newIndex = selectedImages.findIndex(
+                (img) =>
+                  img.uri === selectedProfileImage.uri ||
+                  img.name === selectedProfileImage.name,
+              );
+
+              const matched = uploadedImages[newIndex];
+
+              profileImageId =
+                matched?.image_id ||
+                matched?.id ||
+                matched?.imageId ||
+                profileImageId;
+            }
+
+            if (profileImageId) {
+              await setPetProfileImageApi(petId, profileImageId);
+            }
           }
 
           Alert.alert("Success", "Pet added successfully");
 
           closeModal();
-
           loadPets();
         } else {
           Alert.alert("Error", response.data || "Add failed");
@@ -345,8 +490,12 @@ export default function PetScreen({ navigation }) {
     }
   };
 
-  // DELETE PET
   const handleDelete = async (id) => {
+    if (isGuest) {
+      promptSignIn();
+      return;
+    }
+
     Alert.alert("Delete Pet", "Are you sure?", [
       {
         text: "Cancel",
@@ -358,6 +507,8 @@ export default function PetScreen({ navigation }) {
 
         onPress: async () => {
           try {
+            setLoading(true);
+
             const success = await deletePetApi(id);
 
             if (success) {
@@ -367,39 +518,48 @@ export default function PetScreen({ navigation }) {
             }
           } catch (error) {
             Alert.alert("Error", "Delete failed");
+          } finally {
+            setLoading(false);
           }
         },
       },
     ]);
   };
 
-  // EDIT PET
-  // EDIT PET
   const editPet = async (pet) => {
     try {
-      const id = pet.pet_id || pet.id;
+      const id = pet?.pet_id || pet?.id || pet;
+
+      if (!id) {
+        Alert.alert("Error", "Pet id is missing");
+        return;
+      }
 
       setLoading(true);
 
-      // FETCH FULL PET DETAILS
       const fullPet = await fetchPetByIdApi(id);
 
       setEditingId(id);
 
-      // FETCH PET IMAGES
       const existingImages = await fetchPetImagesApi(id);
 
-      setSelectedImages(
-        existingImages.map((img) => ({
-          ...img,
-          uri: img.uri || img.image_url || img.url || img.pet_image,
-          isExisting: true,
-        })),
+      const mappedImages = existingImages.map((img) => ({
+        ...img,
+        uri: img.uri || img.image_url || img.url || img.pet_image,
+        isExisting: true,
+      }));
+
+      setSelectedImages(mappedImages);
+      setProfileImageIndex(
+        mappedImages.findIndex(
+          (img) =>
+            img?.is_profile === "1" ||
+            img?.is_profile === 1 ||
+            img?.is_profile === true,
+        ),
       );
 
-      // SET FULL DATA
       setPetData({
-        // PET
         pet_name: fullPet?.pet?.pet_name || "",
         pet_type: fullPet?.pet?.pet_type || "",
         breed: fullPet?.pet?.breed || "",
@@ -428,22 +588,34 @@ export default function PetScreen({ navigation }) {
 
         breeding_line: fullPet?.pet?.breeding_line || "",
 
-        // HEALTH
         vaccination_status: fullPet?.health?.vaccination_status || "",
 
         vaccination_details: fullPet?.health?.vaccination_details || "",
 
         vaccination_notes: fullPet?.health?.vaccination_notes || "",
 
+        vaccination_certificate:
+          fullPet?.health?.vaccination_certificate || null,
+
         deworming_date:
-          fullPet?.health?.deworming_date === "0000-00-00"
+          fullPet &&
+          fullPet.health &&
+          fullPet.health.deworming_date === "0000-00-00"
             ? ""
-            : fullPet?.health?.deworming_date || "",
+            : (fullPet && fullPet.health && fullPet.health.deworming_date) ||
+              fullPet?.deworming_date ||
+              "",
 
         flea_tick_treatment_date:
-          fullPet?.health?.flea_tick_treatment_date === "0000-00-00"
+          fullPet &&
+          fullPet.health &&
+          fullPet.health.flea_tick_treatment_date === "0000-00-00"
             ? ""
-            : fullPet?.health?.flea_tick_treatment_date || "",
+            : (fullPet &&
+                fullPet.health &&
+                fullPet.health.flea_tick_treatment_date) ||
+              fullPet?.flea_tick_treatment_date ||
+              "",
 
         medical_history: fullPet?.health?.medical_history || "",
 
@@ -468,7 +640,6 @@ export default function PetScreen({ navigation }) {
 
         special_care_required: fullPet?.health?.special_care_required || "",
 
-        // BEHAVIOR + FOOD
         eating_habit: fullPet?.behavior_feeding?.eating_habit || "",
 
         water_intake_habit: fullPet?.behavior_feeding?.water_intake_habit || "",
@@ -524,28 +695,45 @@ export default function PetScreen({ navigation }) {
     }
   };
 
-  // LOADER
+  useEffect(() => {
+    if (!initialEditPetId || hasOpenedInitialEdit) return;
+
+    setHasOpenedInitialEdit(true);
+    editPet(initialEditPetId);
+  }, [initialEditPetId, hasOpenedInitialEdit]);
+
   if (loading && pets.length === 0) {
     return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#f97316" />
+      <View style={petScreenStyles.loaderContainer}>
+        <ActivityIndicator size="large" color="#6b21a8" />
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <LinearGradient
+      colors={["#faf5ff", "#fdf2f8", "#fff7ed"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={petScreenStyles.screen}
+    >
       {/* HEADER */}
 
-      <View style={styles.header}>
-        <Text style={styles.heading}>My Pets 🐾</Text>
+      <View style={petScreenStyles.header}>
+        <Text style={petScreenStyles.heading}>My Pets 🐾</Text>
 
         <TouchableOpacity
-          style={styles.addBtn}
+          style={petScreenStyles.addBtn}
           onPress={() => {
+            if (isGuest) {
+              promptSignIn();
+              return;
+            }
+
             setEditingId(null);
 
             setSelectedImages([]);
+            setProfileImageIndex(null);
 
             setPetData(initialPetData);
 
@@ -560,6 +748,12 @@ export default function PetScreen({ navigation }) {
 
       {/* PET LIST */}
 
+      {loading && (pets.length > 0 || showForm) && (
+        <View style={petScreenStyles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#6b21a8" />
+        </View>
+      )}
+
       <FlatList
         data={pets}
         keyExtractor={(item, index) => String(item.pet_id || item.id || index)}
@@ -569,18 +763,42 @@ export default function PetScreen({ navigation }) {
             onRefresh={() => {
               setRefreshing(true);
 
-              loadPets();
+              loadPets(1, false);
             }}
           />
         }
-        contentContainerStyle={styles.container}
+        contentContainerStyle={petScreenStyles.container}
+        ListFooterComponent={
+          hasMorePages ? (
+            <View style={petScreenStyles.paginationFooter}>
+              <TouchableOpacity
+                style={petScreenStyles.nextPageButton}
+                onPress={() => loadPets(currentPage + 1, true)}
+                disabled={loadingMore}
+              >
+                {loadingMore ? (
+                  <ActivityIndicator size="small" color="#ffffff" />
+                ) : (
+                  <Text style={petScreenStyles.nextPageButtonText}>
+                    Next Page {currentPage + 1}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          ) : null
+        }
         renderItem={({ item }) => (
           <PetCard
             item={item}
             petImages={petImages}
-            styles={styles}
             navigation={navigation}
-            onEdit={editPet}
+            onEdit={(pet) => {
+              if (isGuest) {
+                promptSignIn();
+                return;
+              }
+              editPet(pet);
+            }}
             onDelete={handleDelete}
           />
         )}
@@ -598,11 +816,12 @@ export default function PetScreen({ navigation }) {
         selectedImages={selectedImages}
         pickImages={pickImages}
         removeImage={removeImage}
+        profileImageIndex={profileImageIndex}
+        setProfileImageIndex={setProfileImageIndex}
         loading={loading}
-        styles={styles}
-        onClose={closeModal}
+        onClose={handleModalClose}
         onSubmit={handleAddOrUpdate}
       />
-    </View>
+    </LinearGradient>
   );
 }

@@ -3,24 +3,24 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
 } from "react-native";
+import roleSelectorStyles from "../../styles/RoleSelectorStyles";
 
 export default function RoleSelector({
   role,
   setRole,
 }) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>
+    <View style={roleSelectorStyles.container}>
+      <Text style={roleSelectorStyles.title}>
         Choose Registration Type
       </Text>
 
       <TouchableOpacity
         style={[
-          styles.card,
+          roleSelectorStyles.card,
           role === "pet_owner" &&
-            styles.activeCard,
+            roleSelectorStyles.activeCard,
         ]}
         onPress={() =>
           setRole("pet_owner")
@@ -28,9 +28,9 @@ export default function RoleSelector({
       >
         <Text
           style={[
-            styles.cardTitle,
+            roleSelectorStyles.cardTitle,
             role === "pet_owner" &&
-              styles.activeText,
+              roleSelectorStyles.activeText,
           ]}
         >
           Pet Owner
@@ -38,9 +38,9 @@ export default function RoleSelector({
 
         <Text
           style={[
-            styles.cardDescription,
+            roleSelectorStyles.cardDescription,
             role === "pet_owner" &&
-              styles.activeText,
+              roleSelectorStyles.activeText,
           ]}
         >
           Register your pets and book
@@ -50,9 +50,9 @@ export default function RoleSelector({
 
       <TouchableOpacity
         style={[
-          styles.card,
+          roleSelectorStyles.card,
           role === "boarding_owner" &&
-            styles.activeCard,
+            roleSelectorStyles.activeCard,
         ]}
         onPress={() =>
           setRole("boarding_owner")
@@ -60,9 +60,9 @@ export default function RoleSelector({
       >
         <Text
           style={[
-            styles.cardTitle,
+            roleSelectorStyles.cardTitle,
             role === "boarding_owner" &&
-              styles.activeText,
+              roleSelectorStyles.activeText,
           ]}
         >
           Boarding Owner
@@ -70,9 +70,9 @@ export default function RoleSelector({
 
         <Text
           style={[
-            styles.cardDescription,
+            roleSelectorStyles.cardDescription,
             role === "boarding_owner" &&
-              styles.activeText,
+              roleSelectorStyles.activeText,
           ]}
         >
           Register your boarding
@@ -83,47 +83,3 @@ export default function RoleSelector({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 20,
-  },
-
-  title: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#333",
-    marginBottom: 12,
-  },
-
-  card: {
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
-  },
-
-  activeCard: {
-    backgroundColor: "#6b21a8",
-    borderColor: "#6b21a8",
-  },
-
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#222",
-    marginBottom: 6,
-  },
-
-  cardDescription: {
-    fontSize: 13,
-    color: "#666",
-    lineHeight: 20,
-  },
-
-  activeText: {
-    color: "#fff",
-  },
-});

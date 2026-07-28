@@ -4,219 +4,421 @@ import {
   Text,
   ScrollView,
   ActivityIndicator,
-  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Linking,
+  Alert,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import petDetailsScreenStyles from "../styles/PetDetailsScreenStyles";
 
 import { fetchPetByIdApi } from "../services/petService";
+import {
+  fetchPetImagesApi,
+  extractImageUrlFromPayload,
+} from "../services/imageService";
 
-export default function PetDetailsScreen({ route }) {
+const getImageUrl = (image) => {
+  if (!image) return null;
+  return extractImageUrlFromPayload(image) || null;
+};
+
+const formatSubtitle = (type, breed) => {
+  if (!type && !breed) return "";
+  const base = type ? `${type.charAt(0).toUpperCase()}${type.slice(1)}` : "";
+  return breed ? `${base}${base ? " • " : ""}${breed}` : base;
+};
+
+export default function PetDetailsScreen({ route, navigation }) {
   const { petId } = route.params;
 
   const [petData, setPetData] = useState(null);
+  const [petImages, setPetImages] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadPetDetails();
-  }, []);
+  const [expandedSection, setExpandedSection] = useState("pet");
 
-  const loadPetDetails = async () => {
-    try {
-      const data = await fetchPetByIdApi(petId);
-
-      setPetData(data);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
+  const toggleSection = (section) => {
+    setExpandedSection(expandedSection === section ? null : section);
   };
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+
+        const [details, images] = await Promise.all([
+          fetchPetByIdApi(petId),
+          fetchPetImagesApi(petId),
+        ]);
+
+        setPetData(details);
+        setPetImages(Array.isArray(images) ? images : []);
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [petId]);
 
   if (loading) {
     return (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#f97316" />
-      </View>
+      <LinearGradient
+        colors={["#faf5ff", "#fdf2f8", "#fff7ed"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={petDetailsScreenStyles.detailsLoader}
+      >
+        <ActivityIndicator size="large" color="#6b21a8" />
+      </LinearGradient>
     );
   }
 
   if (!petData) {
     return (
-      <View style={styles.loader}>
-        <Text>No pet details found</Text>
-      </View>
+      <LinearGradient
+        colors={["#faf5ff", "#fdf2f8", "#fff7ed"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={petDetailsScreenStyles.loaderContainer}
+      >
+        <Text style={petDetailsScreenStyles.emptyText}>
+          Pet details are unavailable.
+        </Text>
+      </LinearGradient>
     );
   }
 
   const owner = petData.owner || {};
   const pet = petData.pet || {};
-  const health = petData.health || {};
+  const rawHealth = petData.health || {};
+  const health = {
+    ...rawHealth,
+    deworming_date: rawHealth.deworming_date || petData.deworming_date || null,
+    flea_tick_treatment_date:
+      rawHealth.flea_tick_treatment_date ||
+      petData.flea_tick_treatment_date ||
+      null,
+  };
   const behavior = petData.behavior_feeding || {};
 
-  const DetailRow = ({ label, value }) => (
-    <View style={styles.row}>
-      <Text style={styles.label}>{label}</Text>
-      <Text style={styles.value}>
-        {value === null || value === undefined || value === ""
-          ? "-"
-          : String(value)}
-      </Text>
+  const galleryImages = petImages
+    .map(getImageUrl)
+    .filter((uri) => Boolean(uri));
+
+  const profileImage =
+    getImageUrl(petData) ||
+    getImageUrl(pet) ||
+    galleryImages[0] ||
+    "https://via.placeholder.com/300";
+
+  const openUrl = async (url) => {
+    if (!url) {
+      Alert.alert(
+        "File unavailable",
+        "No vaccination certificate link is available.",
+      );
+      return;
+    }
+
+    const normalizedUrl = String(url).trim();
+    const link = normalizedUrl.startsWith("http")
+      ? normalizedUrl
+      : `https://{YOUR_BASE_URL}/${normalizedUrl}`;
+
+    const supported = await Linking.canOpenURL(link);
+
+    if (supported) {
+      await Linking.openURL(link);
+    } else {
+      Alert.alert(
+        "Cannot open file",
+        "This certificate link cannot be opened.",
+      );
+    }
+  };
+
+  const getCertificateUrl = (certificate) => {
+    if (!certificate) return null;
+
+    if (typeof certificate === "string") {
+      return certificate.trim();
+    }
+
+    return (
+      certificate.uri ||
+      certificate.url ||
+      certificate.path ||
+      certificate.file?.uri ||
+      certificate.file?.url ||
+      certificate.file?.path ||
+      null
+    );
+  };
+
+  const formatCertificateLabel = (certificate) => {
+    const raw =
+      certificate?.name ||
+      certificate?.file?.name ||
+      certificate?.uri ||
+      certificate?.url ||
+      certificate?.path ||
+      certificate ||
+      "Vaccination Certificate";
+
+    if (typeof raw !== "string") return "Vaccination Certificate";
+
+    const filename = raw.split("/").pop();
+    if (!filename) return "Vaccination Certificate";
+    if (filename.toLowerCase().endsWith(".pdf")) return filename;
+    if (filename.includes(".")) return filename;
+    return `${filename}.pdf`;
+  };
+
+  const DetailRow = ({ label, value, onPress, isLink, displayValue }) => (
+    <View style={petDetailsScreenStyles.row}>
+      <Text style={petDetailsScreenStyles.label}>{label}</Text>
+      {isLink ? (
+        <TouchableOpacity
+          onPress={onPress}
+          style={petDetailsScreenStyles.pdfLinkRow}
+        >
+          <View style={petDetailsScreenStyles.pdfLinkInner}>
+            <View style={petDetailsScreenStyles.pdfIconWrapper}>
+              <Ionicons name="document-text-outline" size={18} color="#fff" />
+            </View>
+            <Text style={petDetailsScreenStyles.pdfLinkText}>
+              {displayValue || String(value) || "Vaccination Certificate"}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <Text style={petDetailsScreenStyles.value}>
+          {value === null || value === undefined || value === ""
+            ? "-"
+            : String(value)}
+        </Text>
+      )}
     </View>
   );
 
+  const SectionHeader = ({ title, sectionKey }) => (
+    <TouchableOpacity
+      style={petDetailsScreenStyles.accordionHeader}
+      onPress={() => toggleSection(sectionKey)}
+    >
+      <Text style={petDetailsScreenStyles.accordionTitle}>{title}</Text>
+
+      <Ionicons
+        name={expandedSection === sectionKey ? "chevron-up" : "chevron-down"}
+        size={22}
+        color="#6b21a8"
+      />
+    </TouchableOpacity>
+  );
+
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <Text style={styles.heading}>Pet Details</Text>
+    <LinearGradient
+      colors={["#faf5ff", "#fdf2f8", "#fff7ed"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={petDetailsScreenStyles.detailsContainer}
+    >
+      <ScrollView
+        style={petDetailsScreenStyles.detailsContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={petDetailsScreenStyles.topHeader}>
+          <TouchableOpacity
+            style={petDetailsScreenStyles.headerIconButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="arrow-back" size={24} color="#6b21a8" />
+          </TouchableOpacity>
 
-      {/* PET DETAILS */}
-      <Text style={styles.section}>Pet Information</Text>
+          <Text style={petDetailsScreenStyles.headerTitle}>Pet Profile</Text>
 
-      <DetailRow label="Pet Name" value={pet.pet_name} />
-      <DetailRow label="Pet Type" value={pet.pet_type} />
-      <DetailRow label="Breed" value={pet.breed} />
-      <DetailRow label="Gender" value={pet.gender} />
-      <DetailRow label="Age" value={pet.age} />
-      <DetailRow label="Date Of Birth" value={pet.date_of_birth} />
-      <DetailRow label="Weight" value={pet.weight} />
-      <DetailRow
-        label="Color Identification Marks"
-        value={pet.color_identification_marks}
-      />
-      <DetailRow label="Microchip ID" value={pet.microchip_id} />
-      <DetailRow label="Registration Number" value={pet.registration_number} />
-      <DetailRow label="Additional Details" value={pet.additional_details} />
+          <TouchableOpacity
+            style={petDetailsScreenStyles.headerIconButton}
+            onPress={() =>
+              navigation.navigate("EditPet", {
+                petId,
+              })
+            }
+          >
+            <Ionicons name="create-outline" size={24} color="#6b21a8" />
+          </TouchableOpacity>
+        </View>
+        <View style={petDetailsScreenStyles.detailsHero}>
+          <View style={petDetailsScreenStyles.imageWrapper}>
+            <Image
+              source={{ uri: profileImage }}
+              style={petDetailsScreenStyles.detailPetImage}
+            />
+          </View>
+          <View style={petDetailsScreenStyles.heroText}>
+            <Text style={petDetailsScreenStyles.detailsHeading}>
+              {pet.pet_name || "Pet Details"}
+            </Text>
+            <Text style={petDetailsScreenStyles.petSubtitle}>
+              {formatSubtitle(pet.pet_type, pet.breed)}
+            </Text>
+          </View>
+        </View>
 
-      {/* FAMILY DETAILS */}
-      <Text style={styles.section}>Family Details</Text>
+        <SectionHeader title="Pet Information" sectionKey="pet" />
 
-      <DetailRow label="Mother Name" value={pet.mother_name} />
-      <DetailRow label="Father Name" value={pet.father_name} />
-      <DetailRow label="Breeding Line" value={pet.breeding_line} />
+        {expandedSection === "pet" && (
+          <>
+            <DetailRow label="Gender" value={pet.gender} />
+            <DetailRow label="Age" value={pet.age} />
+            <DetailRow label="Date Of Birth" value={pet.date_of_birth} />
+            <DetailRow label="Weight" value={pet.weight} />
+            <DetailRow
+              label="Color Identification Marks"
+              value={pet.color_identification_marks}
+            />
+            <DetailRow label="Microchip ID" value={pet.microchip_id} />
+            <DetailRow
+              label="Registration Number"
+              value={pet.registration_number}
+            />
+            <DetailRow
+              label="Additional Details"
+              value={pet.additional_details}
+            />
+          </>
+        )}
 
-      {/* HEALTH DETAILS */}
-      <Text style={styles.section}>Health Details</Text>
+        {galleryImages.length > 0 && (
+          <>
+            <SectionHeader title="Photo Gallery" sectionKey="gallery" />
 
-      <DetailRow label="Vaccination Status" value={health.vaccination_status} />
-      <DetailRow
-        label="Vaccination Details"
-        value={health.vaccination_details}
-      />
-      <DetailRow label="Vaccination Notes" value={health.vaccination_notes} />
-      <DetailRow label="Deworming Date" value={health.deworming_date} />
-      <DetailRow
-        label="Flea Tick Treatment Date"
-        value={health.flea_tick_treatment_date}
-      />
-      <DetailRow label="Medical History" value={health.medical_history} />
-      <DetailRow label="Allergies" value={health.allergies} />
-      <DetailRow label="Medical Conditions" value={health.medical_conditions} />
-      <DetailRow
-        label="Current Medications"
-        value={health.current_medications}
-      />
-      <DetailRow label="Surgery History" value={health.surgery_history} />
-      <DetailRow
-        label="Neutered / Spayed"
-        value={health.neutered_spayed === "1" ? "Yes" : "No"}
-      />
+            {expandedSection === "gallery" && (
+              <View style={petDetailsScreenStyles.galleryContainer}>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={petDetailsScreenStyles.thumbnailScroll}
+                >
+                  {galleryImages.map((uri, index) => (
+                    <Image
+                      key={`${uri}-${index}`}
+                      source={{ uri }}
+                      style={petDetailsScreenStyles.thumbnailImage}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+          </>
+        )}
 
-      {/* VET DETAILS */}
-      <Text style={styles.section}>Veterinarian Details</Text>
+        <SectionHeader title="Family Details" sectionKey="family" />
 
-      <DetailRow label="Vet Name" value={health.vet_name} />
-      <DetailRow label="Vet Clinic Name" value={health.vet_clinic_name} />
-      <DetailRow label="Vet Contact" value={health.vet_contact} />
-      <DetailRow
-        label="Special Care Required"
-        value={health.special_care_required}
-      />
+        {expandedSection === "family" && (
+          <>
+            <DetailRow label="Mother Name" value={pet.mother_name} />
+            <DetailRow label="Father Name" value={pet.father_name} />
+            <DetailRow label="Breeding Line" value={pet.breeding_line} />
+          </>
+        )}
 
-      {/* BEHAVIOR & FEEDING */}
-      <Text style={styles.section}>Behavior & Feeding</Text>
+        <SectionHeader title="Health Details" sectionKey="health" />
 
-      <DetailRow label="Eating Habit" value={behavior.eating_habit} />
-      <DetailRow
-        label="Water Intake Habit"
-        value={behavior.water_intake_habit}
-      />
-      <DetailRow
-        label="Friendly With Humans"
-        value={behavior.friendly_with_humans === "1" ? "Yes" : "No"}
-      />
-      <DetailRow
-        label="Friendly With Dogs"
-        value={behavior.friendly_with_dogs === "1" ? "Yes" : "No"}
-      />
-      <DetailRow
-        label="Aggressive Behavior"
-        value={behavior.aggressive_behavior === "1" ? "Yes" : "No"}
-      />
-      <DetailRow label="Anxiety Issues" value={behavior.anxiety_issues} />
-      <DetailRow label="Biting History" value={behavior.biting_history} />
-      <DetailRow label="Food Type" value={behavior.food_type} />
-      <DetailRow label="Food Brand" value={behavior.food_brand} />
-      <DetailRow label="Feeding Schedule" value={behavior.feeding_schedule} />
-      <DetailRow label="Quantity Per Meal" value={behavior.quantity_per_meal} />
-      <DetailRow
-        label="Treats Allowed"
-        value={behavior.treats_allowed === "1" ? "Yes" : "No"}
-      />
-      <DetailRow
-        label="Food Allergies"
-        value={behavior.food_allergies === "1" ? "Yes" : "No"}
-      />
-      <DetailRow
-        label="Food Allergy Details"
-        value={behavior.food_allergy_details}
-      />
+        {expandedSection === "health" && (
+          <>
+            <DetailRow
+              label="Vaccination Status"
+              value={health.vaccination_status}
+            />
 
-      <View style={{ height: 30 }} />
-    </ScrollView>
+            <DetailRow
+              label="Vaccination Details"
+              value={health.vaccination_details}
+            />
+
+            <DetailRow
+              label="Vaccination Notes"
+              value={health.vaccination_notes}
+            />
+
+            <DetailRow
+              label="Vaccination Certificate"
+              value={formatCertificateLabel(health.vaccination_certificate)}
+              displayValue={formatCertificateLabel(
+                health.vaccination_certificate,
+              )}
+              isLink={Boolean(
+                getCertificateUrl(health.vaccination_certificate),
+              )}
+              onPress={() =>
+                openUrl(getCertificateUrl(health.vaccination_certificate))
+              }
+            />
+
+            <DetailRow label="Deworming Date" value={health.deworming_date} />
+
+            <DetailRow label="Medical History" value={health.medical_history} />
+
+            <DetailRow label="Allergies" value={health.allergies} />
+
+            <DetailRow
+              label="Medical Conditions"
+              value={health.medical_conditions}
+            />
+
+            <DetailRow
+              label="Current Medications"
+              value={health.current_medications}
+            />
+          </>
+        )}
+
+        <SectionHeader title="Veterinarian Details" sectionKey="vet" />
+
+        {expandedSection === "vet" && (
+          <>
+            <DetailRow label="Vet Name" value={health.vet_name} />
+
+            <DetailRow label="Vet Clinic Name" value={health.vet_clinic_name} />
+
+            <DetailRow label="Vet Contact" value={health.vet_contact} />
+
+            <DetailRow
+              label="Special Care Required"
+              value={health.special_care_required}
+            />
+          </>
+        )}
+
+        <SectionHeader title="Behavior & Feeding" sectionKey="behavior" />
+
+        {expandedSection === "behavior" && (
+          <>
+            <DetailRow label="Eating Habit" value={behavior.eating_habit} />
+
+            <DetailRow
+              label="Water Intake Habit"
+              value={behavior.water_intake_habit}
+            />
+
+            <DetailRow label="Food Type" value={behavior.food_type} />
+
+            <DetailRow label="Food Brand" value={behavior.food_brand} />
+
+            <DetailRow
+              label="Feeding Schedule"
+              value={behavior.feeding_schedule}
+            />
+          </>
+        )}
+
+        <View style={petDetailsScreenStyles.spacer} />
+      </ScrollView>
+    </LinearGradient>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    padding: 15,
-  },
-
-  loader: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  heading: {
-    fontSize: 26,
-    fontWeight: "bold",
-    color: "#f97316",
-    marginBottom: 15,
-  },
-
-  section: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#f97316",
-    marginTop: 20,
-    marginBottom: 10,
-  },
-
-  row: {
-    marginBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    paddingBottom: 8,
-  },
-
-  label: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#444",
-  },
-
-  value: {
-    marginTop: 4,
-    fontSize: 15,
-    color: "#666",
-  },
-});

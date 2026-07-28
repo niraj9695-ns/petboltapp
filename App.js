@@ -18,57 +18,47 @@ import { ThemeProvider, useTheme } from "./src/context/ThemeContext";
 import { RefreshProvider } from "./src/context/RefreshContext";
 
 import { View, ActivityIndicator } from "react-native";
+import appStyles from "./src/styles/AppStyles";
+import { initializePushNotifications } from "./src/utils/notifications";
 
 const Stack = createNativeStackNavigator();
 
 function MainApp() {
   const { isDark } = useTheme();
 
-  const [loading, setLoading] =
-    useState(true);
-    const [userRole, setUserRole] =
-  useState(null);
+  const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState(null);
 
-const [guestRole, setGuestRole] =
-  useState(null);
+  const [guestRole, setGuestRole] = useState(null);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // CHECK LOGIN
- const checkLogin = async () => {
-  try {
-    const token =
-      await AsyncStorage.getItem(
-        "token"
-      );
+  const checkLogin = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
 
-    const role =
-      await AsyncStorage.getItem(
-        "role"
-      );
+      const role = await AsyncStorage.getItem("role");
 
-    const guestRole =
-      await AsyncStorage.getItem(
-        "guestRole"
-      );
+      const guestRole = await AsyncStorage.getItem("guestRole");
 
-    setIsLoggedIn(!!token);
+      setIsLoggedIn(!!token);
 
-    setUserRole(role);
+      setUserRole(role);
 
-    setGuestRole(guestRole);
+      setGuestRole(guestRole);
 
-  } catch (error) {
-    
-  } finally {
-    setLoading(false);
-  }
-};
+      if (token) {
+        initializePushNotifications().catch((error) => {});
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     checkLogin();
 
-    // AUTO CHECK EVERY SECOND
     const interval = setInterval(() => {
       checkLogin();
     }, 1000);
@@ -78,63 +68,35 @@ const [guestRole, setGuestRole] =
 
   if (loading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <ActivityIndicator size="large" />
+      <View style={appStyles.loadingContainer}>
+        <ActivityIndicator size="large" color="#6b21a8" />
       </View>
     );
   }
 
+  const initialRouteName = isLoggedIn
+    ? userRole === "boarding_owner"
+      ? "BoardingOwner"
+      : "PetOwner"
+    : guestRole === "boarding_owner"
+      ? "GuestBoarding"
+      : guestRole === "pet_owner"
+        ? "GuestPetOwner"
+        : "Auth";
+
   return (
     <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
       <Stack.Navigator
+        initialRouteName={initialRouteName}
         screenOptions={{
           headerShown: false,
         }}
       >
-
-   {isLoggedIn ? (
-
-  userRole === "boarding_owner" ? (
-    <Stack.Screen
-      name="BoardingOwner"
-      component={BoardingOwnerNavigator}
-    />
-  ) : (
-    <Stack.Screen
-      name="PetOwner"
-      component={DrawerNavigator}
-    />
-  )
-
-) : guestRole === "boarding_owner" ? (
-
-  <Stack.Screen
-    name="GuestBoarding"
-    component={BoardingOwnerNavigator}
-  />
-
-) : guestRole === "pet_owner" ? (
-
-  <Stack.Screen
-    name="GuestPetOwner"
-    component={DrawerNavigator}
-  />
-
-) : (
-
-  <Stack.Screen
-    name="Auth"
-    component={AuthNavigator}
-  />
-
-)}
-
+        <Stack.Screen name="Auth" component={AuthNavigator} />
+        <Stack.Screen name="BoardingOwner" component={BoardingOwnerNavigator} />
+        <Stack.Screen name="PetOwner" component={DrawerNavigator} />
+        <Stack.Screen name="GuestBoarding" component={BoardingOwnerNavigator} />
+        <Stack.Screen name="GuestPetOwner" component={DrawerNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );

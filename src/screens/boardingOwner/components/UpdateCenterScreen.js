@@ -26,11 +26,13 @@ import {
   getCenterDetails,
   updateCenter,
 } from "../services/boardingOwnerService";
+import { useRefresh } from "../../../context/RefreshContext";
 
 export default function UpdateCenterScreen() {
   const { width } = Dimensions.get("window");
   const navigation = useNavigation();
   const route = useRoute();
+  const { triggerRefresh } = useRefresh();
   const { centerId } = route.params || {};
 
   const [center, setCenter] = useState(null);
@@ -266,7 +268,8 @@ export default function UpdateCenterScreen() {
         centerPhotos: newImages,
       });
 
-      const response = await updateCenter(formData);
+      await updateCenter(formData);
+      triggerRefresh();
 
       Alert.alert("Success", "Center updated successfully", [
         {

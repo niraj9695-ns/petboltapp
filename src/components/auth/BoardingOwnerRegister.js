@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import FloatingInput from "../inputs/FloatingInput";
 import { PasswordInput } from "../inputs/PasswordInput";
 import DateInput from "../inputs/DateInput";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Picker } from "@react-native-picker/picker";
 import {
   View,
   Text,
@@ -14,6 +16,7 @@ import {
 } from "react-native";
 
 import * as DocumentPicker from "expo-document-picker";
+import styles from "../../styles/BoardingOwnerRegisterStyles";
 
 export default function BoardingOwnerRegister({
   setStep,
@@ -23,10 +26,6 @@ export default function BoardingOwnerRegister({
   const [currentStep, setCurrentStep] = useState(1);
 
   const [loading, setLoading] = useState(false);
-
-  // =====================================
-  // STEP 1 - OWNER DETAILS
-  // =====================================
 
   const [fullName, setFullName] = useState("");
 
@@ -43,10 +42,6 @@ export default function BoardingOwnerRegister({
   const [emergencyContactNumber, setEmergencyContactNumber] = useState("");
 
   const [businessName, setBusinessName] = useState("");
-
-  // =====================================
-  // STEP 2 - CENTER DETAILS
-  // =====================================
 
   const [centerName, setCenterName] = useState("");
 
@@ -72,13 +67,11 @@ export default function BoardingOwnerRegister({
 
   const [description, setDescription] = useState("");
 
-  const [pricePerDay, setPricePerDay] = useState("");
+  const [petPriceRows, setPetPriceRows] = useState([
+    { petType: "", price: "" },
+  ]);
 
-  // =====================================
-  // STEP 3 - SERVICES
-  // =====================================
-
-  const [acceptedPetTypes, setAcceptedPetTypes] = useState("");
+  const [acceptedPetTypes, setAcceptedPetTypes] = useState([]);
 
   const [sizeWeightRestrictions, setSizeWeightRestrictions] = useState("");
 
@@ -92,19 +85,11 @@ export default function BoardingOwnerRegister({
 
   const [vaccinationPolicy, setVaccinationPolicy] = useState("");
 
-  // =====================================
-  // STEP 4 - DOCUMENTS
-  // =====================================
-
   const [aadharFile, setAadharFile] = useState(null);
 
   const [licenseProof, setLicenseProof] = useState(null);
 
   const [centerPhotos, setCenterPhotos] = useState([]);
-
-  // =====================================
-  // STEP 5 - EXTRA DETAILS
-  // =====================================
 
   const [vetClinicName, setVetClinicName] = useState("");
 
@@ -121,9 +106,13 @@ export default function BoardingOwnerRegister({
 
   const [insuranceExpiryDate, setInsuranceExpiryDate] = useState(null);
 
-  const [openingTime, setOpeningTime] = useState("");
+  const [openingTime, setOpeningTime] = useState(new Date());
 
-  const [closingTime, setClosingTime] = useState("");
+  const [closingTime, setClosingTime] = useState(new Date());
+
+  const [showOpeningPicker, setShowOpeningPicker] = useState(false);
+
+  const [showClosingPicker, setShowClosingPicker] = useState(false);
 
   const [specialInstructions, setSpecialInstructions] = useState("");
 
@@ -135,7 +124,8 @@ export default function BoardingOwnerRegister({
 
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  //file pickers
+  const PET_TYPES = ["dog", "cat", "bird", "rabbit", "turtle", "others"];
+
   const pickAadhar = async () => {
     const result = await DocumentPicker.getDocumentAsync({
       type: ["image/*", "application/pdf"],
@@ -167,10 +157,6 @@ export default function BoardingOwnerRegister({
     }
   };
 
-  // =====================================
-  // STEP VALIDATION
-  // =====================================
-
   const validateStep = () => {
     if (currentStep === 1) {
       if (
@@ -184,6 +170,11 @@ export default function BoardingOwnerRegister({
         Alert.alert("Validation", "Please fill all owner details");
         return false;
       }
+
+      if (!/^\d{10}$/.test(mobileNumber)) {
+        Alert.alert("Validation", "Mobile number must be exactly 10 digits");
+        return false;
+      }
     }
 
     if (currentStep === 2) {
@@ -195,7 +186,8 @@ export default function BoardingOwnerRegister({
         !propertyType ||
         !fencingStatus ||
         !supervisionLevel ||
-        !totalCapacity
+        !totalCapacity ||
+        petPriceRows.some((row) => !row.petType || !row.price)
       ) {
         Alert.alert("Validation", "Please fill all boarding center details");
         return false;
@@ -203,7 +195,11 @@ export default function BoardingOwnerRegister({
     }
 
     if (currentStep === 3) {
-      if (!acceptedPetTypes || !vaccinationPolicy) {
+      if (
+        !acceptedPetTypes ||
+        acceptedPetTypes.length === 0 ||
+        !vaccinationPolicy
+      ) {
         Alert.alert("Validation", "Please fill required service details");
         return false;
       }
@@ -212,27 +208,15 @@ export default function BoardingOwnerRegister({
     return true;
   };
 
-  // =====================================
-  // NEXT STEP
-  // =====================================
-
   const nextStep = () => {
     if (!validateStep()) return;
 
     setCurrentStep(currentStep + 1);
   };
 
-  // =====================================
-  // PREVIOUS STEP
-  // =====================================
-
   const prevStep = () => {
     setCurrentStep(currentStep - 1);
   };
-
-  // =====================================
-  // SUBMIT REGISTRATION
-  // =====================================
 
   const handleRegister = async () => {
     if (!termsAccepted) {
@@ -245,10 +229,6 @@ export default function BoardingOwnerRegister({
       setLoading(true);
 
       const formData = new FormData();
-
-      // ==========================
-      // OWNER
-      // ==========================
 
       formData.append("full_name", fullName);
 
@@ -264,16 +244,7 @@ export default function BoardingOwnerRegister({
 
       formData.append("emergency_contact_number", emergencyContactNumber);
 
-      //   formData.append(
-      //     "residential_address",
-      //     residentialAddress
-      //   );
-
       formData.append("business_name", businessName);
-
-      // ==========================
-      // CENTER
-      // ==========================
 
       formData.append("center_name", centerName);
 
@@ -300,21 +271,36 @@ export default function BoardingOwnerRegister({
 
       formData.append("description", description);
 
-      formData.append("price_per_day", pricePerDay);
+      const pricesObject = petPriceRows.reduce((acc, row) => {
+        const petType = row.petType.trim().toLowerCase();
+        const numericPrice = Number(row.price);
 
-      // ==========================
-      // ARRAYS
-      // ==========================
+        if (petType && !Number.isNaN(numericPrice)) {
+          acc[petType] = numericPrice;
+        }
 
-      formData.append(
-        "accepted_pet_types",
-        JSON.stringify(
-          acceptedPetTypes
-            .split(",")
-            .map((item) => item.trim())
-            .filter(Boolean),
-        ),
+        return acc;
+      }, {});
+
+      const supportedPricesObject = Object.entries(pricesObject).reduce(
+        (acc, [petType, price]) => {
+          if (
+            ["dog", "cat", "bird", "rabbit", "turtle", "others"].includes(
+              petType,
+            )
+          ) {
+            acc[petType] = price;
+          }
+          return acc;
+        },
+        {},
       );
+
+      if (Object.keys(supportedPricesObject).length > 0) {
+        formData.append("prices", JSON.stringify(supportedPricesObject));
+      }
+
+      formData.append("accepted_pet_types", JSON.stringify(acceptedPetTypes));
 
       formData.append(
         "size_weight_restrictions",
@@ -368,10 +354,6 @@ export default function BoardingOwnerRegister({
 
       formData.append("vaccination_policy", vaccinationPolicy);
 
-      // ==========================
-      // EXTRA DETAILS
-      // ==========================
-
       formData.append("vet_clinic_name", vetClinicName);
 
       formData.append("vet_clinic_address", vetClinicAddress);
@@ -391,9 +373,23 @@ export default function BoardingOwnerRegister({
           : "",
       );
 
-      formData.append("opening_time", openingTime);
+      formData.append(
+        "opening_time",
+        openingTime.toLocaleTimeString("en-US", {
+          hour12: false,
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      );
 
-      formData.append("closing_time", closingTime);
+      formData.append(
+        "closing_time",
+        closingTime.toLocaleTimeString("en-US", {
+          hour12: false,
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      );
 
       formData.append("special_instructions", specialInstructions);
 
@@ -407,10 +403,6 @@ export default function BoardingOwnerRegister({
       );
 
       formData.append("terms_accepted", "1");
-
-      // ==========================
-      // FILES
-      // ==========================
 
       if (aadharFile) {
         formData.append("aadhar_file", {
@@ -654,12 +646,71 @@ STEP 2 - CENTER DETAILS
             height={100}
           />
 
-          <FloatingInput
-            label="Price Per Day"
-            value={pricePerDay}
-            onChangeText={setPricePerDay}
-            keyboardType="number-pad"
-          />
+          <Text style={styles.helperText}>
+            Add pet prices for each animal type
+          </Text>
+
+          {petPriceRows.map((row, index) => (
+            <View key={index} style={styles.priceRow}>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={row.petType}
+                  onValueChange={(value) => {
+                    const updatedRows = [...petPriceRows];
+                    updatedRows[index].petType = value;
+                    setPetPriceRows(updatedRows);
+                  }}
+                >
+                  <Picker.Item label="Select Pet Type" value="" />
+                  <Picker.Item label="Dog" value="dog" />
+                  <Picker.Item label="Cat" value="cat" />
+                  <Picker.Item label="Bird" value="bird" />
+                  <Picker.Item label="Rabbit" value="rabbit" />
+                  <Picker.Item label="Turtle" value="turtle" />
+                  <Picker.Item label="Others" value="others" />
+                </Picker>
+              </View>
+
+              <TextInput
+                style={styles.priceInput}
+                placeholder="Price"
+                value={row.price}
+                keyboardType="number-pad"
+                onChangeText={(value) => {
+                  const updatedRows = [...petPriceRows];
+                  updatedRows[index].price = value;
+                  setPetPriceRows(updatedRows);
+                }}
+              />
+
+              {petPriceRows.length > 1 && (
+                <TouchableOpacity
+                  style={styles.removeRowButton}
+                  onPress={() => {
+                    const updatedRows = petPriceRows.filter(
+                      (_, rowIndex) => rowIndex !== index,
+                    );
+                    setPetPriceRows(
+                      updatedRows.length > 0
+                        ? updatedRows
+                        : [{ petType: "", price: "" }],
+                    );
+                  }}
+                >
+                  <Text style={styles.removeRowText}>-</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          ))}
+
+          <TouchableOpacity
+            style={styles.addRowButton}
+            onPress={() =>
+              setPetPriceRows([...petPriceRows, { petType: "", price: "" }])
+            }
+          >
+            <Text style={styles.addRowText}>+ Add More</Text>
+          </TouchableOpacity>
 
           <View
             style={{
@@ -687,14 +738,40 @@ STEP 3 - SERVICES & AMENITIES
           <Text style={styles.heading}>Services & Amenities</Text>
 
           <Text style={styles.helperText}>
-            Enter multiple values separated by commas (,)
+            Tap to toggle accepted pet types
           </Text>
 
-          <FloatingInput
-            label="Accepted Pet Types (Dogs, Cats, Birds) *"
-            value={acceptedPetTypes}
-            onChangeText={setAcceptedPetTypes}
-          />
+          <View
+            style={{ flexDirection: "row", flexWrap: "wrap", marginBottom: 12 }}
+          >
+            {PET_TYPES.map((pt) => {
+              const selected = acceptedPetTypes.includes(pt);
+              return (
+                <TouchableOpacity
+                  key={pt}
+                  style={[styles.chip, selected ? styles.chipSelected : null]}
+                  onPress={() => {
+                    if (selected) {
+                      setAcceptedPetTypes(
+                        acceptedPetTypes.filter((p) => p !== pt),
+                      );
+                    } else {
+                      setAcceptedPetTypes([...acceptedPetTypes, pt]);
+                    }
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.chipText,
+                      selected ? styles.chipSelectedText : null,
+                    ]}
+                  >
+                    {pt.charAt(0).toUpperCase() + pt.slice(1)}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
 
           <FloatingInput
             label="Size / Weight Restrictions"
@@ -901,17 +978,61 @@ STEP 5 - EXTRA DETAILS & SUBMIT
             onChange={(date) => setInsuranceExpiryDate(date)}
           />
 
-          <FloatingInput
-            label="Opening Time"
-            value={openingTime}
-            onChangeText={setOpeningTime}
-          />
+          <TouchableOpacity
+            style={styles.timePickerButton}
+            onPress={() => setShowOpeningPicker(true)}
+          >
+            <Text style={styles.timePickerLabel}>Opening Time</Text>
+            <Text style={styles.timePickerValue}>
+              {openingTime.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </Text>
+          </TouchableOpacity>
 
-          <FloatingInput
-            label="Closing Time"
-            value={closingTime}
-            onChangeText={setClosingTime}
-          />
+          {showOpeningPicker && (
+            <DateTimePicker
+              value={openingTime}
+              mode="time"
+              is24Hour={true}
+              display="default"
+              onChange={(_, selectedTime) => {
+                setShowOpeningPicker(false);
+                if (selectedTime) {
+                  setOpeningTime(selectedTime);
+                }
+              }}
+            />
+          )}
+
+          <TouchableOpacity
+            style={styles.timePickerButton}
+            onPress={() => setShowClosingPicker(true)}
+          >
+            <Text style={styles.timePickerLabel}>Closing Time</Text>
+            <Text style={styles.timePickerValue}>
+              {closingTime.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </Text>
+          </TouchableOpacity>
+
+          {showClosingPicker && (
+            <DateTimePicker
+              value={closingTime}
+              mode="time"
+              is24Hour={true}
+              display="default"
+              onChange={(_, selectedTime) => {
+                setShowClosingPicker(false);
+                if (selectedTime) {
+                  setClosingTime(selectedTime);
+                }
+              }}
+            />
+          )}
 
           <FloatingInput
             label="Special Instructions"
@@ -969,67 +1090,3 @@ STEP 5 - EXTRA DETAILS & SUBMIT
     </ScrollView>
   );
 }
-const styles = StyleSheet.create({
-  heading: {
-    fontSize: 22,
-    fontWeight: "700",
-    marginBottom: 20,
-    color: "#222",
-  },
-
-  helperText: {
-    color: "#666",
-    marginBottom: 12,
-  },
-
-  input: {
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 12,
-  },
-
-  uploadButton: {
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-  },
-
-  uploadText: {
-    color: "#444",
-  },
-
-  nextButton: {
-    backgroundColor: "#6b21a8",
-    padding: 14,
-    borderRadius: 12,
-    minWidth: 120,
-    alignItems: "center",
-  },
-
-  backButton: {
-    backgroundColor: "#999",
-    padding: 14,
-    borderRadius: 12,
-    flex: 1,
-    alignItems: "center",
-  },
-
-  submitButton: {
-    backgroundColor: "#6b21a8",
-    padding: 14,
-    borderRadius: 12,
-    minWidth: 120,
-    alignItems: "center",
-  },
-
-  buttonText: {
-    color: "#fff",
-    fontWeight: "700",
-  },
-});

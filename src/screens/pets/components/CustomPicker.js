@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import customPickerStyles from "../styles/CustomPickerStyles";
 
 export default function CustomPicker({
   selectedValue,
@@ -9,17 +10,7 @@ export default function CustomPicker({
   style,
 }) {
   return (
-    <View
-      style={[
-        style,
-        {
-          borderWidth: 1,
-          borderColor: "#ddd",
-          borderRadius: 10,
-          marginBottom: 12,
-        },
-      ]}
-    >
+    <View style={[customPickerStyles.pickerContainer, style]}>
       <Picker selectedValue={selectedValue} onValueChange={onValueChange}>
         <Picker.Item label="Select" value="" />
 
@@ -30,3 +21,4 @@ export default function CustomPicker({
     </View>
   );
 }
+

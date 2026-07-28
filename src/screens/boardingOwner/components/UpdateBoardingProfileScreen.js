@@ -19,8 +19,10 @@ import {
   getOwnerProfile,
   updateOwnerProfile,
 } from "../services/boardingOwnerService";
+import { useRefresh } from "../../../context/RefreshContext";
 
 export default function UpdateBoardingProfileScreen({ navigation }) {
+  const { triggerRefresh } = useRefresh();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [expandedSection, setExpandedSection] = useState("personal");
@@ -132,6 +134,7 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
       const response = await updateOwnerProfile(formData);
 
       if (response.status === "success") {
+        triggerRefresh();
         Alert.alert("Success", "Profile Updated Successfully", [
           {
             text: "OK",

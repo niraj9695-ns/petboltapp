@@ -58,24 +58,36 @@ export default function CreateCouponScreen() {
   const [centers, setCenters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [centerPage, setCenterPage] = useState(1);
+  const [centerTotalPages, setCenterTotalPages] = useState(1);
+  const [centerTotalItems, setCenterTotalItems] = useState(0);
   const [showErrors, setShowErrors] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [form, setForm] = useState(initialForm);
 
   useEffect(() => {
-    loadCenters();
+    loadCenters(1);
   }, []);
 
-  const loadCenters = async () => {
+  const loadCenters = async (page = 1) => {
     try {
-      const response = await getCenters();
-      const centerList = Array.isArray(response?.data)
-        ? response.data
-        : Array.isArray(response)
-          ? response
+      const response = await getCenters(page, 20);
+      const payload = response?.data || response || {};
+      const centerList = Array.isArray(payload?.data)
+        ? payload.data
+        : Array.isArray(payload)
+          ? payload
           : [];
+      const pagination = payload?.pagination || response?.pagination || {};
 
       setCenters(centerList);
+      setCenterPage(Number(pagination?.page || page || 1));
+      setCenterTotalPages(
+        Number(pagination?.total_pages || payload?.total_pages || 1) || 1,
+      );
+      setCenterTotalItems(
+        Number(pagination?.total || payload?.total || centerList.length || 0),
+      );
 
       const defaultCenterId =
         route?.params?.selectedCenterId || String(centerList[0]?.id || "");
@@ -88,6 +100,64 @@ export default function CreateCouponScreen() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const goToCenterPage = (page) => {
+    if (page < 1 || page > centerTotalPages) return;
+    setLoading(true);
+    loadCenters(page);
+  };
+
+  const renderPagination = () => {
+    if (centerTotalPages <= 1) return null;
+
+    const pages = [];
+    const startPage = Math.max(1, centerPage - 2);
+    const endPage = Math.min(centerTotalPages, centerPage + 2);
+
+    for (let page = startPage; page <= endPage; page += 1) {
+      pages.push(page);
+    }
+
+    return (
+      <View style={styles.paginationContainer}>
+        <TouchableOpacity
+          style={styles.paginationButton}
+          onPress={() => goToCenterPage(centerPage - 1)}
+          disabled={centerPage === 1}
+        >
+          <Text style={styles.paginationButtonText}>Prev</Text>
+        </TouchableOpacity>
+
+        {pages.map((page) => (
+          <TouchableOpacity
+            key={`center-${page}`}
+            style={[
+              styles.pageNumberButton,
+              centerPage === page && styles.activePageNumberButton,
+            ]}
+            onPress={() => goToCenterPage(page)}
+          >
+            <Text
+              style={[
+                styles.pageNumberButtonText,
+                centerPage === page && styles.activePageNumberButtonText,
+              ]}
+            >
+              {page}
+            </Text>
+          </TouchableOpacity>
+        ))}
+
+        <TouchableOpacity
+          style={styles.paginationButton}
+          onPress={() => goToCenterPage(centerPage + 1)}
+          disabled={centerPage === centerTotalPages}
+        >
+          <Text style={styles.paginationButtonText}>Next</Text>
+        </TouchableOpacity>
+      </View>
+    );
   };
 
   const showFieldError = (value) => showErrors && !value;
@@ -194,6 +264,10 @@ export default function CreateCouponScreen() {
                   ))}
                 </Picker>
               </View>
+              <Text style={styles.summaryText}>
+                Showing {centers.length} of {centerTotalItems} centers
+              </Text>
+              {renderPagination()}
             </View>
 
             <View style={styles.rowFields}>

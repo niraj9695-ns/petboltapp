@@ -59,46 +59,80 @@ export default function BoardingCouponsScreen() {
   const [loadingCenters, setLoadingCenters] = useState(true);
   const [loadingDiscounts, setLoadingDiscounts] = useState(false);
   const [selectedCenterId, setSelectedCenterId] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [centerPage, setCenterPage] = useState(1);
+  const [centerTotalPages, setCenterTotalPages] = useState(1);
+  const [centerTotalItems, setCenterTotalItems] = useState(0);
   const { width } = useWindowDimensions();
 
   const isTablet = width >= 768;
   const numColumns = isTablet ? 2 : 1;
 
-  const loadDiscounts = useCallback(async (centerId) => {
+  const loadDiscounts = useCallback(async (centerId, page = 1) => {
     if (!centerId) {
       setDiscounts([]);
+      setCurrentPage(1);
+      setTotalPages(1);
+      setTotalItems(0);
       return;
     }
 
     setLoadingDiscounts(true);
 
     try {
-      const response = await getDateDiscounts(centerId);
-      const discountList = Array.isArray(response?.data)
-        ? response.data
-        : Array.isArray(response)
-          ? response
-          : [];
+      const response = await getDateDiscounts(centerId, page, 20);
+      const payload = response?.data || response || {};
+      const discountList = Array.isArray(payload?.data)
+        ? payload.data
+        : Array.isArray(payload?.discounts)
+          ? payload.discounts
+          : Array.isArray(payload)
+            ? payload
+            : [];
+      const pagination = payload?.pagination || response?.pagination || {};
 
       setDiscounts(discountList);
+      setCurrentPage(Number(pagination?.page || page || 1));
+      setTotalPages(
+        Number(pagination?.total_pages || payload?.total_pages || 1) || 1,
+      );
+      setTotalItems(
+        Number(
+          pagination?.total || payload?.total || discountList.length || 0,
+        ),
+      );
     } catch (error) {
       Alert.alert("Error", "Unable to load the coupons for this center.");
       setDiscounts([]);
+      setCurrentPage(1);
+      setTotalPages(1);
+      setTotalItems(0);
     } finally {
       setLoadingDiscounts(false);
     }
   }, []);
 
-  const loadCenters = useCallback(async () => {
+  const loadCenters = useCallback(async (page = 1) => {
     try {
-      const response = await getCenters();
-      const centerList = Array.isArray(response?.data)
-        ? response.data
-        : Array.isArray(response)
-          ? response
+      const response = await getCenters(page, 20);
+      const payload = response?.data || response || {};
+      const centerList = Array.isArray(payload?.data)
+        ? payload.data
+        : Array.isArray(payload)
+          ? payload
           : [];
+      const pagination = payload?.pagination || response?.pagination || {};
 
       setCenters(centerList);
+      setCenterPage(Number(pagination?.page || page || 1));
+      setCenterTotalPages(
+        Number(pagination?.total_pages || payload?.total_pages || 1) || 1,
+      );
+      setCenterTotalItems(
+        Number(pagination?.total || payload?.total || centerList.length || 0),
+      );
 
       const activeCenterId =
         selectedCenterId || String(centerList[0]?.id || "");
@@ -111,7 +145,7 @@ export default function BoardingCouponsScreen() {
       setSelectedCenterId(nextCenterId);
 
       if (nextCenterId) {
-        await loadDiscounts(nextCenterId);
+        await loadDiscounts(nextCenterId, 1);
       }
     } catch (error) {
       Alert.alert("Error", "Unable to load your centers right now.");
@@ -122,24 +156,89 @@ export default function BoardingCouponsScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      loadCenters();
+      loadCenters(1);
     }, [loadCenters]),
   );
 
   useEffect(() => {
     if (selectedCenterId) {
-      loadDiscounts(selectedCenterId);
+      loadDiscounts(selectedCenterId, currentPage);
     }
-  }, [selectedCenterId, refreshKey, loadDiscounts]);
+  }, [selectedCenterId, refreshKey, loadDiscounts, currentPage]);
 
   const changeCenter = (centerId) => {
     setSelectedCenterId(centerId);
+    setCurrentPage(1);
+    loadDiscounts(centerId, 1);
+  };
+
+  const goToCenterPage = (page) => {
+    if (page < 1 || page > centerTotalPages) return;
+    loadCenters(page);
+  };
+
+  const goToCouponPage = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+    loadDiscounts(selectedCenterId, page);
   };
 
   const openCreateForm = () => {
     navigation.navigate("CreateCoupon", {
       selectedCenterId,
     });
+  };
+
+  const renderPagination = (page, total, onPageChange, label) => {
+    if (total <= 1) return null;
+
+    const pages = [];
+    const startPage = Math.max(1, page - 2);
+    const endPage = Math.min(total, page + 2);
+
+    for (let current = startPage; current <= endPage; current += 1) {
+      pages.push(current);
+    }
+
+    return (
+      <View style={styles.paginationContainer}>
+        <TouchableOpacity
+          style={styles.paginationButton}
+          onPress={() => onPageChange(page - 1)}
+          disabled={page === 1}
+        >
+          <Text style={styles.paginationButtonText}>Prev</Text>
+        </TouchableOpacity>
+
+        {pages.map((pageNumber) => (
+          <TouchableOpacity
+            key={`${label}-${pageNumber}`}
+            style={[
+              styles.pageNumberButton,
+              page === pageNumber && styles.activePageNumberButton,
+            ]}
+            onPress={() => onPageChange(pageNumber)}
+          >
+            <Text
+              style={[
+                styles.pageNumberButtonText,
+                page === pageNumber && styles.activePageNumberButtonText,
+              ]}
+            >
+              {pageNumber}
+            </Text>
+          </TouchableOpacity>
+        ))}
+
+        <TouchableOpacity
+          style={styles.paginationButton}
+          onPress={() => onPageChange(page + 1)}
+          disabled={page === total}
+        >
+          <Text style={styles.paginationButtonText}>Next</Text>
+        </TouchableOpacity>
+      </View>
+    );
   };
 
   const openUpdateForm = (discount) => {
@@ -228,13 +327,21 @@ export default function BoardingCouponsScreen() {
                 ))}
               </Picker>
             </View>
+            {renderPagination(
+              centerPage,
+              centerTotalPages,
+              goToCenterPage,
+              "center",
+            )}
           </View>
 
           <View style={styles.listCard}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Saved coupons</Text>
               <Text style={styles.mutedText}>
-                {loadingDiscounts ? "Loading..." : `${discounts.length} items`}
+                {loadingDiscounts
+                  ? "Loading..."
+                  : `${discounts.length} of ${totalItems} items`}
               </Text>
             </View>
 
@@ -250,10 +357,11 @@ export default function BoardingCouponsScreen() {
                 </Text>
               </View>
             ) : (
-              <View style={styles.cardsContainer}>
-                {discounts.map((discount) => (
-                  <View
-                    key={discount.id}
+              <>
+                <View style={styles.cardsContainer}>
+                  {discounts.map((discount) => (
+                    <View
+                      key={discount.id}
                     style={[
                       styles.discountCard,
                       {
@@ -327,8 +435,15 @@ export default function BoardingCouponsScreen() {
                       </TouchableOpacity>
                     </View>
                   </View>
-                ))}
-              </View>
+                  ))}
+                </View>
+                {renderPagination(
+                  currentPage,
+                  totalPages,
+                  goToCouponPage,
+                  "coupon",
+                )}
+              </>
             )}
           </View>
         </ScrollView>

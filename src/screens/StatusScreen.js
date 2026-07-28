@@ -1,18 +1,17 @@
 import { View, ScrollView } from "react-native";
 import LiveUpdates from "../components/LiveUpdates";
+import statusStyles from "../styles/StatusScreenStyles";
 
 export default function StatusScreen() {
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: "#f9fafb" }}
-      contentContainerStyle={{
-        paddingVertical: 20,
-        alignItems: "center",
-      }}
+      style={statusStyles.scroll}
+      contentContainerStyle={statusStyles.content}
     >
-      <View style={{ width: "100%" }}>
+      <View style={statusStyles.contentView}>
         <LiveUpdates />
       </View>
     </ScrollView>
   );
 }
+

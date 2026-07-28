@@ -11,15 +11,23 @@ import {
 
 import { Picker } from "@react-native-picker/picker";
 
+import { Ionicons } from "@expo/vector-icons";
+
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+
+import phaseOneFormStyles from "../styles/PhaseOneFormStyles";
+
+import FormLabel from "./FormLabel";
 
 export default function PhaseOneForm({
   petData,
   setPetData,
-  styles,
+  fieldErrors = {},
   pickImages,
   selectedImages,
   removeImage,
+  profileImageIndex,
+  setProfileImageIndex,
 }) {
   const [showDobPicker, setShowDobPicker] = useState(false);
 
@@ -38,18 +46,15 @@ export default function PhaseOneForm({
     <View>
       {/* PET NAME */}
 
-      <Text
-        style={{
-          marginBottom: 5,
-          fontWeight: "600",
-        }}
-      >
-        Pet Name <Text style={{ color: "red" }}>*</Text>
-      </Text>
+      <FormLabel
+        title="Pet Name"
+        required
+        error={fieldErrors.pet_name}
+      />
 
       <TextInput
         placeholder="Pet Name"
-        style={styles.input}
+        style={[phaseOneFormStyles.input, fieldErrors.pet_name && phaseOneFormStyles.inputError]}
         value={petData.pet_name}
         onChangeText={(text) =>
           setPetData({
@@ -61,23 +66,17 @@ export default function PhaseOneForm({
 
       {/* PET TYPE */}
 
-      <Text
-        style={{
-          marginBottom: 5,
-          fontWeight: "600",
-        }}
-      >
-        Pet Type <Text style={{ color: "red" }}>*</Text>
-      </Text>
+      <FormLabel
+        title="Pet Type"
+        required
+        error={fieldErrors.pet_type}
+      />
 
       <View
-        style={{
-          borderWidth: 1,
-          borderColor: "#ddd",
-          borderRadius: 10,
-          marginBottom: 12,
-          overflow: "hidden",
-        }}
+        style={[
+          phaseOneFormStyles.pickerWrapper,
+          fieldErrors.pet_type && phaseOneFormStyles.inputError,
+        ]}
       >
         <Picker
           selectedValue={petData.pet_type}
@@ -98,18 +97,15 @@ export default function PhaseOneForm({
 
       {/* BREED */}
 
-      <Text
-        style={{
-          marginBottom: 5,
-          fontWeight: "600",
-        }}
-      >
-        Breed <Text style={{ color: "red" }}>*</Text>
-      </Text>
+      <FormLabel
+        title="Breed"
+        required
+        error={fieldErrors.breed}
+      />
 
       <TextInput
         placeholder="Breed"
-        style={styles.input}
+        style={[phaseOneFormStyles.input, fieldErrors.breed && phaseOneFormStyles.inputError]}
         value={petData.breed}
         onChangeText={(text) =>
           setPetData({
@@ -121,23 +117,17 @@ export default function PhaseOneForm({
 
       {/* GENDER */}
 
-      <Text
-        style={{
-          marginBottom: 5,
-          fontWeight: "600",
-        }}
-      >
-        Gender <Text style={{ color: "red" }}>*</Text>
-      </Text>
+      <FormLabel
+        title="Gender"
+        required
+        error={fieldErrors.gender}
+      />
 
       <View
-        style={{
-          borderWidth: 1,
-          borderColor: "#ddd",
-          borderRadius: 10,
-          marginBottom: 12,
-          overflow: "hidden",
-        }}
+        style={[
+          phaseOneFormStyles.pickerWrapper,
+          fieldErrors.gender && phaseOneFormStyles.inputError,
+        ]}
       >
         <Picker
           selectedValue={petData.gender}
@@ -157,19 +147,16 @@ export default function PhaseOneForm({
 
       {/* AGE */}
 
-      <Text
-        style={{
-          marginBottom: 5,
-          fontWeight: "600",
-        }}
-      >
-        Age <Text style={{ color: "red" }}>*</Text>
-      </Text>
+      <FormLabel
+        title="Age"
+        required
+        error={fieldErrors.age}
+      />
 
       <TextInput
         placeholder="Age"
         keyboardType="numeric"
-        style={styles.input}
+        style={[phaseOneFormStyles.input, fieldErrors.age && phaseOneFormStyles.inputError]}
         value={petData.age}
         onChangeText={(text) =>
           setPetData({
@@ -181,26 +168,20 @@ export default function PhaseOneForm({
 
       {/* DATE OF BIRTH */}
 
-      <Text
-        style={{
-          marginBottom: 5,
-          fontWeight: "600",
-        }}
-      >
-        Date Of Birth <Text style={{ color: "red" }}>*</Text>
-      </Text>
+      <FormLabel
+        title="Date Of Birth"
+        required
+        error={fieldErrors.date_of_birth}
+      />
 
       <TouchableOpacity
-        style={styles.input}
+        style={[phaseOneFormStyles.dateInput, fieldErrors.date_of_birth && phaseOneFormStyles.inputError]}
         onPress={() => setShowDobPicker(true)}
       >
-        <Text
-          style={{
-            color: petData.date_of_birth ? "#000" : "#999",
-          }}
-        >
+        <Text style={phaseOneFormStyles.dateInputText}>
           {petData.date_of_birth || "Select Date Of Birth"}
         </Text>
+        <Ionicons name="calendar-outline" size={18} color="#6b21a8" />
       </TouchableOpacity>
 
       <DateTimePickerModal
@@ -213,19 +194,16 @@ export default function PhaseOneForm({
 
       {/* WEIGHT */}
 
-      <Text
-        style={{
-          marginBottom: 5,
-          fontWeight: "600",
-        }}
-      >
-        Weight (KG) <Text style={{ color: "red" }}>*</Text>
-      </Text>
+      <FormLabel
+        title="Weight (KG)"
+        required
+        error={fieldErrors.weight}
+      />
 
       <TextInput
         placeholder="Weight"
         keyboardType="numeric"
-        style={styles.input}
+        style={[phaseOneFormStyles.input, fieldErrors.weight && phaseOneFormStyles.inputError]}
         value={petData.weight}
         onChangeText={(text) =>
           setPetData({
@@ -239,7 +217,7 @@ export default function PhaseOneForm({
 
       <TextInput
         placeholder="Color Marks"
-        style={styles.input}
+        style={phaseOneFormStyles.input}
         value={petData.color_marks}
         onChangeText={(text) =>
           setPetData({
@@ -253,7 +231,7 @@ export default function PhaseOneForm({
 
       <TextInput
         placeholder="Microchip ID"
-        style={styles.input}
+        style={phaseOneFormStyles.input}
         value={petData.microchip_id}
         onChangeText={(text) =>
           setPetData({
@@ -267,7 +245,7 @@ export default function PhaseOneForm({
 
       <TextInput
         placeholder="Registration Number"
-        style={styles.input}
+        style={phaseOneFormStyles.input}
         value={petData.registration_number}
         onChangeText={(text) =>
           setPetData({
@@ -281,7 +259,7 @@ export default function PhaseOneForm({
 
       <TextInput
         placeholder="Additional Details"
-        style={styles.input}
+        style={[phaseOneFormStyles.input, phaseOneFormStyles.textArea]}
         multiline
         value={petData.additional_details}
         onChangeText={(text) =>
@@ -294,89 +272,69 @@ export default function PhaseOneForm({
 
       {/* IMAGES */}
 
-      <Text
-        style={{
-          marginBottom: 5,
-          fontWeight: "600",
-        }}
-      >
-        Pet Images
-      </Text>
+      <Text style={phaseOneFormStyles.fieldLabel}>Pet Images</Text>
+      <Text style={phaseOneFormStyles.helperText}>You can add one or more photos for the pet profile.</Text>
 
-      <TouchableOpacity
-        onPress={pickImages}
-        style={{
-          borderWidth: 1,
-          borderColor: "#ddd",
-          borderRadius: 10,
-          paddingVertical: 14,
-          paddingHorizontal: 15,
-          marginBottom: 12,
-          backgroundColor: "#fafafa",
-        }}
-      >
-        <Text
-          style={{
-            color: "#666",
-            fontSize: 15,
-          }}
-        >
-        Select Images
-        </Text>
+      <TouchableOpacity onPress={pickImages} style={phaseOneFormStyles.imageSelectButton}>
+        <Text style={phaseOneFormStyles.imageSelectButtonText}>Select Images</Text>
       </TouchableOpacity>
 
       {selectedImages?.length > 0 && (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{ marginTop: 15 }}
-        >
-          {selectedImages.map((img, index) => (
-            <View
-              key={index}
-              style={{
-                marginRight: 10,
-                position: "relative",
-              }}
-            >
-              <Image
-                source={{
-                  uri: img.uri || img.image_url || img.url || img.pet_image,
-                }}
-                style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 10,
-                }}
-              />
-
+        <>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={phaseOneFormStyles.imagePreviewContainer}
+          >
+            {selectedImages.map((img, index) => (
               <TouchableOpacity
-                onPress={() => removeImage(index)}
-                style={{
-                  position: "absolute",
-                  top: -6,
-                  right: -6,
-                  width: 26,
-                  height: 26,
-                  borderRadius: 13,
-                  backgroundColor: "red",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
+                key={index}
+                style={[
+                  phaseOneFormStyles.imageThumbWrapper,
+                  profileImageIndex === index && phaseOneFormStyles.selectedThumbWrapper,
+                ]}
+                onPress={() => setProfileImageIndex(index)}
               >
-                <Text
-                  style={{
-                    color: "#fff",
-                    fontWeight: "bold",
+                <Image
+                  source={{
+                    uri: img.uri || img.image_url || img.url || img.pet_image,
                   }}
+                  style={phaseOneFormStyles.imageThumb}
+                />
+
+                <View
+                  style={[
+                    phaseOneFormStyles.profileBadge,
+                    profileImageIndex === index
+                      ? phaseOneFormStyles.profileBadgeActive
+                      : phaseOneFormStyles.profileBadgeInactive,
+                  ]}
                 >
-                  ✕
-                </Text>
+                  <Text style={phaseOneFormStyles.profileBadgeText}>
+                    {profileImageIndex === index
+                      ? "Profile"
+                      : "Set Profile"}
+                  </Text>
+                </View>
+
+                <TouchableOpacity
+                  onPress={() => removeImage(index)}
+                  style={phaseOneFormStyles.removeImageBtn}
+                >
+                  <Text style={phaseOneFormStyles.removeImageText}>✕</Text>
+                </TouchableOpacity>
               </TouchableOpacity>
-            </View>
-          ))}
-        </ScrollView>
+            ))}
+          </ScrollView>
+
+          {profileImageIndex === null && (
+            <Text style={phaseOneFormStyles.helperText}>
+              Tap a photo to choose the pet profile image.
+            </Text>
+          )}
+        </>
       )}
     </View>
   );
 }
+

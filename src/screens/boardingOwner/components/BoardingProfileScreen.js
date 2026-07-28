@@ -13,10 +13,12 @@ import styles from "../styles/BoardingProfileStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRefresh } from "../../../context/RefreshContext";
 
 const BASE_URL = "https://www.cgpisoftware.com/cheerytail";
 
 export default function BoardingProfileScreen({ navigation }) {
+  const { refreshKey } = useRefresh();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [expandedSection, setExpandedSection] = useState("personal");
@@ -54,7 +56,7 @@ export default function BoardingProfileScreen({ navigation }) {
     });
 
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, refreshKey]);
 
   if (loading) {
     return (

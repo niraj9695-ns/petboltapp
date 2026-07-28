@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { TouchableOpacity, Text } from "react-native";
+import dateFieldStyles from "../styles/DateFieldStyles";
 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
@@ -18,11 +19,7 @@ export default function DateField({ value, onChange, placeholder, style }) {
   return (
     <>
       <TouchableOpacity style={style} onPress={() => setVisible(true)}>
-        <Text
-          style={{
-            color: value ? "#000" : "#999",
-          }}
-        >
+        <Text style={value ? dateFieldStyles.dateFieldText : dateFieldStyles.dateFieldPlaceholder}>
           {value || placeholder}
         </Text>
       </TouchableOpacity>
@@ -37,3 +34,4 @@ export default function DateField({ value, onChange, placeholder, style }) {
     </>
   );
 }
+

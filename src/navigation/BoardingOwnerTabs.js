@@ -7,6 +7,7 @@ import BoardingBookingsScreen from "../screens/boardingOwner/components/Boarding
 import BoardingCentersScreen from "../screens/boardingOwner/components/BoardingCentersScreen";
 import BoardingCouponsScreen from "../screens/boardingOwner/components/BoardingCouponsScreen";
 import BoardingProfileScreen from "../screens/boardingOwner/components/BoardingProfileScreen";
+import NotificationsScreen from "../screens/NotificationScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -21,6 +22,10 @@ export default function BoardingOwnerTabs() {
 
           if (route.name === "Bookings") {
             iconName = "calendar-outline";
+          }if (route.name === "Bookings") {
+            iconName = "calendar-outline";
+          } else if (route.name === "Notifications") {
+            iconName = "notifications-outline";
           } else if (route.name === "Centers") {
             iconName = "business-outline";
           } else if (route.name === "Coupons") {
@@ -37,6 +42,8 @@ export default function BoardingOwnerTabs() {
       })}
     >
       <Tab.Screen name="Bookings" component={BoardingBookingsScreen} />
+
+      <Tab.Screen name="Notifications" component={NotificationsScreen} />
 
       <Tab.Screen name="Centers" component={BoardingCentersScreen} />
 

@@ -6,13 +6,13 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
-  StyleSheet,
   ActivityIndicator,
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { PasswordInput } from "../inputs/PasswordInput";
+import otpVerificationStyles from "../../styles/OTPVerificationStyles";
 
 export default function OTPVerification({
   email,
@@ -20,6 +20,7 @@ export default function OTPVerification({
   password,
   onSuccess,
   onBack,
+  navigation,
 }) {
   const [otp, setOtp] = useState("");
 
@@ -36,10 +37,6 @@ export default function OTPVerification({
 
     try {
       setLoading(true);
-
-      // ====================================
-      // RESET PASSWORD FLOW
-      // ====================================
 
       if (otpType === "reset_password") {
         if (!newPassword) {
@@ -75,10 +72,6 @@ export default function OTPVerification({
 
         return;
       }
-
-      // ====================================
-      // LOGIN / REGISTER FLOW
-      // ====================================
 
       const endpoint =
         otpType === "login"
@@ -118,7 +111,17 @@ export default function OTPVerification({
         Alert.alert("Success", "OTP Verified");
 
         setTimeout(() => {
-          onSuccess?.();
+          if (navigation && user?.role) {
+            const nextRoute =
+              user.role === "boarding_owner" ? "BoardingOwner" : "PetOwner";
+
+            navigation.reset({
+              index: 0,
+              routes: [{ name: nextRoute }],
+            });
+          } else {
+            onSuccess?.();
+          }
         }, 100);
       } else {
         Alert.alert("Error", result.message || "Invalid OTP");
@@ -161,6 +164,12 @@ export default function OTPVerification({
 
       const result = await response.json();
 
+      const resendOtp =
+        result?.otp ||
+        result?.data?.otp ||
+        result?.data?.verification_otp ||
+        "OTP not returned";
+
       Alert.alert("Success", "OTP Resent Successfully");
     } catch (error) {
       Alert.alert("Error", "Failed to resend OTP");
@@ -171,15 +180,15 @@ export default function OTPVerification({
 
   return (
     <View>
-      <Text style={styles.heading}>Verify OTP</Text>
+      <Text style={otpVerificationStyles.heading}>Verify OTP</Text>
 
-      <Text style={styles.subText}>
+      <Text style={otpVerificationStyles.subText}>
         OTP sent to{"\n"}
         {email}
       </Text>
 
       <TextInput
-        style={styles.input}
+        style={otpVerificationStyles.input}
         placeholder="Enter OTP"
         keyboardType="number-pad"
         maxLength={6}
@@ -196,71 +205,24 @@ export default function OTPVerification({
       )}
 
       <TouchableOpacity onPress={handleResendOtp}>
-        <Text style={styles.resendText}>Resend OTP</Text>
+        <Text style={otpVerificationStyles.resendText}>Resend OTP</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.button}
+        style={otpVerificationStyles.button}
         onPress={handleVerifyOtp}
         disabled={loading}
       >
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.buttonText}>Verify OTP</Text>
+          <Text style={otpVerificationStyles.buttonText}>Verify OTP</Text>
         )}
       </TouchableOpacity>
 
       <TouchableOpacity onPress={onBack}>
-        <Text style={styles.backText}>Back</Text>
+        <Text style={otpVerificationStyles.backText}>Back</Text>
       </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  heading: {
-    fontSize: 24,
-    fontWeight: "700",
-    marginBottom: 10,
-  },
-
-  subText: {
-    color: "#666",
-    marginBottom: 20,
-  },
-
-  input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 12,
-    backgroundColor: "#fff",
-  },
-
-  resendText: {
-    color: "#6b21a8",
-    textAlign: "center",
-    marginBottom: 20,
-    fontWeight: "600",
-  },
-
-  button: {
-    backgroundColor: "#6b21a8",
-    padding: 15,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-
-  buttonText: {
-    color: "#fff",
-    fontWeight: "700",
-  },
-
-  backText: {
-    textAlign: "center",
-    marginTop: 15,
-    color: "#666",
-  },
-});

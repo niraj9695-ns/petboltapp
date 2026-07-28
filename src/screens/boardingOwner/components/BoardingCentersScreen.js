@@ -12,12 +12,17 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getCenters } from "../services/boardingOwnerService";
 import { Ionicons } from "@expo/vector-icons";
+import { useRefresh } from "../../../context/RefreshContext";
 import styles from "../styles/BoardingCentersStyles";
 
 export default function BoardingCentersScreen() {
   const navigation = useNavigation();
+  const { refreshKey } = useRefresh();
   const [centers, setCenters] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
 
   const { width } = useWindowDimensions();
 
@@ -31,18 +36,84 @@ export default function BoardingCentersScreen() {
         : (width - 80) / 3;
 
   useEffect(() => {
-    loadCenters();
-  }, []);
+    loadCenters(1);
+  }, [refreshKey]);
 
-  const loadCenters = async () => {
+  const loadCenters = async (page = 1) => {
     try {
-      const response = await getCenters();
-      const data = response?.data || [];
+      setLoading(true);
+      const response = await getCenters(page, 20);
+      const payload = response?.data || response || {};
+      const data = Array.isArray(payload?.data)
+        ? payload.data
+        : Array.isArray(payload) ? payload : [];
+      const pagination = payload?.pagination || {};
+
       setCenters(data);
+      setCurrentPage(Number(pagination?.page || page || 1));
+      setTotalPages(Number(pagination?.total_pages || 1));
+      setTotalItems(Number(pagination?.total || data.length || 0));
     } catch (error) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const goToPage = (page) => {
+    if (page < 1 || page > totalPages) return;
+    loadCenters(page);
+  };
+
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    const pages = [];
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+
+    for (let page = startPage; page <= endPage; page += 1) {
+      pages.push(page);
+    }
+
+    return (
+      <View style={styles.paginationContainer}>
+        <TouchableOpacity
+          style={styles.paginationButton}
+          onPress={() => goToPage(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          <Text style={styles.paginationButtonText}>Prev</Text>
+        </TouchableOpacity>
+
+        {pages.map((page) => (
+          <TouchableOpacity
+            key={page}
+            style={[
+              styles.pageNumberButton,
+              currentPage === page && styles.activePageNumberButton,
+            ]}
+            onPress={() => goToPage(page)}
+          >
+            <Text
+              style={[
+                styles.pageNumberButtonText,
+                currentPage === page && styles.activePageNumberButtonText,
+              ]}
+            >
+              {page}
+            </Text>
+          </TouchableOpacity>
+        ))}
+
+        <TouchableOpacity
+          style={styles.paginationButton}
+          onPress={() => goToPage(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          <Text style={styles.paginationButtonText}>Next</Text>
+        </TouchableOpacity>
+      </View>
+    );
   };
 
   if (loading) {
@@ -121,8 +192,13 @@ export default function BoardingCentersScreen() {
                 <Text style={styles.createButtonText}>Create</Text>
               </TouchableOpacity>
             </View>
+
+            <Text style={styles.summaryText}>
+              Showing {centers.length} of {totalItems} centers
+            </Text>
           </View>
         }
+        ListFooterComponent={renderPagination()}
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Text style={styles.emptyText}>No centers found</Text>

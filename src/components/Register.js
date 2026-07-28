@@ -3,12 +3,18 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Image,
 } from "react-native";
+import {
+  AntDesign,
+  Feather,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -19,242 +25,199 @@ import PetOwnerRegister from "./auth/PetOwnerRegister";
 import BoardingOwnerRegister from "./auth/BoardingOwnerRegister";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import registerStyles from "../styles/RegisterScreenStyles";
 
-export default function RegisterScreen({
-  navigation,
-}) {
-  const [isLogin, setIsLogin] =
-    useState(true);
+export default function RegisterScreen({ navigation }) {
+  const [isLogin, setIsLogin] = useState(true);
 
-  const [step, setStep] =
-    useState("auth");
+  const [step, setStep] = useState("auth");
 
-  const [role, setRole] =
-    useState("pet_owner");
+  const [role, setRole] = useState("pet_owner");
 
-  const [email, setEmail] =
-    useState("");
+  const [email, setEmail] = useState("");
 
-  const [password, setPassword] =
-    useState("");
+  const [password, setPassword] = useState("");
 
-  const [otpType, setOtpType] =
-    useState("");
+  const [otpType, setOtpType] = useState("");
 
-  const constinueAsGuest =
-    async (guestRole) => {
-      await AsyncStorage.setItem(
-        "guestRole",
-        guestRole
-      );
+  const constinueAsGuest = async (guestRole) => {
+    await AsyncStorage.setItem("guestRole", guestRole);
 
-      await AsyncStorage.setItem(
-        "isGuest",
-        "true"
-      );
+    await AsyncStorage.setItem("isGuest", "true");
 
-      // navigation.reset({
-      //   index: 0,
-      //   routes: [{ name: "Root" }],
-      // });
-    };
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name:
+            guestRole === "boarding_owner" ? "GuestBoarding" : "GuestPetOwner",
+        },
+      ],
+    });
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={registerStyles.container}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={
-          Platform.OS === "ios"
-            ? "padding"
-            : "height"
-        }
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
-          contentContainerStyle={
-            styles.scrollContainer
-          }
-          showsVerticalScrollIndicator={
-            false
-          }
+          contentContainerStyle={registerStyles.scrollContainer}
+          showsVerticalScrollIndicator={false}
         >
-          <View
-            style={{ marginBottom: 18 }}
-          >
-            <Text
-              style={{
-                fontSize: 28,
-                fontWeight: "700",
-                color: "#111827",
-              }}
-            >
-              Welcome
-            </Text>
+          <View style={registerStyles.heroContainer}>
+            <View style={registerStyles.textContainer}>
+              <Text style={registerStyles.welcomeTitle}>Welcome Back!</Text>
 
-            <Text
-              style={{
-                marginTop: 4,
-                color: "#6B7280",
-                fontSize: 15,
-              }}
-            >
-              Sign in to continue or
-              create an account
-            </Text>
+              <Text style={registerStyles.welcomeSubtitle}>
+                Sign in to your account and care for your{" "}
+                <Text style={registerStyles.highlightText}>furry friend.</Text>
+              </Text>
+            </View>
+
+            <Image
+              source={require("../../assets/pets.png")}
+              style={registerStyles.petImage}
+              resizeMode="contain"
+            />
           </View>
 
           {step === "auth" && (
             <>
-              <View
-                style={
-                  styles.segmentContainer
-                }
-              >
+              <View style={registerStyles.segmentContainer}>
                 <TouchableOpacity
                   activeOpacity={0.9}
                   style={[
-                    styles.segmentButton,
-                    isLogin &&
-                      styles.segmentActive,
+                    registerStyles.segmentButton,
+                    isLogin && registerStyles.segmentActive,
                   ]}
-                  onPress={() =>
-                    setIsLogin(true)
-                  }
+                  onPress={() => setIsLogin(true)}
                 >
-                  <Text
-                    style={[
-                      styles.segmentText,
-                      isLogin &&
-                        styles.segmentActiveText,
-                    ]}
-                  >
-                    Login
-                  </Text>
+                  <View style={registerStyles.segmentContent}>
+                    <MaterialCommunityIcons
+                      name="paw"
+                      size={18}
+                      color={isLogin ? "#6D28D9" : "#6B7280"}
+                    />
+
+                    <Text
+                      style={[
+                        registerStyles.segmentText,
+                        isLogin && registerStyles.segmentActiveText,
+                      ]}
+                    >
+                      Sign In
+                    </Text>
+                  </View>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   activeOpacity={0.9}
                   style={[
-                    styles.segmentButton,
-                    !isLogin &&
-                      styles.segmentActive,
+                    registerStyles.segmentButton,
+                    !isLogin && registerStyles.segmentActive,
                   ]}
-                  onPress={() =>
-                    setIsLogin(false)
-                  }
+                  onPress={() => setIsLogin(false)}
                 >
-                  <Text
-                    style={[
-                      styles.segmentText,
-                      !isLogin &&
-                        styles.segmentActiveText,
-                    ]}
-                  >
-                    Register
-                  </Text>
+                  <View style={registerStyles.segmentContent}>
+                    <MaterialCommunityIcons
+                      name="account-outline"
+                      size={22}
+                      color={!isLogin ? "#6D28D9" : "#6B7280"}
+                    />
+
+                    <Text
+                      style={[
+                        registerStyles.segmentText,
+                        !isLogin && registerStyles.segmentActiveText,
+                      ]}
+                    >
+                      Sign Up
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               </View>
 
               {isLogin ? (
-                <View
-                  style={styles.authCard}
-                >
+                <View style={registerStyles.authCard}>
                   <LoginForm
                     setStep={setStep}
-                    setOtpType={
-                      setOtpType
-                    }
+                    setOtpType={setOtpType}
                     setEmail={setEmail}
-                    setPassword={
-                      setPassword
-                    }
+                    setPassword={setPassword}
                   />
 
-                  <View
-                    style={
-                      styles.guestContainer
-                    }
-                  >
-                    <Text
-                      style={
-                        styles.guestTitle
-                      }
-                    >
-                      Explore without
-                      account
+                  <View style={registerStyles.guestContainer}>
+                    <Text style={registerStyles.guestTitle}>
+                      Explore as Guest
                     </Text>
 
-                    <TouchableOpacity
-                      style={
-                        styles.guestButton
-                      }
-                      onPress={() =>
-                        constinueAsGuest(
-                          "pet_owner"
-                        )
-                      }
-                    >
-                      <Text
-                        style={
-                          styles.guestButtonText
-                        }
-                      >
-                        Continue as Pet
-                        Owner Guest
-                      </Text>
-                    </TouchableOpacity>
+                    <Text style={registerStyles.guestSubtitle}>
+                      Choose how you'd like to continue
+                    </Text>
 
-                    <TouchableOpacity
-                      style={
-                        styles.guestButton
-                      }
-                      onPress={() =>
-                        constinueAsGuest(
-                          "boarding_owner"
-                        )
-                      }
-                    >
-                      <Text
-                        style={
-                          styles.guestButtonText
-                        }
+                    <View style={registerStyles.guestCardsRow}>
+                      <TouchableOpacity
+                        style={registerStyles.guestCard}
+                        onPress={() => constinueAsGuest("pet_owner")}
                       >
-                        Continue as
-                        Boarding Owner
-                        Guest
-                      </Text>
-                    </TouchableOpacity>
+                        <View style={registerStyles.iconCirclePurple}>
+                          <Text style={registerStyles.iconText}>🐾</Text>
+                        </View>
+
+                        <Text style={registerStyles.guestCardTitle}>
+                          Pet Owner
+                        </Text>
+
+                        <Text style={registerStyles.guestCardDescription}>
+                          Explore and manage your pet care
+                        </Text>
+
+                        <View style={registerStyles.arrowPurple}>
+                          <AntDesign name="right" size={10} color="#9333EA" />
+                        </View>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        style={registerStyles.guestCard}
+                        onPress={() => constinueAsGuest("boarding_owner")}
+                      >
+                        <View style={registerStyles.iconCircleGreen}>
+                          <Text style={registerStyles.iconText}>🏠</Text>
+                        </View>
+
+                        <Text style={registerStyles.guestCardTitle}>
+                          Boarding Owner
+                        </Text>
+
+                        <Text style={registerStyles.guestCardDescription}>
+                          Manage your boarding business
+                        </Text>
+
+                        <View style={registerStyles.arrowGreen}>
+                          <AntDesign name="right" size={10} color="#22C55E" />
+                        </View>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               ) : (
-                <View
-                  style={styles.authCard}
-                >
-                  <RoleSelector
-                    role={role}
-                    setRole={setRole}
-                  />
+                <View style={registerStyles.authCard}>
+                  <RoleSelector role={role} setRole={setRole} />
 
-                  {role ===
-                  "pet_owner" ? (
+                  {role === "pet_owner" ? (
                     <PetOwnerRegister
                       setStep={setStep}
-                      setOtpType={
-                        setOtpType
-                      }
-                      setEmail={
-                        setEmail
-                      }
+                      setOtpType={setOtpType}
+                      setEmail={setEmail}
                     />
                   ) : (
                     <BoardingOwnerRegister
                       setStep={setStep}
-                      setOtpType={
-                        setOtpType
-                      }
-                      setEmail={
-                        setEmail
-                      }
+                      setOtpType={setOtpType}
+                      setEmail={setEmail}
                     />
                   )}
                 </View>
@@ -272,116 +235,48 @@ export default function RegisterScreen({
                 setStep("auth");
                 setIsLogin(true);
               }}
-              onBack={() =>
-                setStep("auth")
-              }
+              onBack={() => setStep("auth")}
+              navigation={navigation}
             />
           )}
+
+          <View style={registerStyles.featuresContainer}>
+            <View style={registerStyles.featureItem}>
+              <Feather name="shield" size={26} color="#8B5CF6" />
+
+              <Text style={registerStyles.featureTitle}>Safe & Secure</Text>
+
+              <Text style={registerStyles.featureSubtitle}>
+                Your data is protected
+              </Text>
+            </View>
+
+            <View style={registerStyles.featureDivider} />
+
+            <View style={registerStyles.featureItem}>
+              <MaterialCommunityIcons name="paw" size={26} color="#8B5CF6" />
+
+              <Text style={registerStyles.featureTitle}>Trusted Care</Text>
+
+              <Text style={registerStyles.featureSubtitle}>
+                Verified sitters{"\n"}& homes
+              </Text>
+            </View>
+
+            <View style={registerStyles.featureDivider} />
+
+            <View style={registerStyles.featureItem}>
+              <MaterialIcons name="event" size={26} color="#8B5CF6" />
+
+              <Text style={registerStyles.featureTitle}>Easy Booking</Text>
+
+              <Text style={registerStyles.featureSubtitle}>
+                Quick &{"\n"}hassle-free
+              </Text>
+            </View>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F5F6FA",
-  },
-
-  scrollContainer: {
-    paddingHorizontal: 18,
-    paddingTop:
-      Platform.OS === "android"
-        ? 25
-        : 15,
-    paddingBottom: 60,
-    flexGrow: 1,
-  },
-
-  authCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 20,
-    padding: 18,
-
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-
-    elevation: 3,
-  },
-
-  guestContainer: {
-    marginTop: 25,
-    borderTopWidth: 1,
-    borderTopColor: "#eee",
-    paddingTop: 20,
-  },
-
-  guestTitle: {
-    textAlign: "center",
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 15,
-  },
-
-  guestButton: {
-    backgroundColor: "#f3f4f6",
-    paddingVertical: 14,
-    borderRadius: 12,
-    marginBottom: 10,
-    alignItems: "center",
-  },
-
-  guestButtonText: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#374151",
-  },
-
-  segmentContainer: {
-    flexDirection: "row",
-    backgroundColor: "#ECE7F5",
-    borderRadius: 16,
-    padding: 4,
-    marginBottom: 24,
-  },
-
-  segmentButton: {
-    flex: 1,
-    height: 48,
-    borderRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  segmentActive: {
-    backgroundColor: "#FFFFFF",
-
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-
-    elevation: 2,
-  },
-
-  segmentText: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#6B7280",
-  },
-
-  segmentActiveText: {
-    color: "#6b21a8",
-    fontWeight: "700",
-  },
-});
-

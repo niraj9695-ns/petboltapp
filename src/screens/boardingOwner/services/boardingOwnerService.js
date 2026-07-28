@@ -125,23 +125,32 @@ export const buildCenterFormData = (payload = {}, options = {}) => {
   return formData;
 };
 
-export const getCenters = async () => {
+export const getCenters = async (page = 1, perPage = 20) => {
   const headers = await getAuthHeaders();
 
   const response = await axios.get(`${BASE_URL}/api/centers`, {
     headers,
+    params: {
+      page,
+      per_page: perPage,
+    },
   });
 
   return response.data;
 };
 
-export const getDateDiscounts = async (centerId) => {
+export const getDateDiscounts = async (centerId, page = 1, perPage = 20) => {
   const headers = await getAuthHeaders();
 
   const response = await axios.get(
-    `${BASE_URL}/api/owner/date-discounts?center_id=${centerId}`,
+    `${BASE_URL}/api/owner/date-discounts`,
     {
       headers,
+      params: {
+        center_id: centerId,
+        page,
+        per_page: perPage,
+      },
     },
   );
 
@@ -285,12 +294,15 @@ export const deleteCenterImage = async (centerId, imagePath) => {
   }
 };
 
-export const getOwnerBookings = async () => {
+export const getOwnerBookings = async (page = 1, perPage = 20) => {
   const headers = await getAuthHeaders();
 
-  const response = await axios.get(`${BASE_URL}/api/bookings/owner`, {
-    headers,
-  });
+  const response = await axios.get(
+    `${BASE_URL}/api/bookings/owner?page=${page}&per_page=${perPage}`,
+    {
+      headers,
+    },
+  );
 
   return response.data;
 };

@@ -23,10 +23,12 @@ import {
   buildCenterFormData,
   createCenter,
 } from "../services/boardingOwnerService";
+import { useRefresh } from "../../../context/RefreshContext";
 import styles from "../styles/CreateCenterStyles";
 
 export default function CreateCenterScreen() {
   const navigation = useNavigation();
+  const { triggerRefresh } = useRefresh();
   const [loading, setLoading] = useState(false);
   const [centerImages, setCenterImages] = useState([]);
   const [licenseFile, setLicenseFile] = useState(null);
@@ -227,6 +229,7 @@ export default function CreateCenterScreen() {
 
       const response = await createCenter(formData);
       if (response?.status === "success" || response?.success) {
+        triggerRefresh();
         Alert.alert("Success", "Center created successfully", [
           { text: "OK", onPress: () => navigation.goBack() },
         ]);

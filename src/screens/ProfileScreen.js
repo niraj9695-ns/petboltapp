@@ -2,14 +2,18 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
+  TextInput,
   TouchableOpacity,
   Image,
   ActivityIndicator,
   ScrollView,
+  Alert,
+  Linking,
+  useWindowDimensions,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
+import profileStyles from "../styles/ProfileScreenStyles";
 
 const API_URL = "https://www.cgpisoftware.com/cheerytail";
 
@@ -17,6 +21,9 @@ export default function ProfileScreen({ navigation }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isGuest, setIsGuest] = useState(false);
+  const { width } = useWindowDimensions();
+
+  const isTablet = width >= 768;
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -27,7 +34,6 @@ export default function ProfileScreen({ navigation }) {
 
       const guestRole = await AsyncStorage.getItem("guestRole");
 
-      // GUEST USER
       if (!token) {
         if (guestRole) {
           setIsGuest(true);
@@ -46,13 +52,23 @@ export default function ProfileScreen({ navigation }) {
 
       const result = await response.json();
 
-      if (response.ok && result.status === "success") {
-        const details = result.data.owner_details || {};
+      const data = result?.data || result;
+      const details =
+        data?.owner_details || data?.owner || result?.owner || data || {};
 
+      const statusSuccess =
+        result?.status === "success" ||
+        result?.status === true ||
+        result?.status === 1 ||
+        result?.status === "1" ||
+        (!result?.status && !!data);
+
+      if (response.ok && statusSuccess) {
         setUser({
-          id: result.data.id,
-          role: result.data.role,
-          email_verified: result.data.email_verified,
+          id: data?.id || result?.user_id || result?.id || null,
+          role: data?.role || result?.role || "",
+          email_verified:
+            data?.email_verified || result?.email_verified || false,
 
           full_name: details.full_name || "",
           email: details.email || "",
@@ -67,15 +83,25 @@ export default function ProfileScreen({ navigation }) {
 
           aadhar_file: details.aadhar_file || "",
 
-          created_at: result.data.created_at || "",
+          created_at: data?.created_at || result?.created_at || "",
 
-          updated_at: result.data.updated_at || "",
+          updated_at: data?.updated_at || result?.updated_at || "",
         });
       }
     } catch (error) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const startEditing = () => {
+    navigation.navigate("ProfileEdit");
+  };
+
+  const handleSignIn = async () => {
+    await AsyncStorage.removeItem("guestRole");
+    setIsGuest(false);
+    navigation.navigate("Auth");
   };
 
   if (loading) {
@@ -135,9 +161,7 @@ export default function ProfileScreen({ navigation }) {
             borderRadius: 12,
             marginTop: 25,
           }}
-          onPress={async () => {
-            await AsyncStorage.removeItem("guestRole");
-          }}
+          onPress={handleSignIn}
         >
           <Text
             style={{
@@ -151,6 +175,9 @@ export default function ProfileScreen({ navigation }) {
       </View>
     );
   }
+
+  const currentAadharIsPdf = user?.aadhar_file?.toLowerCase().endsWith(".pdf");
+
   return (
     <ScrollView
       style={styles.wrapper}
@@ -160,7 +187,14 @@ export default function ProfileScreen({ navigation }) {
     >
       <LinearGradient
         colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
-        style={styles.container}
+        style={[
+          styles.container,
+          {
+            maxWidth: isTablet ? 700 : "100%",
+            alignSelf: "center",
+            width: "100%",
+          },
+        ]}
       >
         {/* Profile Image */}
         <View style={styles.avatarWrapper}>
@@ -222,13 +256,22 @@ export default function ProfileScreen({ navigation }) {
           <>
             <Text style={styles.docTitle}>Aadhaar Document</Text>
 
-            <Image
-              source={{
-                uri: user.aadhar_file,
-              }}
-              style={styles.aadharImage}
-              resizeMode="cover"
-            />
+            {currentAadharIsPdf ? (
+              <TouchableOpacity
+                style={styles.fileAction}
+                onPress={() => Linking.openURL(user.aadhar_file)}
+              >
+                <Text style={styles.fileActionText}>View Aadhaar PDF</Text>
+              </TouchableOpacity>
+            ) : (
+              <Image
+                source={{
+                  uri: user.aadhar_file,
+                }}
+                style={styles.aadharImage}
+                resizeMode="cover"
+              />
+            )}
           </>
         ) : null}
         {/* Description */}
@@ -238,13 +281,17 @@ export default function ProfileScreen({ navigation }) {
 
         {/* Buttons */}
         <View style={styles.btnRow}>
-          <TouchableOpacity style={styles.primaryBtn}>
+          <TouchableOpacity style={styles.primaryBtn} onPress={startEditing}>
             <Text style={styles.primaryBtnText}>Edit Profile</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.secondaryBtn}
-            onPress={() => navigation.navigate("Pets")}
+            onPress={() =>
+              navigation.navigate("Pets", {
+                screen: "PetList",
+              })
+            }
           >
             <Text style={styles.secondaryBtnText}>My Pets</Text>
           </TouchableOpacity>
@@ -254,152 +301,4 @@ export default function ProfileScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-
-  loaderContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  container: {
-    margin: 15,
-    borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-  },
-
-  avatarWrapper: {
-    marginTop: 10,
-    marginBottom: 10,
-  },
-
-  avatar: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    borderWidth: 3,
-    borderColor: "#fff",
-  },
-
-  badge: {
-    backgroundColor: "#fff",
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 50,
-    marginBottom: 10,
-  },
-
-  badgeText: {
-    fontSize: 12,
-    fontWeight: "600",
-  },
-
-  name: {
-    fontSize: 26,
-    fontWeight: "bold",
-    color: "#333",
-    marginTop: 5,
-  },
-
-  subText: {
-    fontSize: 14,
-    color: "#666",
-    marginTop: 6,
-  },
-
-  roleText: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#f97316",
-    marginTop: 12,
-  },
-
-  address: {
-    marginTop: 12,
-    textAlign: "center",
-    color: "#555",
-    fontSize: 14,
-    lineHeight: 22,
-  },
-
-  desc: {
-    fontSize: 14,
-    color: "#555",
-    textAlign: "center",
-    marginTop: 20,
-    marginBottom: 20,
-  },
-
-  btnRow: {
-    width: "100%",
-    gap: 12,
-  },
-
-  primaryBtn: {
-    backgroundColor: "#f97316",
-    padding: 14,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-
-  primaryBtnText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 15,
-  },
-
-  secondaryBtn: {
-    backgroundColor: "#fff",
-    padding: 14,
-    borderRadius: 12,
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#ddd",
-  },
-
-  secondaryBtnText: {
-    color: "#6b21a8",
-    fontWeight: "bold",
-    fontSize: 15,
-  },
-  infoCard: {
-    width: "100%",
-    backgroundColor: "#fff",
-    borderRadius: 15,
-    padding: 16,
-    marginTop: 20,
-    marginBottom: 20,
-  },
-
-  label: {
-    fontSize: 12,
-    color: "#888",
-    fontWeight: "600",
-    marginTop: 10,
-  },
-
-  value: {
-    fontSize: 15,
-    color: "#222",
-    marginTop: 4,
-  },
-
-  docTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 10,
-    alignSelf: "flex-start",
-  },
-
-  aadharImage: {
-    width: "100%",
-    height: 220,
-    borderRadius: 15,
-    marginBottom: 20,
-  },
-});
+const styles = profileStyles;
