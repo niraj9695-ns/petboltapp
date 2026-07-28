@@ -327,19 +327,24 @@ export default function CenterDetailsScreen() {
               onToggle={toggleSection}
             >
               {center.license_proof ? (
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#f3f4f6",
-                    padding: 14,
-                    borderRadius: 12,
-                    marginTop: 4,
-                  }}
-                  onPress={() => Linking.openURL(center.license_proof)}
-                >
-                  <Text style={{ color: "#6b21a8", fontWeight: "700" }}>
-                    📄 View License Document
+                <>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#f3f4f6",
+                      padding: 14,
+                      borderRadius: 12,
+                      marginTop: 4,
+                    }}
+                    onPress={() => Linking.openURL(center.license_proof)}
+                  >
+                    <Text style={{ color: "#6b21a8", fontWeight: "700" }}>
+                      📄 View License Document
+                    </Text>
+                  </TouchableOpacity>
+                  <Text style={styles.documentHint}>
+                    Official license scanned document available for review.
                   </Text>
-                </TouchableOpacity>
+                </>
               ) : (
                 <Text style={styles.value}>No document uploaded</Text>
               )}

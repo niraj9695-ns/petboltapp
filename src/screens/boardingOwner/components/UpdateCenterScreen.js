@@ -96,6 +96,15 @@ export default function UpdateCenterScreen() {
     boarding_services: "",
   });
 
+  const MAX_FILE_SIZE = 100 * 1024;
+
+  const getFileSize = async (file) => {
+    if (!file) return 0;
+    if (typeof file.fileSize === "number") return file.fileSize;
+    if (typeof file.size === "number") return file.size;
+    return 0;
+  };
+
   useEffect(() => {
     if (centerId) {
       loadCenter();
@@ -360,7 +369,29 @@ export default function UpdateCenterScreen() {
     });
 
     if (!result.canceled) {
-      setNewImages((prev) => [...prev, ...(result.assets || [])]);
+      const assets = result.assets || [result];
+      const validImages = [];
+      const oversized = [];
+
+      for (const asset of assets) {
+        const size = await getFileSize(asset);
+        if (size > MAX_FILE_SIZE) {
+          oversized.push(asset);
+        } else {
+          validImages.push(asset);
+        }
+      }
+
+      if (oversized.length > 0) {
+        Alert.alert(
+          "File Too Large",
+          "One or more selected images exceed the 100KB upload limit. Please choose smaller images.",
+        );
+      }
+
+      if (validImages.length > 0) {
+        setNewImages((prev) => [...prev, ...validImages]);
+      }
     }
   };
 
@@ -372,14 +403,25 @@ export default function UpdateCenterScreen() {
       });
 
       if (!result.canceled) {
-        const file = result.assets[0];
+        const file = result.assets?.[0] ?? result;
+        const size = await getFileSize(file);
+        if (size > MAX_FILE_SIZE) {
+          Alert.alert(
+            "File Too Large",
+            "Selected document exceeds the 100KB upload limit. Please choose a smaller file.",
+          );
+          return;
+        }
+
         if (type === "license") {
           setLicenseProof(file);
         } else {
           setInsuranceDocument(file);
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      Alert.alert("Error", "Unable to select document.");
+    }
   };
 
   if (loading) {
@@ -678,6 +720,9 @@ export default function UpdateCenterScreen() {
                   <Text style={styles.actionButtonText}>+ Add Images</Text>
                 </TouchableOpacity>
               </View>
+              <Text style={styles.uploadInfo}>
+                Upload images and documents up to 100KB each.
+              </Text>
               {licenseProof && (
                 <Text style={styles.helperText}>
                   Selected: {licenseProof.name}

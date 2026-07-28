@@ -222,6 +222,11 @@ export default StyleSheet.create({
     color: "green",
     marginBottom: 14,
   },
+  uploadInfo: {
+    color: "#6b7280",
+    marginBottom: 12,
+    fontSize: 12,
+  },
   saveButton: {
     backgroundColor: "#6b21a8",
     marginHorizontal: 16,

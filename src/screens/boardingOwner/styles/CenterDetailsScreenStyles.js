@@ -113,6 +113,12 @@ export default StyleSheet.create({
     fontWeight: "600",
     color: "#111827",
   },
+  documentHint: {
+    marginTop: 10,
+    color: "#475569",
+    fontSize: 13,
+    lineHeight: 18,
+  },
   editButton: {
     backgroundColor: "#6b21a8",
     marginHorizontal: 16,

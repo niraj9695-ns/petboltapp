@@ -197,6 +197,11 @@ export default StyleSheet.create({
     color: "#6b21a8",
     fontWeight: "700",
   },
+  uploadInfo: {
+    color: "#6b7280",
+    fontSize: 12,
+    marginBottom: 8,
+  },
   uploadHint: {
     color: "#16a34a",
     fontSize: 12,

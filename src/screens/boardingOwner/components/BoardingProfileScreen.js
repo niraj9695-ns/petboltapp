@@ -10,12 +10,9 @@ import {
   Alert,
 } from "react-native";
 import styles from "../styles/BoardingProfileStyles";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRefresh } from "../../../context/RefreshContext";
-
-const BASE_URL = "https://www.cgpisoftware.com/cheerytail";
+import { getOwnerProfile } from "../services/boardingOwnerService";
 
 export default function BoardingProfileScreen({ navigation }) {
   const { refreshKey } = useRefresh();
@@ -25,24 +22,13 @@ export default function BoardingProfileScreen({ navigation }) {
 
   const fetchProfile = async () => {
     try {
-      const token = await AsyncStorage.getItem("token");
+      const response = await getOwnerProfile();
 
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
-      const response = await axios.get(`${BASE_URL}/api/owner/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-
-      if (response.data.status === "success") {
-        setProfile(response.data.data);
+      if (response?.status === "success") {
+        setProfile(response.data);
       }
     } catch (error) {
+      Alert.alert("Error", "Unable to load profile");
     } finally {
       setLoading(false);
     }

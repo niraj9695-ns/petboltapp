@@ -86,6 +86,15 @@ export default function CreateCenterScreen() {
     prices: {},
   });
 
+  const MAX_FILE_SIZE = 100 * 1024;
+
+  const getFileSize = async (file) => {
+    if (!file) return 0;
+    if (typeof file.fileSize === "number") return file.fileSize;
+    if (typeof file.size === "number") return file.size;
+    return 0;
+  };
+
   const updateField = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
@@ -168,7 +177,29 @@ export default function CreateCenterScreen() {
     });
 
     if (!result.canceled) {
-      setCenterImages(result.assets || []);
+      const assets = result.assets || [result];
+      const validImages = [];
+      const oversizedFiles = [];
+
+      for (const asset of assets) {
+        const size = await getFileSize(asset);
+        if (size > MAX_FILE_SIZE) {
+          oversizedFiles.push(asset);
+        } else {
+          validImages.push(asset);
+        }
+      }
+
+      if (oversizedFiles.length > 0) {
+        Alert.alert(
+          "File Too Large",
+          "One or more selected images exceed the 100KB upload limit. Please choose smaller images.",
+        );
+      }
+
+      if (validImages.length > 0) {
+        setCenterImages((prev) => [...prev, ...validImages]);
+      }
     }
   };
 
@@ -180,9 +211,20 @@ export default function CreateCenterScreen() {
       });
 
       if (!result.canceled) {
-        setLicenseFile(result.assets[0]);
+        const file = result.assets?.[0] ?? result;
+        const size = await getFileSize(file);
+        if (size > MAX_FILE_SIZE) {
+          Alert.alert(
+            "File Too Large",
+            "Selected document exceeds the 100KB upload limit. Please choose a smaller file.",
+          );
+          return;
+        }
+        setLicenseFile(file);
       }
-    } catch (error) {}
+    } catch (error) {
+      Alert.alert("Error", "Unable to select document.");
+    }
   };
 
   const handleCreate = async () => {
@@ -587,6 +629,9 @@ export default function CreateCenterScreen() {
                     Upload License File
                   </Text>
                 </TouchableOpacity>
+                <Text style={styles.uploadInfo}>
+                  Allowed: PDF / image up to 100KB
+                </Text>
                 {licenseFile ? (
                   <Text style={styles.uploadHint}>
                     Selected: {licenseFile.name}
@@ -602,6 +647,9 @@ export default function CreateCenterScreen() {
                 >
                   <Text style={styles.uploadButtonText}>Upload Image</Text>
                 </TouchableOpacity>
+                <Text style={styles.uploadInfo}>
+                  Upload one or more images up to 100KB each.
+                </Text>
                 {centerImages.length > 0 ? (
                   <View style={styles.previewRow}>
                     {centerImages.map((image, index) => (
