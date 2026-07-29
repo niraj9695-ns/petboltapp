@@ -14,6 +14,8 @@ export function PasswordInput({ value, onChangeText, label }) {
         secureTextEntry={secure}
         value={value}
         onChangeText={onChangeText}
+        autoCapitalize="none"
+        autoCorrect={false}
       />
 
       <TouchableOpacity

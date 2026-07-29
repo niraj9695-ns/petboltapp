@@ -36,15 +36,6 @@ export default StyleSheet.create({
     justifyContent: "space-between",
   },
 
-  discountCard: {
-    borderWidth: 1,
-    borderColor: "#ede9fe",
-    borderRadius: 16,
-    padding: 14,
-    marginBottom: 12,
-    backgroundColor: "#faf5ff",
-  },
-
   pickerWrap: {
     backgroundColor: "#f9fafb",
     borderWidth: 1,

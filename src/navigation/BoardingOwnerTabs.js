@@ -1,8 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-
-import BoardingDashboardScreen from "../screens/boardingOwner/components/BoardingDashboardScreen";
 import BoardingBookingsScreen from "../screens/boardingOwner/components/BoardingBookingsScreen";
 import BoardingCentersScreen from "../screens/boardingOwner/components/BoardingCentersScreen";
 import BoardingCouponsScreen from "../screens/boardingOwner/components/BoardingCouponsScreen";
@@ -21,8 +19,6 @@ export default function BoardingOwnerTabs() {
           let iconName;
 
           if (route.name === "Bookings") {
-            iconName = "calendar-outline";
-          }if (route.name === "Bookings") {
             iconName = "calendar-outline";
           } else if (route.name === "Notifications") {
             iconName = "notifications-outline";

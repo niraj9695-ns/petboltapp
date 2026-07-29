@@ -13,6 +13,9 @@ export default StyleSheet.create({
     padding: 14,
     marginBottom: 12,
     backgroundColor: "#fff",
+
+    color: "#111827", // Add this
+    fontSize: 16, // Optional
   },
   forgotText: {
     textAlign: "right",

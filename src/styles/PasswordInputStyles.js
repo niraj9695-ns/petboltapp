@@ -9,9 +9,11 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 12,
-    padding: 10,
-    paddingRight: 45,
+    padding: 14,
+    marginBottom: 12,
     backgroundColor: "#fff",
+    color: "#111827",
+    fontSize: 16, 
   },
   icon: {
     position: "absolute",

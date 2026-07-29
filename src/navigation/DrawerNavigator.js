@@ -72,6 +72,7 @@ function CustomDrawerContent({ navigation }) {
       await AsyncStorage.removeItem("guestRole");
 
       setGuestRole(null);
+      setRole(null);
 
       const parentNav = navigation.getParent?.();
       if (parentNav) {

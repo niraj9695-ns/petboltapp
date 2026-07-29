@@ -66,6 +66,17 @@ function BoardingOwnerDrawerContent({ navigation }) {
       await AsyncStorage.multiRemove(["token", "user", "role", "guestRole"]);
 
       setGuestRole(null);
+      setRole(null);
+
+      const parentNav = navigation.getParent?.();
+      if (parentNav) {
+        parentNav.reset({
+          index: 0,
+          routes: [{ name: "Auth" }],
+        });
+      } else {
+        navigation.navigate("Auth");
+      }
 
       Alert.alert("Success", "Logged out successfully");
     } catch (error) {
@@ -81,22 +92,6 @@ function BoardingOwnerDrawerContent({ navigation }) {
         backgroundColor: theme.background,
       }}
     >
-      <Pressable
-        style={styles.item}
-        onPress={() =>
-          navigation.navigate("Main", {
-            screen: "BoardingTabs",
-            params: {
-              screen: "Dashboard",
-            },
-          })
-        }
-      >
-        <Ionicons name="home-outline" size={22} color={theme.text} />
-
-        <Text style={[styles.text, { color: theme.text }]}>Dashboard</Text>
-      </Pressable>
-
       {/* Logout */}
       {loading ? (
         <View
