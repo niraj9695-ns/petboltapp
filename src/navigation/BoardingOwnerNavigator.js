@@ -16,9 +16,6 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { useTheme } from "../context/ThemeContext";
 
-import BoardingOwnerHomeScreen from "../screens/boardingOwner/components/BoardingOwnerHomeScreen";
-import NotificationScreen from "../screens/NotificationScreen";
-
 const Drawer = createDrawerNavigator();
 
 function BoardingOwnerDrawerContent({ navigation }) {
@@ -49,6 +46,7 @@ function BoardingOwnerDrawerContent({ navigation }) {
     setGuestRole(null);
     navigation.navigate("Auth");
   };
+
   const handleLogout = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
