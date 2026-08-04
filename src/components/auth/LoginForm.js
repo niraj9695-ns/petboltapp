@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../../context/ThemeContext";
 
 import { PasswordInput } from "../inputs/PasswordInput";
@@ -18,6 +19,7 @@ export default function LoginForm({
   setOtpType,
   setEmail,
   setPassword,
+  navigation,
 }) {
   const [email, setEmailInput] = useState("");
 
@@ -68,60 +70,42 @@ export default function LoginForm({
 
       const result = await response.json();
 
-      const loginOtp =
-        result?.otp ||
-        result?.data?.otp ||
-        result?.data?.verification_otp ||
-        "OTP not returned";
-
       if (result.status === true || result.status === "success") {
-        Alert.alert("Success", "OTP Sent Successfully");
+        const token = result?.data?.token || result?.token;
+        const user = result?.data?.user || result?.user;
+
+        if (user?.role) {
+          await AsyncStorage.setItem("role", user.role);
+        }
+
+        if (token) {
+          await AsyncStorage.setItem("token", token);
+        }
+
+        if (user) {
+          await AsyncStorage.setItem("user", JSON.stringify(user));
+        }
+
+        Alert.alert("Success", "Login successful");
 
         setEmail?.(email);
-
         setPassword?.(password);
 
-        setOtpType("login");
+        if (navigation) {
+          const nextRoute =
+            user?.role === "boarding_owner" ? "BoardingOwner" : "PetOwner";
 
-        setTimeout(() => {
-          setStep("otp");
-        }, 50);
-      } else if (result.message?.toLowerCase().includes("verify email")) {
-        const otpResponse = await fetch(
-          "https://www.cgpisoftware.com/cheerytail/api/auth/send-email-otp",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email,
-            }),
-          },
-        );
+          navigation.reset({
+            index: 0,
+            routes: [{ name: nextRoute }],
+          });
+        } else {
+          setOtpType("login");
 
-        const otpResult = await otpResponse.json();
-
-        const emailOtp =
-          otpResult?.otp ||
-          otpResult?.data?.otp ||
-          otpResult?.data?.verification_otp ||
-          "OTP not returned";
-
-        Alert.alert(
-          "Email Not Verified",
-          "Verification OTP sent to your email",
-        );
-
-        setEmail?.(email);
-
-        setPassword?.(password);
-
-        setOtpType("register");
-
-        setTimeout(() => {
-          setStep("otp");
-        }, 50);
+          setTimeout(() => {
+            setStep("otp");
+          }, 50);
+        }
       } else {
         Alert.alert("Error", result.message || "Invalid Credentials");
       }
