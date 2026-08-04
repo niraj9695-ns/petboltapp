@@ -4,15 +4,17 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
-  ActivityIndicator,
   useWindowDimensions,
 } from "react-native";
+import PremiumLoader from "../../../components/PremiumLoader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 
 import { useRefresh } from "../../../context/RefreshContext";
 import styles from "../styles/BoardingBookingsStyles";
 import { getOwnerBookings } from "../services/boardingOwnerService";
+import { requireAuth } from "../../../utils/guestGuard";
+import { boardingOwnerTheme } from "../../../styles/themeStyles";
 
 export default function BoardingBookingsScreen({ navigation }) {
   const { refreshKey } = useRefresh();
@@ -135,13 +137,31 @@ export default function BoardingBookingsScreen({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-      loadBookings();
-    }, [loadBookings]),
+      const checkAccess = async () => {
+        const canAccess = await requireAuth(navigation);
+        if (!canAccess) {
+          setLoading(false);
+          return;
+        }
+        loadBookings();
+      };
+
+      checkAccess();
+    }, [loadBookings, navigation]),
   );
 
   useEffect(() => {
-    loadBookings();
-  }, [refreshKey, loadBookings]);
+    const checkAccess = async () => {
+      const canAccess = await requireAuth(navigation);
+      if (!canAccess) {
+        setLoading(false);
+        return;
+      }
+      loadBookings();
+    };
+
+    checkAccess();
+  }, [refreshKey, loadBookings, navigation]);
 
   const renderBooking = ({ item }) => (
     <TouchableOpacity
@@ -200,9 +220,9 @@ export default function BoardingBookingsScreen({ navigation }) {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.loaderContainer}>
-        <ActivityIndicator size="large" />
-      </SafeAreaView>
+      <View style={styles.loaderContainer}>
+        <PremiumLoader size={56} color={boardingOwnerTheme.primary} label="Loading bookings" fullScreen />
+      </View>
     );
   }
 

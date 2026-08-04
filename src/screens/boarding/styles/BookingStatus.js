@@ -3,11 +3,13 @@ import { StyleSheet, Dimensions } from "react-native";
 const { width } = Dimensions.get("window");
 
 export default StyleSheet.create({
-  loaderContainer: {
-    flex: 1,
+  loaderScreen: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "#faf5ff",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#faf5ff",
+    paddingBottom: 0,
+    zIndex: 1000,
   },
 
   bookingStatusContainer: {

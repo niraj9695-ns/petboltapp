@@ -3,17 +3,19 @@ import {
   View,
   Text,
   FlatList,
-  ActivityIndicator,
   TouchableOpacity,
   Image,
   useWindowDimensions,
 } from "react-native";
+import PremiumLoader from "../../../components/PremiumLoader";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getCenters } from "../services/boardingOwnerService";
 import { Ionicons } from "@expo/vector-icons";
 import { useRefresh } from "../../../context/RefreshContext";
 import styles from "../styles/BoardingCentersStyles";
+import { requireAuth } from "../../../utils/guestGuard";
+import { boardingOwnerTheme } from "../../../styles/themeStyles";
 
 export default function BoardingCentersScreen() {
   const navigation = useNavigation();
@@ -36,8 +38,17 @@ export default function BoardingCentersScreen() {
         : (width - 80) / 3;
 
   useEffect(() => {
-    loadCenters(1);
-  }, [refreshKey]);
+    const checkAccess = async () => {
+      const canAccess = await requireAuth(navigation);
+      if (!canAccess) {
+        setLoading(false);
+        return;
+      }
+      loadCenters(1);
+    };
+
+    checkAccess();
+  }, [refreshKey, navigation]);
 
   const loadCenters = async (page = 1) => {
     try {
@@ -120,7 +131,7 @@ export default function BoardingCentersScreen() {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.loader}>
-          <ActivityIndicator size="large" color="#6b21a8" />
+          <PremiumLoader size={56} color={boardingOwnerTheme.primary} label="Loading centers" fullScreen />
         </View>
       </SafeAreaView>
     );
@@ -186,9 +197,15 @@ export default function BoardingCentersScreen() {
 
               <TouchableOpacity
                 style={styles.createButton}
-                onPress={() => navigation.navigate("CreateCenter")}
+                onPress={async () => {
+                  const canAccess = await requireAuth(navigation);
+                  if (!canAccess) {
+                    return;
+                  }
+                  navigation.navigate("CreateCenter");
+                }}
               >
-                <Ionicons name="add-circle-outline" size={18} color="#fff" />
+                <Ionicons name="add-circle-outline" size={18} color={boardingOwnerTheme.surface} />
                 <Text style={styles.createButtonText}>Create</Text>
               </TouchableOpacity>
             </View>

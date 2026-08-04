@@ -6,11 +6,12 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
   Alert,
 } from "react-native";
+import PremiumLoader from "../../../components/PremiumLoader";
 
-import petFormModalStyles from "../styles/PetFormModalStyles";
+import createPetFormModalStyles from "../styles/PetFormModalStyles";
+import { useTheme } from "../../../context/ThemeContext";
 
 import StepIndicator from "./StepIndicator";
 
@@ -37,18 +38,12 @@ export default function PetFormModal({
   onSubmit,
 }) {
   const [fieldErrors, setFieldErrors] = useState({});
+  const { isDark } = useTheme();
+  const petFormModalStyles = createPetFormModalStyles(isDark);
 
   const requiredFieldsByStep = useMemo(
     () => ({
-      1: [
-        "pet_name",
-        "pet_type",
-        "breed",
-        "gender",
-        "age",
-        "date_of_birth",
-        "weight",
-      ],
+      1: ["pet_name", "pet_type", "breed", "gender", "age"],
       2: [],
       3: ["food_type"],
     }),
@@ -128,10 +123,7 @@ export default function PetFormModal({
           )}
 
           {step === 2 && (
-            <PhaseTwoForm
-              petData={petData}
-              setPetData={setPetData}
-            />
+            <PhaseTwoForm petData={petData} setPetData={setPetData} />
           )}
 
           {step === 3 && (
@@ -155,7 +147,10 @@ export default function PetFormModal({
             )}
 
             {step < 3 ? (
-              <TouchableOpacity style={petFormModalStyles.nextBtn} onPress={handleNext}>
+              <TouchableOpacity
+                style={petFormModalStyles.nextBtn}
+                onPress={handleNext}
+              >
                 <Text style={petFormModalStyles.buttonText}>Next</Text>
               </TouchableOpacity>
             ) : (
@@ -165,7 +160,7 @@ export default function PetFormModal({
                 disabled={loading}
               >
                 {loading ? (
-                  <ActivityIndicator color="#fff" />
+                  <PremiumLoader size={20} color="#fff" showLabel={false} />
                 ) : (
                   <Text style={petFormModalStyles.buttonText}>
                     {editingId ? "Update Pet" : "Add Pet"}
@@ -177,7 +172,10 @@ export default function PetFormModal({
 
           {/* CLOSE BUTTON */}
 
-          <TouchableOpacity style={petFormModalStyles.closeBtn} onPress={onClose}>
+          <TouchableOpacity
+            style={petFormModalStyles.closeBtn}
+            onPress={onClose}
+          >
             <Text style={petFormModalStyles.closeText}>Close</Text>
           </TouchableOpacity>
         </ScrollView>
@@ -185,4 +183,3 @@ export default function PetFormModal({
     </Modal>
   );
 }
-

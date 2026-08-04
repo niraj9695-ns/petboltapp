@@ -1,13 +1,20 @@
 import { StyleSheet } from "react-native";
+import { lightTheme } from "../../../theme/lightTheme";
+import { darkTheme } from "../../../theme/darkTheme";
 
-export default StyleSheet.create({
+const theme = { light: lightTheme, dark: darkTheme };
+
+export default function createPetFormModalStyles(isDark = false) {
+  const palette = theme[isDark ? "dark" : "light"];
+
+  return StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.4)",
+    backgroundColor: palette.overlay,
     justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: "#fff",
+    backgroundColor: palette.cardBackground,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     paddingHorizontal: 18,
@@ -23,21 +30,21 @@ export default StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 12,
     marginBottom: 4,
-    backgroundColor: "#fffaf7",
+    backgroundColor: palette.cardBackground,
     borderBottomWidth: 1,
-    borderBottomColor: "#e9d5ff",
+    borderBottomColor: palette.border,
   },
   modalTitle: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    color: "#6b21a8",
+    color: palette.primary,
     textAlign: "center",
   },
   closeIcon: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#666",
+    color: palette.textSecondary,
     paddingHorizontal: 5,
   },
   stepButtonRow: {
@@ -46,7 +53,7 @@ export default StyleSheet.create({
   },
   backBtn: {
     flex: 1,
-    backgroundColor: "#6b7280",
+    backgroundColor: palette.textSecondary,
     padding: 14,
     borderRadius: 14,
     alignItems: "center",
@@ -54,14 +61,14 @@ export default StyleSheet.create({
   },
   nextBtn: {
     flex: 1,
-    backgroundColor: "#6b21a8",
+    backgroundColor: palette.primary,
     padding: 14,
     borderRadius: 14,
     alignItems: "center",
   },
   button: {
     flex: 1,
-    backgroundColor: "#6b21a8",
+    backgroundColor: palette.primary,
     padding: 14,
     borderRadius: 14,
     alignItems: "center",
@@ -76,8 +83,9 @@ export default StyleSheet.create({
     alignItems: "center",
   },
   closeText: {
-    color: "#ef4444",
+    color: palette.error,
     fontWeight: "bold",
     fontSize: 16,
   },
-});
+  });
+}

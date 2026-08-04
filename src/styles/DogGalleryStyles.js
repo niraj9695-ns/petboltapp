@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
 
 export default StyleSheet.create({
   section: {
@@ -7,8 +8,8 @@ export default StyleSheet.create({
     paddingBottom: 24,
   },
   title: {
-    fontSize: 22,
-    fontWeight: "800",
+    fontSize: typography.h4.fontSize,
+    fontWeight: typography.h3.fontWeight,
     color: "#111827",
   },
   subtitle: {
@@ -34,18 +35,18 @@ export default StyleSheet.create({
     padding: 14,
   },
   name: {
-    fontSize: 16,
-    fontWeight: "700",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.h3.fontWeight,
     color: "#111827",
   },
   desc: {
-    fontSize: 13,
+    fontSize: typography.small.fontSize,
     color: "#6b7280",
     marginTop: 4,
   },
   link: {
     color: "#6b21a8",
-    fontWeight: "700",
+    fontWeight: typography.h3.fontWeight,
     marginTop: 10,
   },
 });

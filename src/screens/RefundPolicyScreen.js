@@ -2,14 +2,16 @@ import React from "react";
 import { Text, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import refundStyles from "../styles/RefundPolicyScreenStyles";
+import BackButton from "../components/BackButton";
 
-export default function RefundPolicyScreen() {
+export default function RefundPolicyScreen({ navigation }) {
   return (
     <ScrollView style={refundStyles.scroll}>
       <LinearGradient
         colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
         style={refundStyles.container}
       >
+        <BackButton onPress={() => navigation.goBack()} />
         {/* Title */}
         <Text style={refundStyles.title}>Refund & Exchange Policy</Text>
         <Text style={refundStyles.updated}>

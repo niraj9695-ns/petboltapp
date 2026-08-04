@@ -5,20 +5,21 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
-  ActivityIndicator,
   Alert,
   Platform,
   KeyboardAvoidingView,
   Image,
   StyleSheet,
 } from "react-native";
+import PremiumLoader from "../../../components/PremiumLoader";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import { LinearGradient } from "expo-linear-gradient";
+import { boardingOwnerTheme } from "../../../styles/themeStyles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
+import FloatingInput from "../../../components/inputs/FloatingInput";
 import {
   buildCenterFormData,
   createCenter,
@@ -33,6 +34,7 @@ export default function CreateCenterScreen() {
   const [centerImages, setCenterImages] = useState([]);
   const [licenseFile, setLicenseFile] = useState(null);
   const [pickerConfig, setPickerConfig] = useState(null);
+  const [errors, setErrors] = useState({});
   const [petPriceDraft, setPetPriceDraft] = useState({
     petType: "dog",
     amount: "",
@@ -44,14 +46,13 @@ export default function CreateCenterScreen() {
     amenities: false,
     uploads: false,
   });
+  const PET_TYPES = ["dog", "cat", "bird", "rabbit", "turtle", "others"];
   const [form, setForm] = useState({
     center_name: "",
     address: "",
     city: "",
     state: "",
     zip_code: "",
-    latitude: "",
-    longitude: "",
     center_type: "both",
     description: "",
     price_per_day: "",
@@ -60,8 +61,8 @@ export default function CreateCenterScreen() {
     is_active: "1",
     address_line_2: "",
     registration_license_number: "",
-    opening_time: "",
-    closing_time: "",
+    opening_time: "10:00",
+    closing_time: "22:00",
     primary_contact_number: "",
     email_address: "",
     website_url: "",
@@ -86,8 +87,6 @@ export default function CreateCenterScreen() {
     prices: {},
   });
 
-  const MAX_FILE_SIZE = 100 * 1024;
-
   const getFileSize = async (file) => {
     if (!file) return 0;
     if (typeof file.fileSize === "number") return file.fileSize;
@@ -97,10 +96,120 @@ export default function CreateCenterScreen() {
 
   const updateField = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
+    setErrors((prev) => ({ ...prev, [key]: "" }));
   };
 
   const toggleSection = (key) => {
     setExpandedSections((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const toggleAcceptedPetType = (petType) => {
+    const currentValues = normalizeListValue(form.accepted_pet_types);
+    const nextValues = currentValues.includes(petType)
+      ? currentValues.filter((value) => value !== petType)
+      : [...currentValues, petType];
+
+    updateField("accepted_pet_types", nextValues);
+  };
+
+  const normalizeListValue = (value) => {
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      if (!trimmed) return [];
+
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) {
+          return parsed.filter(Boolean);
+        }
+      } catch (error) {
+        // Fall through to comma splitting for plain strings.
+      }
+
+      return trimmed
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+
+    if (Array.isArray(value)) {
+      return value.filter(Boolean);
+    }
+
+    return [];
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    const trimmedCenterName = form.center_name?.trim() || "";
+    const trimmedAddress = form.address?.trim() || "";
+    const trimmedCity = form.city?.trim() || "";
+    const trimmedState = form.state?.trim() || "";
+    const zipCode = String(form.zip_code || "").replace(/\D/g, "");
+    const dailyCapacity = Number(form.daily_capacity);
+    const totalCapacity = Number(form.total_capacity);
+
+    if (!trimmedCenterName) {
+      newErrors.center_name = "Center name is required";
+    } else if (trimmedCenterName.length < 3) {
+      newErrors.center_name = "Minimum 3 characters required";
+    }
+
+    if (!trimmedAddress) newErrors.address = "Address is required";
+    if (!trimmedCity) newErrors.city = "City is required";
+    if (!trimmedState) newErrors.state = "State is required";
+    if (!/^\d{5,6}$/.test(zipCode)) {
+      newErrors.zip_code = "Enter a valid 5-6 digit ZIP code";
+    }
+    if (!form.property_type) {
+      newErrors.property_type = "Property type is required";
+    }
+    if (!form.fencing_status) {
+      newErrors.fencing_status = "Fencing status is required";
+    }
+    if (!form.supervision_level) {
+      newErrors.supervision_level = "Supervision level is required";
+    }
+    if (!form.daily_capacity || Number.isNaN(dailyCapacity) || dailyCapacity <= 0) {
+      newErrors.daily_capacity = "Daily capacity is required";
+    }
+    if (!form.total_capacity || Number.isNaN(totalCapacity) || totalCapacity <= 0) {
+      newErrors.total_capacity = "Total capacity is required";
+    }
+
+    const priceEntries = Object.entries(form.prices || {}).filter(
+      ([, amount]) => amount !== "" && amount !== null && amount !== undefined,
+    );
+
+    if (priceEntries.length === 0) {
+      newErrors.prices = "Add at least one pet price";
+    } else if (
+      priceEntries.some(
+        ([, amount]) => Number.isNaN(Number(amount)) || Number(amount) <= 0,
+      )
+    ) {
+      newErrors.prices = "Enter valid pet prices";
+    }
+
+    if (!form.closing_time) newErrors.closing_time = "Closing time is required";
+    if (
+      form.opening_time &&
+      form.closing_time &&
+      form.closing_time <= form.opening_time
+    ) {
+      newErrors.closing_time = "Closing time must be after opening time";
+    }
+    if (!licenseFile) {
+      newErrors.licenseFile = "License proof is required";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return false;
+    }
+
+    setErrors({});
+    return true;
   };
 
   const openPicker = (field, mode) => {
@@ -151,12 +260,14 @@ export default function CreateCenterScreen() {
     nextPrices[petPriceDraft.petType] = Number(petPriceDraft.amount);
     updateField("prices", nextPrices);
     setPetPriceDraft({ petType: petPriceDraft.petType, amount: "" });
+    setErrors((prev) => ({ ...prev, prices: "" }));
   };
 
   const removePetPrice = (petType) => {
     const nextPrices = { ...(form.prices || {}) };
     delete nextPrices[petType];
     updateField("prices", nextPrices);
+    setErrors((prev) => ({ ...prev, prices: "" }));
   };
 
   const removeSelectedImage = (index) => {
@@ -164,42 +275,22 @@ export default function CreateCenterScreen() {
   };
 
   const pickImages = async () => {
-    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permission.granted) {
-      Alert.alert("Permission Required", "Gallery permission is required");
-      return;
-    }
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "image/*",
+        multiple: true,
+        copyToCacheDirectory: true,
+      });
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-      allowsMultipleSelection: true,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      const assets = result.assets || [result];
-      const validImages = [];
-      const oversizedFiles = [];
-
-      for (const asset of assets) {
-        const size = await getFileSize(asset);
-        if (size > MAX_FILE_SIZE) {
-          oversizedFiles.push(asset);
-        } else {
-          validImages.push(asset);
+      if (!result.canceled) {
+        const assets = result.assets || [];
+        if (assets.length > 0) {
+          setCenterImages((prev) => [...prev, ...assets]);
+          setErrors((prev) => ({ ...prev, imageUpload: "" }));
         }
       }
-
-      if (oversizedFiles.length > 0) {
-        Alert.alert(
-          "File Too Large",
-          "One or more selected images exceed the 100KB upload limit. Please choose smaller images.",
-        );
-      }
-
-      if (validImages.length > 0) {
-        setCenterImages((prev) => [...prev, ...validImages]);
-      }
+    } catch (error) {
+      Alert.alert("Error", "Unable to select image.");
     }
   };
 
@@ -212,15 +303,8 @@ export default function CreateCenterScreen() {
 
       if (!result.canceled) {
         const file = result.assets?.[0] ?? result;
-        const size = await getFileSize(file);
-        if (size > MAX_FILE_SIZE) {
-          Alert.alert(
-            "File Too Large",
-            "Selected document exceeds the 100KB upload limit. Please choose a smaller file.",
-          );
-          return;
-        }
         setLicenseFile(file);
+        setErrors((prev) => ({ ...prev, licenseFile: "" }));
       }
     } catch (error) {
       Alert.alert("Error", "Unable to select document.");
@@ -228,33 +312,26 @@ export default function CreateCenterScreen() {
   };
 
   const handleCreate = async () => {
+    if (!validateForm()) {
+      Alert.alert("Validation Error", "Please fix the highlighted fields");
+      return;
+    }
+
     try {
       setLoading(true);
       const payload = { ...form };
 
       if (typeof payload.amenities === "string") {
-        payload.amenities = payload.amenities
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
+        payload.amenities = normalizeListValue(payload.amenities);
       }
       if (typeof payload.accepted_pet_types === "string") {
-        payload.accepted_pet_types = payload.accepted_pet_types
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
+        payload.accepted_pet_types = normalizeListValue(payload.accepted_pet_types);
       }
       if (typeof payload.required_vaccines === "string") {
-        payload.required_vaccines = payload.required_vaccines
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
+        payload.required_vaccines = normalizeListValue(payload.required_vaccines);
       }
       if (typeof payload.boarding_services === "string") {
-        payload.boarding_services = payload.boarding_services
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
+        payload.boarding_services = normalizeListValue(payload.boarding_services);
       }
       if (typeof payload.prices === "string" && payload.prices.trim()) {
         try {
@@ -270,10 +347,32 @@ export default function CreateCenterScreen() {
       });
 
       const response = await createCenter(formData);
-      if (response?.status === "success" || response?.success) {
+      const success =
+        response?.status === true ||
+        response?.status === "success" ||
+        response?.success === true ||
+        response?.success === "success";
+      if (success) {
         triggerRefresh();
+        const centerId =
+          response?.data?.id ||
+          response?.data?.center_id ||
+          response?.id ||
+          response?.center_id ||
+          response?.center?.id ||
+          response?.center?.center_id;
+
         Alert.alert("Success", "Center created successfully", [
-          { text: "OK", onPress: () => navigation.goBack() },
+          {
+            text: "OK",
+            onPress: () => {
+              if (centerId) {
+                navigation.replace("CenterDetails", { centerId, refreshKey: Date.now() });
+              } else {
+                navigation.navigate("BoardingTabs", { screen: "Centers" });
+              }
+            },
+          },
         ]);
       } else {
         Alert.alert("Error", response?.message || "Failed to create center");
@@ -326,12 +425,15 @@ export default function CreateCenterScreen() {
                 value={form.center_name}
                 onChangeText={(v) => updateField("center_name", v)}
                 placeholder="Enter center name"
+                error={errors.center_name}
+                helperText="Use your official business center name"
               />
               <Input
                 label="Address"
                 value={form.address}
                 onChangeText={(v) => updateField("address", v)}
                 placeholder="Street address"
+                error={errors.address}
               />
               <Input
                 label="Address Line 2"
@@ -344,31 +446,21 @@ export default function CreateCenterScreen() {
                 value={form.city}
                 onChangeText={(v) => updateField("city", v)}
                 placeholder="City"
+                error={errors.city}
               />
               <Input
                 label="State"
                 value={form.state}
                 onChangeText={(v) => updateField("state", v)}
                 placeholder="State"
+                error={errors.state}
               />
               <Input
                 label="Zip Code"
                 value={form.zip_code}
                 onChangeText={(v) => updateField("zip_code", v)}
                 placeholder="ZIP code"
-              />
-              <Input
-                label="Latitude"
-                value={form.latitude}
-                onChangeText={(v) => updateField("latitude", v)}
-                placeholder="Latitude"
-                keyboardType="numeric"
-              />
-              <Input
-                label="Longitude"
-                value={form.longitude}
-                onChangeText={(v) => updateField("longitude", v)}
-                placeholder="Longitude"
+                error={errors.zip_code}
                 keyboardType="numeric"
               />
               <SelectField
@@ -389,18 +481,12 @@ export default function CreateCenterScreen() {
                 placeholder="Describe your center"
               />
               <Input
-                label="Price Per Day"
-                value={form.price_per_day}
-                onChangeText={(v) => updateField("price_per_day", v)}
-                keyboardType="numeric"
-                placeholder="Default price"
-              />
-              <Input
                 label="Daily Capacity"
                 value={form.daily_capacity}
                 onChangeText={(v) => updateField("daily_capacity", v)}
                 keyboardType="numeric"
                 placeholder="Daily capacity"
+                error={errors.daily_capacity}
               />
               <Input
                 label="Total Capacity"
@@ -408,6 +494,7 @@ export default function CreateCenterScreen() {
                 onChangeText={(v) => updateField("total_capacity", v)}
                 keyboardType="numeric"
                 placeholder="Total capacity"
+                error={errors.total_capacity}
               />
             </SectionBlock>
 
@@ -431,12 +518,14 @@ export default function CreateCenterScreen() {
                 value={form.opening_time}
                 onPress={() => openPicker("opening_time", "time")}
                 placeholder="Select opening time"
+                error={errors.opening_time}
               />
               <DatePickerField
                 label="Closing Time"
                 value={form.closing_time}
                 onPress={() => openPicker("closing_time", "time")}
                 placeholder="Select closing time"
+                error={errors.closing_time}
               />
               <Input
                 label="Primary Contact Number"
@@ -472,6 +561,7 @@ export default function CreateCenterScreen() {
                 onAdd={addPetPrice}
                 prices={form.prices || {}}
                 onRemove={removePetPrice}
+                error={errors.prices}
               />
               <SelectField
                 label="Property Type"
@@ -483,6 +573,8 @@ export default function CreateCenterScreen() {
                   { label: "Apartment", value: "apartment" },
                   { label: "Facility", value: "facility" },
                 ]}
+                error={errors.property_type}
+                helperText="Suggested options: House, Apartment, or Facility"
               />
               <SelectField
                 label="Fencing Status"
@@ -494,6 +586,8 @@ export default function CreateCenterScreen() {
                   { label: "Partial", value: "partial" },
                   { label: "None", value: "none" },
                 ]}
+                error={errors.fencing_status}
+                helperText="Suggested options: Full, Partial, or None"
               />
               <SelectField
                 label="Supervision Level"
@@ -505,6 +599,8 @@ export default function CreateCenterScreen() {
                   { label: "Limited", value: "limited" },
                   { label: "Scheduled", value: "scheduled" },
                 ]}
+                error={errors.supervision_level}
+                helperText="Suggested options: 24x7, Limited, or Scheduled"
               />
               <Input
                 label="Vaccination Policy"
@@ -512,6 +608,7 @@ export default function CreateCenterScreen() {
                 onChangeText={(v) => updateField("vaccination_policy", v)}
                 multiline
                 placeholder="Vaccination requirements"
+                error={errors.vaccination_policy}
               />
             </SectionBlock>
 
@@ -574,42 +671,80 @@ export default function CreateCenterScreen() {
                 multiline
                 placeholder="Special instructions"
               />
-              <Input
-                label="Amenities (comma separated)"
+              <FloatingInput
+                label="Amenities"
                 value={form.amenities}
                 onChangeText={(v) => updateField("amenities", v)}
-                placeholder="Play area, CCTV, grooming"
               />
-              <Input
-                label="Accepted Pet Types (comma separated)"
-                value={form.accepted_pet_types}
-                onChangeText={(v) => updateField("accepted_pet_types", v)}
-                placeholder="Dogs, cats, rabbits"
-              />
-              <Input
-                label="Size Weight Restrictions (comma separated)"
-                value={form.size_weight_restrictions}
-                onChangeText={(v) => updateField("size_weight_restrictions", v)}
-                placeholder="Small, medium, large"
-              />
-              <Input
-                label="Age Preferences (comma separated)"
-                value={form.age_preferences}
-                onChangeText={(v) => updateField("age_preferences", v)}
-                placeholder="Puppies, adults, seniors"
-              />
-              <Input
-                label="Required Vaccines (comma separated)"
-                value={form.required_vaccines}
-                onChangeText={(v) => updateField("required_vaccines", v)}
-                placeholder="Rabies, distemper"
-              />
-              <Input
-                label="Boarding Services (comma separated)"
-                value={form.boarding_services}
-                onChangeText={(v) => updateField("boarding_services", v)}
-                placeholder="Daycare, overnight"
-              />
+              <View style={styles.fieldContainer}>
+                <Text style={styles.label}>Accepted Pet Types</Text>
+                <Text style={styles.helperText}>
+                  Tap to select the pet types you accept
+                </Text>
+                <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+                  {PET_TYPES.map((petType) => {
+                    const selected = normalizeListValue(form.accepted_pet_types).includes(petType);
+                    return (
+                      <TouchableOpacity
+                        key={petType}
+                        style={[
+                          styles.chip,
+                          selected ? styles.chipSelected : null,
+                        ]}
+                        onPress={() => toggleAcceptedPetType(petType)}
+                      >
+                        <Text
+                          style={[
+                            styles.chipText,
+                            selected ? styles.chipSelectedText : null,
+                          ]}
+                        >
+                          {petType.charAt(0).toUpperCase() + petType.slice(1)}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+                {errors.accepted_pet_types ? (
+                  <Text style={styles.errorText}>{errors.accepted_pet_types}</Text>
+                ) : null}
+              </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.label}>Size / Weight Restrictions</Text>
+                <Text style={styles.helperText}>Example: Small, Medium, Large</Text>
+                <FloatingInput
+                  label=""
+                  value={form.size_weight_restrictions}
+                  onChangeText={(v) => updateField("size_weight_restrictions", v)}
+                />
+              </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.label}>Age Preferences</Text>
+                <Text style={styles.helperText}>Example: Puppies, Adults, Seniors</Text>
+                <FloatingInput
+                  label=""
+                  value={form.age_preferences}
+                  onChangeText={(v) => updateField("age_preferences", v)}
+                />
+              </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.label}>Required Vaccines</Text>
+                <Text style={styles.helperText}>Example: Rabies, Distemper</Text>
+                <FloatingInput
+                  label=""
+                  value={form.required_vaccines}
+                  onChangeText={(v) => updateField("required_vaccines", v)}
+                />
+              </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.label}>Boarding Services</Text>
+                <Text style={styles.helperText}>Example: Daycare, Overnight</Text>
+                <FloatingInput
+                  label=""
+                  value={form.boarding_services}
+                  onChangeText={(v) => updateField("boarding_services", v)}
+                />
+              </View>
             </SectionBlock>
 
             <SectionBlock
@@ -632,6 +767,12 @@ export default function CreateCenterScreen() {
                 <Text style={styles.uploadInfo}>
                   Allowed: PDF / image up to 100KB
                 </Text>
+                {errors.licenseFile ? (
+                  <Text style={styles.errorText}>{errors.licenseFile}</Text>
+                ) : null}
+                {errors.imageUpload ? (
+                  <Text style={styles.errorText}>{errors.imageUpload}</Text>
+                ) : null}
                 {licenseFile ? (
                   <Text style={styles.uploadHint}>
                     Selected: {licenseFile.name}
@@ -673,13 +814,17 @@ export default function CreateCenterScreen() {
             </SectionBlock>
           </View>
 
-          <TouchableOpacity onPress={handleCreate} activeOpacity={0.9}>
+          <TouchableOpacity
+            onPress={handleCreate}
+            activeOpacity={0.9}
+            disabled={loading}
+          >
             <LinearGradient
-              colors={["#6b21a8", "#8b5cf6"]}
-              style={styles.submitButton}
+              colors={[boardingOwnerTheme.primary, boardingOwnerTheme.secondary]}
+              style={[styles.submitButton, loading && { opacity: 0.85 }]}
             >
               {loading ? (
-                <ActivityIndicator color="#fff" />
+                <PremiumLoader size={24} color={boardingOwnerTheme.surface} showLabel={false} />
               ) : (
                 <Text style={styles.submitButtonText}>Create Center</Text>
               )}
@@ -734,11 +879,18 @@ const Input = ({
   multiline = false,
   keyboardType = "default",
   placeholder,
+  error,
+  helperText,
 }) => (
   <View style={styles.fieldContainer}>
     <Text style={styles.label}>{label}</Text>
+    {helperText ? <Text style={styles.helperText}>{helperText}</Text> : null}
     <TextInput
-      style={[styles.input, multiline && styles.multilineInput]}
+      style={[
+        styles.input,
+        multiline && styles.multilineInput,
+        error ? styles.inputError : null,
+      ]}
       value={value}
       onChangeText={onChangeText}
       multiline={multiline}
@@ -746,14 +898,15 @@ const Input = ({
       placeholder={placeholder}
       placeholderTextColor="#9ca3af"
     />
+    {error ? <Text style={styles.errorText}>{error}</Text> : null}
   </View>
 );
 
-const DatePickerField = ({ label, value, onPress, placeholder }) => (
+const DatePickerField = ({ label, value, onPress, placeholder, error }) => (
   <View style={styles.fieldContainer}>
     <Text style={styles.label}>{label}</Text>
     <TouchableOpacity
-      style={styles.dateButton}
+      style={[styles.dateButton, error ? styles.dateButtonError : null]}
       onPress={onPress}
       activeOpacity={0.8}
     >
@@ -769,10 +922,11 @@ const DatePickerField = ({ label, value, onPress, placeholder }) => (
   </View>
 );
 
-const SelectField = ({ label, value, onValueChange, options }) => (
+const SelectField = ({ label, value, onValueChange, options, error, helperText }) => (
   <View style={styles.fieldContainer}>
     <Text style={styles.label}>{label}</Text>
-    <View style={styles.selectBox}>
+    {helperText ? <Text style={styles.helperText}>{helperText}</Text> : null}
+    <View style={[styles.selectBox, error ? styles.selectBoxError : null]}>
       <Picker
         selectedValue={value}
         onValueChange={onValueChange}
@@ -788,10 +942,11 @@ const SelectField = ({ label, value, onValueChange, options }) => (
         ))}
       </Picker>
     </View>
+    {error ? <Text style={styles.errorText}>{error}</Text> : null}
   </View>
 );
 
-const PetPriceEditor = ({ value, onChange, onAdd, prices, onRemove }) => (
+const PetPriceEditor = ({ value, onChange, onAdd, prices, onRemove, error }) => (
   <View style={styles.fieldContainer}>
     <Text style={styles.label}>Pet Prices</Text>
     <View style={styles.selectBox}>
@@ -828,6 +983,8 @@ const PetPriceEditor = ({ value, onChange, onAdd, prices, onRemove }) => (
       <Text style={styles.addChipText}>Add Pet Price</Text>
     </TouchableOpacity>
 
+    {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
     {Object.entries(prices || {}).length > 0 ? (
       <View style={{ marginTop: 10 }}>
         {Object.entries(prices).map(([petType, amount]) => (
@@ -845,4 +1002,3 @@ const PetPriceEditor = ({ value, onChange, onAdd, prices, onRemove }) => (
     ) : null}
   </View>
 );
-

@@ -4,26 +4,30 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
   Alert,
   TextInput,
 } from "react-native";
+import PremiumLoader from "../../../components/PremiumLoader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
 import { Calendar } from "react-native-calendars";
 import styles from "../styles/BoardingBookingStyles";
+import RazorpayCheckout from "react-native-razorpay";
+
 import {
-  fetchCapacityApi,
-  checkAvailabilityApi,
   fetchBookedDatesApi,
   fetchPricingApi,
+  createAndPayBookingApi,
+  verifyPaymentApi,
 } from "../services/boardingService";
 import { fetchPetsApi } from "../../pets/services/petService";
 
 export default function BoardingBookingScreen({ route, navigation }) {
   const { centerId, centerName, pricePerDay } = route.params;
+
+  // Back should prefer going to the boarding details for this center
+  // if no navigator back is available.
 
   const [pets, setPets] = useState([]);
   const [selectedPetId, setSelectedPetId] = useState(null);
@@ -37,14 +41,6 @@ export default function BoardingBookingScreen({ route, navigation }) {
   const [fetchingBookedDates, setFetchingBookedDates] = useState(false);
 
   const [pickerMode, setPickerMode] = useState("checkin");
-
-  const [capacity, setCapacity] = useState(null);
-
-  const [available, setAvailable] = useState(null);
-
-  const [loadingCapacity, setLoadingCapacity] = useState(false);
-
-  const [checkingAvailability, setCheckingAvailability] = useState(false);
 
   const [bookingLoading, setBookingLoading] = useState(false);
 
@@ -79,7 +75,6 @@ export default function BoardingBookingScreen({ route, navigation }) {
       }
 
       loadPets();
-      getCapacity();
     };
 
     checkGuestAndLoad();
@@ -297,17 +292,6 @@ export default function BoardingBookingScreen({ route, navigation }) {
     } catch (error) {}
   };
 
-  const getCapacity = async () => {
-    try {
-      setLoadingCapacity(true);
-      const data = await fetchCapacityApi(centerId);
-      setCapacity(data);
-    } catch (error) {
-    } finally {
-      setLoadingCapacity(false);
-    }
-  };
-
   const handleDateSelection = async (date) => {
     if (!date) return;
 
@@ -354,61 +338,75 @@ export default function BoardingBookingScreen({ route, navigation }) {
         return;
       }
 
-      if (checkOutDate < checkInDate) {
-        Alert.alert(
-          "Invalid Dates",
-          "End date must be on or after the start date",
-        );
-        return;
-      }
-
       const token = await AsyncStorage.getItem("token");
 
       setBookingLoading(true);
 
-      const response = await fetch(
-        "https://www.cgpisoftware.com/cheerytail/api/bookings/create",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            center_id: centerId,
-            pet_id: selectedPetId,
-            start_date: formatDate(checkInDate),
-            end_date: formatDate(checkOutDate),
-            special_instructions: specialInstructions,
-          }),
+      const data = await createAndPayBookingApi({
+        token,
+        petId: selectedPetId,
+        centerId,
+        startDate: formatDate(checkInDate),
+        endDate: formatDate(checkOutDate),
+        specialInstructions,
+      });
+
+      if (data?.status !== "success" && data?.status !== true) {
+        Alert.alert(
+          "Booking Failed",
+          data?.message || "Unable to create booking",
+        );
+        return;
+      }
+
+      const bookingData = data?.data || {};
+      const paymentData = bookingData?.payment || {};
+
+      const options = {
+        description: "Pet Boarding Booking",
+        currency: "INR",
+        key: paymentData.razorpay_key_id,
+        amount: Number(paymentData.total_amount || totalCost) * 100,
+        order_id: paymentData.razorpay_order_id,
+        name: centerName || "CheeryTail",
+        theme: {
+          color: "#7c3aed",
         },
-      );
+      };
 
-      const data = await response.json();
+      const razorpayResult = await RazorpayCheckout.open(options);
 
-      if (data.status === "success") {
-        const bookingPayload = data?.data || data?.booking || data;
-        const resolvedBookingId =
-          bookingPayload?.id ||
-          bookingPayload?.booking_id ||
-          bookingPayload?.bookingId ||
-          bookingPayload?.data?.id ||
-          bookingPayload?.data?.booking_id;
-
-        navigation.navigate("BoardingPayment", {
-          booking: bookingPayload,
-          bookingId: resolvedBookingId,
-          centerName,
-          petName:
-            pets.find((pet) => pet.pet_id === selectedPetId)?.pet_name ||
-            pets.find((pet) => pet.id === selectedPetId)?.name,
-          totalAmount: pricingPayload?.total_price || totalCost,
-        });
+      const verifyData = await verifyPaymentApi({
+        token,
+        paymentId: paymentData.payment_id,
+        razorpayPaymentId: razorpayResult.razorpay_payment_id,
+        razorpayOrderId: razorpayResult.razorpay_order_id,
+        razorpaySignature: razorpayResult.razorpay_signature,
+      });
+      if (verifyData?.status === "success" || verifyData?.status === true) {
+        Alert.alert("Payment Successful", "Booking confirmed", [
+          {
+            text: "OK",
+            onPress: () => {
+              navigation.navigate("BookingStatus", {
+                refresh: true,
+              });
+            },
+          },
+        ]);
       } else {
-        Alert.alert("Failed", data.message || "Booking creation failed");
+        Alert.alert(
+          "Verification Failed",
+          verifyData?.message || "Payment verification failed",
+        );
       }
     } catch (error) {
-      Alert.alert("Error", "Unable to create booking");
+      Alert.alert(
+        "Payment Error",
+        `${error?.description || JSON.stringify(error)}`,
+      );
+
+      Alert.alert("Payment Error", JSON.stringify(error, null, 2));
     } finally {
       setBookingLoading(false);
     }
@@ -546,7 +544,12 @@ export default function BoardingBookingScreen({ route, navigation }) {
           </View>
 
           {fetchingBookedDates ? (
-            <ActivityIndicator style={styles.smallLoader} />
+            <PremiumLoader
+              size={24}
+              color="#6b21a8"
+              showLabel={false}
+              style={styles.smallLoader}
+            />
           ) : bookedDates.length > 0 ? (
             <Text style={styles.warningText}>
               {bookedDates.length} unavailable date(s) in this month.
@@ -579,7 +582,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
         {/* Pricing summary fetched from API */}
         <View style={styles.pricingCard}>
           {pricingLoading ? (
-            <ActivityIndicator />
+            <PremiumLoader size={24} color="#6b21a8" showLabel={false} />
           ) : pricingError ? (
             <Text style={styles.warningText}>{pricingError}</Text>
           ) : pricingPayload ? (

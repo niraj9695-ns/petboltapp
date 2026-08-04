@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
-  ActivityIndicator,
   useWindowDimensions,
 } from "react-native";
+import PremiumLoader from "../../../components/PremiumLoader";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useRefresh } from "../../../context/RefreshContext";
@@ -306,7 +306,7 @@ export default function BookingDetailsScreen({ route, navigation }) {
                   disabled={pickupLoading}
                 >
                   {pickupLoading ? (
-                    <ActivityIndicator color="#fff" />
+                    <PremiumLoader size={18} color="#fff" showLabel={false} />
                   ) : (
                     <Text style={styles.rejectButtonText}>
                       Save Pickup & Drop Details
@@ -375,7 +375,7 @@ export default function BookingDetailsScreen({ route, navigation }) {
               disabled={!canReject || loading}
             >
               {loading ? (
-                <ActivityIndicator color="#fff" />
+                <PremiumLoader size={18} color="#fff" showLabel={false} />
               ) : (
                 <Text style={styles.rejectButtonText}>
                   {canReject ? "Reject Booking" : "Cannot Reject"}

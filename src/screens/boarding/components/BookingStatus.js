@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
   Text,
   FlatList,
-  ActivityIndicator,
   Image,
   TouchableOpacity,
   useWindowDimensions,
   Linking,
   Alert,
 } from "react-native";
+import PremiumLoader from "../../../components/PremiumLoader";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -149,9 +150,11 @@ export default function BookingStatus() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    loadBookings(1, false);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadBookings(1, false);
+    }, []),
+  );
 
   const loadBookings = async (pageToLoad = 1, append = false) => {
     try {
@@ -163,14 +166,19 @@ export default function BookingStatus() {
 
       const token = await AsyncStorage.getItem("token");
       const result = await fetchMyBookingsApi(token, pageToLoad, 20);
-      const bookingsData = Array.isArray(result?.bookings)
-        ? result.bookings
-        : [];
+      let bookingsData = Array.isArray(result?.bookings) ? result.bookings : [];
+
+      bookingsData.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at),
+      );
       const pagination = result?.pagination || {};
 
-      setBookings((prevBookings) =>
-        append ? [...prevBookings, ...bookingsData] : bookingsData,
-      );
+      if (append) {
+        setBookings((prev) => [...prev, ...bookingsData]);
+      } else {
+        setBookings(bookingsData);
+        setCurrentPage(1);
+      }
       setCurrentPage(Number(pagination.page || pageToLoad));
       setTotalPages(Number(pagination.total_pages || 1));
 
@@ -256,8 +264,13 @@ export default function BookingStatus() {
 
   if (loading) {
     return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#9333ea" />
+      <View style={styles.loaderScreen}>
+        <PremiumLoader
+          size={56}
+          color="#9333ea"
+          label="Loading booking status"
+          fullScreen
+        />
       </View>
     );
   }
@@ -266,6 +279,7 @@ export default function BookingStatus() {
     return new Date(date).toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "short",
+      year: "numeric",
     });
   };
 
@@ -306,7 +320,7 @@ export default function BookingStatus() {
                   disabled={loadingMore}
                 >
                   {loadingMore ? (
-                    <ActivityIndicator size="small" color="#ffffff" />
+                    <PremiumLoader size={18} color="#ffffff" showLabel={false} />
                   ) : (
                     <Text style={styles.nextPageButtonText}>Load More</Text>
                   )}

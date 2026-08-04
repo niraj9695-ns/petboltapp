@@ -6,7 +6,7 @@ import DogGallery from "../components/DogGallery";
 import BookingStatus from "./boarding/components/BookingStatus";
 import homeStyles from "../styles/HomeScreenStyles";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const { theme } = useTheme();
 
   const [refreshing, setRefreshing] = useState(false);
@@ -36,4 +36,3 @@ export default function HomeScreen() {
     </ScrollView>
   );
 }
-

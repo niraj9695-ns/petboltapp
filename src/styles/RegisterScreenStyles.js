@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
 
 export default StyleSheet.create({
   container: {
@@ -10,13 +11,13 @@ export default StyleSheet.create({
     paddingBottom: 40,
   },
   welcomeTitle: {
-    fontSize: 20,
-    fontWeight: "800",
+    fontSize: typography.title.fontSize,
+    fontWeight: typography.h3.fontWeight,
     color: "#17174A",
   },
   welcomeSubtitle: {
     marginTop: 2,
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     color: "#666666",
   },
   petImage: {
@@ -26,7 +27,7 @@ export default StyleSheet.create({
 
   highlightText: {
     color: "#6D28D9",
-    fontWeight: "700",
+    fontWeight: typography.h3.fontWeight,
   },
   heroContainer: {
     flexDirection: "row",
@@ -62,13 +63,13 @@ export default StyleSheet.create({
 
   segmentText: {
     color: "#6B7280",
-    fontWeight: "800",
-    fontSize: 15,
+    fontWeight: typography.h3.fontWeight,
+    fontSize: typography.body.fontSize,
   },
 
   segmentActiveText: {
     color: "#6D28D9",
-    fontWeight: "800",
+    fontWeight: typography.h3.fontWeight,
   },
   authCard: {
     backgroundColor: "#fff",
@@ -80,13 +81,13 @@ export default StyleSheet.create({
   },
 
   guestTitle: {
-    fontSize: 18,
-    fontWeight: "700",
+    fontSize: typography.title.fontSize,
+    fontWeight: typography.h3.fontWeight,
     color: "#1B1B4B",
   },
 
   guestSubtitle: {
-    fontSize: 14,
+    fontSize: typography.small.fontSize,
     color: "#6B7280",
     marginTop: 4,
     marginBottom: 16,
@@ -129,18 +130,18 @@ export default StyleSheet.create({
   },
 
   iconText: {
-    fontSize: 20,
+    fontSize: typography.h4.fontSize,
   },
 
   guestCardTitle: {
-    fontSize: 14,
-    fontWeight: "700",
+    fontSize: typography.small.fontSize,
+    fontWeight: typography.h3.fontWeight,
     color: "#1B1B4B",
     marginBottom: 4,
   },
 
   guestCardDescription: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     color: "#6B7280",
     width: "90%",
   },
@@ -193,15 +194,15 @@ export default StyleSheet.create({
   },
 
   featureTitle: {
-    fontSize: 14,
-    fontWeight: "700",
+    fontSize: typography.small.fontSize,
+    fontWeight: typography.h3.fontWeight,
     color: "#6D28D9",
     textAlign: "center",
   },
 
   featureSubtitle: {
     marginTop: 6,
-    fontSize: 11,
+    fontSize: typography.caption.fontSize,
     color: "#777777",
     textAlign: "center",
     lineHeight: 15,

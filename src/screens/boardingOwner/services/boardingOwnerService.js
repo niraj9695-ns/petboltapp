@@ -78,8 +78,75 @@ const CENTER_FIELDS = [
   "amenities",
   "special_instructions",
   "prices",
+  "pet_type_prices",
   "is_active",
 ];
+
+const normalizeListValue = (value) => {
+  if (value === undefined || value === null || value === "") {
+    return [];
+  }
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return [];
+    }
+
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) {
+        return parsed.filter(Boolean);
+      }
+    } catch (error) {
+      // Fall through to comma-splitting for plain strings.
+    }
+
+    return trimmed
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  if (Array.isArray(value)) {
+    return value.filter(Boolean);
+  }
+
+  return [];
+};
+
+const normalizeCenterPayload = (payload = {}) => {
+  const normalized = { ...payload };
+  const listFields = [
+    "amenities",
+    "accepted_pet_types",
+    "size_weight_restrictions",
+    "age_preferences",
+    "required_vaccines",
+    "boarding_services",
+  ];
+
+  listFields.forEach((key) => {
+    const value = normalized[key];
+    if (typeof value === "string" || Array.isArray(value)) {
+      normalized[key] = normalizeListValue(value);
+    }
+  });
+
+  if (typeof normalized.prices === "string" && normalized.prices.trim()) {
+    try {
+      normalized.prices = JSON.parse(normalized.prices);
+    } catch (error) {
+      normalized.prices = { value: normalized.prices };
+    }
+  }
+
+  if (normalized.prices && typeof normalized.prices === "object" && !Array.isArray(normalized.prices)) {
+    normalized.pet_type_prices = { ...normalized.prices };
+  }
+
+  return normalized;
+};
 
 const appendCenterValue = (formData, key, value) => {
   if (value === undefined || value === null || value === "") {
@@ -94,32 +161,69 @@ const appendCenterValue = (formData, key, value) => {
   formData.append(key, String(value));
 };
 
+const getFileExtension = (uri, fallback = "jpg") => {
+  if (!uri || typeof uri !== "string") return fallback;
+
+  const cleanUri = uri.split("?")[0].split("#")[0];
+  const extension = cleanUri.split(".").pop();
+  return extension && extension.length <= 5 ? extension : fallback;
+};
+
+const normalizeFilePayload = (file, fallbackName = "file") => {
+  if (!file) return null;
+
+  const uri = file.uri || file;
+  if (!uri) return null;
+
+  const name =
+    file.name ||
+    file.fileName ||
+    file.filename ||
+    `${fallbackName}.${getFileExtension(uri, file.type === "application/pdf" ? "pdf" : "jpg")}`;
+
+  const type =
+    file.mimeType ||
+    file.type ||
+    (name.toLowerCase().endsWith(".pdf") ? "application/pdf" : "image/jpeg");
+
+  return {
+    uri,
+    name,
+    type,
+  };
+};
+
 export const buildCenterFormData = (payload = {}, options = {}) => {
   const formData = new FormData();
-  const { centerId, licenseProof, centerPhotos = [] } = options;
+  const { centerId, licenseProof, insuranceProof, centerPhotos = [] } = options;
+  const normalizedPayload = normalizeCenterPayload(payload);
 
   if (centerId) {
     formData.append("center_id", String(centerId));
   }
 
   CENTER_FIELDS.forEach((key) => {
-    appendCenterValue(formData, key, payload[key]);
+    appendCenterValue(formData, key, normalizedPayload[key]);
   });
 
-  if (licenseProof) {
-    formData.append("license_proof", {
-      uri: licenseProof.uri,
-      name: licenseProof.name,
-      type: licenseProof.mimeType || "application/pdf",
-    });
+  const normalizedLicenseProof = normalizeFilePayload(licenseProof, "license");
+  if (normalizedLicenseProof) {
+    formData.append("license_proof", normalizedLicenseProof);
+    formData.append("license_document", normalizedLicenseProof);
+  }
+
+  const normalizedInsuranceProof = normalizeFilePayload(insuranceProof, "insurance");
+  if (normalizedInsuranceProof) {
+    formData.append("insurance_proof", normalizedInsuranceProof);
+    formData.append("insurance_document", normalizedInsuranceProof);
   }
 
   centerPhotos.forEach((img) => {
-    formData.append("center_photos[]", {
-      uri: img.uri,
-      name: img.fileName || img.name || `photo_${Date.now()}.jpg`,
-      type: img.mimeType || "image/jpeg",
-    });
+    const normalizedImage = normalizeFilePayload(img, `photo_${Date.now()}`);
+    if (normalizedImage) {
+      formData.append("center_photos[]", normalizedImage);
+      formData.append("center_photos", normalizedImage);
+    }
   });
 
   return formData;

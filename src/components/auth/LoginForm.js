@@ -6,11 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
-  ActivityIndicator,
 } from "react-native";
+import { useTheme } from "../../context/ThemeContext";
 
 import { PasswordInput } from "../inputs/PasswordInput";
 import loginFormStyles from "../../styles/LoginFormStyles";
+import PremiumLoader from "../PremiumLoader";
 
 export default function LoginForm({
   setStep,
@@ -23,11 +24,28 @@ export default function LoginForm({
   const [password, setPasswordInput] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const { theme } = useTheme();
+
+  const validateLogin = () => {
+    const newErrors = {};
+
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Enter a valid email address";
+    }
+
+    if (!password.trim()) {
+      newErrors.password = "Password is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert("Validation", "Please enter email and password");
-
+    if (!validateLogin()) {
       return;
     }
 
@@ -115,9 +133,17 @@ export default function LoginForm({
   };
 
   const handleForgotPassword = async () => {
-    if (!email) {
-      Alert.alert("Validation", "Please enter your email");
+    const newErrors = {};
 
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Enter a valid email address";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
       return;
     }
 
@@ -167,33 +193,54 @@ export default function LoginForm({
 
   return (
     <View>
-      <Text style={loginFormStyles.heading}>Login</Text>
+      <Text style={[loginFormStyles.heading, { color: theme.textPrimary }]}>Login</Text>
+
+      {errors.email || errors.password ? (
+        <Text style={loginFormStyles.errorTopText}>
+          {errors.email || errors.password}
+        </Text>
+      ) : null}
 
       <TextInput
-        style={loginFormStyles.input}
+        style={[
+          loginFormStyles.input,
+          {
+            backgroundColor: theme.inputBackground,
+            borderColor: theme.border,
+            color: theme.textPrimary,
+          },
+        ]}
         placeholder="Email"
+        placeholderTextColor={theme.placeholder}
         value={email}
-        onChangeText={setEmailInput}
+        onChangeText={(text) => {
+          setEmailInput(text);
+          setErrors((prev) => ({ ...prev, email: "" }));
+        }}
         autoCapitalize="none"
+        selectionColor={theme.primary}
       />
 
       <PasswordInput
         label="Password"
         value={password}
-        onChangeText={setPasswordInput}
+        onChangeText={(text) => {
+          setPasswordInput(text);
+          setErrors((prev) => ({ ...prev, password: "" }));
+        }}
       />
 
       <TouchableOpacity onPress={handleForgotPassword}>
-        <Text style={loginFormStyles.forgotText}>Forgot Password?</Text>
+        <Text style={[loginFormStyles.forgotText, { color: theme.primary }]}>Forgot Password?</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={loginFormStyles.button}
+        style={[loginFormStyles.button, { backgroundColor: theme.primary }]}
         onPress={handleLogin}
         disabled={loading}
       >
         {loading ? (
-          <ActivityIndicator color="#fff" />
+          <PremiumLoader size={28} color="#fff" showLabel={false} />
         ) : (
           <Text style={loginFormStyles.buttonText}>Sign In</Text>
         )}

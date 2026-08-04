@@ -1,20 +1,12 @@
 import { StyleSheet } from "react-native";
+import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
 
-const COLORS = {
-  primary: "#6b21a8",
-  secondary: "#9333ea",
-  lightPurple: "#f5ebff",
-  white: "#ffffff",
-  text: "#1f2937",
-  gray: "#6b7280",
-  border: "#e9d8fd",
-  success: "#16a34a",
-};
+const COLORS = boardingOwnerTheme;
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8fafc",
+    backgroundColor: COLORS.background,
   },
   content: {
     padding: 16,
@@ -27,17 +19,17 @@ export default StyleSheet.create({
     marginBottom: 16,
   },
   heroTitle: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: COLORS.white,
+    fontSize: typography.h4.fontSize,
+    fontWeight: typography.h4.fontWeight,
+    color: COLORS.surface,
   },
   heroSubtitle: {
-    color: "rgba(255,255,255,0.9)",
+    color: COLORS.surface,
     fontSize: 13,
     marginTop: 6,
   },
   card: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.surface,
     borderRadius: 20,
     padding: 18,
     borderWidth: 1,
@@ -123,7 +115,7 @@ export default StyleSheet.create({
   },
 
   actionPanel: {
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.surface,
     borderRadius: 20,
     padding: 18,
     marginTop: 24,
@@ -160,17 +152,17 @@ export default StyleSheet.create({
     padding: 14,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#e9d8fd",
+    borderColor: COLORS.border,
     marginBottom: 10,
-    backgroundColor: "#faf5ff",
+    backgroundColor: COLORS.surfaceAlt,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#e9d8fd",
+    borderColor: COLORS.border,
     borderRadius: 14,
     padding: 14,
     marginBottom: 12,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.surface,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -180,7 +172,7 @@ export default StyleSheet.create({
   expandIcon: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#6b21a8",
+    color: COLORS.primary,
   },
   completedBox: {
     marginTop: 12,

@@ -1,17 +1,29 @@
 import { StyleSheet } from "react-native";
+import { lightTheme } from "../../../theme/lightTheme";
+import { darkTheme } from "../../../theme/darkTheme";
 
-export default StyleSheet.create({
+const theme = {
+  light: lightTheme,
+  dark: darkTheme,
+};
+
+const getTheme = (isDark) => theme[isDark ? "dark" : "light"];
+
+export default function createPhaseOneFormStyles(isDark = false) {
+  const palette = getTheme(isDark);
+
+  return StyleSheet.create({
   input: {
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: palette.border,
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
     minHeight: 52,
     marginBottom: 12,
-    backgroundColor: "#fff",
+    backgroundColor: palette.inputBackground,
     fontSize: 15,
-    color: "#111827",
+    color: palette.textPrimary,
   },
   textArea: {
     minHeight: 90,
@@ -19,34 +31,34 @@ export default StyleSheet.create({
   },
   pickerWrapper: {
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: palette.border,
     borderRadius: 14,
     marginBottom: 12,
     overflow: "hidden",
-    backgroundColor: "#fff",
+    backgroundColor: palette.inputBackground,
   },
   fieldLabel: {
     marginBottom: 6,
     fontWeight: "700",
-    color: "#374151",
+    color: palette.textPrimary,
     fontSize: 14,
   },
   helperText: {
-    color: "#6b7280",
+    color: palette.textSecondary,
     fontSize: 12,
     marginBottom: 8,
   },
   imageSelectButton: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: palette.border,
     borderRadius: 10,
     paddingVertical: 14,
     paddingHorizontal: 15,
     marginBottom: 12,
-    backgroundColor: "#fafafa",
+    backgroundColor: palette.cardBackground,
   },
   imageSelectButtonText: {
-    color: "#666",
+    color: palette.textSecondary,
     fontSize: 15,
   },
   imagePreviewContainer: {
@@ -69,7 +81,7 @@ export default StyleSheet.create({
     height: 104,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: palette.border,
   },
   profileBadge: {
     position: "absolute",
@@ -81,13 +93,13 @@ export default StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.6)",
   },
   profileBadgeActive: {
-    backgroundColor: "#6b21a8",
+    backgroundColor: palette.primary,
   },
   profileBadgeInactive: {
     backgroundColor: "rgba(255,255,255,0.95)",
   },
   profileBadgeText: {
-    color: "#111",
+    color: palette.textPrimary,
     fontSize: 12,
     fontWeight: "700",
   },
@@ -115,21 +127,22 @@ export default StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: palette.border,
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
     minHeight: 52,
     marginBottom: 12,
-    backgroundColor: "#fff",
+    backgroundColor: palette.inputBackground,
   },
   dateInputText: {
     flex: 1,
-    color: "#111827",
+    color: palette.textPrimary,
     fontSize: 15,
   },
   inputError: {
-    borderColor: "#ef4444",
-    backgroundColor: "#fff1f2",
+    borderColor: palette.error,
+    backgroundColor: palette.errorBackground,
   },
-});
+  });
+}

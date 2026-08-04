@@ -15,7 +15,8 @@ import { Ionicons } from "@expo/vector-icons";
 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-import phaseOneFormStyles from "../styles/PhaseOneFormStyles";
+import createPhaseOneFormStyles from "../styles/PhaseOneFormStyles";
+import { useTheme } from "../../../context/ThemeContext";
 
 import FormLabel from "./FormLabel";
 
@@ -30,6 +31,8 @@ export default function PhaseOneForm({
   setProfileImageIndex,
 }) {
   const [showDobPicker, setShowDobPicker] = useState(false);
+  const { isDark } = useTheme();
+  const phaseOneFormStyles = createPhaseOneFormStyles(isDark);
 
   const handleDobConfirm = (date) => {
     const formattedDate = date.toISOString().split("T")[0];
@@ -46,15 +49,14 @@ export default function PhaseOneForm({
     <View>
       {/* PET NAME */}
 
-      <FormLabel
-        title="Pet Name"
-        required
-        error={fieldErrors.pet_name}
-      />
+      <FormLabel title="Pet Name" required error={fieldErrors.pet_name} />
 
       <TextInput
         placeholder="Pet Name"
-        style={[phaseOneFormStyles.input, fieldErrors.pet_name && phaseOneFormStyles.inputError]}
+        style={[
+          phaseOneFormStyles.input,
+          fieldErrors.pet_name && phaseOneFormStyles.inputError,
+        ]}
         value={petData.pet_name}
         onChangeText={(text) =>
           setPetData({
@@ -66,11 +68,7 @@ export default function PhaseOneForm({
 
       {/* PET TYPE */}
 
-      <FormLabel
-        title="Pet Type"
-        required
-        error={fieldErrors.pet_type}
-      />
+      <FormLabel title="Pet Type" required error={fieldErrors.pet_type} />
 
       <View
         style={[
@@ -97,15 +95,14 @@ export default function PhaseOneForm({
 
       {/* BREED */}
 
-      <FormLabel
-        title="Breed"
-        required
-        error={fieldErrors.breed}
-      />
+      <FormLabel title="Breed" required error={fieldErrors.breed} />
 
       <TextInput
         placeholder="Breed"
-        style={[phaseOneFormStyles.input, fieldErrors.breed && phaseOneFormStyles.inputError]}
+        style={[
+          phaseOneFormStyles.input,
+          fieldErrors.breed && phaseOneFormStyles.inputError,
+        ]}
         value={petData.breed}
         onChangeText={(text) =>
           setPetData({
@@ -117,11 +114,7 @@ export default function PhaseOneForm({
 
       {/* GENDER */}
 
-      <FormLabel
-        title="Gender"
-        required
-        error={fieldErrors.gender}
-      />
+      <FormLabel title="Gender" required error={fieldErrors.gender} />
 
       <View
         style={[
@@ -147,16 +140,15 @@ export default function PhaseOneForm({
 
       {/* AGE */}
 
-      <FormLabel
-        title="Age"
-        required
-        error={fieldErrors.age}
-      />
+      <FormLabel title="Age" required error={fieldErrors.age} />
 
       <TextInput
         placeholder="Age"
         keyboardType="numeric"
-        style={[phaseOneFormStyles.input, fieldErrors.age && phaseOneFormStyles.inputError]}
+        style={[
+          phaseOneFormStyles.input,
+          fieldErrors.age && phaseOneFormStyles.inputError,
+        ]}
         value={petData.age}
         onChangeText={(text) =>
           setPetData({
@@ -168,14 +160,13 @@ export default function PhaseOneForm({
 
       {/* DATE OF BIRTH */}
 
-      <FormLabel
-        title="Date Of Birth"
-        required
-        error={fieldErrors.date_of_birth}
-      />
+      <FormLabel title="Date Of Birth" />
 
       <TouchableOpacity
-        style={[phaseOneFormStyles.dateInput, fieldErrors.date_of_birth && phaseOneFormStyles.inputError]}
+        style={[
+          phaseOneFormStyles.dateInput,
+          fieldErrors.date_of_birth && phaseOneFormStyles.inputError,
+        ]}
         onPress={() => setShowDobPicker(true)}
       >
         <Text style={phaseOneFormStyles.dateInputText}>
@@ -194,16 +185,15 @@ export default function PhaseOneForm({
 
       {/* WEIGHT */}
 
-      <FormLabel
-        title="Weight (KG)"
-        required
-        error={fieldErrors.weight}
-      />
+      <FormLabel title="Weight (KG)" />
 
       <TextInput
         placeholder="Weight"
         keyboardType="numeric"
-        style={[phaseOneFormStyles.input, fieldErrors.weight && phaseOneFormStyles.inputError]}
+        style={[
+          phaseOneFormStyles.input,
+          fieldErrors.weight && phaseOneFormStyles.inputError,
+        ]}
         value={petData.weight}
         onChangeText={(text) =>
           setPetData({
@@ -273,10 +263,17 @@ export default function PhaseOneForm({
       {/* IMAGES */}
 
       <Text style={phaseOneFormStyles.fieldLabel}>Pet Images</Text>
-      <Text style={phaseOneFormStyles.helperText}>You can add one or more photos for the pet profile.</Text>
+      <Text style={phaseOneFormStyles.helperText}>
+        You can add one or more photos for the pet profile.
+      </Text>
 
-      <TouchableOpacity onPress={pickImages} style={phaseOneFormStyles.imageSelectButton}>
-        <Text style={phaseOneFormStyles.imageSelectButtonText}>Select Images</Text>
+      <TouchableOpacity
+        onPress={pickImages}
+        style={phaseOneFormStyles.imageSelectButton}
+      >
+        <Text style={phaseOneFormStyles.imageSelectButtonText}>
+          Select Images
+        </Text>
       </TouchableOpacity>
 
       {selectedImages?.length > 0 && (
@@ -291,7 +288,8 @@ export default function PhaseOneForm({
                 key={index}
                 style={[
                   phaseOneFormStyles.imageThumbWrapper,
-                  profileImageIndex === index && phaseOneFormStyles.selectedThumbWrapper,
+                  profileImageIndex === index &&
+                    phaseOneFormStyles.selectedThumbWrapper,
                 ]}
                 onPress={() => setProfileImageIndex(index)}
               >
@@ -311,9 +309,7 @@ export default function PhaseOneForm({
                   ]}
                 >
                   <Text style={phaseOneFormStyles.profileBadgeText}>
-                    {profileImageIndex === index
-                      ? "Profile"
-                      : "Set Profile"}
+                    {profileImageIndex === index ? "Profile" : "Set Profile"}
                   </Text>
                 </View>
 
@@ -337,4 +333,3 @@ export default function PhaseOneForm({
     </View>
   );
 }
-

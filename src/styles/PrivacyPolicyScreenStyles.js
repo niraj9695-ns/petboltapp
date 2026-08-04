@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
 
 export default StyleSheet.create({
   scroll: {
@@ -10,25 +11,25 @@ export default StyleSheet.create({
     borderRadius: 0,
   },
   title: {
-    fontSize: 26,
-    fontWeight: "700",
+    fontSize: typography.h3.fontSize,
+    fontWeight: typography.h3.fontWeight,
     color: "#111827",
     marginBottom: 6,
   },
   updated: {
-    fontSize: 13,
+    fontSize: typography.small.fontSize,
     color: "#6b7280",
     marginBottom: 18,
   },
   heading: {
-    fontSize: 17,
-    fontWeight: "700",
+    fontSize: typography.h4.fontSize,
+    fontWeight: typography.h3.fontWeight,
     color: "#111827",
     marginTop: 18,
     marginBottom: 6,
   },
   text: {
-    fontSize: 14,
+    fontSize: typography.small.fontSize,
     color: "#374151",
     lineHeight: 21,
     marginBottom: 8,

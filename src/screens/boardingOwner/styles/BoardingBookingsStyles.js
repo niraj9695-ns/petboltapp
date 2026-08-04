@@ -1,21 +1,15 @@
 import { StyleSheet } from "react-native";
+import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
 
 const COLORS = {
-  primary: "#6b21a8",
-  secondary: "#9333ea",
-  lightPurple: "#f5ebff",
-  white: "#ffffff",
-  text: "#1f2937",
-  gray: "#6b7280",
-  border: "#e9d8fd",
-  success: "#16a34a",
-  warning: "#d97706",
+  ...boardingOwnerTheme,
+  warning: boardingOwnerTheme.accent,
 };
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8fafc",
+    backgroundColor: COLORS.background,
   },
   header: {
     paddingHorizontal: 18,
@@ -23,8 +17,8 @@ export default StyleSheet.create({
     paddingBottom: 8,
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: "800",
+    fontSize: typography.h3.fontSize,
+    fontWeight: typography.h3.fontWeight,
     color: COLORS.primary,
   },
   headerSubtitle: {
@@ -37,7 +31,7 @@ export default StyleSheet.create({
     paddingBottom: 24,
   },
   card: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.surface,
     borderRadius: 18,
     padding: 16,
     marginBottom: 14,
@@ -105,13 +99,14 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: COLORS.lightPurple,
+    backgroundColor: COLORS.surfaceAlt,
+    position: "relative",
   },
   emptyText: {
     textAlign: "center",
     marginTop: 50,
-    color: COLORS.gray,
-    fontSize: 15,
+    color: COLORS.textMuted,
+    fontSize: typography.body.fontSize,
   },
   paginationContainer: {
     flexDirection: "row",

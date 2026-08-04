@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
 
 export default StyleSheet.create({
   section: {
@@ -7,8 +8,8 @@ export default StyleSheet.create({
     padding: 15,
   },
   title: {
-    fontSize: 22,
-    fontWeight: "bold",
+    fontSize: typography.h4.fontSize,
+    fontWeight: typography.h3.fontWeight,
     textAlign: "center",
     marginTop: 10,
   },
@@ -36,10 +37,10 @@ export default StyleSheet.create({
     backgroundColor: "#fff",
   },
   emoji: {
-    fontSize: 28,
+    fontSize: typography.h3.fontSize,
   },
   storyName: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     marginTop: 5,
   },
   card: {
@@ -72,14 +73,14 @@ export default StyleSheet.create({
     backgroundColor: "#fff",
     padding: 5,
     borderRadius: 10,
-    fontSize: 10,
+    fontSize: typography.caption.fontSize,
   },
   content: {
     padding: 15,
   },
   name: {
-    fontWeight: "bold",
-    fontSize: 16,
+    fontWeight: typography.h3.fontWeight,
+    fontSize: typography.body.fontSize,
     marginBottom: 5,
   },
   caption: {
@@ -99,7 +100,7 @@ export default StyleSheet.create({
   btnText: {
     color: "#fff",
     textAlign: "center",
-    fontWeight: "600",
+    fontWeight: typography.title.fontWeight,
   },
   bottomBtn: {
     backgroundColor: "#6b21a8",
@@ -111,6 +112,6 @@ export default StyleSheet.create({
   bottomText: {
     color: "#fff",
     textAlign: "center",
-    fontWeight: "600",
+    fontWeight: typography.title.fontWeight,
   },
 });

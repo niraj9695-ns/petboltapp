@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   RefreshControl,
   View,
   Text,
@@ -9,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import PremiumLoader from "../components/PremiumLoader";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { RectButton, Swipeable } from "react-native-gesture-handler";
@@ -20,10 +20,11 @@ import {
   deleteAllNotifications,
 } from "../utils/notifications";
 import styles from "../styles/NotificationScreenStyles";
+import BackButton from "../components/BackButton";
 
 const PAGE_SIZE = 20;
 
-export default function NotificationScreen() {
+export default function NotificationScreen({ navigation }) {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -195,6 +196,8 @@ export default function NotificationScreen() {
           />
         }
       >
+        <BackButton onPress={() => navigation.goBack()} />
+
         <View style={styles.header}>
           <View>
             <Text style={styles.heading}>Notifications</Text>
@@ -235,7 +238,7 @@ export default function NotificationScreen() {
         <View style={styles.card}>
           {loading ? (
             <View style={styles.emptyBox}>
-              <ActivityIndicator size="small" color="#6b21a8" />
+              <PremiumLoader size={22} color="#6b21a8" showLabel={false} />
               <Text style={styles.emptyText}>Loading notifications…</Text>
             </View>
           ) : error ? (

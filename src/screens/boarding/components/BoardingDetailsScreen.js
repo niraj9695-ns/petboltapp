@@ -4,7 +4,6 @@ import {
   View,
   Text,
   ScrollView,
-  ActivityIndicator,
   Image,
   TouchableOpacity,
   Linking,
@@ -12,6 +11,8 @@ import {
   useWindowDimensions,
 } from "react-native";
 
+import PremiumLoader from "../../../components/PremiumLoader";
+import BackButton from "../../../components/BackButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -103,13 +104,14 @@ export default function BoardingDetailsScreen({ route, navigation }) {
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#6b21a8" />
+        <PremiumLoader size={56} color="#6b21a8" label="Loading details" fullScreen />
       </View>
     );
   }
 
   return (
     <ScrollView style={styles.wrapper} showsVerticalScrollIndicator={false}>
+      <BackButton fallbackRoute={"Booking"} />
       {/* IMAGE SLIDER */}
 
       {photoList.length > 0 ? (
@@ -258,7 +260,7 @@ export default function BoardingDetailsScreen({ route, navigation }) {
             <Text style={styles.sectionTitle}>Capacity Status</Text>
 
             {capacityLoading ? (
-              <ActivityIndicator color="#6b21a8" />
+              <PremiumLoader size={24} color="#6b21a8" showLabel={false} />
             ) : (
               <>
                 <View style={styles.infoRow}>

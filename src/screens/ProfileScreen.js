@@ -5,15 +5,16 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  ActivityIndicator,
   ScrollView,
   Alert,
   Linking,
   useWindowDimensions,
 } from "react-native";
+import PremiumLoader from "../components/PremiumLoader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "../styles/ProfileScreenStyles";
+import { useTheme } from "../context/ThemeContext";
 
 const API_URL = "https://www.cgpisoftware.com/cheerytail";
 
@@ -22,6 +23,7 @@ export default function ProfileScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [isGuest, setIsGuest] = useState(false);
   const { width } = useWindowDimensions();
+  const { theme, isDark } = useTheme();
 
   const isTablet = width >= 768;
   useEffect(() => {
@@ -106,8 +108,13 @@ export default function ProfileScreen({ navigation }) {
 
   if (loading) {
     return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#6b21a8" />
+      <View style={[styles.loaderContainer, { backgroundColor: theme.background }]}> 
+        <PremiumLoader
+          size={56}
+          color={theme.primary}
+          label="Loading profile"
+          fullScreen
+        />
       </View>
     );
   }
@@ -119,6 +126,7 @@ export default function ProfileScreen({ navigation }) {
           justifyContent: "center",
           alignItems: "center",
           padding: 20,
+          backgroundColor: theme.background,
         }}
       >
         <Image
@@ -137,6 +145,7 @@ export default function ProfileScreen({ navigation }) {
           style={{
             fontSize: 24,
             fontWeight: "bold",
+            color: theme.textPrimary,
           }}
         >
           Guest User
@@ -146,7 +155,7 @@ export default function ProfileScreen({ navigation }) {
           style={{
             textAlign: "center",
             marginTop: 10,
-            color: "#666",
+            color: theme.textSecondary,
           }}
         >
           Sign in or create an account to view your profile, pets, bookings and
@@ -155,7 +164,7 @@ export default function ProfileScreen({ navigation }) {
 
         <TouchableOpacity
           style={{
-            backgroundColor: "#6b21a8",
+            backgroundColor: theme.primary,
             paddingHorizontal: 30,
             paddingVertical: 14,
             borderRadius: 12,
@@ -180,35 +189,30 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <ScrollView
-      style={styles.wrapper}
+      style={[styles.wrapper, { backgroundColor: theme.background }]}
       contentContainerStyle={{
         paddingBottom: 30,
       }}
     >
       <LinearGradient
-        colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
+        colors={
+          isDark
+            ? [theme.background, theme.cardBackground, theme.surfaceAlt]
+            : ["#fff1e6", "#ffe4f0", "#f3e8ff"]
+        }
         style={[
           styles.container,
           {
             maxWidth: isTablet ? 700 : "100%",
             alignSelf: "center",
             width: "100%",
+            backgroundColor: theme.cardBackground,
           },
         ]}
       >
-        {/* Profile Image */}
-        <View style={styles.avatarWrapper}>
-          <Image
-            source={{
-              uri: "https://i.pravatar.cc/150?img=12",
-            }}
-            style={styles.avatar}
-          />
-        </View>
-
         {/* Verification Badge */}
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>
+        <View style={[styles.badge, { backgroundColor: theme.cardBackground }]}> 
+          <Text style={[styles.badgeText, { color: theme.textSecondary }]}> 
             {user?.email_verified
               ? "⭐ Verified User"
               : "⚠️ Email Not Verified"}
@@ -216,48 +220,48 @@ export default function ProfileScreen({ navigation }) {
         </View>
 
         {/* Name */}
-        <Text style={styles.name}>{user?.full_name || "User"}</Text>
+        <Text style={[styles.name, { color: theme.textPrimary }]}>{user?.full_name || "User"}</Text>
 
-        <View style={styles.infoCard}>
-          <Text style={styles.label}>Email</Text>
-          <Text style={styles.value}>{user?.email}</Text>
+        <View style={[styles.infoCard, { backgroundColor: theme.cardBackground, borderColor: theme.border, borderWidth: 1 }]}> 
+          <Text style={[styles.label, { color: theme.textSecondary }]}>Email</Text>
+          <Text style={[styles.value, { color: theme.textPrimary }]}>{user?.email}</Text>
 
-          <Text style={styles.label}>Mobile Number</Text>
-          <Text style={styles.value}>{user?.phone}</Text>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>Mobile Number</Text>
+          <Text style={[styles.value, { color: theme.textPrimary }]}>{user?.phone}</Text>
 
-          <Text style={styles.label}>Alternate Contact Number</Text>
-          <Text style={styles.value}>{user?.alternate_phone}</Text>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>Alternate Contact Number</Text>
+          <Text style={[styles.value, { color: theme.textPrimary }]}>{user?.alternate_phone}</Text>
 
-          <Text style={styles.label}>Residential Address</Text>
-          <Text style={styles.value}>{user?.address}</Text>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>Residential Address</Text>
+          <Text style={[styles.value, { color: theme.textPrimary }]}>{user?.address}</Text>
 
-          <Text style={styles.label}>Emergency Contact Name</Text>
-          <Text style={styles.value}>{user?.emergency_name}</Text>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>Emergency Contact Name</Text>
+          <Text style={[styles.value, { color: theme.textPrimary }]}>{user?.emergency_name}</Text>
 
-          <Text style={styles.label}>Emergency Contact Number</Text>
-          <Text style={styles.value}>{user?.emergency_number}</Text>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>Emergency Contact Number</Text>
+          <Text style={[styles.value, { color: theme.textPrimary }]}>{user?.emergency_number}</Text>
 
-          <Text style={styles.label}>Email Verification</Text>
-          <Text style={styles.value}>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>Email Verification</Text>
+          <Text style={[styles.value, { color: theme.textPrimary }]}> 
             {user?.email_verified ? "Verified ✅" : "Not Verified ❌"}
           </Text>
         </View>
 
         {user?.aadhar_file ? (
-          <View style={styles.documentCard}>
+          <View style={[styles.documentCard, { backgroundColor: theme.cardBackground, borderColor: theme.border, borderWidth: 1 }]}> 
             <View style={styles.documentInfo}>
               <Text style={styles.documentIcon}>🪪</Text>
 
               <View style={{ flex: 1 }}>
-                <Text style={styles.documentTitle}>Aadhaar Document</Text>
-                <Text style={styles.documentSubTitle}>
+                <Text style={[styles.documentTitle, { color: theme.textPrimary }]}>Aadhaar Document</Text>
+                <Text style={[styles.documentSubTitle, { color: theme.textSecondary }]}> 
                   Identity document uploaded
                 </Text>
               </View>
             </View>
 
             <TouchableOpacity
-              style={styles.viewDocumentBtn}
+              style={[styles.viewDocumentBtn, { backgroundColor: theme.primary }]}
               onPress={() => Linking.openURL(user.aadhar_file)}
             >
               <Text style={styles.viewDocumentText}>View Aadhaar</Text>
@@ -265,18 +269,21 @@ export default function ProfileScreen({ navigation }) {
           </View>
         ) : null}
         {/* Description */}
-        <Text style={styles.desc}>
+        <Text style={[styles.desc, { color: theme.textSecondary }]}> 
           Manage your pets, bookings, and preferences in one place.
         </Text>
 
         {/* Buttons */}
         <View style={styles.btnRow}>
-          <TouchableOpacity style={styles.primaryBtn} onPress={startEditing}>
+          <TouchableOpacity style={[styles.primaryBtn, { backgroundColor: theme.primary }]} onPress={startEditing}>
             <Text style={styles.primaryBtnText}>Edit Profile</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.secondaryBtn}
+            style={[
+              styles.secondaryBtn,
+              { backgroundColor: theme.cardBackground, borderColor: theme.border },
+            ]}
             onPress={() =>
               navigation.navigate("Pets", {
                 screen: "PetList",

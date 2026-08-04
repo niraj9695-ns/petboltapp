@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
 
 export default StyleSheet.create({
   heading: {
-    fontSize: 24,
-    fontWeight: "700",
+    fontSize: typography.h2.fontSize,
+    fontWeight: typography.h2.fontWeight,
     marginBottom: 20,
   },
   input: {
@@ -15,12 +16,12 @@ export default StyleSheet.create({
     backgroundColor: "#fff",
 
     color: "#111827", // Add this
-    fontSize: 16, // Optional
+    fontSize: typography.body.fontSize, // Optional
   },
   forgotText: {
     textAlign: "right",
     color: "#6b21a8",
-    fontWeight: "600",
+    fontWeight: typography.title.fontWeight,
     marginBottom: 10,
   },
   button: {
@@ -32,6 +33,25 @@ export default StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
-    fontWeight: "700",
+    fontWeight: typography.h1.fontWeight,
+  },
+  errorTopText: {
+    color: "#dc2626",
+    backgroundColor: "#fef2f2",
+    borderWidth: 1,
+    borderColor: "#fecaca",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 12,
+    fontSize: typography.small.fontSize,
+    fontWeight: typography.title.fontWeight,
+  },
+  errorText: {
+    color: "#dc2626",
+    fontSize: typography.caption.fontSize,
+    marginTop: -6,
+    marginBottom: 10,
+    marginLeft: 2,
   },
 });

@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
 
 export default StyleSheet.create({
   wrapper: {
@@ -37,17 +38,17 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   badgeText: {
-    fontSize: 12,
-    fontWeight: "600",
+    fontSize: typography.caption.fontSize,
+    fontWeight: typography.caption.fontWeight,
   },
   name: {
-    fontSize: 26,
-    fontWeight: "bold",
+    fontSize: typography.h3.fontSize,
+    fontWeight: typography.h3.fontWeight,
     color: "#333",
     marginTop: 5,
   },
   desc: {
-    fontSize: 14,
+    fontSize: typography.small.fontSize,
     color: "#555",
     textAlign: "center",
     marginTop: 20,
@@ -80,14 +81,14 @@ export default StyleSheet.create({
   },
   primaryBtnText: {
     color: "#fff",
-    fontWeight: "bold",
-    fontSize: 15,
+    fontWeight: typography.h3.fontWeight,
+    fontSize: typography.body.fontSize,
   },
 
   secondaryBtnText: {
     color: "#6b21a8",
-    fontWeight: "bold",
-    fontSize: 15,
+    fontWeight: typography.h3.fontWeight,
+    fontSize: typography.body.fontSize,
   },
   infoCard: {
     width: "100%",
@@ -98,19 +99,19 @@ export default StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     color: "#888",
-    fontWeight: "600",
+    fontWeight: typography.caption.fontWeight,
     marginTop: 10,
   },
   value: {
-    fontSize: 15,
+    fontSize: typography.body.fontSize,
     color: "#222",
     marginTop: 4,
   },
   docTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.h3.fontWeight,
     marginBottom: 10,
     alignSelf: "flex-start",
   },
@@ -138,18 +139,18 @@ export default StyleSheet.create({
   },
 
   documentIcon: {
-    fontSize: 28,
+    fontSize: typography.h3.fontSize,
     marginRight: 12,
   },
 
   documentTitle: {
-    fontSize: 16,
-    fontWeight: "700",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.h3.fontWeight,
     color: "#111827",
   },
 
   documentSubTitle: {
-    fontSize: 13,
+    fontSize: typography.small.fontSize,
     color: "#6B7280",
     marginTop: 3,
   },
@@ -164,8 +165,8 @@ export default StyleSheet.create({
 
   viewDocumentText: {
     color: "#FFFFFF",
-    fontWeight: "700",
-    fontSize: 14,
+    fontWeight: typography.h3.fontWeight,
+    fontSize: typography.small.fontSize,
   },
   aadharImage: {
     width: "100%",
@@ -206,8 +207,8 @@ export default StyleSheet.create({
     marginBottom: 20,
   },
   guestTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: typography.h2.fontSize,
+    fontWeight: typography.h2.fontWeight,
   },
   guestText: {
     textAlign: "center",
@@ -223,6 +224,6 @@ export default StyleSheet.create({
   },
   guestButtonText: {
     color: "#fff",
-    fontWeight: "bold",
+    fontWeight: typography.h3.fontWeight,
   },
 });

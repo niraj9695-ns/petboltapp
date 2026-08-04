@@ -4,7 +4,8 @@ import { View, TextInput, Switch, Text } from "react-native";
 
 import { Picker } from "@react-native-picker/picker";
 
-import phaseThreeFormStyles from "../styles/PhaseThreeFormStyles";
+import createPhaseThreeFormStyles from "../styles/PhaseThreeFormStyles";
+import { useTheme } from "../../../context/ThemeContext";
 
 import FormLabel from "./FormLabel";
 
@@ -13,6 +14,9 @@ export default function PhaseThreeForm({
   setPetData,
   fieldErrors = {},
 }) {
+  const { isDark } = useTheme();
+  const phaseThreeFormStyles = createPhaseThreeFormStyles(isDark);
+
   return (
     <View>
       <TextInput

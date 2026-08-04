@@ -1,15 +1,16 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
 
 export default StyleSheet.create({
   heading: {
-    fontSize: 22,
-    fontWeight: "700",
+    fontSize: typography.h4.fontSize,
+    fontWeight: typography.h3.fontWeight,
     marginBottom: 20,
     color: "#222",
   },
 
   helperText: {
-    color: "#666",
+    color: "#666666",
     marginBottom: 12,
   },
 
@@ -61,7 +62,7 @@ export default StyleSheet.create({
 
   buttonText: {
     color: "#fff",
-    fontWeight: "700",
+    fontWeight: typography.h3.fontWeight,
   },
 
   priceRow: {
@@ -106,8 +107,8 @@ export default StyleSheet.create({
 
   removeRowText: {
     color: "#dc2626",
-    fontSize: 16,
-    fontWeight: "700",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.h3.fontWeight,
   },
 
   chip: {
@@ -130,7 +131,7 @@ export default StyleSheet.create({
   chipText: {
     color: "#4c1d95",
     marginRight: 8,
-    fontWeight: "600",
+    fontWeight: typography.caption.fontWeight,
   },
 
   chipSelected: {
@@ -159,8 +160,8 @@ export default StyleSheet.create({
 
   timePickerValue: {
     color: "#222",
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.smallMedium.fontWeight,
   },
   pickerContainer: {
     flex: 1,
@@ -205,8 +206,8 @@ export default StyleSheet.create({
 
   countryText: {
     color: "#6B21A8",
-    fontSize: 15,
-    fontWeight: "700",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.h3.fontWeight,
   },
 
   phoneInput: {
@@ -215,13 +216,13 @@ export default StyleSheet.create({
     paddingHorizontal: 16,
 
     color: "#111827",
-    fontSize: 15,
+    fontSize: typography.body.fontSize,
   },
 
   errorTopText: {
     color: "#DC2626",
-    fontSize: 12,
-    fontWeight: "600",
+    fontSize: typography.caption.fontSize,
+    fontWeight: typography.caption.fontWeight,
     marginBottom: 6,
     marginLeft: 4,
   },
@@ -259,7 +260,7 @@ export default StyleSheet.create({
 
   btnText: {
     color: "#fff",
-    fontWeight: "bold",
+    fontWeight: typography.h3.fontWeight,
   },
 
   /* Error banner (like PetOwnerRegister) */
@@ -274,13 +275,13 @@ export default StyleSheet.create({
 
   errorBannerTitle: {
     color: "#B91C1C",
-    fontWeight: "700",
+    fontWeight: typography.h3.fontWeight,
     marginBottom: 6,
   },
 
   errorBannerText: {
     color: "#DC2626",
-    fontSize: 13,
+    fontSize: typography.small.fontSize,
     marginTop: 2,
   },
 });

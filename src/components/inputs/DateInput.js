@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Platform } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import dateInputStyles from "../../styles/DateInputStyles";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function DateInput({
   label,
@@ -10,6 +11,7 @@ export default function DateInput({
   mode = "date", // "date" | "time"
 }) {
   const [show, setShow] = useState(false);
+  const { theme } = useTheme();
 
   const formatDate = (date) => {
     if (!date) return "";
@@ -20,13 +22,19 @@ export default function DateInput({
 
   return (
     <View style={dateInputStyles.container}>
-      <Text style={dateInputStyles.label}>{label}</Text>
+      <Text style={[dateInputStyles.label, { color: theme.textPrimary }]}>{label}</Text>
 
       <TouchableOpacity
-        style={dateInputStyles.input}
+        style={[
+          dateInputStyles.input,
+          {
+            backgroundColor: theme.inputBackground,
+            borderColor: theme.border,
+          },
+        ]}
         onPress={() => setShow(true)}
       >
-        <Text style={{ color: value ? "#000" : "#888" }}>
+        <Text style={{ color: value ? theme.textPrimary : theme.placeholder }}>
           {value ? formatDate(value) : "Select"}
         </Text>
       </TouchableOpacity>

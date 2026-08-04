@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
 
 export default StyleSheet.create({
   container: {
@@ -13,7 +14,7 @@ export default StyleSheet.create({
     marginBottom: 12,
     backgroundColor: "#fff",
     color: "#111827",
-    fontSize: 16, 
+    fontSize: typography.body.fontSize,
   },
   icon: {
     position: "absolute",

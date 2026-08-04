@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
 
 export default StyleSheet.create({
   container: {
@@ -24,13 +25,13 @@ export default StyleSheet.create({
   },
 
   heading: {
-    fontSize: 28,
-    fontWeight: "700",
+    fontSize: typography.h2.fontSize,
+    fontWeight: typography.h2.fontWeight,
     color: "#111827",
   },
 
   subHeading: {
-    fontSize: 14,
+    fontSize: typography.small.fontSize,
     color: "#6b7280",
     marginTop: 4,
   },
@@ -51,14 +52,14 @@ export default StyleSheet.create({
 
   markAllText: {
     color: "#ffffff",
-    fontWeight: "700",
-    fontSize: 13,
+    fontWeight: typography.h2.fontWeight,
+    fontSize: typography.small.fontSize,
   },
 
   deleteAllText: {
     color: "#ffffff",
-    fontWeight: "700",
-    fontSize: 13,
+    fontWeight: typography.h2.fontWeight,
+    fontSize: typography.small.fontSize,
   },
 
   infoCard: {
@@ -73,7 +74,7 @@ export default StyleSheet.create({
   infoText: {
     marginLeft: 10,
     color: "#4338ca",
-    fontSize: 14,
+    fontSize: typography.small.fontSize,
     lineHeight: 20,
     flex: 1,
   },
@@ -132,14 +133,14 @@ export default StyleSheet.create({
   },
 
   title: {
-    fontSize: 16,
-    fontWeight: "700",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.h3.fontWeight,
     color: "#111827",
   },
 
   date: {
     color: "#6b7280",
-    fontSize: 13,
+    fontSize: typography.small.fontSize,
     marginTop: 6,
   },
 
@@ -152,7 +153,7 @@ export default StyleSheet.create({
 
   bodyText: {
     color: "#111827",
-    fontSize: 14,
+    fontSize: typography.small.fontSize,
     lineHeight: 20,
   },
 
@@ -167,8 +168,8 @@ export default StyleSheet.create({
 
   loadMoreText: {
     color: "#6b21a8",
-    fontWeight: "700",
-    fontSize: 13,
+    fontWeight: typography.h3.fontWeight,
+    fontSize: typography.small.fontSize,
   },
 
   unreadDot: {
@@ -181,7 +182,7 @@ export default StyleSheet.create({
 
   actionHint: {
     color: "#6b7280",
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     marginTop: 4,
   },
 
@@ -196,8 +197,8 @@ export default StyleSheet.create({
 
   swipeActionText: {
     color: "#ffffff",
-    fontSize: 12,
-    fontWeight: "700",
+    fontSize: typography.caption.fontSize,
+    fontWeight: typography.h3.fontWeight,
     marginTop: 6,
   },
 
@@ -210,14 +211,14 @@ export default StyleSheet.create({
   emptyText: {
     marginTop: 14,
     color: "#111827",
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.title.fontWeight,
   },
 
   emptySubText: {
     marginTop: 10,
     color: "#6b7280",
-    fontSize: 14,
+    fontSize: typography.small.fontSize,
     textAlign: "center",
     maxWidth: 260,
     lineHeight: 20,

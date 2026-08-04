@@ -5,6 +5,7 @@ import * as DocumentPicker from "expo-document-picker";
 import { PasswordInput } from "../inputs/PasswordInput";
 import FloatingInput from "../inputs/FloatingInput";
 import petOwnerRegisterStyles from "../../styles/PetOwnerRegisterStyles";
+import { useTheme } from "../../context/ThemeContext";
 export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
   const [loading, setLoading] = useState(false);
 
@@ -29,6 +30,7 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
   const [errors, setErrors] = useState({});
 
   const [serverError, setServerError] = useState("");
+  const { theme } = useTheme();
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -216,7 +218,7 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
   return (
     <View>
       {serverError ? (
-        <View style={petOwnerRegisterStyles.errorBanner}>
+        <View style={[petOwnerRegisterStyles.errorBanner, { backgroundColor: theme.errorBackground, borderColor: theme.error }]}> 
           <Text style={petOwnerRegisterStyles.errorBannerTitle}>
             Registration Error
           </Text>
@@ -281,9 +283,9 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         </View>
 
         <TextInput
-          style={petOwnerRegisterStyles.phoneInput}
+          style={[petOwnerRegisterStyles.phoneInput, { color: theme.textPrimary }]}
           placeholder="Enter mobile number"
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor={theme.placeholder}
           keyboardType="number-pad"
           maxLength={10}
           value={mobileNumber}
@@ -307,9 +309,9 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         </View>
 
         <TextInput
-          style={petOwnerRegisterStyles.phoneInput}
+          style={[petOwnerRegisterStyles.phoneInput, { color: theme.textPrimary }]}
           placeholder="Alternate Contact Number"
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor={theme.placeholder}
           keyboardType="number-pad"
           maxLength={10}
           value={alternateContactNumber}

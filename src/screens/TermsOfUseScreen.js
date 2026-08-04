@@ -2,14 +2,16 @@ import React from "react";
 import { Text, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import termsStyles from "../styles/TermsOfUseScreenStyles";
+import BackButton from "../components/BackButton";
 
-export default function TermsOfUseScreen() {
+export default function TermsOfUseScreen({ navigation }) {
   return (
     <ScrollView style={termsStyles.scroll}>
       <LinearGradient
         colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
         style={termsStyles.container}
       >
+        <BackButton onPress={() => navigation.goBack()} />
         {/* Title */}
         <Text style={termsStyles.title}>Terms of Use</Text>
         <Text style={termsStyles.updated}>Last Updated: April 2026</Text>

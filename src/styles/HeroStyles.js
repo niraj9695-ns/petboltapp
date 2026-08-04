@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
 
 export default StyleSheet.create({
   wrapper: {
@@ -19,12 +20,12 @@ export default StyleSheet.create({
   },
   badgeText: {
     color: "#7c3aed",
-    fontSize: 12,
-    fontWeight: "600",
+    fontSize: typography.caption.fontSize,
+    fontWeight: typography.caption.fontWeight,
   },
   title: {
-    fontSize: 32,
-    fontWeight: "800",
+    fontSize: typography.h1.fontSize,
+    fontWeight: typography.h1.fontWeight,
     lineHeight: 38,
     color: "#111827",
     marginBottom: 10,
@@ -34,7 +35,7 @@ export default StyleSheet.create({
   },
   desc: {
     color: "#4b5563",
-    fontSize: 14,
+    fontSize: typography.small.fontSize,
     lineHeight: 20,
     marginBottom: 18,
   },
@@ -51,7 +52,7 @@ export default StyleSheet.create({
   },
   primaryBtnText: {
     color: "#fff",
-    fontWeight: "700",
+    fontWeight: typography.h1.fontWeight,
   },
   secondaryBtn: {
     borderWidth: 1,
@@ -62,7 +63,7 @@ export default StyleSheet.create({
   },
   secondaryBtnText: {
     color: "#111827",
-    fontWeight: "600",
+    fontWeight: typography.title.fontWeight,
   },
   statsRow: {
     flexDirection: "row",
@@ -78,12 +79,12 @@ export default StyleSheet.create({
     alignItems: "center",
   },
   statNum: {
-    fontSize: 18,
-    fontWeight: "800",
+    fontSize: typography.title.fontSize,
+    fontWeight: typography.h1.fontWeight,
     color: "#111827",
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     color: "#6b7280",
     marginTop: 4,
   },

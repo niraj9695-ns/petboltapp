@@ -1,9 +1,12 @@
 import { StyleSheet } from "react-native";
+import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
+
+const COLORS = boardingOwnerTheme;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f4f6f9",
+    backgroundColor: COLORS.background,
   },
 
   loader: {
@@ -13,7 +16,7 @@ const styles = StyleSheet.create({
   },
 
   profileCard: {
-    backgroundColor: "#ffffff",
+    backgroundColor: COLORS.surface,
     marginHorizontal: 16,
     marginTop: 3,
     borderRadius: 24,
@@ -31,46 +34,46 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: "#6b21a8",
+    backgroundColor: COLORS.primary,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 15,
   },
 
   avatarText: {
-    color: "#fff",
-    fontSize: 38,
+    color: COLORS.surface,
+    fontSize: typography.h2.fontSize,
     fontWeight: "bold",
   },
 
   name: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#111827",
+    fontSize: typography.h3.fontSize,
+    fontWeight: typography.h3.fontWeight,
+    color: COLORS.text,
   },
 
   email: {
-    fontSize: 14,
-    color: "#6b7280",
+    fontSize: typography.small.fontSize,
+    color: COLORS.textMuted,
     marginTop: 4,
   },
 
   roleBadge: {
     marginTop: 12,
-    backgroundColor: "#f3e8ff",
+    backgroundColor: COLORS.muted,
     paddingHorizontal: 18,
     paddingVertical: 8,
     borderRadius: 20,
   },
 
   roleText: {
-    color: "#6b21a8",
-    fontWeight: "700",
-    fontSize: 13,
+    color: COLORS.primary,
+    fontWeight: typography.title.fontWeight,
+    fontSize: typography.caption.fontSize,
   },
 
   card: {
-    backgroundColor: "#ffffff",
+    backgroundColor: COLORS.surface,
     marginHorizontal: 16,
     marginTop: 16,
     borderRadius: 20,
@@ -92,15 +95,15 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#111827",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.title.fontWeight,
+    color: COLORS.text,
   },
 
   sectionChevron: {
     fontSize: 20,
-    color: "#6b21a8",
-    fontWeight: "700",
+    color: COLORS.primary,
+    fontWeight: typography.title.fontWeight,
   },
 
   sectionBody: {
@@ -110,45 +113,45 @@ const styles = StyleSheet.create({
 
   infoRow: {
     borderBottomWidth: 1,
-    borderBottomColor: "#eef2f7",
+    borderBottomColor: COLORS.border,
     paddingVertical: 12,
   },
 
   label: {
-    color: "#64748b",
-    fontSize: 13,
+    color: COLORS.textMuted,
+    fontSize: typography.caption.fontSize,
     marginBottom: 4,
   },
 
   value: {
-    color: "#111827",
-    fontSize: 15,
-    fontWeight: "600",
+    color: COLORS.text,
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.title.fontWeight,
   },
 
   documentBtn: {
-    backgroundColor: "#6b21a8",
+    backgroundColor: COLORS.primary,
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: "center",
   },
 
   documentBtnText: {
-    color: "#ffffff",
-    fontSize: 15,
-    fontWeight: "700",
+    color: COLORS.surface,
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.title.fontWeight,
   },
 
   documentHint: {
     marginTop: 10,
-    color: "#6b7280",
+    color: COLORS.textMuted,
     fontSize: 12,
     textAlign: "center",
   },
 
   emptyText: {
-    color: "#6b7280",
-    fontSize: 14,
+    color: COLORS.textMuted,
+    fontSize: typography.small.fontSize,
   },
 
   profileImage: {
@@ -159,7 +162,7 @@ const styles = StyleSheet.create({
   },
 
   editBtn: {
-    backgroundColor: "#6b21a8",
+    backgroundColor: COLORS.primary,
     marginHorizontal: 16,
     marginTop: 12,
     marginBottom: 30,
@@ -169,9 +172,9 @@ const styles = StyleSheet.create({
   },
 
   editText: {
-    color: "#ffffff",
-    fontSize: 16,
-    fontWeight: "700",
+    color: COLORS.surface,
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.title.fontWeight,
   },
 });
 

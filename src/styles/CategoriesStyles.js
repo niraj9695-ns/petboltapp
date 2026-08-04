@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
 
 export default StyleSheet.create({
   section: {
@@ -8,8 +9,8 @@ export default StyleSheet.create({
   },
 
   title: {
-    fontSize: 28,
-    fontWeight: "bold",
+    fontSize: typography.h2.fontSize,
+    fontWeight: typography.h2.fontWeight,
     textAlign: "center",
     marginBottom: 6,
     color: "#1f2937",
@@ -23,7 +24,7 @@ export default StyleSheet.create({
     textAlign: "center",
     color: "#6b7280",
     marginBottom: 25,
-    fontSize: 14,
+    fontSize: typography.small.fontSize,
   },
 
   scrollContainer: {
@@ -66,19 +67,19 @@ export default StyleSheet.create({
     position: "absolute",
     top: -8,
     right: -8,
-    fontSize: 22,
+    fontSize: typography.h4.fontSize,
   },
 
   name: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: typography.title.fontSize,
+    fontWeight: typography.title.fontWeight,
     color: "#1f2937",
     marginBottom: 6,
     textAlign: "center",
   },
 
   desc: {
-    fontSize: 13,
+    fontSize: typography.small.fontSize,
     color: "#6b7280",
     textAlign: "center",
     marginBottom: 18,
@@ -95,7 +96,7 @@ export default StyleSheet.create({
 
   buttonText: {
     color: "#fff",
-    fontWeight: "600",
-    fontSize: 14,
+    fontWeight: typography.title.fontWeight,
+    fontSize: typography.small.fontSize,
   },
 });

@@ -1,11 +1,12 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
 
 export default StyleSheet.create({
   container: {
     marginBottom: 14,
   },
   label: {
-    fontSize: 14,
+    fontSize: typography.small.fontSize,
     marginBottom: 6,
     color: "#444",
   },

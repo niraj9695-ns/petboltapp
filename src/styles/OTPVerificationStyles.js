@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
 
 export default StyleSheet.create({
   heading: {
-    fontSize: 24,
-    fontWeight: "700",
+    fontSize: typography.h2.fontSize,
+    fontWeight: typography.h2.fontWeight,
     marginBottom: 10,
   },
   subText: {
@@ -29,8 +30,8 @@ export default StyleSheet.create({
 
     textAlign: "center",
 
-    fontSize: 22,
-    fontWeight: "700",
+    fontSize: typography.h3.fontSize,
+    fontWeight: typography.h3.fontWeight,
 
     color: "#6B21A8",
 
@@ -48,7 +49,7 @@ export default StyleSheet.create({
     color: "#6b21a8",
     textAlign: "center",
     marginBottom: 20,
-    fontWeight: "600",
+    fontWeight: typography.title.fontWeight,
   },
   button: {
     backgroundColor: "#6b21a8",
@@ -58,7 +59,7 @@ export default StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
-    fontWeight: "700",
+    fontWeight: typography.h3.fontWeight,
   },
   backText: {
     textAlign: "center",

@@ -2,14 +2,16 @@ import React from "react";
 import { Text, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import policyStyles from "../styles/PrivacyPolicyScreenStyles";
+import BackButton from "../components/BackButton";
 
-export default function PrivacyPolicyScreen() {
+export default function PrivacyPolicyScreen({ navigation }) {
   return (
     <ScrollView style={policyStyles.scroll}>
       <LinearGradient
         colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
         style={policyStyles.container}
       >
+        <BackButton onPress={() => navigation.goBack()} />
         <Text style={policyStyles.title}>Privacy Policy</Text>
         <Text style={policyStyles.updated}>Last updated: April 2026</Text>
 

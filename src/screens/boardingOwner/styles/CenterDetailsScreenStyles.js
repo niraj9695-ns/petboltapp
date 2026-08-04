@@ -1,11 +1,13 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
 
 const { width } = Dimensions.get("window");
+const COLORS = boardingOwnerTheme;
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8fafc",
+    backgroundColor: COLORS.background,
   },
   loader: {
     flex: 1,
@@ -16,20 +18,20 @@ export default StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 12,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.surface,
   },
   backButton: {
     marginBottom: 10,
   },
   backText: {
-    color: "#6b21a8",
-    fontSize: 15,
-    fontWeight: "600",
+    color: COLORS.primary,
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.bodyMedium.fontWeight,
   },
   title: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#111827",
+    fontSize: typography.h3.fontSize,
+    fontWeight: typography.h3.fontWeight,
+    color: COLORS.text,
   },
   imageContainer: {
     position: "relative",
@@ -53,7 +55,7 @@ export default StyleSheet.create({
     fontSize: 12,
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.surface,
     marginTop: 16,
     padding: 18,
     borderRadius: 18,
@@ -64,18 +66,18 @@ export default StyleSheet.create({
     elevation: 4,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#6b21a8",
+    fontSize: typography.title.fontSize,
+    fontWeight: typography.title.fontWeight,
+    color: COLORS.primary,
     marginBottom: 15,
   },
   sectionCard: {
     borderWidth: 1,
-    borderColor: "#f1e8ff",
+    borderColor: COLORS.border,
     borderRadius: 16,
     padding: 12,
     marginBottom: 12,
-    backgroundColor: "#fcfaff",
+    backgroundColor: COLORS.surfaceAlt,
   },
   sectionHeaderButton: {
     flexDirection: "row",
@@ -92,7 +94,7 @@ export default StyleSheet.create({
     marginBottom: 4,
   },
   sectionChevron: {
-    color: "#6b21a8",
+    color: COLORS.primary,
     fontSize: 20,
     fontWeight: "700",
     marginLeft: 10,
@@ -104,14 +106,14 @@ export default StyleSheet.create({
     marginBottom: 14,
   },
   label: {
-    fontSize: 13,
-    color: "#6b7280",
+    fontSize: typography.caption.fontSize,
+    color: COLORS.textMuted,
     marginBottom: 4,
   },
   value: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#111827",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.bodyMedium.fontWeight,
+    color: COLORS.text,
   },
   documentHint: {
     marginTop: 10,
@@ -120,7 +122,7 @@ export default StyleSheet.create({
     lineHeight: 18,
   },
   editButton: {
-    backgroundColor: "#6b21a8",
+    backgroundColor: COLORS.primary,
     marginHorizontal: 16,
     marginVertical: 20,
     paddingVertical: 16,
@@ -128,7 +130,7 @@ export default StyleSheet.create({
     alignItems: "center",
   },
   editButtonText: {
-    color: "#fff",
+    color: COLORS.surface,
     fontSize: 16,
     fontWeight: "700",
   },

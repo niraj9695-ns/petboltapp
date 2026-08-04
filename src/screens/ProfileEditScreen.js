@@ -5,16 +5,17 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  ActivityIndicator,
   ScrollView,
   Alert,
   Linking,
   useWindowDimensions,
 } from "react-native";
+import PremiumLoader from "../components/PremiumLoader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as DocumentPicker from "expo-document-picker";
 import { LinearGradient } from "expo-linear-gradient";
 import profileEditStyles from "../styles/ProfileEditScreenStyles";
+import { useTheme } from "../context/ThemeContext";
 
 const API_URL = "https://www.cgpisoftware.com/cheerytail";
 
@@ -30,6 +31,7 @@ export default function ProfileEditScreen({ navigation }) {
   const [aadharFile, setAadharFile] = useState(null);
   const [user, setUser] = useState(null);
   const { width } = useWindowDimensions();
+  const { theme, isDark } = useTheme();
 
   const isTablet = width >= 768;
 
@@ -41,7 +43,7 @@ export default function ProfileEditScreen({ navigation }) {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        navigation.goBack();
+        navigation.navigate("Profile");
         return;
       }
 
@@ -158,7 +160,7 @@ export default function ProfileEditScreen({ navigation }) {
         (result.status === true || result.status === "success")
       ) {
         Alert.alert("Success", "Profile updated successfully.");
-        navigation.goBack();
+        navigation.navigate("Profile");
       } else {
         Alert.alert(
           "Update Failed",
@@ -176,138 +178,190 @@ export default function ProfileEditScreen({ navigation }) {
 
   if (loading) {
     return (
-      <View style={profileEditStyles.loaderContainer}>
-        <ActivityIndicator size="large" color="#6b21a8" />
+      <View style={[profileEditStyles.loaderContainer, { backgroundColor: theme.background }]}> 
+        <PremiumLoader size={56} color={theme.primary} label="Loading profile" />
       </View>
     );
   }
 
   return (
     <ScrollView
-      style={profileEditStyles.wrapper}
+      style={[profileEditStyles.wrapper, { backgroundColor: theme.background }]}
       contentContainerStyle={{ paddingBottom: 30 }}
     >
       <LinearGradient
-        colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
+        colors={
+          isDark
+            ? [theme.background, theme.cardBackground, theme.surfaceAlt]
+            : ["#fff1e6", "#ffe4f0", "#f3e8ff"]
+        }
         style={[
           profileEditStyles.container,
           {
             maxWidth: isTablet ? 700 : "100%",
             alignSelf: "center",
             width: "100%",
+            backgroundColor: theme.cardBackground,
           },
         ]}
       >
         <View style={profileEditStyles.headerRow}>
           <TouchableOpacity
-            style={profileEditStyles.backButton}
-            onPress={() => navigation.goBack()}
+            style={[profileEditStyles.backButton, { backgroundColor: theme.cardBackground }]}
+            onPress={() => navigation.navigate("Profile")}
           >
-            <Text style={profileEditStyles.backButtonText}>← Back</Text>
+            <Text style={[profileEditStyles.backButtonText, { color: theme.primary }]}>← Back</Text>
           </TouchableOpacity>
-          <Text style={profileEditStyles.editTitle}>Update Profile</Text>
+          <Text style={[profileEditStyles.editTitle, { color: theme.textPrimary }]}>Update Profile</Text>
         </View>
 
-        <View style={profileEditStyles.editCard}>
-          <Text style={profileEditStyles.formLabel}>Full Name</Text>
+        <View style={[profileEditStyles.editCard, { backgroundColor: theme.cardBackground, borderColor: theme.border, borderWidth: 1 }]}> 
+          <Text style={[profileEditStyles.formLabel, { color: theme.textSecondary }]}>Full Name</Text>
           <TextInput
             value={fullName}
             onChangeText={setFullName}
-            style={profileEditStyles.input}
+            style={[
+              profileEditStyles.input,
+              {
+                backgroundColor: theme.inputBackground,
+                borderColor: theme.border,
+                color: theme.textPrimary,
+              },
+            ]}
+            placeholderTextColor={theme.placeholder}
+            selectionColor={theme.primary}
           />
 
-          <Text style={profileEditStyles.formLabel}>Mobile Number</Text>
+          <Text style={[profileEditStyles.formLabel, { color: theme.textSecondary }]}>Mobile Number</Text>
           <TextInput
             value={phone}
             onChangeText={setPhone}
-            style={profileEditStyles.input}
+            style={[
+              profileEditStyles.input,
+              {
+                backgroundColor: theme.inputBackground,
+                borderColor: theme.border,
+                color: theme.textPrimary,
+              },
+            ]}
             keyboardType="phone-pad"
+            placeholderTextColor={theme.placeholder}
+            selectionColor={theme.primary}
           />
 
-          <Text style={profileEditStyles.formLabel}>Alternate Contact Number</Text>
+          <Text style={[profileEditStyles.formLabel, { color: theme.textSecondary }]}> 
+            Alternate Contact Number
+          </Text>
           <TextInput
             value={alternatePhone}
             onChangeText={setAlternatePhone}
-            style={profileEditStyles.input}
+            style={[
+              profileEditStyles.input,
+              {
+                backgroundColor: theme.inputBackground,
+                borderColor: theme.border,
+                color: theme.textPrimary,
+              },
+            ]}
             keyboardType="phone-pad"
+            placeholderTextColor={theme.placeholder}
+            selectionColor={theme.primary}
           />
 
-          <Text style={profileEditStyles.formLabel}>Residential Address</Text>
+          <Text style={[profileEditStyles.formLabel, { color: theme.textSecondary }]}>Residential Address</Text>
           <TextInput
             value={address}
             onChangeText={setAddress}
-            style={[profileEditStyles.input, profileEditStyles.multiLineInput]}
+            style={[
+              profileEditStyles.input,
+              profileEditStyles.multiLineInput,
+              {
+                backgroundColor: theme.inputBackground,
+                borderColor: theme.border,
+                color: theme.textPrimary,
+              },
+            ]}
             multiline
+            placeholderTextColor={theme.placeholder}
+            selectionColor={theme.primary}
           />
 
-          <Text style={profileEditStyles.formLabel}>Emergency Contact Name</Text>
+          <Text style={[profileEditStyles.formLabel, { color: theme.textSecondary }]}> 
+            Emergency Contact Name
+          </Text>
           <TextInput
             value={emergencyName}
             onChangeText={setEmergencyName}
-            style={profileEditStyles.input}
+            style={[
+              profileEditStyles.input,
+              {
+                backgroundColor: theme.inputBackground,
+                borderColor: theme.border,
+                color: theme.textPrimary,
+              },
+            ]}
+            placeholderTextColor={theme.placeholder}
+            selectionColor={theme.primary}
           />
 
-          <Text style={profileEditStyles.formLabel}>Emergency Contact Number</Text>
+          <Text style={[profileEditStyles.formLabel, { color: theme.textSecondary }]}> 
+            Emergency Contact Number
+          </Text>
           <TextInput
             value={emergencyNumber}
             onChangeText={setEmergencyNumber}
-            style={profileEditStyles.input}
+            style={[
+              profileEditStyles.input,
+              {
+                backgroundColor: theme.inputBackground,
+                borderColor: theme.border,
+                color: theme.textPrimary,
+              },
+            ]}
             keyboardType="phone-pad"
+            placeholderTextColor={theme.placeholder}
+            selectionColor={theme.primary}
           />
 
           <TouchableOpacity
-            style={profileEditStyles.fileButton}
+            style={[
+              profileEditStyles.fileButton,
+              {
+                backgroundColor: theme.muted,
+                borderColor: theme.border,
+              },
+            ]}
             onPress={pickAadhar}
           >
-            <Text style={profileEditStyles.fileButtonText}>
+            <Text style={[profileEditStyles.fileButtonText, { color: theme.primary }]}> 
               Choose Aadhaar File
             </Text>
           </TouchableOpacity>
+          <View style={profileEditStyles.buttonContainer}>
+            <View style={profileEditStyles.btnRow}>
+              <TouchableOpacity
+                style={[profileEditStyles.primaryBtn, { backgroundColor: theme.primary }]}
+                onPress={handleSaveProfile}
+                disabled={saving}
+              >
+                <Text style={profileEditStyles.primaryBtnText}>
+                  {saving ? "Saving..." : "Save Changes"}
+                </Text>
+              </TouchableOpacity>
 
-          <View style={profileEditStyles.btnRow}>
-            <TouchableOpacity
-              style={profileEditStyles.primaryBtn}
-              onPress={handleSaveProfile}
-              disabled={saving}
-            >
-              <Text style={profileEditStyles.primaryBtnText}>
-                {saving ? "Saving..." : "Save Changes"}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[profileEditStyles.secondaryBtn, profileEditStyles.cancelBtn]}
-              onPress={() => navigation.goBack()}
-            >
-              <Text style={profileEditStyles.secondaryBtnText}>Cancel</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  profileEditStyles.secondaryBtn,
+                  profileEditStyles.cancelBtn,
+                  { backgroundColor: theme.cardBackground, borderColor: theme.border },
+                ]}
+                onPress={() => navigation.navigate("Profile")}
+              >
+                <Text style={[profileEditStyles.secondaryBtnText, { color: theme.primary }]}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-
-        {user?.aadhar_file ? (
-          <View style={profileEditStyles.documentCard}>
-            <View style={profileEditStyles.documentInfo}>
-              <Text style={profileEditStyles.documentIcon}>🪪</Text>
-
-              <View style={{ flex: 1 }}>
-                <Text style={profileEditStyles.documentTitle}>
-                  Aadhaar Document
-                </Text>
-
-                <Text style={profileEditStyles.documentSubTitle}>
-                  Uploaded and verified document
-                </Text>
-              </View>
-            </View>
-
-            <TouchableOpacity
-              style={profileEditStyles.viewDocumentBtn}
-              onPress={() => Linking.openURL(user.aadhar_file)}
-            >
-              <Text style={profileEditStyles.viewDocumentText}>View Aadhaar</Text>
-            </TouchableOpacity>
-          </View>
-        ) : null}
       </LinearGradient>
     </ScrollView>
   );

@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
 
 export default StyleSheet.create({
   fileButton: {
@@ -33,12 +34,12 @@ export default StyleSheet.create({
 
   btnText: {
     color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "700",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.h3.fontWeight,
   },
   btnText: {
     color: "#fff",
-    fontWeight: "bold",
+    fontWeight: typography.h3.fontWeight,
   },
 
   phoneWrapper: {
@@ -74,8 +75,8 @@ export default StyleSheet.create({
 
   countryText: {
     color: "#6B21A8",
-    fontSize: 15,
-    fontWeight: "700",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.h3.fontWeight,
   },
 
   phoneInput: {
@@ -84,13 +85,13 @@ export default StyleSheet.create({
     paddingHorizontal: 16,
 
     color: "#111827",
-    fontSize: 15,
+    fontSize: typography.body.fontSize,
   },
 
   errorTopText: {
     color: "#DC2626",
-    fontSize: 12,
-    fontWeight: "600",
+    fontSize: typography.caption.fontSize,
+    fontWeight: typography.caption.fontWeight,
     marginTop: -8,
     marginBottom: 8,
     marginLeft: 4,
@@ -107,49 +108,19 @@ export default StyleSheet.create({
 
   errorBannerTitle: {
     color: "#B91C1C",
-    fontWeight: "700",
+    fontWeight: typography.h3.fontWeight,
     marginBottom: 6,
   },
 
   errorBannerText: {
     color: "#DC2626",
-    fontSize: 13,
+    fontSize: typography.small.fontSize,
     marginTop: 2,
   },
-
   errorTopText: {
     color: "#DC2626",
-    fontSize: 12,
-    fontWeight: "600",
-    marginBottom: 6,
-    marginLeft: 4,
-  },
-
-  errorBanner: {
-    backgroundColor: "#FEF2F2",
-    borderWidth: 1,
-    borderColor: "#FECACA",
-    borderRadius: 16,
-    padding: 14,
-    marginBottom: 16,
-  },
-
-  errorBannerTitle: {
-    color: "#B91C1C",
-    fontWeight: "700",
-    marginBottom: 6,
-  },
-
-  errorBannerText: {
-    color: "#DC2626",
-    fontSize: 13,
-    marginTop: 2,
-  },
-
-  errorTopText: {
-    color: "#DC2626",
-    fontSize: 12,
-    fontWeight: "600",
+    fontSize: typography.caption.fontSize,
+    fontWeight: typography.caption.fontWeight,
     marginBottom: 6,
     marginLeft: 4,
   },

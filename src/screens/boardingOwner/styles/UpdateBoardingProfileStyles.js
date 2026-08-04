@@ -1,9 +1,12 @@
 import { StyleSheet } from "react-native";
+import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
+
+const COLORS = boardingOwnerTheme;
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f3ff",
+    backgroundColor: COLORS.background,
   },
 
   loader: {
@@ -13,27 +16,27 @@ export default StyleSheet.create({
   },
 
   heading: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: "#4c1d95",
+    fontSize: typography.h4.fontSize,
+    fontWeight: typography.h4.fontWeight,
+    color: COLORS.primaryDark,
     marginTop: 16,
     marginHorizontal: 16,
   },
 
   subHeading: {
-    fontSize: 13,
-    color: "#6b7280",
+    fontSize: typography.caption.fontSize,
+    color: COLORS.textMuted,
     marginHorizontal: 16,
     marginBottom: 12,
   },
 
   card: {
-    backgroundColor: "#ffffff",
+    backgroundColor: COLORS.surface,
     marginHorizontal: 16,
     marginBottom: 12,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: "#ece7ff",
+    borderColor: COLORS.border,
     overflow: "hidden",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -51,15 +54,15 @@ export default StyleSheet.create({
   },
 
   sectionTitle: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#4c1d95",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.title.fontWeight,
+    color: COLORS.primaryDark,
   },
 
   sectionChevron: {
     fontSize: 20,
-    color: "#6b21a8",
-    fontWeight: "700",
+    color: COLORS.primary,
+    fontWeight: typography.title.fontWeight,
   },
 
   sectionBody: {
@@ -72,21 +75,21 @@ export default StyleSheet.create({
   },
 
   label: {
-    color: "#6b7280",
+    color: COLORS.textMuted,
     marginBottom: 6,
-    fontSize: 12.5,
-    fontWeight: "600",
+    fontSize: typography.caption.fontSize,
+    fontWeight: typography.bodyMedium.fontWeight,
   },
 
   input: {
     borderWidth: 1,
-    borderColor: "#e9e3ff",
+    borderColor: COLORS.border,
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    backgroundColor: "#fcfbff",
-    fontSize: 14,
-    color: "#111827",
+    backgroundColor: COLORS.surfaceAlt,
+    fontSize: typography.small.fontSize,
+    color: COLORS.text,
   },
 
   inputMultiline: {
@@ -95,7 +98,7 @@ export default StyleSheet.create({
   },
 
   saveButton: {
-    backgroundColor: "#6b21a8",
+    backgroundColor: COLORS.primary,
     marginHorizontal: 16,
     marginTop: 6,
     marginBottom: 30,
@@ -105,8 +108,8 @@ export default StyleSheet.create({
   },
 
   saveButtonText: {
-    color: "#fff",
-    fontWeight: "700",
-    fontSize: 15,
+    color: COLORS.surface,
+    fontWeight: typography.title.fontWeight,
+    fontSize: typography.body.fontSize,
   },
 });
