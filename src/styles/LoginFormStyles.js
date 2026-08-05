@@ -1,57 +1,61 @@
 import { StyleSheet } from "react-native";
+import { colors } from "./theme/colors";
+import { spacing } from "./theme/spacing";
+import { radius } from "./theme/radius";
 import { typography } from "./themeStyles";
+import { typography as baseTypography } from "./theme/typography";
 
 export default StyleSheet.create({
   heading: {
-    fontSize: typography.h2.fontSize,
-    fontWeight: typography.h2.fontWeight,
-    marginBottom: 20,
+    fontSize: (typography && typography.h2 && typography.h2.fontSize) || baseTypography.h2 || 24,
+    fontWeight: (typography && typography.h2 && typography.h2.fontWeight) || baseTypography.weights.bold || "700",
+    marginBottom: spacing.xl,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 12,
-    backgroundColor: "#fff",
+    borderColor: colors.border,
+    borderRadius: radius.input,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+    backgroundColor: colors.surface,
 
-    color: "#111827", // Add this
-    fontSize: typography.body.fontSize, // Optional
+    color: colors.text,
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
   },
   forgotText: {
     textAlign: "right",
-    color: "#6b21a8",
-    fontWeight: typography.title.fontWeight,
-    marginBottom: 10,
+    color: colors.primary,
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
+    marginBottom: spacing.sm,
   },
   button: {
-    backgroundColor: "#6b21a8",
-    padding: 15,
-    borderRadius: 12,
+    backgroundColor: colors.primary,
+    padding: spacing.lg,
+    borderRadius: radius.button,
     alignItems: "center",
-    marginTop: 10,
+    marginTop: spacing.sm,
   },
   buttonText: {
     color: "#fff",
-    fontWeight: typography.h1.fontWeight,
+    fontWeight: (typography && typography.h1 && typography.h1.fontWeight) || baseTypography.weights.bold || "700",
   },
   errorTopText: {
     color: "#dc2626",
     backgroundColor: "#fef2f2",
     borderWidth: 1,
     borderColor: "#fecaca",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginBottom: 12,
-    fontSize: typography.small.fontSize,
-    fontWeight: typography.title.fontWeight,
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    marginBottom: spacing.md,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
   },
   errorText: {
     color: "#dc2626",
-    fontSize: typography.caption.fontSize,
-    marginTop: -6,
-    marginBottom: 10,
-    marginLeft: 2,
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    marginTop: -spacing.xs,
+    marginBottom: spacing.sm,
+    marginLeft: spacing.xs,
   },
 });

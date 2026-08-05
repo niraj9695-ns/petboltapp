@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
+import { typography as baseTypography } from "../../../styles/theme/typography";
 
 const COLORS = boardingOwnerTheme;
 
@@ -21,8 +22,14 @@ export default StyleSheet.create({
   },
 
   header: {
+    flexDirection: "column",
+    justifyContent: "center",
     paddingHorizontal: 16,
+    paddingTop: 16,
     paddingBottom: 12,
+    backgroundColor: "#fffaf7",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e9d5ff",
   },
 
   headerRow: {
@@ -32,8 +39,8 @@ export default StyleSheet.create({
   },
 
   title: {
-    fontSize: typography.h3.fontSize,
-    fontWeight: typography.h3.fontWeight,
+    fontSize: 28,
+    fontWeight: "800",
     color: COLORS.primary,
   },
 
@@ -83,15 +90,15 @@ export default StyleSheet.create({
   },
 
   centerName: {
-    fontSize: typography.title.fontSize,
-    fontWeight: typography.title.fontWeight,
+    fontSize: (typography && typography.title && typography.title.fontSize) || baseTypography.cardTitle || 18,
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
     color: COLORS.text,
   },
 
   location: {
     marginTop: 4,
     color: COLORS.textMuted,
-    fontSize: typography.small.fontSize,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
   },
 
   button: {
@@ -105,8 +112,8 @@ export default StyleSheet.create({
 
   buttonText: {
     color: COLORS.surface,
-    fontWeight: typography.title.fontWeight,
-    fontSize: typography.small.fontSize,
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
   },
 
   emptyState: {
@@ -116,13 +123,13 @@ export default StyleSheet.create({
 
   emptyText: {
     color: COLORS.textMuted,
-    fontSize: typography.body.fontSize,
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
   },
 
   summaryText: {
     marginTop: 8,
     color: COLORS.textMuted,
-    fontSize: typography.caption.fontSize,
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
   },
 
   paginationContainer: {
@@ -146,7 +153,7 @@ export default StyleSheet.create({
 
   paginationButtonText: {
     color: COLORS.primary,
-    fontWeight: typography.title.fontWeight,
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
   },
 
   pageNumberButton: {
@@ -167,7 +174,7 @@ export default StyleSheet.create({
 
   pageNumberButtonText: {
     color: COLORS.primary,
-    fontWeight: typography.title.fontWeight,
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
   },
 
   activePageNumberButtonText: {

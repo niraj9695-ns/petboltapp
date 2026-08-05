@@ -1,33 +1,38 @@
 import { StyleSheet } from "react-native";
+import { colors } from "./theme/colors";
+import { spacing } from "./theme/spacing";
+import { typography as themeTypography } from "./theme/typography";
+import { radius } from "./theme/radius";
+import { shadows } from "./theme/shadows";
 
 export const palette = {
-  primary: "#6b21a8",
-  primaryDark: "#4c1d95",
-  secondary: "#6b21a8",
-  accent: "#ec4899",
-  background: "#fffaf5",
-  surface: "#ffffff",
-  surfaceAlt: "#f8fafc",
-  surfaceMuted: "#f3f4f6",
-  text: "#111827",
-  textMuted: "#6b7280",
-  border: "#e5e7eb",
-  success: "#22c55e",
-  info: "#3b82f6",
-  danger: "#ef4444",
+  primary: colors.primary,
+  primaryDark: colors.primaryDark,
+  secondary: colors.primary,
+  accent: colors.accent,
+  background: colors.background,
+  surface: colors.surface,
+  surfaceAlt: colors.surfaceAlt,
+  surfaceMuted: colors.surfaceMuted,
+  text: colors.text,
+  textMuted: colors.textMuted,
+  border: colors.border,
+  success: colors.success,
+  info: colors.info,
+  danger: colors.danger,
 };
 
 export const typography = {
-  h1: { fontSize: 34, fontWeight: "700" },
-  h2: { fontSize: 28, fontWeight: "700" },
-  h3: { fontSize: 26, fontWeight: "700" },
-  h4: { fontSize: 22, fontWeight: "600" },
-  title: { fontSize: 18, fontWeight: "600" },
-  body: { fontSize: 16, fontWeight: "400" },
-  bodyMedium: { fontSize: 16, fontWeight: "500" },
-  small: { fontSize: 14, fontWeight: "400" },
-  smallMedium: { fontSize: 14, fontWeight: "500" },
-  caption: { fontSize: 12, fontWeight: "600" },
+  h1: { fontSize: 24, fontWeight: "700" },
+  h2: { fontSize: 20, fontWeight: "700" },
+  h3: { fontSize: 18, fontWeight: "700" },
+  h4: { fontSize: 16, fontWeight: "600" },
+  title: { fontSize: 14, fontWeight: "600" },
+  body: { fontSize: themeTypography.body, fontWeight: "400" },
+  bodyMedium: { fontSize: themeTypography.body, fontWeight: "500" },
+  small: { fontSize: themeTypography.small, fontWeight: "400" },
+  smallMedium: { fontSize: themeTypography.small, fontWeight: "500" },
+  caption: { fontSize: themeTypography.caption, fontWeight: "600" },
 };
 
 export const boardingOwnerTheme = {
@@ -53,28 +58,28 @@ export const homeStyles = StyleSheet.create({
     backgroundColor: palette.background,
   },
   content: {
-    paddingBottom: 30,
+    paddingBottom: spacing.xxl,
   },
 });
 
 export const drawerStyles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 40,
+    paddingTop: spacing.xxl,
     backgroundColor: palette.background,
   },
   item: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 15,
-    gap: 10,
+    padding: spacing.lg,
+    gap: spacing.sm,
   },
   text: {
     fontSize: typography.body.fontSize,
     fontWeight: typography.bodyMedium.fontWeight,
   },
   loader: {
-    marginTop: 20,
+    marginTop: spacing.xl,
     alignItems: "center",
   },
   headerContainer: {
@@ -87,13 +92,13 @@ export const drawerStyles = StyleSheet.create({
     resizeMode: "contain",
   },
   menuButton: {
-    marginLeft: 15,
+    marginLeft: spacing.lg,
     backgroundColor: palette.surfaceMuted,
-    padding: 8,
-    borderRadius: 10,
+    padding: spacing.sm,
+    borderRadius: radius.md,
   },
   headerRightButton: {
-    marginRight: 15,
+    marginRight: spacing.lg,
     position: "relative",
   },
   notificationBadgeContainer: {
@@ -103,11 +108,11 @@ export const drawerStyles = StyleSheet.create({
   },
   notificationBadge: {
     position: "absolute",
-    top: -6,
-    right: -8,
-    minWidth: 18,
-    height: 18,
-    borderRadius: 9,
+    top: -spacing.xs,
+    right: -spacing.sm,
+    minWidth: spacing.lg,
+    height: spacing.lg,
+    borderRadius: radius.round,
     backgroundColor: palette.danger,
     justifyContent: "center",
     alignItems: "center",

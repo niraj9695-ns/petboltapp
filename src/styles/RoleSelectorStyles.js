@@ -1,13 +1,14 @@
 import { StyleSheet } from "react-native";
 import { typography } from "./themeStyles";
+import { typography as baseTypography } from "./theme/typography";
 
 export default StyleSheet.create({
   container: {
     marginBottom: 20,
   },
   title: {
-    fontSize: typography.body.fontSize,
-    fontWeight: typography.h3.fontWeight,
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
     color: "#333",
     marginBottom: 12,
   },
@@ -24,13 +25,13 @@ export default StyleSheet.create({
     borderColor: "#6b21a8",
   },
   cardTitle: {
-    fontSize: typography.body.fontSize,
-    fontWeight: typography.h3.fontWeight,
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
     color: "#222",
     marginBottom: 6,
   },
   cardDescription: {
-    fontSize: typography.small.fontSize,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
     color: "#666",
     lineHeight: 20,
   },

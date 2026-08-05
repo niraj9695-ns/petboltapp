@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { typography } from "../styles/themeStyles";
+import { typography as baseTypography } from "../styles/theme/typography";
 
 export default function BackButton({ onPress, label = "← Back", fallbackRoute, fallbackParams }) {
   const navigation = useNavigation();
@@ -64,8 +65,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   backButtonText: {
-    fontSize: typography.small.fontSize,
-    fontWeight: typography.smallMedium.fontWeight,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontWeight: (typography && typography.smallMedium && typography.smallMedium.fontWeight) || baseTypography.weights.regular || "400",
     color: "#6b21a8",
   },
 });

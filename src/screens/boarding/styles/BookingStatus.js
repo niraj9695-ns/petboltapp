@@ -1,11 +1,16 @@
-import { StyleSheet, Dimensions } from "react-native";
-
-const { width } = Dimensions.get("window");
+import { StyleSheet } from "react-native";
+import { colors } from "../../../styles/theme/colors";
+import { spacing } from "../../../styles/theme/spacing";
+import { radius } from "../../../styles/theme/radius";
+import { responsive } from "../../../styles/theme/responsive";
+import { typography } from "../../../styles/themeStyles";
+import { typography as baseTypography } from "../../../styles/theme/typography";
+import { shadows } from "../../../styles/theme/shadows";
 
 export default StyleSheet.create({
   loaderScreen: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "#faf5ff",
+    backgroundColor: colors.background,
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: 0,
@@ -14,50 +19,43 @@ export default StyleSheet.create({
 
   bookingStatusContainer: {
     flex: 1,
-    backgroundColor: "#faf5ff",
+    backgroundColor: colors.background,
   },
 
   headerSection: {
-    paddingHorizontal: 15,
-    paddingVertical: 20,
-    backgroundColor: "#ffffff",
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.xl,
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: "#e2e8f0",
+    borderBottomColor: colors.border,
   },
 
   bookingStatusTitle: {
-    fontSize: 28,
+    fontSize: (typography && typography.heroTitle && typography.heroTitle.fontSize) || baseTypography.heroTitle || 28,
     fontWeight: "800",
-    color: "#0f172a",
-    marginBottom: 2,
+    color: colors.text,
+    marginBottom: spacing.xs,
   },
 
   bookingStatusSubtitle: {
-    fontSize: 15,
-    color: "#64748b",
+    fontSize: (typography && typography.subtitle && typography.subtitle.fontSize) || baseTypography.subtitle || 16,
+    color: colors.textMuted,
     fontWeight: "500",
   },
 
   bookingListContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    paddingBottom: 24,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
+    paddingBottom: spacing.xxxl,
   },
 
   bookingStatusCard: {
-    borderRadius: 24,
-    padding: 20,
-    marginRight: 16,
+    borderRadius: radius.xxl,
+    padding: spacing.lg,
+    marginRight: spacing.lg,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
-    shadowColor: "#000",
-    shadowOpacity: 0.06,
-    shadowRadius: 12,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    elevation: 4,
+    borderColor: colors.border,
+    ...shadows.md,
     overflow: "hidden",
   },
 
@@ -77,28 +75,25 @@ export default StyleSheet.create({
   bookingStatusIconBox: {
     width: 64,
     height: 64,
-    borderRadius: 18,
+    borderRadius: radius.lg,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 14,
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
+    marginRight: spacing.md,
+    ...shadows.sm,
   },
 
   bookingStatusPetImage: {
     width: 64,
     height: 64,
-    borderRadius: 18,
-    marginRight: 14,
-    backgroundColor: "#f3f4f6",
+    borderRadius: radius.lg,
+    marginRight: spacing.md,
+    backgroundColor: colors.surfaceMuted,
     borderWidth: 2,
-    borderColor: "#f1f5f9",
+    borderColor: colors.surfaceAlt,
   },
 
   bookingStatusPetEmoji: {
-    fontSize: 32,
+    fontSize: (typography && typography.heroTitle && typography.heroTitle.fontSize) || baseTypography.heroTitle || 28,
   },
 
   petNameSection: {
@@ -107,14 +102,14 @@ export default StyleSheet.create({
 
   bookingStatusPetName: {
     fontWeight: "800",
-    fontSize: 18,
-    color: "#0f172a",
-    marginBottom: 4,
+    fontSize: (typography && typography.cardTitle && typography.cardTitle.fontSize) || baseTypography.cardTitle || 18,
+    color: colors.text,
+    marginBottom: spacing.xs,
   },
 
   petBreedText: {
-    fontSize: 13,
-    color: "#94a3b8",
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    color: colors.textMuted,
     fontWeight: "500",
   },
 
@@ -134,18 +129,18 @@ export default StyleSheet.create({
 
   cardDivider: {
     height: 1,
-    backgroundColor: "#e2e8f0",
-    marginBottom: 16,
+    backgroundColor: colors.border,
+    marginBottom: spacing.lg,
   },
 
   infoSection: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    backgroundColor: "#f8fafc",
-    borderRadius: 14,
-    marginBottom: 16,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: radius.lg,
+    marginBottom: spacing.lg,
   },
 
   infoContent: {
@@ -153,15 +148,15 @@ export default StyleSheet.create({
   },
 
   infoLabel: {
-    fontSize: 12,
-    color: "#64748b",
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    color: colors.textMuted,
     fontWeight: "600",
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
 
   infoValue: {
-    fontSize: 15,
-    color: "#0f172a",
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    color: colors.text,
     fontWeight: "700",
   },
 
@@ -173,19 +168,19 @@ export default StyleSheet.create({
 
   dateBox: {
     flex: 1,
-    backgroundColor: "#ffffff",
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    borderRadius: 14,
+    backgroundColor: colors.surface,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    borderRadius: radius.lg,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
   },
 
   dateLabel: {
-    fontSize: 11,
-    color: "#64748b",
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    color: colors.textMuted,
     fontWeight: "600",
-    marginBottom: 6,
+    marginBottom: spacing.xs,
   },
 
   dateContent: {
@@ -194,8 +189,8 @@ export default StyleSheet.create({
   },
 
   dateValue: {
-    fontSize: width < 768 ? 12 : 13,
-    color: "#0f172a",
+    fontSize: responsive.isTablet ? ((typography && typography.small && typography.small.fontSize) || baseTypography.small || 12) : ((typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10),
+    color: colors.text,
     fontWeight: "700",
   },
 
@@ -207,52 +202,52 @@ export default StyleSheet.create({
 
   detailsGrid: {
     flexDirection: "row",
-    backgroundColor: "#f8fafc",
-    borderRadius: 14,
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: radius.lg,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     overflow: "hidden",
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
 
   detailBox: {
     flex: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
     justifyContent: "center",
   },
 
   mobileDetailsCard: {
-    backgroundColor: "#f8fafc",
-    borderRadius: 14,
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: radius.lg,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
-    marginBottom: 16,
-    padding: 14,
+    borderColor: colors.border,
+    marginBottom: spacing.lg,
+    padding: spacing.md,
   },
 
   mobileDetailRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 8,
+    paddingVertical: spacing.xs,
   },
 
   mobileDetailLabel: {
-    fontSize: 13,
-    color: "#64748b",
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    color: colors.textMuted,
     fontWeight: "600",
   },
 
   mobileDetailValue: {
-    fontSize: 15,
-    color: "#0f172a",
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    color: colors.text,
     fontWeight: "700",
   },
 
   gridDivider: {
     width: 1,
-    backgroundColor: "#e2e8f0",
+    backgroundColor: colors.border,
   },
 
   detailLabel: {

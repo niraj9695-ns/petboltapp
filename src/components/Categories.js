@@ -12,6 +12,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import styles from "../styles/CategoriesStyles";
 
 export default function Categories() {
+  const commonGradient = ["#c084fc", "#9333ea"];
+  const commonBgColor = "#faf5ff";
   const { width } = useWindowDimensions();
   const cardWidth = width >= 1200 ? 320 : width >= 768 ? 280 : width * 0.72;
 
@@ -31,18 +33,13 @@ export default function Categories() {
       icon: "home-outline",
       name: "Boarding",
       description: "Safe & cozy stays",
-      gradient: ["#fb923c", "#ea580c"],
-      bgColor: "#fff7ed",
       emoji: "🏠",
       comingSoon: false,
-      screen: "BoardingCenters",
     },
     {
       icon: "heart-outline",
       name: "Adoption",
       description: "Find your best friend",
-      gradient: ["#f472b6", "#db2777"],
-      bgColor: "#fdf2f8",
       emoji: "🐕",
       comingSoon: true,
     },
@@ -50,8 +47,6 @@ export default function Categories() {
       icon: "shopping",
       name: "Buy & Sell",
       description: "Quality pet supplies",
-      gradient: ["#c084fc", "#9333ea"],
-      bgColor: "#faf5ff",
       emoji: "🛍️",
       comingSoon: true,
     },
@@ -59,8 +54,6 @@ export default function Categories() {
       icon: "account-group-outline",
       name: "Mating",
       description: "Find the perfect match",
-      gradient: ["#60a5fa", "#2563eb"],
-      bgColor: "#eff6ff",
       emoji: "💝",
       comingSoon: true,
     },
@@ -68,8 +61,6 @@ export default function Categories() {
       icon: "content-cut",
       name: "Grooming",
       description: "Spa & styling",
-      gradient: ["#2dd4bf", "#0d9488"],
-      bgColor: "#f0fdfa",
       emoji: "✂️",
       comingSoon: true,
     },
@@ -77,8 +68,6 @@ export default function Categories() {
       icon: "stethoscope",
       name: "Vet Doctors",
       description: "Expert healthcare",
-      gradient: ["#818cf8", "#4f46e5"],
-      bgColor: "#eef2ff",
       emoji: "👨‍⚕️",
       comingSoon: true,
     },
@@ -107,14 +96,14 @@ export default function Categories() {
             style={[
               styles.card,
               {
-                backgroundColor: item.bgColor,
+                backgroundColor: commonBgColor,
                 width: cardWidth,
                 opacity: item.comingSoon ? 0.85 : 1,
               },
             ]}
           >
             <View style={styles.iconWrapper}>
-              <LinearGradient colors={item.gradient} style={styles.iconBox}>
+              <LinearGradient colors={commonGradient} style={styles.iconBox}>
                 <MaterialCommunityIcons
                   name={item.icon}
                   size={36}
@@ -129,7 +118,7 @@ export default function Categories() {
             <Text style={styles.desc}>{item.description}</Text>
 
             <LinearGradient
-              colors={item.comingSoon ? ["#9ca3af", "#6b7280"] : item.gradient}
+              colors={item.comingSoon ? ["#9ca3af", "#6b7280"] : commonGradient}
               style={styles.button}
             >
               <Text style={styles.buttonText}>

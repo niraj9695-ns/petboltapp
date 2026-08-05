@@ -1,35 +1,27 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet } from "react-native";
+import { responsive } from "../../../styles/theme/responsive";
+import { spacing } from "../../../styles/theme/spacing";
+import { radius } from "../../../styles/theme/radius";
+import { colors } from "../../../styles/theme/colors";
+import { typography } from "../../../styles/themeStyles";
+import { typography as baseTypography } from "../../../styles/theme/typography";
+import { shadows } from "../../../styles/theme/shadows";
 
-const { width } = Dimensions.get("window");
-
-const isTablet = width >= 768;
-
-const scale = (size) => {
-  if (isTablet) return size * 1.1;
-  if (width < 360) return size * 0.9;
-  return size;
-};
+const IMAGE_HEIGHT = responsive.isTablet ? 180 : 160;
 
 export default StyleSheet.create({
   centerCardWrapper: {
     flex: 1,
-    borderRadius: scale(20),
+    borderRadius: radius.card,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
-    backgroundColor: "#ffffff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 4,
+    ...shadows.md,
   },
 
   cardContainer: {
-    marginBottom: scale(16),
+    marginBottom: spacing.lg,
     alignSelf: "center",
   },
 
@@ -37,8 +29,8 @@ export default StyleSheet.create({
   centerImageContainer: {
     position: "relative",
     width: "100%",
-    height: isTablet ? 180 : 160,
-    backgroundColor: "#f1f5f9",
+    height: IMAGE_HEIGHT,
+    backgroundColor: colors.surfaceMuted,
     overflow: "hidden",
   },
 
@@ -57,34 +49,34 @@ export default StyleSheet.create({
 
   centerImagePlaceholder: {
     width: "100%",
-    height: isTablet ? 180 : 160,
+    height: IMAGE_HEIGHT,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f1f5f9",
+    backgroundColor: colors.surfaceMuted,
   },
 
   typeaBadge: {
     position: "absolute",
-    top: scale(12),
-    right: scale(12),
+    top: spacing.md,
+    right: spacing.md,
     backgroundColor: "rgba(107, 33, 168, 0.9)",
-    paddingHorizontal: scale(10),
-    paddingVertical: scale(6),
-    borderRadius: scale(20),
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.round,
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.3)",
   },
 
   typeBadgeText: {
-    color: "#ffffff",
-    fontSize: scale(10),
+    color: colors.surface,
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
     fontWeight: "700",
     letterSpacing: 0.5,
   },
 
   centerCardContent: {
     flex: 1,
-    padding: scale(16),
+    padding: spacing.cardPadding || spacing.lg,
     justifyContent: "space-between",
   },
 
@@ -93,57 +85,57 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: scale(8),
+    marginBottom: spacing.titleToSubtitle,
   },
 
   titleSection: {
     flex: 1,
-    marginRight: scale(8),
+    marginRight: spacing.sm,
   },
 
   centerCardTitle: {
-    fontSize: scale(16),
+    fontSize: (typography && typography.cardTitle && typography.cardTitle.fontSize) || baseTypography.cardTitle || 18,
     fontWeight: "800",
-    color: "#0f172a",
-    lineHeight: scale(22),
-    marginBottom: scale(6),
+    color: colors.text,
+    lineHeight: 22,
+    marginBottom: spacing.xs,
   },
 
   locationBadge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f3e8ff",
-    paddingHorizontal: scale(8),
-    paddingVertical: scale(4),
-    borderRadius: scale(6),
+    backgroundColor: colors.surfaceMuted,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.sm,
     alignSelf: "flex-start",
   },
 
   locationText: {
-    fontSize: scale(11),
-    color: "#6b21a8",
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    color: colors.primary,
     fontWeight: "600",
-    marginLeft: scale(4),
+    marginLeft: spacing.xs,
   },
 
   centerCardPrice: {
-    fontSize: scale(15),
+    fontSize: (typography && typography.cardTitle && typography.cardTitle.fontSize) || baseTypography.cardTitle || 18,
     fontWeight: "800",
-    color: "#6b21a8",
-    backgroundColor: "#f3e8ff",
-    paddingHorizontal: scale(10),
-    paddingVertical: scale(6),
-    borderRadius: scale(10),
+    color: colors.primary,
+    backgroundColor: colors.surfaceMuted,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.sm,
     textAlign: "center",
-    minWidth: scale(70),
+    minWidth: 70,
   },
 
   /* DESCRIPTION */
   centerCardDescription: {
-    fontSize: scale(12),
-    color: "#64748b",
-    lineHeight: scale(18),
-    marginBottom: scale(10),
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    color: colors.textMuted,
+    lineHeight: 18,
+    marginBottom: spacing.md,
     fontWeight: "500",
   },
 
@@ -151,14 +143,14 @@ export default StyleSheet.create({
   amenitiesContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: scale(10),
+    marginBottom: spacing.md,
   },
 
   amenitiesPreview: {
-    fontSize: scale(11),
-    color: "#6b21a8",
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    color: colors.primary,
     fontWeight: "600",
-    marginLeft: scale(6),
+    marginLeft: spacing.xs,
     flex: 1,
   },
 
@@ -166,50 +158,43 @@ export default StyleSheet.create({
   infoBadgesRow: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginBottom: scale(12),
-    gap: scale(6),
+    marginBottom: spacing.md,
+    gap: spacing.xs,
   },
 
   infoBadge: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#f0f4ff",
-    paddingHorizontal: scale(8),
-    paddingVertical: scale(4),
-    borderRadius: scale(6),
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.sm,
     borderWidth: 1,
     borderColor: "#e0e7ff",
   },
 
   infoBadgeText: {
-    fontSize: scale(10),
-    color: "#4f46e5",
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    color: colors.secondary,
     fontWeight: "600",
-    marginLeft: scale(4),
+    marginLeft: spacing.xs,
   },
 
   /* BUTTON */
   centerCardButton: {
-    height: scale(44),
-    borderRadius: scale(12),
-    backgroundColor: "#6b21a8",
+    height: spacing.buttonHeight - 4,
+    borderRadius: radius.lg,
+    backgroundColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    shadowColor: "#6b21a8",
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    elevation: 3,
+    ...shadows.sm,
   },
 
   centerCardButtonText: {
-    fontSize: scale(13),
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
     fontWeight: "700",
-    color: "#ffffff",
+    color: colors.surface,
     letterSpacing: 0.3,
   },
 });

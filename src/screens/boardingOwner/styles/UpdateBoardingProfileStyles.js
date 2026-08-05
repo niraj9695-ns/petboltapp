@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
+import { typography as baseTypography } from "../../../styles/theme/typography";
 
 const COLORS = boardingOwnerTheme;
 
@@ -16,15 +17,15 @@ export default StyleSheet.create({
   },
 
   heading: {
-    fontSize: typography.h4.fontSize,
-    fontWeight: typography.h4.fontWeight,
+    fontSize: (typography && typography.h4 && typography.h4.fontSize) || baseTypography.sectionTitle || 22,
+    fontWeight: (typography && typography.h4 && typography.h4.fontWeight) || baseTypography.weights.bold || "700",
     color: COLORS.primaryDark,
     marginTop: 16,
     marginHorizontal: 16,
   },
 
   subHeading: {
-    fontSize: typography.caption.fontSize,
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
     color: COLORS.textMuted,
     marginHorizontal: 16,
     marginBottom: 12,
@@ -54,8 +55,8 @@ export default StyleSheet.create({
   },
 
   sectionTitle: {
-    fontSize: typography.body.fontSize,
-    fontWeight: typography.title.fontWeight,
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
     color: COLORS.primaryDark,
   },
 
@@ -77,8 +78,8 @@ export default StyleSheet.create({
   label: {
     color: COLORS.textMuted,
     marginBottom: 6,
-    fontSize: typography.caption.fontSize,
-    fontWeight: typography.bodyMedium.fontWeight,
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontWeight: (typography && typography.bodyMedium && typography.bodyMedium.fontWeight) || baseTypography.weights.medium || "500",
   },
 
   input: {
@@ -88,7 +89,7 @@ export default StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     backgroundColor: COLORS.surfaceAlt,
-    fontSize: typography.small.fontSize,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
     color: COLORS.text,
   },
 
@@ -109,7 +110,7 @@ export default StyleSheet.create({
 
   saveButtonText: {
     color: COLORS.surface,
-    fontWeight: typography.title.fontWeight,
-    fontSize: typography.body.fontSize,
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
   },
 });

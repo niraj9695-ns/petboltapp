@@ -1,240 +1,235 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../../../styles/theme/colors";
+import { spacing } from "../../../styles/theme/spacing";
+import { radius } from "../../../styles/theme/radius";
+import { typography } from "../../../styles/themeStyles";
+import { typography as baseTypography } from "../../../styles/theme/typography";
+import { shadows } from "../../../styles/theme/shadows";
 
 export default StyleSheet.create({
   bookingScreenContainer: {
     flex: 1,
-    backgroundColor: "#faf5ff",
+    backgroundColor: colors.background,
   },
 
   bookingScreenContent: {
-    padding: 16,
-    paddingBottom: 30,
+    padding: spacing.lg,
+    paddingBottom: spacing.xxxl,
   },
 
   bookingScreenCard: {
-    backgroundColor: "#fff",
-    padding: 16,
-    borderRadius: 16,
-    marginBottom: 15,
+    backgroundColor: colors.surface,
+    padding: spacing.lg,
+    borderRadius: radius.card,
+    marginBottom: spacing.lg,
     width: "100%",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 3,
+    ...shadows.sm,
   },
 
   bookingScreenCenterName: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#111827",
+    fontSize: (typography && typography.h1 && typography.h1.fontSize) || 34,
+    fontWeight: "700",
+    color: colors.text,
   },
 
   bookingScreenPrice: {
-    marginTop: 5,
-    color: "#6b21a8",
+    marginTop: spacing.xs,
+    color: colors.primary,
     fontWeight: "700",
-    fontSize: 16,
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
   },
 
   bookingScreenHeading: {
-    fontSize: 18,
+    fontSize: (typography && typography.cardTitle && typography.cardTitle.fontSize) || 18,
     fontWeight: "700",
-    marginBottom: 12,
-    color: "#111827",
+    marginBottom: spacing.md,
+    color: colors.text,
   },
 
   bookingScreenInputWrapper: {
     borderWidth: 1,
-    borderColor: "#e5e7eb",
-    borderRadius: 12,
+    borderColor: colors.border,
+    borderRadius: radius.input,
     overflow: "hidden",
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.surface,
   },
 
   bookingScreenPicker: {
     width: "100%",
-    color: "#111827",
+    color: colors.text,
   },
 
   bookingScreenDateRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
 
   bookingScreenDatePill: {
     flex: 1,
-    borderRadius: 16,
-    padding: 14,
-    backgroundColor: "#f3f4f6",
+    borderRadius: radius.input,
+    padding: spacing.md,
+    backgroundColor: colors.surfaceMuted,
     borderWidth: 1,
-    borderColor: "#e5e7eb",
-    marginRight: 10,
+    borderColor: colors.border,
+    marginRight: spacing.sm,
   },
 
   bookingScreenActivePill: {
-    backgroundColor: "#6b21a8",
-    borderColor: "#6b21a8",
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
 
   bookingScreenDateLabel: {
-    fontSize: 12,
-    color: "#6b7280",
-    marginBottom: 6,
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    color: colors.textMuted,
+    marginBottom: spacing.xs,
   },
 
   bookingScreenDateValue: {
-    fontSize: 14,
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
     fontWeight: "700",
-    color: "#111827",
+    color: colors.text,
   },
 
   bookingScreenActivePillText: {
-    color: "#ffffff",
+    color: colors.surface,
   },
 
   calendarWrapper: {
-    marginTop: 12,
-    borderRadius: 16,
+    marginTop: spacing.md,
+    borderRadius: radius.card,
     overflow: "hidden",
   },
 
   bookingScreenLegendRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 12,
+    marginTop: spacing.md,
   },
 
   bookingScreenMarkerBadge: {
     width: 14,
     height: 14,
     borderRadius: 4,
-    marginRight: 8,
+    marginRight: spacing.sm,
   },
 
   bookingScreenMarkerText: {
-    color: "#4b5563",
-    fontSize: 13,
+    color: colors.textMuted,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
   },
 
   warningText: {
-    marginTop: 10,
-    color: "#ef4444",
+    marginTop: spacing.sm,
+    color: colors.danger,
     fontWeight: "600",
   },
 
   statusNote: {
-    marginTop: 10,
-    color: "#4b5563",
+    marginTop: spacing.sm,
+    color: colors.textMuted,
   },
 
   smallLoader: {
-    marginTop: 10,
+    marginTop: spacing.sm,
   },
 
   bookingScreenOrangeBtn: {
-    backgroundColor: "#6b21a8",
-    padding: 16,
-    borderRadius: 12,
+    backgroundColor: colors.primary,
+    padding: spacing.lg,
+    borderRadius: radius.button,
     alignItems: "center",
   },
 
   bookingScreenBookBtn: {
-    backgroundColor: "#6b21a8",
-    padding: 18,
-    borderRadius: 16,
+    backgroundColor: colors.primary,
+    padding: spacing.xl,
+    borderRadius: radius.card,
     alignItems: "center",
-    marginTop: 10,
-    marginBottom: 30,
+    marginTop: spacing.sm,
+    marginBottom: spacing.xxxl,
   },
 
   bookingScreenBtnText: {
-    color: "#ffffff",
+    color: colors.surface,
     fontWeight: "700",
-    fontSize: 15,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
   },
 
   availableInfoContainer: {
-    marginTop: 15,
+    marginTop: spacing.lg,
   },
 
   availabilityText: {
-    marginTop: 10,
-    fontWeight: "bold",
-    fontSize: 16,
+    marginTop: spacing.sm,
+    fontWeight: "700",
+    fontSize: baseTypography.subtitle || 16,
   },
 
   bookingScreenInput: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 12,
-    padding: 12,
+    borderColor: colors.border,
+    borderRadius: radius.input,
+    padding: spacing.md,
     minHeight: 100,
     textAlignVertical: "top",
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.surface,
   },
 
   totalCostText: {
-    marginTop: 8,
-    fontWeight: "bold",
-    fontSize: 18,
-    color: "#6b21a8",
+    marginTop: spacing.xs,
+    fontWeight: "700",
+    fontSize: baseTypography.cardTitle || 18,
+    color: colors.primary,
   },
   /* Pricing summary styles */
   pricingCard: {
-    backgroundColor: "#ffffff",
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 4,
+    backgroundColor: colors.surface,
+    borderRadius: radius.card,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+    ...shadows.md,
   },
 
   pricingRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
 
   pricingLabel: {
-    color: "#6b7280",
-    fontSize: 14,
+    color: colors.textMuted,
+    fontSize: baseTypography.body || 14,
   },
 
   pricingValue: {
-    color: "#0f172a",
+    color: colors.text,
     fontWeight: "800",
-    fontSize: 15,
+    fontSize: baseTypography.small || 12,
   },
 
   pricingTotal: {
-    fontSize: 20,
+    fontSize: baseTypography.sectionTitle || 20,
     fontWeight: "900",
-    color: "#111827",
+    color: colors.text,
   },
 
   discountBadge: {
     backgroundColor: "#fffbeb",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 12,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.sm,
     borderWidth: 1,
     borderColor: "#f59e0b",
   },
 
   availabilityPill: {
     backgroundColor: "#ecfccb",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 999,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.round,
     borderWidth: 1,
     borderColor: "#84cc16",
   },

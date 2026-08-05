@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
+import { typography as baseTypography } from "../../../styles/theme/typography";
 
 const COLORS = {
   ...boardingOwnerTheme,
@@ -13,12 +14,15 @@ export default StyleSheet.create({
   },
   header: {
     paddingHorizontal: 18,
-    paddingTop: 18,
+    paddingTop: 16,
     paddingBottom: 8,
+    backgroundColor: "#fffaf7",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e9d5ff",
   },
   headerTitle: {
-    fontSize: typography.h3.fontSize,
-    fontWeight: typography.h3.fontWeight,
+    fontSize: 28,
+    fontWeight: "800",
     color: COLORS.primary,
   },
   headerSubtitle: {
@@ -106,7 +110,7 @@ export default StyleSheet.create({
     textAlign: "center",
     marginTop: 50,
     color: COLORS.textMuted,
-    fontSize: typography.body.fontSize,
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
   },
   paginationContainer: {
     flexDirection: "row",

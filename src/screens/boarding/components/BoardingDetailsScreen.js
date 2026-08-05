@@ -104,7 +104,12 @@ export default function BoardingDetailsScreen({ route, navigation }) {
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
-        <PremiumLoader size={56} color="#6b21a8" label="Loading details" fullScreen />
+        <PremiumLoader
+          size={56}
+          color="#6b21a8"
+          label="Loading details"
+          fullScreen
+        />
       </View>
     );
   }
@@ -254,54 +259,6 @@ export default function BoardingDetailsScreen({ route, navigation }) {
             </View>
           </View>
 
-          {/* CAPACITY */}
-
-          <View style={styles.sectionCard}>
-            <Text style={styles.sectionTitle}>Capacity Status</Text>
-
-            {capacityLoading ? (
-              <PremiumLoader size={24} color="#6b21a8" showLabel={false} />
-            ) : (
-              <>
-                <View style={styles.infoRow}>
-                  <Text style={styles.label}>Total Capacity</Text>
-                  <Text style={styles.infoText}>
-                    {capacity?.data?.total_capacity || 0}
-                  </Text>
-                </View>
-
-                <View style={styles.divider} />
-
-                <View style={styles.infoRow}>
-                  <Text style={styles.label}>Available</Text>
-                  <Text style={styles.infoText}>
-                    {capacity?.data?.available_capacity || 0}
-                  </Text>
-                </View>
-
-                <View style={styles.divider} />
-
-                <View style={styles.infoRow}>
-                  <Text style={styles.label}>Booked</Text>
-                  <Text style={styles.infoText}>
-                    {capacity?.data?.booked_count || 0}
-                  </Text>
-                </View>
-
-                <Text
-                  style={[
-                    styles.capacityStatusText,
-                    { color: capacity?.data?.is_available ? "green" : "red" },
-                  ]}
-                >
-                  {capacity?.data?.is_available
-                    ? "🟢 Slots Available"
-                    : "🔴 Fully Booked"}
-                </Text>
-              </>
-            )}
-          </View>
-
           {/* AMENITIES */}
 
           {center.amenities && center.amenities.length > 0 && (
@@ -337,26 +294,22 @@ export default function BoardingDetailsScreen({ route, navigation }) {
 
                 {center.size_weight_restrictions &&
                   center.size_weight_restrictions.length > 0 && (
-                    <>
-                      <Text style={[styles.sectionSubtitle, { marginTop: 14 }]}>
-                        Size/Weight Restrictions
-                      </Text>
+                    <View style={[styles.infoRow, { marginTop: 14 }]}> 
+                      <Text style={styles.label}>Size/Weight Restrictions</Text>
                       <Text style={styles.infoText}>
                         {center.size_weight_restrictions.join(", ")} kg
                       </Text>
-                    </>
+                    </View>
                   )}
 
                 {center.age_preferences &&
                   center.age_preferences.length > 0 && (
-                    <>
-                      <Text style={[styles.sectionSubtitle, { marginTop: 14 }]}>
-                        Age Preference
-                      </Text>
+                    <View style={[styles.infoRow, { marginTop: 14 }]}> 
+                      <Text style={styles.label}>Age Preference</Text>
                       <Text style={styles.infoText}>
                         {center.age_preferences.join(", ")} years
                       </Text>
-                    </>
+                    </View>
                   )}
               </View>
             )}

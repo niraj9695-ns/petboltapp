@@ -1,5 +1,11 @@
 import { StyleSheet } from "react-native";
+import { colors } from "./theme/colors";
+import { spacing } from "./theme/spacing";
+import { radius } from "./theme/radius";
+import { shadows } from "./theme/shadows";
+import { responsive } from "./theme/responsive";
 import { typography } from "./themeStyles";
+import { typography as baseTypography } from "./theme/typography";
 
 export default StyleSheet.create({
   container: {
@@ -7,86 +13,86 @@ export default StyleSheet.create({
   },
 
   scroll: {
-    padding: 18,
-    paddingBottom: 32,
+    padding: spacing.lg,
+    paddingBottom: spacing.xxxl,
   },
 
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
 
   headerActions: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: spacing.sm,
   },
 
   heading: {
-    fontSize: typography.h2.fontSize,
-    fontWeight: typography.h2.fontWeight,
+    fontSize: (typography && typography.h2 && typography.h2.fontSize) || baseTypography.h2 || 24,
+    fontWeight: (typography && typography.h2 && typography.h2.fontWeight) || baseTypography.weights.bold || "700",
     color: "#111827",
   },
 
   subHeading: {
-    fontSize: typography.small.fontSize,
-    color: "#6b7280",
-    marginTop: 4,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    color: colors.textMuted,
+    marginTop: spacing.xs,
   },
 
   markAllBtn: {
-    backgroundColor: "#6b21a8",
-    borderRadius: 14,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    backgroundColor: colors.primary,
+    borderRadius: radius.lg,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
   },
 
   deleteAllBtn: {
-    backgroundColor: "#ef4444",
-    borderRadius: 14,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    backgroundColor: colors.danger,
+    borderRadius: radius.lg,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
   },
 
   markAllText: {
     color: "#ffffff",
-    fontWeight: typography.h2.fontWeight,
-    fontSize: typography.small.fontSize,
+    fontWeight: (typography && typography.h2 && typography.h2.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
   },
 
   deleteAllText: {
     color: "#ffffff",
-    fontWeight: typography.h2.fontWeight,
-    fontSize: typography.small.fontSize,
+    fontWeight: (typography && typography.h2 && typography.h2.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
   },
 
   infoCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#eef2ff",
-    borderRadius: 18,
-    padding: 14,
-    marginBottom: 16,
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.xl,
+    padding: spacing.lg,
+    marginBottom: spacing.lg,
   },
 
   infoText: {
-    marginLeft: 10,
-    color: "#4338ca",
-    fontSize: typography.small.fontSize,
+    marginLeft: spacing.sm,
+    color: colors.primary,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
     lineHeight: 20,
     flex: 1,
   },
 
   card: {
-    gap: 12,
+    gap: spacing.md,
   },
 
   notificationItem: {
-    borderRadius: 18,
-    padding: 18,
-    backgroundColor: "#ffffff",
+    borderRadius: radius.xl,
+    padding: spacing.lg,
+    backgroundColor: colors.surface,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
@@ -112,20 +118,20 @@ export default StyleSheet.create({
   iconContainer: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: radius.round,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 12,
+    marginRight: spacing.md,
   },
 
   iconDot: {
     width: 44,
     height: 44,
-    borderRadius: 14,
-    backgroundColor: "#6366f1",
+    borderRadius: radius.lg,
+    backgroundColor: colors.secondary,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 14,
+    marginRight: spacing.lg,
   },
 
   notificationContent: {
@@ -133,57 +139,57 @@ export default StyleSheet.create({
   },
 
   title: {
-    fontSize: typography.body.fontSize,
-    fontWeight: typography.h3.fontWeight,
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
     color: "#111827",
   },
 
   date: {
-    color: "#6b7280",
-    fontSize: typography.small.fontSize,
-    marginTop: 6,
+    color: colors.textMuted,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    marginTop: spacing.xs,
   },
 
   expandedBodyWrap: {
-    marginTop: 12,
-    paddingTop: 12,
+    marginTop: spacing.md,
+    paddingTop: spacing.md,
     borderTopWidth: 1,
     borderTopColor: "#e5e7eb",
   },
 
   bodyText: {
-    color: "#111827",
-    fontSize: typography.small.fontSize,
+    color: colors.text,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
     lineHeight: 20,
   },
 
   loadMoreBtn: {
     alignSelf: "center",
     backgroundColor: "#ede9fe",
-    borderRadius: 999,
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-    marginTop: 4,
+    borderRadius: radius.round,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    marginTop: spacing.xs,
   },
 
   loadMoreText: {
     color: "#6b21a8",
-    fontWeight: typography.h3.fontWeight,
-    fontSize: typography.small.fontSize,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
   },
 
   unreadDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 999,
-    backgroundColor: "#6b21a8",
-    marginLeft: 10,
+    width: spacing.sm,
+    height: spacing.sm,
+    borderRadius: radius.round,
+    backgroundColor: colors.primary,
+    marginLeft: spacing.sm,
   },
 
   actionHint: {
-    color: "#6b7280",
-    fontSize: typography.caption.fontSize,
-    marginTop: 4,
+    color: colors.textMuted,
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    marginTop: spacing.xs,
   },
 
   swipeAction: {
@@ -191,34 +197,34 @@ export default StyleSheet.create({
     backgroundColor: "#dc2626",
     justifyContent: "center",
     alignItems: "center",
-    borderTopRightRadius: 18,
-    borderBottomRightRadius: 18,
+    borderTopRightRadius: radius.xl,
+    borderBottomRightRadius: radius.xl,
   },
 
   swipeActionText: {
-    color: "#ffffff",
-    fontSize: typography.caption.fontSize,
-    fontWeight: typography.h3.fontWeight,
-    marginTop: 6,
+    color: colors.surface,
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    marginTop: spacing.xs,
   },
 
   emptyBox: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 60,
+    paddingVertical: spacing.xxxl,
   },
 
   emptyText: {
-    marginTop: 14,
-    color: "#111827",
-    fontSize: typography.body.fontSize,
-    fontWeight: typography.title.fontWeight,
+    marginTop: spacing.lg,
+    color: colors.text,
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
   },
 
   emptySubText: {
-    marginTop: 10,
-    color: "#6b7280",
-    fontSize: typography.small.fontSize,
+    marginTop: spacing.sm,
+    color: colors.textMuted,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
     textAlign: "center",
     maxWidth: 260,
     lineHeight: 20,
@@ -226,8 +232,8 @@ export default StyleSheet.create({
   iconButtonPurple: {
     width: 42,
     height: 42,
-    borderRadius: 21,
-    backgroundColor: "#6b21a8",
+    borderRadius: radius.round,
+    backgroundColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -235,8 +241,8 @@ export default StyleSheet.create({
   iconButtonRed: {
     width: 42,
     height: 42,
-    borderRadius: 21,
-    backgroundColor: "#ef4444",
+    borderRadius: radius.round,
+    backgroundColor: colors.danger,
     justifyContent: "center",
     alignItems: "center",
   },

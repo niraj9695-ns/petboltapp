@@ -1,10 +1,11 @@
 import { StyleSheet } from "react-native";
 import { typography } from "./themeStyles";
+import { typography as baseTypography } from "./theme/typography";
 
 export default StyleSheet.create({
   heading: {
-    fontSize: typography.h2.fontSize,
-    fontWeight: typography.h2.fontWeight,
+    fontSize: (typography && typography.h2 && typography.h2.fontSize) || baseTypography.h2 || 24,
+    fontWeight: (typography && typography.h2 && typography.h2.fontWeight) || baseTypography.weights.bold || "700",
     marginBottom: 10,
   },
   subText: {
@@ -30,8 +31,8 @@ export default StyleSheet.create({
 
     textAlign: "center",
 
-    fontSize: typography.h3.fontSize,
-    fontWeight: typography.h3.fontWeight,
+    fontSize: (typography && typography.h3 && typography.h3.fontSize) || baseTypography.h3 || 20,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
 
     color: "#6B21A8",
 
@@ -49,7 +50,7 @@ export default StyleSheet.create({
     color: "#6b21a8",
     textAlign: "center",
     marginBottom: 20,
-    fontWeight: typography.title.fontWeight,
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
   },
   button: {
     backgroundColor: "#6b21a8",
@@ -59,7 +60,7 @@ export default StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
-    fontWeight: typography.h3.fontWeight,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
   },
   backText: {
     textAlign: "center",

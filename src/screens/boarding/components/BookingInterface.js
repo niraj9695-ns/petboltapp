@@ -14,6 +14,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../../../context/ThemeContext";
 import styles from "../styles/BookingInterface";
+import CustomPicker from "../../pets/components/CustomPicker";
 
 export default function BookingInterface({ navigation }) {
   const { theme, isDark } = useTheme();
@@ -120,18 +121,12 @@ export default function BookingInterface({ navigation }) {
           <Text style={[styles.bookingInterfaceHeading, { color: theme.textPrimary }]}>Select Your Pet</Text>
 
           {/* Picker */}
-          <View style={{ backgroundColor: theme.inputBackground, borderRadius: 12 }}>
-            <Picker
-              selectedValue={selectedPet}
-              onValueChange={(v) => setSelectedPet(v)}
-              dropdownIconColor={theme.textPrimary}
-              style={{ color: theme.textPrimary }}
-            >
-            {pets.map((p) => (
-              <Picker.Item key={p} label={p} value={p} color={theme.textPrimary} />
-            ))}
-            </Picker>
-          </View>
+          <CustomPicker
+            selectedValue={selectedPet}
+            onValueChange={(v) => setSelectedPet(v)}
+            items={pets.map((p) => ({ label: p, value: p }))}
+            style={{ backgroundColor: theme.inputBackground, borderRadius: 12 }}
+          />
 
           {/* Chips */}
           <View style={styles.bookingInterfacePetRow}>
@@ -190,19 +185,17 @@ export default function BookingInterface({ navigation }) {
                 selectionColor={theme.primary}
               />
 
-              <View style={{ backgroundColor: theme.inputBackground, borderRadius: 12 }}>
-                <Picker
-                  selectedValue={newPetType}
-                  onValueChange={(v) => setNewPetType(v)}
-                  dropdownIconColor={theme.textPrimary}
-                  style={{ color: theme.textPrimary }}
-                >
-                  <Picker.Item label="Dog" value="Dog" color={theme.textPrimary} />
-                  <Picker.Item label="Cat" value="Cat" color={theme.textPrimary} />
-                  <Picker.Item label="Rabbit" value="Rabbit" color={theme.textPrimary} />
-                  <Picker.Item label="Other" value="Other" color={theme.textPrimary} />
-                </Picker>
-              </View>
+              <CustomPicker
+                selectedValue={newPetType}
+                onValueChange={(v) => setNewPetType(v)}
+                items={[
+                  { label: "Dog", value: "Dog" },
+                  { label: "Cat", value: "Cat" },
+                  { label: "Rabbit", value: "Rabbit" },
+                  { label: "Other", value: "Other" },
+                ]}
+                style={{ backgroundColor: theme.inputBackground, borderRadius: 12 }}
+              />
 
               <TouchableOpacity style={styles.bookingInterfaceAddButton} onPress={handleAddPet}>
                 <Text style={styles.bookingInterfaceButtonText}>
