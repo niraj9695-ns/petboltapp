@@ -1,20 +1,55 @@
 import { StyleSheet } from "react-native";
+import { colors } from "./theme/colors";
+import { spacing } from "./theme/spacing";
+import { typography as themeTypography } from "./theme/typography";
+import { radius } from "./theme/radius";
+import { shadows } from "./theme/shadows";
 
 export const palette = {
-  primary: "#6b21a8",
-  primaryDark: "#4c1d95",
-  secondary: "#6b21a8",
-  accent: "#ec4899",
-  background: "#fffaf5",
-  surface: "#ffffff",
-  surfaceAlt: "#f8fafc",
-  surfaceMuted: "#f3f4f6",
-  text: "#111827",
-  textMuted: "#6b7280",
-  border: "#e5e7eb",
-  success: "#22c55e",
-  info: "#3b82f6",
-  danger: "#ef4444",
+  primary: colors.primary,
+  primaryDark: colors.primaryDark,
+  secondary: colors.primary,
+  accent: colors.accent,
+  background: colors.background,
+  surface: colors.surface,
+  surfaceAlt: colors.surfaceAlt,
+  surfaceMuted: colors.surfaceMuted,
+  text: colors.text,
+  textMuted: colors.textMuted,
+  border: colors.border,
+  success: colors.success,
+  info: colors.info,
+  danger: colors.danger,
+};
+
+export const typography = {
+  h1: { fontSize: 24, fontWeight: "700" },
+  h2: { fontSize: 20, fontWeight: "700" },
+  h3: { fontSize: 18, fontWeight: "700" },
+  h4: { fontSize: 16, fontWeight: "600" },
+  title: { fontSize: 14, fontWeight: "600" },
+  body: { fontSize: themeTypography.body, fontWeight: "400" },
+  bodyMedium: { fontSize: themeTypography.body, fontWeight: "500" },
+  small: { fontSize: themeTypography.small, fontWeight: "400" },
+  smallMedium: { fontSize: themeTypography.small, fontWeight: "500" },
+  caption: { fontSize: themeTypography.caption, fontWeight: "600" },
+};
+
+export const boardingOwnerTheme = {
+  primary: palette.primary,
+  primaryDark: palette.primaryDark,
+  secondary: palette.secondary,
+  accent: palette.accent,
+  background: palette.background,
+  surface: palette.surface,
+  surfaceAlt: palette.surfaceAlt,
+  muted: palette.surfaceMuted,
+  text: palette.text,
+  textMuted: palette.textMuted,
+  border: palette.border,
+  success: palette.success,
+  danger: palette.danger,
+  info: palette.info,
 };
 
 export const homeStyles = StyleSheet.create({
@@ -23,28 +58,28 @@ export const homeStyles = StyleSheet.create({
     backgroundColor: palette.background,
   },
   content: {
-    paddingBottom: 30,
+    paddingBottom: spacing.xxl,
   },
 });
 
 export const drawerStyles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 40,
+    paddingTop: spacing.xxl,
     backgroundColor: palette.background,
   },
   item: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 15,
-    gap: 10,
+    padding: spacing.lg,
+    gap: spacing.sm,
   },
   text: {
-    fontSize: 15,
-    fontWeight: "500",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.bodyMedium.fontWeight,
   },
   loader: {
-    marginTop: 20,
+    marginTop: spacing.xl,
     alignItems: "center",
   },
   headerContainer: {
@@ -57,13 +92,37 @@ export const drawerStyles = StyleSheet.create({
     resizeMode: "contain",
   },
   menuButton: {
-    marginLeft: 15,
+    marginLeft: spacing.lg,
     backgroundColor: palette.surfaceMuted,
-    padding: 8,
-    borderRadius: 10,
+    padding: spacing.sm,
+    borderRadius: radius.md,
   },
   headerRightButton: {
-    marginRight: 15,
+    marginRight: spacing.lg,
+    position: "relative",
+  },
+  notificationBadgeContainer: {
+    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  notificationBadge: {
+    position: "absolute",
+    top: -spacing.xs,
+    right: -spacing.sm,
+    minWidth: spacing.lg,
+    height: spacing.lg,
+    borderRadius: radius.round,
+    backgroundColor: palette.danger,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 4,
+  },
+  notificationBadgeText: {
+    color: palette.surface,
+    fontSize: typography.caption.fontSize,
+    fontWeight: typography.h3.fontWeight,
+    lineHeight: typography.caption.fontSize,
   },
 });
 
@@ -84,13 +143,13 @@ export const heroStyles = StyleSheet.create({
     marginBottom: 15,
   },
   badgeText: {
-    fontSize: 12,
-    fontWeight: "600",
+    fontSize: typography.caption.fontSize,
+    fontWeight: typography.caption.fontWeight,
     color: palette.text,
   },
   title: {
-    fontSize: 34,
-    fontWeight: "bold",
+    fontSize: typography.h1.fontSize,
+    fontWeight: typography.h1.fontWeight,
     color: palette.text,
     marginBottom: 10,
   },
@@ -98,7 +157,7 @@ export const heroStyles = StyleSheet.create({
     color: palette.secondary,
   },
   desc: {
-    fontSize: 14,
+    fontSize: typography.small.fontSize,
     color: palette.textMuted,
     marginBottom: 20,
   },
@@ -115,7 +174,7 @@ export const heroStyles = StyleSheet.create({
   },
   primaryBtnText: {
     color: palette.surface,
-    fontWeight: "bold",
+    fontWeight: typography.h4.fontWeight,
   },
   secondaryBtn: {
     backgroundColor: palette.surface,
@@ -127,7 +186,7 @@ export const heroStyles = StyleSheet.create({
   },
   secondaryBtnText: {
     color: palette.primary,
-    fontWeight: "bold",
+    fontWeight: typography.title.fontWeight,
   },
   statsRow: {
     flexDirection: "row",
@@ -139,12 +198,12 @@ export const heroStyles = StyleSheet.create({
     flex: 1,
   },
   statNum: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: typography.title.fontSize,
+    fontWeight: typography.h1.fontWeight,
     color: palette.text,
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     color: palette.textMuted,
   },
 });
@@ -156,8 +215,8 @@ export const categoriesStyles = StyleSheet.create({
     backgroundColor: palette.background,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "bold",
+    fontSize: typography.h2.fontSize,
+    fontWeight: typography.h2.fontWeight,
     textAlign: "center",
     marginBottom: 6,
     color: palette.text,
@@ -169,7 +228,7 @@ export const categoriesStyles = StyleSheet.create({
     textAlign: "center",
     color: palette.textMuted,
     marginBottom: 25,
-    fontSize: 14,
+    fontSize: typography.small.fontSize,
   },
   scrollContainer: {
     paddingHorizontal: 10,
@@ -202,16 +261,16 @@ export const categoriesStyles = StyleSheet.create({
     position: "absolute",
     top: -6,
     right: -6,
-    fontSize: 22,
+    fontSize: typography.h4.fontSize,
   },
   name: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: typography.title.fontSize,
+    fontWeight: typography.title.fontWeight,
     color: palette.text,
     marginBottom: 4,
   },
   desc: {
-    fontSize: 13,
+    fontSize: typography.small.fontSize,
     color: palette.textMuted,
     textAlign: "center",
     marginBottom: 16,
@@ -224,8 +283,8 @@ export const categoriesStyles = StyleSheet.create({
   buttonText: {
     color: palette.surface,
     textAlign: "center",
-    fontWeight: "600",
-    fontSize: 14,
+    fontWeight: typography.title.fontWeight,
+    fontSize: typography.title.fontSize,
   },
 });
 
@@ -235,8 +294,8 @@ export const dogGalleryStyles = StyleSheet.create({
     backgroundColor: palette.background,
   },
   title: {
-    fontSize: 26,
-    fontWeight: "bold",
+    fontSize: typography.h3.fontSize,
+    fontWeight: typography.h3.fontWeight,
     textAlign: "center",
     color: palette.text,
   },
@@ -270,19 +329,19 @@ export const dogGalleryStyles = StyleSheet.create({
     padding: 15,
   },
   name: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.title.fontWeight,
     color: palette.text,
     marginBottom: 5,
   },
   desc: {
-    fontSize: 13,
+    fontSize: typography.small.fontSize,
     color: palette.textMuted,
     marginBottom: 10,
   },
   link: {
-    fontSize: 13,
-    fontWeight: "600",
+    fontSize: typography.small.fontSize,
+    fontWeight: typography.title.fontWeight,
     color: palette.secondary,
   },
 });
@@ -295,8 +354,8 @@ export const notificationStyles = StyleSheet.create({
     padding: 16,
   },
   heading: {
-    fontSize: 28,
-    fontWeight: "bold",
+    fontSize: typography.h2.fontSize,
+    fontWeight: typography.h2.fontWeight,
     color: palette.text,
     marginBottom: 6,
   },
@@ -321,17 +380,17 @@ export const notificationStyles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontWeight: "bold",
-    fontSize: 15,
+    fontWeight: typography.bodyMedium.fontWeight,
+    fontSize: typography.body.fontSize,
     marginBottom: 2,
     color: palette.text,
   },
   desc: {
-    fontSize: 13,
+    fontSize: typography.small.fontSize,
     color: palette.textMuted,
   },
   date: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     color: palette.textMuted,
     marginTop: 2,
   },
@@ -410,25 +469,25 @@ export const policyStyles = StyleSheet.create({
     backgroundColor: palette.surface,
   },
   title: {
-    fontSize: 26,
-    fontWeight: "bold",
+    fontSize: typography.h3.fontSize,
+    fontWeight: typography.h3.fontWeight,
     color: palette.text,
     marginBottom: 5,
   },
   updated: {
-    fontSize: 12,
+    fontSize: typography.caption.fontSize,
     color: palette.textMuted,
     marginBottom: 15,
   },
   heading: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: typography.h4.fontSize,
+    fontWeight: typography.h3.fontWeight,
     marginTop: 15,
     marginBottom: 5,
     color: palette.text,
   },
   text: {
-    fontSize: 13,
+    fontSize: typography.small.fontSize,
     color: palette.textMuted,
     lineHeight: 20,
   },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import BottomTabs from "./BottomTabs";
 
@@ -8,9 +8,9 @@ import {
   Pressable,
   Text,
   Alert,
-  ActivityIndicator,
 } from "react-native";
 
+import PremiumLoader from "../components/PremiumLoader";
 import { Ionicons } from "@expo/vector-icons";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -23,8 +23,55 @@ import BoardingStack from "./BoardingStack";
 
 import { useTheme } from "../context/ThemeContext";
 import { drawerStyles } from "../styles/themeStyles";
+import { fetchNotificationsFromApi } from "../utils/notifications";
 
 const Drawer = createDrawerNavigator();
+
+function HeaderNotificationButton({ navigation }) {
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const refreshUnreadCount = useCallback(async () => {
+    try {
+      const items = await fetchNotificationsFromApi({ limit: 20, offset: 0 });
+      const count = items.reduce(
+        (total, item) =>
+          total + (item.is_read === "1" || item.is_read === 1 ? 0 : 1),
+        0,
+      );
+      setUnreadCount(count);
+    } catch (error) {
+      setUnreadCount(0);
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshUnreadCount();
+
+    const unsubscribe = navigation.addListener("focus", () => {
+      refreshUnreadCount();
+    });
+
+    return unsubscribe;
+  }, [navigation, refreshUnreadCount]);
+
+  return (
+    <Pressable
+      style={drawerStyles.headerRightButton}
+      onPress={() => navigation.navigate("Notification")}
+    >
+      <View style={drawerStyles.notificationBadgeContainer}>
+        <Ionicons name="notifications-outline" size={26} color={"#111827"} />
+        {unreadCount > 0 ? (
+          <View style={drawerStyles.notificationBadge}>
+            <Text style={drawerStyles.notificationBadgeText}>
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </Text>
+          </View>
+        ) : null}
+      </View>
+    </Pressable>
+  );
+}
 
 function CustomDrawerContent({ navigation }) {
   const { isDark, toggleTheme, theme } = useTheme();
@@ -72,6 +119,7 @@ function CustomDrawerContent({ navigation }) {
       await AsyncStorage.removeItem("guestRole");
 
       setGuestRole(null);
+      setRole(null);
 
       const parentNav = navigation.getParent?.();
       if (parentNav) {
@@ -176,7 +224,7 @@ function CustomDrawerContent({ navigation }) {
       {/* Logout */}
       {loading ? (
         <View style={drawerStyles.loader}>
-          <ActivityIndicator size="small" color="#6b21a8" />
+          <PremiumLoader size={24} color="#6b21a8" showLabel={false} />
         </View>
       ) : guestRole ? (
         <Pressable
@@ -237,18 +285,7 @@ export default function DrawerNavigator() {
           </Pressable>
         ),
 
-        headerRight: () => (
-          <Pressable
-            style={drawerStyles.headerRightButton}
-            onPress={() => navigation.navigate("Notification")}
-          >
-            <Ionicons
-              name="notifications-outline"
-              size={26}
-              color={theme.text}
-            />
-          </Pressable>
-        ),
+        headerRight: () => <HeaderNotificationButton navigation={navigation} />,
       })}
     >
       {/* MAIN BOTTOM TABS */}

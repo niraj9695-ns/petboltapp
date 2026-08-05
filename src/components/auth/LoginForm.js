@@ -6,28 +6,48 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
-  ActivityIndicator,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "../../context/ThemeContext";
 
 import { PasswordInput } from "../inputs/PasswordInput";
 import loginFormStyles from "../../styles/LoginFormStyles";
+import PremiumLoader from "../PremiumLoader";
 
 export default function LoginForm({
   setStep,
   setOtpType,
   setEmail,
   setPassword,
+  navigation,
 }) {
   const [email, setEmailInput] = useState("");
 
   const [password, setPasswordInput] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const { theme } = useTheme();
+
+  const validateLogin = () => {
+    const newErrors = {};
+
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Enter a valid email address";
+    }
+
+    if (!password.trim()) {
+      newErrors.password = "Password is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert("Validation", "Please enter email and password");
-
+    if (!validateLogin()) {
       return;
     }
 
@@ -50,60 +70,42 @@ export default function LoginForm({
 
       const result = await response.json();
 
-      const loginOtp =
-        result?.otp ||
-        result?.data?.otp ||
-        result?.data?.verification_otp ||
-        "OTP not returned";
-
       if (result.status === true || result.status === "success") {
-        Alert.alert("Success", "OTP Sent Successfully");
+        const token = result?.data?.token || result?.token;
+        const user = result?.data?.user || result?.user;
+
+        if (user?.role) {
+          await AsyncStorage.setItem("role", user.role);
+        }
+
+        if (token) {
+          await AsyncStorage.setItem("token", token);
+        }
+
+        if (user) {
+          await AsyncStorage.setItem("user", JSON.stringify(user));
+        }
+
+        Alert.alert("Success", "Login successful");
 
         setEmail?.(email);
-
         setPassword?.(password);
 
-        setOtpType("login");
+        if (navigation) {
+          const nextRoute =
+            user?.role === "boarding_owner" ? "BoardingOwner" : "PetOwner";
 
-        setTimeout(() => {
-          setStep("otp");
-        }, 50);
-      } else if (result.message?.toLowerCase().includes("verify email")) {
-        const otpResponse = await fetch(
-          "https://www.cgpisoftware.com/cheerytail/api/auth/send-email-otp",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email,
-            }),
-          },
-        );
+          navigation.reset({
+            index: 0,
+            routes: [{ name: nextRoute }],
+          });
+        } else {
+          setOtpType("login");
 
-        const otpResult = await otpResponse.json();
-
-        const emailOtp =
-          otpResult?.otp ||
-          otpResult?.data?.otp ||
-          otpResult?.data?.verification_otp ||
-          "OTP not returned";
-
-        Alert.alert(
-          "Email Not Verified",
-          "Verification OTP sent to your email",
-        );
-
-        setEmail?.(email);
-
-        setPassword?.(password);
-
-        setOtpType("register");
-
-        setTimeout(() => {
-          setStep("otp");
-        }, 50);
+          setTimeout(() => {
+            setStep("otp");
+          }, 50);
+        }
       } else {
         Alert.alert("Error", result.message || "Invalid Credentials");
       }
@@ -115,9 +117,17 @@ export default function LoginForm({
   };
 
   const handleForgotPassword = async () => {
-    if (!email) {
-      Alert.alert("Validation", "Please enter your email");
+    const newErrors = {};
 
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Enter a valid email address";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
       return;
     }
 
@@ -167,33 +177,54 @@ export default function LoginForm({
 
   return (
     <View>
-      <Text style={loginFormStyles.heading}>Login</Text>
+      <Text style={[loginFormStyles.heading, { color: theme.textPrimary }]}>Login</Text>
+
+      {errors.email || errors.password ? (
+        <Text style={loginFormStyles.errorTopText}>
+          {errors.email || errors.password}
+        </Text>
+      ) : null}
 
       <TextInput
-        style={loginFormStyles.input}
+        style={[
+          loginFormStyles.input,
+          {
+            backgroundColor: theme.inputBackground,
+            borderColor: theme.border,
+            color: theme.textPrimary,
+          },
+        ]}
         placeholder="Email"
+        placeholderTextColor={theme.placeholder}
         value={email}
-        onChangeText={setEmailInput}
+        onChangeText={(text) => {
+          setEmailInput(text);
+          setErrors((prev) => ({ ...prev, email: "" }));
+        }}
         autoCapitalize="none"
+        selectionColor={theme.primary}
       />
 
       <PasswordInput
         label="Password"
         value={password}
-        onChangeText={setPasswordInput}
+        onChangeText={(text) => {
+          setPasswordInput(text);
+          setErrors((prev) => ({ ...prev, password: "" }));
+        }}
       />
 
       <TouchableOpacity onPress={handleForgotPassword}>
-        <Text style={loginFormStyles.forgotText}>Forgot Password?</Text>
+        <Text style={[loginFormStyles.forgotText, { color: theme.primary }]}>Forgot Password?</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={loginFormStyles.button}
+        style={[loginFormStyles.button, { backgroundColor: theme.primary }]}
         onPress={handleLogin}
         disabled={loading}
       >
         {loading ? (
-          <ActivityIndicator color="#fff" />
+          <PremiumLoader size={28} color="#fff" showLabel={false} />
         ) : (
           <Text style={loginFormStyles.buttonText}>Sign In</Text>
         )}

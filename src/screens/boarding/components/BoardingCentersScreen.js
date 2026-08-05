@@ -3,10 +3,10 @@ import {
   View,
   Text,
   FlatList,
-  ActivityIndicator,
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
+import PremiumLoader from "../../../components/PremiumLoader";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import styles from "../styles/BoardingCentersScreen";
 import CenterCard from "./CenterCard";
@@ -133,7 +133,7 @@ export default function BoardingCentersScreen({ navigation, route }) {
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#6b21a8" />
+        <PremiumLoader size={56} color="#6b21a8" label="Loading centers" fullScreen />
       </View>
     );
   }

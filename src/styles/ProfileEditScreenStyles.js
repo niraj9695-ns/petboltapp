@@ -1,4 +1,6 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
+import { typography as baseTypography } from "./theme/typography";
 
 export default StyleSheet.create({
   wrapper: {
@@ -27,16 +29,16 @@ export default StyleSheet.create({
   },
 
   backButtonText: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontWeight: (typography && typography.smallMedium && typography.smallMedium.fontWeight) || baseTypography.weights.medium || "500",
     color: "#6b21a8",
   },
 
   editTitle: {
     flex: 1,
     textAlign: "center",
-    fontSize: 22,
-    fontWeight: "700",
+    fontSize: (typography && typography.h4 && typography.h4.fontSize) || baseTypography.h4 || 18,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
     color: "#1f2937",
     marginRight: 45,
   },
@@ -67,8 +69,8 @@ export default StyleSheet.create({
   },
 
   formLabel: {
-    fontSize: 13,
-    fontWeight: "600",
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontWeight: (typography && typography.caption && typography.caption.fontWeight) || baseTypography.weights.semibold || "600",
     color: "#6B7280",
     marginBottom: 6,
     marginTop: 12,
@@ -82,7 +84,7 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E5E7EB",
     paddingHorizontal: 16,
-    fontSize: 15,
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
     color: "#111827",
   },
 
@@ -104,15 +106,15 @@ export default StyleSheet.create({
 
   fileButtonText: {
     color: "#4338CA",
-    fontWeight: "700",
-    fontSize: 14,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
   },
 
   fileName: {
     marginTop: 10,
     textAlign: "center",
     color: "#374151",
-    fontWeight: "500",
+    fontWeight: typography.bodyMedium.fontWeight,
   },
 
   documentCard: {
@@ -138,18 +140,18 @@ export default StyleSheet.create({
   },
 
   documentIcon: {
-    fontSize: 30,
+    fontSize: (typography && typography.h3 && typography.h3.fontSize) || baseTypography.h3 || 20,
     marginRight: 12,
   },
 
   documentTitle: {
-    fontSize: 16,
-    fontWeight: "700",
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
     color: "#111827",
   },
 
   documentSubTitle: {
-    fontSize: 13,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
     color: "#6B7280",
     marginTop: 2,
   },
@@ -164,13 +166,18 @@ export default StyleSheet.create({
 
   viewDocumentText: {
     color: "#FFFFFF",
-    fontWeight: "700",
-    fontSize: 14,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+  },
+
+  buttonContainer: {
+    marginTop: 24,
+    alignItems: "center",
   },
 
   btnRow: {
-    marginTop: 22,
     flexDirection: "row",
+    width: "95%",
     gap: 12,
   },
 
@@ -184,8 +191,8 @@ export default StyleSheet.create({
 
   primaryBtnText: {
     color: "#FFFFFF",
-    fontWeight: "700",
-    fontSize: 15,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
   },
 
   secondaryBtn: {
@@ -200,8 +207,8 @@ export default StyleSheet.create({
 
   secondaryBtnText: {
     color: "#6b21a8",
-    fontWeight: "700",
-    fontSize: 15,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
   },
 
   cancelBtn: {

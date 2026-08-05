@@ -6,13 +6,14 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
-  ActivityIndicator,
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { PasswordInput } from "../inputs/PasswordInput";
 import otpVerificationStyles from "../../styles/OTPVerificationStyles";
+import PremiumLoader from "../PremiumLoader";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function OTPVerification({
   email,
@@ -35,6 +36,7 @@ export default function OTPVerification({
   const [loading, setLoading] = useState(false);
 
   const [countdown, setCountdown] = useState(30);
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (countdown <= 0) return;
@@ -213,9 +215,9 @@ export default function OTPVerification({
 
   return (
     <View>
-      <Text style={otpVerificationStyles.heading}>Verify OTP</Text>
+      <Text style={[otpVerificationStyles.heading, { color: theme.textPrimary }]}>Verify OTP</Text>
 
-      <Text style={otpVerificationStyles.subText}>
+      <Text style={[otpVerificationStyles.subText, { color: theme.textSecondary }]}>
         OTP sent to{"\n"}
         {email}
       </Text>
@@ -228,6 +230,11 @@ export default function OTPVerification({
             style={[
               otpVerificationStyles.otpBox,
               focusedIndex === index && otpVerificationStyles.otpBoxActive,
+              {
+                backgroundColor: theme.inputBackground,
+                borderColor: focusedIndex === index ? theme.primary : theme.border,
+                color: theme.primary,
+              },
             ]}
             keyboardType="number-pad"
             maxLength={1}
@@ -235,6 +242,8 @@ export default function OTPVerification({
             onFocus={() => setFocusedIndex(index)}
             onBlur={() => setFocusedIndex(null)}
             onChangeText={(value) => handleOtpChange(value, index)}
+            placeholderTextColor={theme.placeholder}
+            selectionColor={theme.primary}
             onKeyPress={({ nativeEvent }) => {
               if (nativeEvent.key === "Backspace" && !digit && index > 0) {
                 inputRefs.current[index - 1]?.focus();
@@ -253,7 +262,7 @@ export default function OTPVerification({
       )}
 
       {countdown > 0 ? (
-        <Text style={otpVerificationStyles.resendText}>
+        <Text style={[otpVerificationStyles.resendText, { color: theme.primary }]}> 
           Resend OTP in {countdown}s
         </Text>
       ) : (
@@ -268,7 +277,7 @@ export default function OTPVerification({
         disabled={loading}
       >
         {loading ? (
-          <ActivityIndicator color="#fff" />
+          <PremiumLoader size={28} color="#fff" showLabel={false} />
         ) : (
           <Text style={otpVerificationStyles.buttonText}>Verify OTP</Text>
         )}

@@ -1,23 +1,28 @@
 import { StyleSheet } from "react-native";
+import { colors } from "./theme/colors";
+import { spacing } from "./theme/spacing";
+import { radius } from "./theme/radius";
+import { responsive } from "./theme/responsive";
+import { typography as legacyTypography } from "./themeStyles";
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F7F4FC",
+    backgroundColor: colors.surfaceAlt,
   },
   scrollContainer: {
-    padding: 15,
-    paddingBottom: 40,
+    padding: spacing.lg,
+    paddingBottom: spacing.xxxl,
   },
   welcomeTitle: {
-    fontSize: 20,
-    fontWeight: "800",
-    color: "#17174A",
+    fontSize: legacyTypography.title.fontSize,
+    fontWeight: legacyTypography.h3.fontWeight,
+    color: colors.text,
   },
   welcomeSubtitle: {
-    marginTop: 2,
-    fontSize: 12,
-    color: "#666666",
+    marginTop: spacing.xs,
+    fontSize: legacyTypography.caption.fontSize,
+    color: colors.textMuted,
   },
   petImage: {
     width: 180,
@@ -25,8 +30,8 @@ export default StyleSheet.create({
   },
 
   highlightText: {
-    color: "#6D28D9",
-    fontWeight: "700",
+    color: colors.primary,
+    fontWeight: legacyTypography.h3.fontWeight,
   },
   heroContainer: {
     flexDirection: "row",
@@ -38,15 +43,15 @@ export default StyleSheet.create({
   },
   segmentContainer: {
     flexDirection: "row",
-    backgroundColor: "#EDE7F6",
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    backgroundColor: colors.surfaceMuted,
+    borderTopLeftRadius: radius.xxl,
+    borderTopRightRadius: radius.xxl,
     marginBottom: 0,
     overflow: "hidden",
   },
   segmentButton: {
     flex: 1,
-    height: 60,
+    height: spacing.buttonHeight,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -61,35 +66,35 @@ export default StyleSheet.create({
   },
 
   segmentText: {
-    color: "#6B7280",
-    fontWeight: "800",
-    fontSize: 15,
+    color: colors.textMuted,
+    fontWeight: legacyTypography.h3.fontWeight,
+    fontSize: legacyTypography.body.fontSize,
   },
 
   segmentActiveText: {
-    color: "#6D28D9",
-    fontWeight: "800",
+    color: colors.primary,
+    fontWeight: legacyTypography.h3.fontWeight,
   },
   authCard: {
-    backgroundColor: "#fff",
-    borderRadius: 18,
-    padding: 16,
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl,
+    padding: spacing.lg,
   },
   guestContainer: {
-    marginTop: 24,
+    marginTop: spacing.xxl,
   },
 
   guestTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#1B1B4B",
+    fontSize: legacyTypography.title.fontSize,
+    fontWeight: legacyTypography.h3.fontWeight,
+    color: colors.text,
   },
 
   guestSubtitle: {
-    fontSize: 14,
-    color: "#6B7280",
-    marginTop: 4,
-    marginBottom: 16,
+    fontSize: legacyTypography.small.fontSize,
+    color: colors.textMuted,
+    marginTop: spacing.xs,
+    marginBottom: spacing.lg,
   },
 
   guestCardsRow: {
@@ -98,12 +103,12 @@ export default StyleSheet.create({
   },
 
   guestCard: {
-    width: "49%",
-    backgroundColor: "#FFFFFF",
+    width: responsive.isTablet ? "48%" : "49%",
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: "#E8E8E8",
-    borderRadius: 16,
-    padding: 10,
+    borderColor: colors.border,
+    borderRadius: radius.xl,
+    padding: spacing.sm,
     height: 140,
     position: "relative",
   },
@@ -112,7 +117,7 @@ export default StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 24,
-    backgroundColor: "#F3E8FF",
+    backgroundColor: colors.surfaceMuted,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 10,
@@ -122,26 +127,26 @@ export default StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 24,
-    backgroundColor: "#ECFDF3",
+    backgroundColor: colors.surfaceMuted,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 10,
   },
 
   iconText: {
-    fontSize: 20,
+    fontSize: legacyTypography.h4.fontSize,
   },
 
   guestCardTitle: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#1B1B4B",
-    marginBottom: 4,
+    fontSize: legacyTypography.small.fontSize,
+    fontWeight: legacyTypography.h3.fontWeight,
+    color: colors.text,
+    marginBottom: spacing.xs,
   },
 
   guestCardDescription: {
-    fontSize: 12,
-    color: "#6B7280",
+    fontSize: legacyTypography.caption.fontSize,
+    color: colors.textMuted,
     width: "90%",
   },
 
@@ -153,7 +158,7 @@ export default StyleSheet.create({
     height: 20,
     borderRadius: 15,
     borderWidth: 2,
-    borderColor: "#9333EA",
+    borderColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -166,17 +171,17 @@ export default StyleSheet.create({
     height: 20,
     borderRadius: 15,
     borderWidth: 2,
-    borderColor: "#4ADE80",
+    borderColor: colors.success,
     alignItems: "center",
     justifyContent: "center",
   },
 
   featuresContainer: {
-    marginTop: 18,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 22,
-    paddingVertical: 18,
-    paddingHorizontal: 8,
+    marginTop: spacing.lg,
+    backgroundColor: colors.surface,
+    borderRadius: radius.xxl,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.sm,
 
     flexDirection: "row",
     justifyContent: "space-between",
@@ -193,16 +198,16 @@ export default StyleSheet.create({
   },
 
   featureTitle: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#6D28D9",
+    fontSize: legacyTypography.small.fontSize,
+    fontWeight: legacyTypography.h3.fontWeight,
+    color: colors.primary,
     textAlign: "center",
   },
 
   featureSubtitle: {
-    marginTop: 6,
-    fontSize: 11,
-    color: "#777777",
+    marginTop: spacing.xs,
+    fontSize: legacyTypography.caption.fontSize,
+    color: colors.textMuted,
     textAlign: "center",
     lineHeight: 15,
   },

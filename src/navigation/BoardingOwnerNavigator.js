@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import {
@@ -7,19 +7,65 @@ import {
   Pressable,
   Alert,
   Image,
-  ActivityIndicator,
 } from "react-native";
+import PremiumLoader from "../components/PremiumLoader";
 import BoardingOwnerStack from "./BoardingOwnerStack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Ionicons } from "@expo/vector-icons";
 
 import { useTheme } from "../context/ThemeContext";
-
-import BoardingOwnerHomeScreen from "../screens/boardingOwner/components/BoardingOwnerHomeScreen";
 import NotificationScreen from "../screens/NotificationScreen";
+import { drawerStyles } from "../styles/themeStyles";
+import { fetchNotificationsFromApi } from "../utils/notifications";
 
 const Drawer = createDrawerNavigator();
+
+function HeaderNotificationButton({ navigation }) {
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const refreshUnreadCount = useCallback(async () => {
+    try {
+      const items = await fetchNotificationsFromApi({ limit: 20, offset: 0 });
+      const count = items.reduce(
+        (total, item) =>
+          total + (item.is_read === "1" || item.is_read === 1 ? 0 : 1),
+        0,
+      );
+      setUnreadCount(count);
+    } catch (error) {
+      setUnreadCount(0);
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshUnreadCount();
+
+    const unsubscribe = navigation.addListener("focus", () => {
+      refreshUnreadCount();
+    });
+
+    return unsubscribe;
+  }, [navigation, refreshUnreadCount]);
+
+  return (
+    <Pressable
+      style={drawerStyles.headerRightButton}
+      onPress={() => navigation.navigate("Notification")}
+    >
+      <View style={drawerStyles.notificationBadgeContainer}>
+        <Ionicons name="notifications-outline" size={26} color="#111827" />
+        {unreadCount > 0 ? (
+          <View style={drawerStyles.notificationBadge}>
+            <Text style={drawerStyles.notificationBadgeText}>
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </Text>
+          </View>
+        ) : null}
+      </View>
+    </Pressable>
+  );
+}
 
 function BoardingOwnerDrawerContent({ navigation }) {
   const { theme, isDark, toggleTheme } = useTheme();
@@ -49,6 +95,28 @@ function BoardingOwnerDrawerContent({ navigation }) {
     setGuestRole(null);
     navigation.navigate("Auth");
   };
+
+  const handleContinueAsGuest = async () => {
+    try {
+      await AsyncStorage.setItem("guestRole", "boarding_owner");
+      await AsyncStorage.setItem("isGuest", "true");
+
+      setGuestRole("boarding_owner");
+
+      const parentNav = navigation.getParent?.();
+      if (parentNav) {
+        parentNav.reset({
+          index: 0,
+          routes: [{ name: "GuestBoarding" }],
+        });
+      } else {
+        navigation.navigate("GuestBoarding");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Unable to continue as guest");
+    }
+  };
+
   const handleLogout = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
@@ -66,6 +134,17 @@ function BoardingOwnerDrawerContent({ navigation }) {
       await AsyncStorage.multiRemove(["token", "user", "role", "guestRole"]);
 
       setGuestRole(null);
+      setRole(null);
+
+      const parentNav = navigation.getParent?.();
+      if (parentNav) {
+        parentNav.reset({
+          index: 0,
+          routes: [{ name: "Auth" }],
+        });
+      } else {
+        navigation.navigate("Auth");
+      }
 
       Alert.alert("Success", "Logged out successfully");
     } catch (error) {
@@ -81,22 +160,6 @@ function BoardingOwnerDrawerContent({ navigation }) {
         backgroundColor: theme.background,
       }}
     >
-      <Pressable
-        style={styles.item}
-        onPress={() =>
-          navigation.navigate("Main", {
-            screen: "BoardingTabs",
-            params: {
-              screen: "Dashboard",
-            },
-          })
-        }
-      >
-        <Ionicons name="home-outline" size={22} color={theme.text} />
-
-        <Text style={[styles.text, { color: theme.text }]}>Dashboard</Text>
-      </Pressable>
-
       {/* Logout */}
       {loading ? (
         <View
@@ -105,7 +168,7 @@ function BoardingOwnerDrawerContent({ navigation }) {
             alignItems: "center",
           }}
         >
-          <ActivityIndicator size="small" color="#6b21a8" />
+          <PremiumLoader size={24} color="#6b21a8" showLabel={false} />
         </View>
       ) : guestRole ? (
         <Pressable
@@ -114,9 +177,7 @@ function BoardingOwnerDrawerContent({ navigation }) {
         >
           <Ionicons name="log-in-outline" size={22} color="#6b21a8" />
 
-          <Text style={[styles.text, { color: "#6b21a8" }]}>
-            Sign In / Sign Up
-          </Text>
+          <Text style={[styles.text, { color: "#6b21a8" }]}>Sign In / Sign Up</Text>
         </Pressable>
       ) : role ? (
         <Pressable
@@ -127,7 +188,27 @@ function BoardingOwnerDrawerContent({ navigation }) {
 
           <Text style={[styles.text, { color: "red" }]}>Logout</Text>
         </Pressable>
-      ) : null}
+      ) : (
+        <>
+          <Pressable
+            style={[styles.item, { marginTop: 20 }]}
+            onPress={handleContinueAsGuest}
+          >
+            <Ionicons name="person-outline" size={22} color="#6b21a8" />
+
+            <Text style={[styles.text, { color: "#6b21a8" }]}>Continue as Guest</Text>
+          </Pressable>
+
+          <Pressable
+            style={[styles.item]}
+            onPress={handleSignIn}
+          >
+            <Ionicons name="log-in-outline" size={22} color="#6b21a8" />
+
+            <Text style={[styles.text, { color: "#6b21a8" }]}>Sign In / Sign Up</Text>
+          </Pressable>
+        </>
+      )}
     </View>
   );
 }
@@ -174,11 +255,22 @@ export default function BoardingOwnerNavigator() {
             <Ionicons name="menu" size={28} color={theme.text} />
           </Pressable>
         ),
+
+        headerRight: () => <HeaderNotificationButton navigation={navigation} />,
       })}
     >
       <Drawer.Screen
         name="Main"
         component={BoardingOwnerStack}
+        options={{
+          drawerItemStyle: {
+            display: "none",
+          },
+        }}
+      />
+      <Drawer.Screen
+        name="Notification"
+        component={NotificationScreen}
         options={{
           drawerItemStyle: {
             display: "none",

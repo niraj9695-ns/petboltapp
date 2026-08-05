@@ -1,17 +1,24 @@
 import { StyleSheet } from "react-native";
+import { lightTheme } from "../../../theme/lightTheme";
+import { darkTheme } from "../../../theme/darkTheme";
 
-export default StyleSheet.create({
+const theme = { light: lightTheme, dark: darkTheme };
+
+export default function createPhaseThreeFormStyles(isDark = false) {
+  const palette = theme[isDark ? "dark" : "light"];
+
+  return StyleSheet.create({
   input: {
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: palette.border,
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
     minHeight: 52,
     marginBottom: 12,
-    backgroundColor: "#fff",
+    backgroundColor: palette.inputBackground,
     fontSize: 15,
-    color: "#111827",
+    color: palette.textPrimary,
   },
   textArea: {
     minHeight: 90,
@@ -19,11 +26,11 @@ export default StyleSheet.create({
   },
   pickerWrapper: {
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: palette.border,
     borderRadius: 14,
     marginBottom: 12,
     overflow: "hidden",
-    backgroundColor: "#fff",
+    backgroundColor: palette.inputBackground,
   },
   switchContainer: {
     flexDirection: "row",
@@ -34,11 +41,12 @@ export default StyleSheet.create({
   switchLabel: {
     fontWeight: "600",
     fontSize: 15,
-    color: "#374151",
+    color: palette.textPrimary,
     flex: 1,
   },
   inputError: {
-    borderColor: "#ef4444",
-    backgroundColor: "#fff1f2",
+    borderColor: palette.error,
+    backgroundColor: palette.errorBackground,
   },
-});
+  });
+}

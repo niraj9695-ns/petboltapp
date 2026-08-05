@@ -147,6 +147,7 @@ export default function RegisterScreen({ navigation }) {
                     setOtpType={setOtpType}
                     setEmail={setEmail}
                     setPassword={setPassword}
+                    navigation={navigation}
                   />
 
                   <View style={registerStyles.guestContainer}>

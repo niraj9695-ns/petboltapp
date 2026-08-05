@@ -1,12 +1,17 @@
 import { StyleSheet } from "react-native";
+import { colors } from "./theme/colors";
+import { spacing } from "./theme/spacing";
+import { radius } from "./theme/radius";
+import { typography } from "./themeStyles";
+import { typography as baseTypography } from "./theme/typography";
 
 export default StyleSheet.create({
   wrapper: {
     width: "100%",
   },
   container: {
-    padding: 18,
-    borderRadius: 24,
+    padding: spacing.lg,
+    borderRadius: radius.xxl,
     overflow: "hidden",
   },
   badge: {
@@ -15,32 +20,32 @@ export default StyleSheet.create({
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 6,
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
   badgeText: {
     color: "#7c3aed",
-    fontSize: 12,
-    fontWeight: "600",
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontWeight: (typography && typography.caption && typography.caption.fontWeight) || baseTypography.weights.semibold || "600",
   },
   title: {
-    fontSize: 32,
-    fontWeight: "800",
+    fontSize: (typography && typography.h1 && typography.h1.fontSize) || baseTypography.h1 || 28,
+    fontWeight: (typography && typography.h1 && typography.h1.fontWeight) || baseTypography.weights.bold || "700",
     lineHeight: 38,
     color: "#111827",
     marginBottom: 10,
   },
   gradientText: {
-    color: "#6b21a8",
+    color: colors.primary,
   },
   desc: {
-    color: "#4b5563",
-    fontSize: 14,
+    color: colors.textMuted,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
     lineHeight: 20,
-    marginBottom: 18,
+    marginBottom: spacing.lg,
   },
   btnRow: {
     flexDirection: "row",
-    gap: 10,
+    gap: spacing.sm,
     flexWrap: "wrap",
   },
   primaryBtn: {
@@ -51,7 +56,7 @@ export default StyleSheet.create({
   },
   primaryBtnText: {
     color: "#fff",
-    fontWeight: "700",
+    fontWeight: (typography && typography.h1 && typography.h1.fontWeight) || baseTypography.weights.bold || "700",
   },
   secondaryBtn: {
     borderWidth: 1,
@@ -62,29 +67,29 @@ export default StyleSheet.create({
   },
   secondaryBtnText: {
     color: "#111827",
-    fontWeight: "600",
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
   },
   statsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 22,
+    marginTop: spacing.xl,
   },
   statBox: {
     flex: 1,
     backgroundColor: "rgba(255,255,255,0.6)",
-    borderRadius: 16,
-    paddingVertical: 12,
-    marginHorizontal: 4,
+    borderRadius: radius.lg,
+    paddingVertical: spacing.md,
+    marginHorizontal: spacing.xs,
     alignItems: "center",
   },
   statNum: {
-    fontSize: 18,
-    fontWeight: "800",
+    fontSize: (typography && typography.title && typography.title.fontSize) || baseTypography.title || 16,
+    fontWeight: (typography && typography.h1 && typography.h1.fontWeight) || baseTypography.weights.bold || "700",
     color: "#111827",
   },
   statLabel: {
-    fontSize: 12,
-    color: "#6b7280",
-    marginTop: 4,
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    color: colors.textMuted,
+    marginTop: spacing.xs,
   },
 });

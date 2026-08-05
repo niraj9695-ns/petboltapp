@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   Platform,
@@ -22,6 +21,7 @@ import {
   getDateDiscounts,
 } from "../services/boardingOwnerService";
 import styles from "../styles/BoardingCouponsStyles";
+import PremiumLoader from "../../../components/PremiumLoader";
 
 const formatShortDate = (value) => {
   if (!value) {
@@ -58,6 +58,7 @@ export default function BoardingCouponsScreen() {
   const [discounts, setDiscounts] = useState([]);
   const [loadingCenters, setLoadingCenters] = useState(true);
   const [loadingDiscounts, setLoadingDiscounts] = useState(false);
+  const [deletingCouponId, setDeletingCouponId] = useState(null);
   const [selectedCenterId, setSelectedCenterId] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -259,12 +260,14 @@ export default function BoardingCouponsScreen() {
           style: "destructive",
           onPress: async () => {
             try {
+              setDeletingCouponId(discount.id);
               await deleteDateDiscount(discount.id);
               triggerRefresh();
-              Alert.alert("Removed", "Coupon deleted successfully.");
-              loadDiscounts(selectedCenterId);
+              await loadDiscounts(selectedCenterId);
             } catch (error) {
               Alert.alert("Error", "Unable to delete this coupon right now.");
+            } finally {
+              setDeletingCouponId(null);
             }
           },
         },
@@ -276,7 +279,7 @@ export default function BoardingCouponsScreen() {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.loaderWrap}>
-          <ActivityIndicator size="large" color="#6d28d9" />
+          <PremiumLoader size={56} color="#6d28d9" label="Loading coupons" fullScreen />
         </View>
       </SafeAreaView>
     );
@@ -347,7 +350,7 @@ export default function BoardingCouponsScreen() {
 
             {loadingDiscounts ? (
               <View style={styles.loaderWrapSmall}>
-                <ActivityIndicator size="small" color="#6d28d9" />
+                <PremiumLoader size={24} color="#6d28d9" showLabel={false} />
               </View>
             ) : discounts.length === 0 ? (
               <View style={styles.emptyState}>
@@ -429,9 +432,16 @@ export default function BoardingCouponsScreen() {
                       <TouchableOpacity
                         style={styles.deleteButton}
                         onPress={() => deleteCoupon(discount)}
+                        disabled={deletingCouponId === discount.id}
                       >
-                        <Ionicons name="trash-outline" size={16} color="#fff" />
-                        <Text style={styles.actionText}>Delete</Text>
+                        {deletingCouponId === discount.id ? (
+                          <PremiumLoader size={18} color="#fff" showLabel={false} />
+                        ) : (
+                          <>
+                            <Ionicons name="trash-outline" size={16} color="#fff" />
+                            <Text style={styles.actionText}>Delete</Text>
+                          </>
+                        )}
                       </TouchableOpacity>
                     </View>
                   </View>

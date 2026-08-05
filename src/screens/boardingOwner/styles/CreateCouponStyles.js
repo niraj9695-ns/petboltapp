@@ -1,9 +1,12 @@
 import { StyleSheet } from "react-native";
+import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
+
+const COLORS = boardingOwnerTheme;
 
 export default StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f5f3ff",
+    backgroundColor: COLORS.background,
   },
   flexOne: {
     flex: 1,
@@ -21,18 +24,18 @@ export default StyleSheet.create({
     paddingBottom: 10,
   },
   title: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: "#111827",
+    fontSize: typography.h4.fontSize,
+    fontWeight: typography.h4.fontWeight,
+    color: COLORS.text,
   },
   subtitle: {
     marginTop: 4,
-    color: "#6b7280",
+    color: COLORS.textMuted,
   },
   backButton: {
     padding: 8,
     borderRadius: 10,
-    backgroundColor: "#f3f4f6",
+    backgroundColor: COLORS.surfaceMuted,
   },
   pickerWrap: {
     backgroundColor: "#f9fafb",
@@ -43,7 +46,7 @@ export default StyleSheet.create({
   },
 
   formCard: {
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.surface,
     borderRadius: 20,
     padding: 16,
     marginBottom: 16,
@@ -83,9 +86,9 @@ export default StyleSheet.create({
     marginLeft: 2,
   },
   input: {
-    backgroundColor: "#f9fafb",
+    backgroundColor: COLORS.surfaceAlt,
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: COLORS.border,
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 12,
@@ -96,9 +99,9 @@ export default StyleSheet.create({
     borderColor: "#dc2626",
   },
   dateButton: {
-    backgroundColor: "#f9fafb",
+    backgroundColor: COLORS.surfaceAlt,
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: COLORS.border,
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 12,
@@ -142,15 +145,15 @@ export default StyleSheet.create({
     color: "#6d28d9",
   },
   primaryButton: {
-    backgroundColor: "#6d28d9",
+    backgroundColor: COLORS.primary,
     borderRadius: 14,
     paddingVertical: 14,
     alignItems: "center",
     marginTop: 4,
   },
   primaryButtonText: {
-    color: "#fff",
-    fontWeight: "800",
+    color: COLORS.surface,
+    fontWeight: typography.h4.fontWeight,
   },
 
   loaderWrap: {

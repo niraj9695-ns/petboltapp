@@ -12,9 +12,12 @@ import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "../../../context/ThemeContext";
 import styles from "../styles/BookingInterface";
+import CustomPicker from "../../pets/components/CustomPicker";
 
 export default function BookingInterface({ navigation }) {
+  const { theme, isDark } = useTheme();
   const [pets, setPets] = useState(["Buddy", "Luna", "Max", "Bella"]);
   const [selectedPet, setSelectedPet] = useState("Buddy");
 
@@ -104,28 +107,26 @@ export default function BookingInterface({ navigation }) {
 
   return (
     <LinearGradient
-      colors={["#faf5ff", "#fdf2f8", "#fff7ed"]}
+      colors={isDark ? ["#0f172a", "#111827", "#1e293b"] : ["#faf5ff", "#fdf2f8", "#fff7ed"]}
       style={styles.bookingInterfaceContainer}
     >
       <ScrollView contentContainerStyle={styles.bookingInterfaceScroll}>
         {/* TITLE */}
-        <Text style={styles.bookingInterfaceTitle}>
+        <Text style={[styles.bookingInterfaceTitle, { color: theme.textPrimary }]}> 
           Book Your Pet's <Text style={styles.bookingInterfaceGradientText}>Perfect Stay</Text>
         </Text>
 
         {/* PET CARD */}
         <View style={[styles.bookingInterfaceCard, { borderColor: "#e9d5ff" }]}>
-          <Text style={styles.bookingInterfaceHeading}>Select Your Pet</Text>
+          <Text style={[styles.bookingInterfaceHeading, { color: theme.textPrimary }]}>Select Your Pet</Text>
 
           {/* Picker */}
-          <Picker
+          <CustomPicker
             selectedValue={selectedPet}
             onValueChange={(v) => setSelectedPet(v)}
-          >
-            {pets.map((p) => (
-              <Picker.Item key={p} label={p} value={p} />
-            ))}
-          </Picker>
+            items={pets.map((p) => ({ label: p, value: p }))}
+            style={{ backgroundColor: theme.inputBackground, borderRadius: 12 }}
+          />
 
           {/* Chips */}
           <View style={styles.bookingInterfacePetRow}>
@@ -165,7 +166,7 @@ export default function BookingInterface({ navigation }) {
                 colors={["#e0e7ff", "#c7d2fe"]}
                 style={styles.bookingInterfaceAddPetChip}
               >
-                <Text style={styles.bookingInterfaceAddPetLabel}>
+                <Text style={[styles.bookingInterfaceAddPetLabel, { color: theme.primary }]}> 
                   {isGuest ? "Sign in to add pet" : "+ Add Pet"}
                 </Text>
               </LinearGradient>
@@ -174,23 +175,27 @@ export default function BookingInterface({ navigation }) {
 
           {/* ✅ ADD PET FORM */}
           {showAddPet && (
-            <View style={styles.bookingInterfaceAddPetBox}>
+            <View style={[styles.bookingInterfaceAddPetBox, { backgroundColor: theme.cardBackground, borderColor: theme.border }]}> 
               <TextInput
                 placeholder="Pet name"
                 value={newPetName}
                 onChangeText={setNewPetName}
-                style={styles.bookingInterfaceInput}
+                style={[styles.bookingInterfaceInput, { backgroundColor: theme.inputBackground, borderColor: theme.border, color: theme.textPrimary }]}
+                placeholderTextColor={theme.placeholder}
+                selectionColor={theme.primary}
               />
 
-              <Picker
+              <CustomPicker
                 selectedValue={newPetType}
                 onValueChange={(v) => setNewPetType(v)}
-              >
-                <Picker.Item label="Dog" value="Dog" />
-                <Picker.Item label="Cat" value="Cat" />
-                <Picker.Item label="Rabbit" value="Rabbit" />
-                <Picker.Item label="Other" value="Other" />
-              </Picker>
+                items={[
+                  { label: "Dog", value: "Dog" },
+                  { label: "Cat", value: "Cat" },
+                  { label: "Rabbit", value: "Rabbit" },
+                  { label: "Other", value: "Other" },
+                ]}
+                style={{ backgroundColor: theme.inputBackground, borderRadius: 12 }}
+              />
 
               <TouchableOpacity style={styles.bookingInterfaceAddButton} onPress={handleAddPet}>
                 <Text style={styles.bookingInterfaceButtonText}>
@@ -202,8 +207,8 @@ export default function BookingInterface({ navigation }) {
         </View>
 
         {/* DATE CARD */}
-        <View style={[styles.bookingInterfaceCard, { borderColor: "#e9d5ff" }]}>
-          <Text style={styles.bookingInterfaceHeading}>Choose Dates</Text>
+<View style={[styles.bookingInterfaceCard, { borderColor: theme.border, backgroundColor: theme.cardBackground }]}> 
+          <Text style={[styles.bookingInterfaceHeading, { color: theme.textPrimary }]}>Choose Dates</Text>
 
           <TouchableOpacity
             style={styles.bookingInterfaceDateInput}
@@ -213,7 +218,7 @@ export default function BookingInterface({ navigation }) {
             }}
           >
             <Ionicons name="calendar-outline" size={18} />
-            <Text>{checkInDate.toDateString()}</Text>
+            <Text style={{ color: theme.textPrimary }}>{checkInDate.toDateString()}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -224,7 +229,7 @@ export default function BookingInterface({ navigation }) {
             }}
           >
             <Ionicons name="calendar-outline" size={18} />
-            <Text>{checkOutDate.toDateString()}</Text>
+            <Text style={{ color: theme.textPrimary }}>{checkOutDate.toDateString()}</Text>
           </TouchableOpacity>
 
           {showPicker && (
@@ -254,8 +259,8 @@ export default function BookingInterface({ navigation }) {
             style={styles.bookingInterfaceSummaryBox}
           >
             <View style={styles.bookingInterfaceRow}>
-              <Text style={styles.bookingInterfaceSummaryLabel}>Total Days</Text>
-              <Text style={styles.bookingInterfaceSummaryValue}>{totalDays}</Text>
+              <Text style={[styles.bookingInterfaceSummaryLabel, { color: theme.textSecondary }]}>Total Days</Text>
+              <Text style={[styles.bookingInterfaceSummaryValue, { color: theme.primary }]}>{totalDays}</Text>
             </View>
 
             <View style={styles.bookingInterfaceRow}>

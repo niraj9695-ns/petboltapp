@@ -1,9 +1,13 @@
 import { StyleSheet } from "react-native";
+import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
+import { typography as baseTypography } from "../../../styles/theme/typography";
+
+const COLORS = boardingOwnerTheme;
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f3ff",
+    backgroundColor: COLORS.background,
   },
 
   loader: {
@@ -13,27 +17,27 @@ export default StyleSheet.create({
   },
 
   heading: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: "#4c1d95",
+    fontSize: (typography && typography.h4 && typography.h4.fontSize) || baseTypography.sectionTitle || 22,
+    fontWeight: (typography && typography.h4 && typography.h4.fontWeight) || baseTypography.weights.bold || "700",
+    color: COLORS.primaryDark,
     marginTop: 16,
     marginHorizontal: 16,
   },
 
   subHeading: {
-    fontSize: 13,
-    color: "#6b7280",
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    color: COLORS.textMuted,
     marginHorizontal: 16,
     marginBottom: 12,
   },
 
   card: {
-    backgroundColor: "#ffffff",
+    backgroundColor: COLORS.surface,
     marginHorizontal: 16,
     marginBottom: 12,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: "#ece7ff",
+    borderColor: COLORS.border,
     overflow: "hidden",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -51,15 +55,15 @@ export default StyleSheet.create({
   },
 
   sectionTitle: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#4c1d95",
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
+    color: COLORS.primaryDark,
   },
 
   sectionChevron: {
     fontSize: 20,
-    color: "#6b21a8",
-    fontWeight: "700",
+    color: COLORS.primary,
+    fontWeight: typography.title.fontWeight,
   },
 
   sectionBody: {
@@ -72,21 +76,21 @@ export default StyleSheet.create({
   },
 
   label: {
-    color: "#6b7280",
+    color: COLORS.textMuted,
     marginBottom: 6,
-    fontSize: 12.5,
-    fontWeight: "600",
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontWeight: (typography && typography.bodyMedium && typography.bodyMedium.fontWeight) || baseTypography.weights.medium || "500",
   },
 
   input: {
     borderWidth: 1,
-    borderColor: "#e9e3ff",
+    borderColor: COLORS.border,
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    backgroundColor: "#fcfbff",
-    fontSize: 14,
-    color: "#111827",
+    backgroundColor: COLORS.surfaceAlt,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    color: COLORS.text,
   },
 
   inputMultiline: {
@@ -95,7 +99,7 @@ export default StyleSheet.create({
   },
 
   saveButton: {
-    backgroundColor: "#6b21a8",
+    backgroundColor: COLORS.primary,
     marginHorizontal: 16,
     marginTop: 6,
     marginBottom: 30,
@@ -105,8 +109,8 @@ export default StyleSheet.create({
   },
 
   saveButtonText: {
-    color: "#fff",
-    fontWeight: "700",
-    fontSize: 15,
+    color: COLORS.surface,
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
   },
 });

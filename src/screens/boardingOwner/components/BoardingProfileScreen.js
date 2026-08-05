@@ -3,16 +3,17 @@ import {
   View,
   Text,
   ScrollView,
-  ActivityIndicator,
   Image,
   TouchableOpacity,
   Linking,
   Alert,
 } from "react-native";
+import PremiumLoader from "../../../components/PremiumLoader";
 import styles from "../styles/BoardingProfileStyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRefresh } from "../../../context/RefreshContext";
 import { getOwnerProfile } from "../services/boardingOwnerService";
+import { boardingOwnerTheme } from "../../../styles/themeStyles";
 
 export default function BoardingProfileScreen({ navigation }) {
   const { refreshKey } = useRefresh();
@@ -46,9 +47,9 @@ export default function BoardingProfileScreen({ navigation }) {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: boardingOwnerTheme.background }}>
         <View style={styles.loader}>
-          <ActivityIndicator size="large" color="#6b21a8" />
+          <PremiumLoader size={56} color={boardingOwnerTheme.primary} label="Loading profile" fullScreen />
         </View>
       </SafeAreaView>
     );

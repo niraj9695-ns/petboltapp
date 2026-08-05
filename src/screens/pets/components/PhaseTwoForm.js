@@ -15,12 +15,15 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import * as DocumentPicker from "expo-document-picker";
 
-import phaseTwoFormStyles from "../styles/PhaseTwoFormStyles";
+import createPhaseTwoFormStyles from "../styles/PhaseTwoFormStyles";
+import { useTheme } from "../../../context/ThemeContext";
 
 export default function PhaseTwoForm({ petData, setPetData }) {
   const [showDewormingPicker, setShowDewormingPicker] = useState(false);
 
   const [showFleaTickPicker, setShowFleaTickPicker] = useState(false);
+  const { isDark } = useTheme();
+  const phaseTwoFormStyles = createPhaseTwoFormStyles(isDark);
 
   const formatDate = (date) => {
     return date.toISOString().split("T")[0];

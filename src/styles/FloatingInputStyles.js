@@ -1,4 +1,6 @@
 import { StyleSheet } from "react-native";
+import { typography } from "./themeStyles";
+import { typography as baseTypography } from "./theme/typography";
 
 export default StyleSheet.create({
   container: {
@@ -9,7 +11,7 @@ export default StyleSheet.create({
     position: "absolute",
     left: 12,
     top: 16,
-    fontSize: 14,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
     color: "#888",
     backgroundColor: "#fff",
     paddingHorizontal: 4,
@@ -17,7 +19,7 @@ export default StyleSheet.create({
   },
   labelActive: {
     top: -8,
-    fontSize: 12,
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
     color: "#6b21a8",
   },
   input: {

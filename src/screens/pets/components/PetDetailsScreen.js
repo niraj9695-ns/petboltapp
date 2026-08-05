@@ -3,12 +3,12 @@ import {
   View,
   Text,
   ScrollView,
-  ActivityIndicator,
   Image,
   TouchableOpacity,
   Linking,
   Alert,
 } from "react-native";
+import PremiumLoader from "../../../components/PremiumLoader";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import petDetailsScreenStyles from "../styles/PetDetailsScreenStyles";
@@ -72,7 +72,7 @@ export default function PetDetailsScreen({ route, navigation }) {
         end={{ x: 1, y: 1 }}
         style={petDetailsScreenStyles.detailsLoader}
       >
-        <ActivityIndicator size="large" color="#6b21a8" />
+        <PremiumLoader size={56} color="#6b21a8" label="Loading pet details" />
       </LinearGradient>
     );
   }

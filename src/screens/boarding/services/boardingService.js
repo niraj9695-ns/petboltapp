@@ -1,5 +1,8 @@
-import { BOARDING_API_URL, AVAILABILITY_API_URL } from "../constants/api";
-import { BOOKING_API_URL } from "../constants/api";
+import {
+  BOARDING_API_URL,
+  AVAILABILITY_API_URL,
+  BOOKING_API_URL,
+} from "../constants/api";
 
 export const fetchBoardingCentersApi = async (
   city = "",
@@ -75,45 +78,6 @@ export const fetchBoardingCenterByIdApi = async (centerId) => {
   return data?.status === "success" ? data.data || null : null;
 };
 
-export const fetchCapacityApi = async (centerId) => {
-  const response = await fetch(
-    `${AVAILABILITY_API_URL}/capacity?center_id=${centerId}`,
-  );
-  const text = await response.text();
-
-  if (!text || text.trim() === "") {
-    return null;
-  }
-
-  return JSON.parse(text);
-};
-
-export const checkAvailabilityApi = async ({
-  centerId,
-  startDate,
-  endDate,
-}) => {
-  const response = await fetch(`${AVAILABILITY_API_URL}/check`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      center_id: centerId,
-      start_date: startDate,
-      end_date: endDate,
-    }),
-  });
-
-  const text = await response.text();
-
-  if (!text || text.trim() === "") {
-    return null;
-  }
-
-  return JSON.parse(text);
-};
-
 export const fetchBookedDatesApi = async (centerId, year, month) => {
   const response = await fetch(
     `${AVAILABILITY_API_URL}/booked-dates?center_id=${centerId}&year=${year}&month=${month}`,
@@ -139,6 +103,63 @@ export const fetchBookedDatesApi = async (centerId, year, month) => {
   }
 
   return dates;
+};
+
+export const createAndPayBookingApi = async ({
+  token,
+  petId,
+  centerId,
+  startDate,
+  endDate,
+  specialInstructions,
+}) => {
+  const formData = new FormData();
+
+  formData.append("pet_id", String(petId));
+  formData.append("center_id", String(centerId));
+  formData.append("start_date", startDate);
+  formData.append("end_date", endDate);
+  formData.append("special_instructions", specialInstructions || "");
+
+  const response = await fetch(`${BOOKING_API_URL}/create-and-pay`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+    },
+    body: formData,
+  });
+
+  return response.json();
+};
+
+export const verifyPaymentApi = async ({
+  token,
+  paymentId,
+  razorpayPaymentId,
+  razorpayOrderId,
+  razorpaySignature,
+}) => {
+  const formData = new FormData();
+
+  formData.append("payment_id", String(paymentId));
+  formData.append("razorpay_payment_id", razorpayPaymentId);
+  formData.append("razorpay_order_id", razorpayOrderId);
+  formData.append("razorpay_signature", razorpaySignature);
+
+  const response = await fetch(
+    "https://www.cgpisoftware.com/cheerytail/api/payments/verify",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+      body: formData,
+    },
+  );
+
+  return response.json();
 };
 
 export const fetchPricingApi = async ({

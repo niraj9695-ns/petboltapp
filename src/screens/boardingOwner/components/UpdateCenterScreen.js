@@ -3,7 +3,6 @@ import {
   View,
   Text,
   ScrollView,
-  ActivityIndicator,
   TouchableOpacity,
   Image,
   Alert,
@@ -16,10 +15,10 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import styles from "../styles/UpdateCenterScreenStyles";
 import { Picker } from "@react-native-picker/picker";
+import FloatingInput from "../../../components/inputs/FloatingInput";
 import {
   buildCenterFormData,
   deleteCenterImage,
@@ -27,6 +26,7 @@ import {
   updateCenter,
 } from "../services/boardingOwnerService";
 import { useRefresh } from "../../../context/RefreshContext";
+import PremiumLoader from "../../../components/PremiumLoader";
 
 export default function UpdateCenterScreen() {
   const { width } = Dimensions.get("window");
@@ -43,11 +43,13 @@ export default function UpdateCenterScreen() {
   const [deletingImageIndex, setDeletingImageIndex] = useState(null);
   const [licenseProof, setLicenseProof] = useState(null);
   const [insuranceDocument, setInsuranceDocument] = useState(null);
+  const [uploadErrors, setUploadErrors] = useState({});
   const [petPriceDraft, setPetPriceDraft] = useState({
     petType: "dog",
     amount: "",
   });
   const [pickerConfig, setPickerConfig] = useState(null);
+  const PET_TYPES = ["dog", "cat", "bird", "rabbit", "turtle", "others"];
   const [expandedSections, setExpandedSections] = useState({
     basic: true,
     operations: false,
@@ -95,8 +97,6 @@ export default function UpdateCenterScreen() {
     required_vaccines: "",
     boarding_services: "",
   });
-
-  const MAX_FILE_SIZE = 100 * 1024;
 
   const getFileSize = async (file) => {
     if (!file) return 0;
@@ -150,18 +150,12 @@ export default function UpdateCenterScreen() {
         longitude: data?.longitude || "",
         service_area_radius: data?.service_area_radius || "",
         prices: data?.pet_type_prices || data?.prices || {},
-        amenities: Array.isArray(data?.amenities)
-          ? data.amenities.join(", ")
-          : data?.amenities || "",
-        accepted_pet_types: Array.isArray(data?.accepted_pet_types)
-          ? data.accepted_pet_types.join(", ")
-          : data?.accepted_pet_types || "",
-        size_weight_restrictions: data?.size_weight_restrictions || "",
-        age_preferences: data?.age_preferences || "",
-        required_vaccines: data?.required_vaccines || "",
-        boarding_services: Array.isArray(data?.boarding_services)
-          ? data.boarding_services.join(", ")
-          : data?.boarding_services || "",
+        amenities: formatListValue(data?.amenities),
+        accepted_pet_types: formatListValue(data?.accepted_pet_types),
+        size_weight_restrictions: formatListValue(data?.size_weight_restrictions),
+        age_preferences: formatListValue(data?.age_preferences),
+        required_vaccines: formatListValue(data?.required_vaccines),
+        boarding_services: formatListValue(data?.boarding_services),
       });
     } catch (error) {
       Alert.alert("Error", "Unable to load center details");
@@ -172,6 +166,66 @@ export default function UpdateCenterScreen() {
 
   const updateField = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const normalizeListValue = (value) => {
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      if (!trimmed) return [];
+
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) {
+          return parsed.filter(Boolean);
+        }
+      } catch (error) {
+        // Fall through to comma splitting for plain strings.
+      }
+
+      return trimmed
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+
+    if (Array.isArray(value)) {
+      return value.filter(Boolean);
+    }
+
+    return [];
+  };
+
+  const formatListValue = (value) => {
+    if (Array.isArray(value)) {
+      return value.join(", ");
+    }
+
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      if (!trimmed) return "";
+
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) {
+          return parsed.join(", ");
+        }
+      } catch (error) {
+        // Keep the original string as-is for plain text values.
+      }
+
+      return trimmed;
+    }
+
+    return "";
+  };
+
+  const toggleAcceptedPetType = (petType) => {
+    const currentValues = normalizeListValue(form.accepted_pet_types);
+    const nextValues = currentValues.includes(petType)
+      ? currentValues.filter((value) => value !== petType)
+      : [...currentValues, petType];
+
+    updateField("accepted_pet_types", nextValues);
   };
 
   const toggleSection = (key) => {
@@ -240,28 +294,16 @@ export default function UpdateCenterScreen() {
       const payload = { ...form };
 
       if (typeof payload.amenities === "string") {
-        payload.amenities = payload.amenities
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
+        payload.amenities = normalizeListValue(payload.amenities);
       }
       if (typeof payload.accepted_pet_types === "string") {
-        payload.accepted_pet_types = payload.accepted_pet_types
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
+        payload.accepted_pet_types = normalizeListValue(payload.accepted_pet_types);
       }
       if (typeof payload.required_vaccines === "string") {
-        payload.required_vaccines = payload.required_vaccines
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
+        payload.required_vaccines = normalizeListValue(payload.required_vaccines);
       }
       if (typeof payload.boarding_services === "string") {
-        payload.boarding_services = payload.boarding_services
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
+        payload.boarding_services = normalizeListValue(payload.boarding_services);
       }
       if (typeof payload.prices === "string" && payload.prices.trim()) {
         try {
@@ -274,17 +316,18 @@ export default function UpdateCenterScreen() {
       const formData = buildCenterFormData(payload, {
         centerId,
         licenseProof,
+        insuranceProof: insuranceDocument,
         centerPhotos: newImages,
       });
 
-      await updateCenter(formData);
+      const response = await updateCenter(formData);
       triggerRefresh();
 
       Alert.alert("Success", "Center updated successfully", [
         {
           text: "OK",
           onPress: () =>
-            navigation.navigate("CenterDetails", {
+            navigation.replace("CenterDetails", {
               centerId,
               refreshKey: Date.now(),
             }),
@@ -356,42 +399,22 @@ export default function UpdateCenterScreen() {
   };
 
   const pickImages = async () => {
-    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permission.granted) {
-      Alert.alert("Permission Required", "Gallery permission is required");
-      return;
-    }
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "image/*",
+        multiple: true,
+        copyToCacheDirectory: true,
+      });
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-      allowsMultipleSelection: true,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      const assets = result.assets || [result];
-      const validImages = [];
-      const oversized = [];
-
-      for (const asset of assets) {
-        const size = await getFileSize(asset);
-        if (size > MAX_FILE_SIZE) {
-          oversized.push(asset);
-        } else {
-          validImages.push(asset);
+      if (!result.canceled) {
+        const assets = result.assets || [];
+        if (assets.length > 0) {
+          setNewImages((prev) => [...prev, ...assets]);
+          setUploadErrors((prev) => ({ ...prev, images: "" }));
         }
       }
-
-      if (oversized.length > 0) {
-        Alert.alert(
-          "File Too Large",
-          "One or more selected images exceed the 100KB upload limit. Please choose smaller images.",
-        );
-      }
-
-      if (validImages.length > 0) {
-        setNewImages((prev) => [...prev, ...validImages]);
-      }
+    } catch (error) {
+      Alert.alert("Error", "Unable to select image.");
     }
   };
 
@@ -404,19 +427,13 @@ export default function UpdateCenterScreen() {
 
       if (!result.canceled) {
         const file = result.assets?.[0] ?? result;
-        const size = await getFileSize(file);
-        if (size > MAX_FILE_SIZE) {
-          Alert.alert(
-            "File Too Large",
-            "Selected document exceeds the 100KB upload limit. Please choose a smaller file.",
-          );
-          return;
-        }
 
         if (type === "license") {
           setLicenseProof(file);
+          setUploadErrors((prev) => ({ ...prev, license: "" }));
         } else {
           setInsuranceDocument(file);
+          setUploadErrors((prev) => ({ ...prev, insurance: "" }));
         }
       }
     } catch (error) {
@@ -428,7 +445,7 @@ export default function UpdateCenterScreen() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }}>
         <View style={styles.loader}>
-          <ActivityIndicator size="large" color="#6b21a8" />
+          <PremiumLoader size={56} color="#6b21a8" label="Loading center details" fullScreen />
         </View>
       </SafeAreaView>
     );
@@ -665,36 +682,77 @@ export default function UpdateCenterScreen() {
                 onChangeText={(v) => updateField("special_instructions", v)}
                 multiline
               />
-              <Input
-                label="Amenities (comma separated)"
+              <FloatingInput
+                label="Amenities"
                 value={form.amenities}
                 onChangeText={(v) => updateField("amenities", v)}
               />
-              <Input
-                label="Accepted Pet Types (comma separated)"
-                value={form.accepted_pet_types}
-                onChangeText={(v) => updateField("accepted_pet_types", v)}
-              />
-              <Input
-                label="Size Weight Restrictions (comma separated)"
-                value={form.size_weight_restrictions}
-                onChangeText={(v) => updateField("size_weight_restrictions", v)}
-              />
-              <Input
-                label="Age Preferences (comma separated)"
-                value={form.age_preferences}
-                onChangeText={(v) => updateField("age_preferences", v)}
-              />
-              <Input
-                label="Required Vaccines (comma separated)"
-                value={form.required_vaccines}
-                onChangeText={(v) => updateField("required_vaccines", v)}
-              />
-              <Input
-                label="Boarding Services (comma separated)"
-                value={form.boarding_services}
-                onChangeText={(v) => updateField("boarding_services", v)}
-              />
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Accepted Pet Types</Text>
+                <Text style={styles.uploadInfo}>Tap to select the pet types you accept</Text>
+                <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+                  {PET_TYPES.map((petType) => {
+                    const selected = normalizeListValue(form.accepted_pet_types).includes(petType);
+                    return (
+                      <TouchableOpacity
+                        key={petType}
+                        style={[
+                          styles.addChip,
+                          selected
+                            ? { backgroundColor: "#6b21a8" }
+                            : null,
+                        ]}
+                        onPress={() => toggleAcceptedPetType(petType)}
+                      >
+                        <Text
+                          style={[
+                            styles.addChipText,
+                            selected ? { color: "#fff" } : null,
+                          ]}
+                        >
+                          {petType.charAt(0).toUpperCase() + petType.slice(1)}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.label}>Size / Weight Restrictions</Text>
+                <Text style={styles.helperText}>Example: Small, Medium, Large</Text>
+                <FloatingInput
+                  label=""
+                  value={form.size_weight_restrictions}
+                  onChangeText={(v) => updateField("size_weight_restrictions", v)}
+                />
+              </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.label}>Age Preferences</Text>
+                <Text style={styles.helperText}>Example: Puppies, Adults, Seniors</Text>
+                <FloatingInput
+                  label=""
+                  value={form.age_preferences}
+                  onChangeText={(v) => updateField("age_preferences", v)}
+                />
+              </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.label}>Required Vaccines</Text>
+                <Text style={styles.helperText}>Example: Rabies, Distemper</Text>
+                <FloatingInput
+                  label=""
+                  value={form.required_vaccines}
+                  onChangeText={(v) => updateField("required_vaccines", v)}
+                />
+              </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.label}>Boarding Services</Text>
+                <Text style={styles.helperText}>Example: Daycare, Overnight</Text>
+                <FloatingInput
+                  label=""
+                  value={form.boarding_services}
+                  onChangeText={(v) => updateField("boarding_services", v)}
+                />
+              </View>
             </SectionBlock>
 
             <SectionBlock
@@ -723,9 +781,23 @@ export default function UpdateCenterScreen() {
               <Text style={styles.uploadInfo}>
                 Upload images and documents up to 100KB each.
               </Text>
+              {uploadErrors.license ? (
+                <Text style={styles.errorText}>{uploadErrors.license}</Text>
+              ) : null}
+              {uploadErrors.insurance ? (
+                <Text style={styles.errorText}>{uploadErrors.insurance}</Text>
+              ) : null}
+              {uploadErrors.images ? (
+                <Text style={styles.errorText}>{uploadErrors.images}</Text>
+              ) : null}
               {licenseProof && (
                 <Text style={styles.helperText}>
-                  Selected: {licenseProof.name}
+                  Selected license: {licenseProof.name}
+                </Text>
+              )}
+              {insuranceDocument && (
+                <Text style={styles.helperText}>
+                  Selected insurance: {insuranceDocument.name}
                 </Text>
               )}
 
@@ -831,7 +903,7 @@ export default function UpdateCenterScreen() {
                             }}
                           >
                             {isDeleting ? (
-                              <ActivityIndicator size="small" color="#dc2626" />
+                              <PremiumLoader size={20} color="#dc2626" showLabel={false} />
                             ) : (
                               <Text
                                 style={{ color: "#dc2626", fontWeight: "800" }}
@@ -849,10 +921,19 @@ export default function UpdateCenterScreen() {
             </SectionBlock>
           </View>
 
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.saveButtonText}>
-              {saving ? "Saving..." : "Save Changes"}
-            </Text>
+          <TouchableOpacity
+            style={[styles.saveButton, saving && { opacity: 0.85 }]}
+            onPress={handleSave}
+            disabled={saving}
+          >
+            {saving ? (
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <PremiumLoader size={20} color="#fff" showLabel={false} />
+                <Text style={[styles.saveButtonText, { marginLeft: 8 }]}>Saving...</Text>
+              </View>
+            ) : (
+              <Text style={styles.saveButtonText}>Save Changes</Text>
+            )}
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>

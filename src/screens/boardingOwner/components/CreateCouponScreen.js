@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   Platform,
@@ -22,6 +21,8 @@ import {
   getCenters,
 } from "../services/boardingOwnerService";
 import styles from "../styles/CreateCouponStyles";
+import PremiumLoader from "../../../components/PremiumLoader";
+import { useTheme } from "../../../context/ThemeContext";
 
 const initialForm = {
   center_id: "",
@@ -64,6 +65,7 @@ export default function CreateCouponScreen() {
   const [showErrors, setShowErrors] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [form, setForm] = useState(initialForm);
+  const { theme } = useTheme();
 
   useEffect(() => {
     loadCenters(1);
@@ -200,9 +202,9 @@ export default function CreateCouponScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}> 
         <View style={styles.loaderWrap}>
-          <ActivityIndicator size="large" color="#6d28d9" />
+          <PremiumLoader size={56} color={theme.primary} label="Loading centers" fullScreen />
         </View>
       </SafeAreaView>
     );
@@ -223,12 +225,12 @@ export default function CreateCouponScreen() {
               onPress={() => navigation.goBack()}
               style={styles.backButton}
             >
-              <Ionicons name="arrow-back" size={22} color="#111827" />
+              <Ionicons name="arrow-back" size={22} color={theme.textPrimary} />
             </TouchableOpacity>
 
             <View style={{ flex: 1, marginLeft: 10 }}>
-              <Text style={styles.title}>Create Coupon</Text>
-              <Text style={styles.subtitle}>
+              <Text style={[styles.title, { color: theme.textPrimary }]}>Create Coupon</Text>
+              <Text style={[styles.subtitle, { color: theme.textSecondary }]}> 
                 Add a new date discount for your center
               </Text>
             </View>
@@ -245,6 +247,7 @@ export default function CreateCouponScreen() {
                 style={[
                   styles.pickerWrap,
                   showFieldError(form.center_id) && styles.inputError,
+                  { backgroundColor: theme.inputBackground, borderColor: theme.border },
                 ]}
               >
                 <Picker
@@ -253,13 +256,15 @@ export default function CreateCouponScreen() {
                     setShowErrors(false);
                     setForm((current) => ({ ...current, center_id: value }));
                   }}
-                  dropdownIconColor="#6d28d9"
+                  dropdownIconColor={theme.primary}
+                  style={{ color: theme.textPrimary }}
                 >
                   {centers.map((center) => (
                     <Picker.Item
                       key={center.id}
                       label={center.center_name || `Center ${center.id}`}
                       value={String(center.id)}
+                      color={theme.textPrimary}
                     />
                   ))}
                 </Picker>
@@ -281,6 +286,7 @@ export default function CreateCouponScreen() {
                   style={[
                     styles.pickerWrap,
                     showFieldError(form.discount_type) && styles.inputError,
+                    { backgroundColor: theme.inputBackground, borderColor: theme.border },
                   ]}
                 >
                   <Picker
@@ -292,10 +298,11 @@ export default function CreateCouponScreen() {
                         discount_type: value,
                       }));
                     }}
-                    dropdownIconColor="#6d28d9"
+                    dropdownIconColor={theme.primary}
+                    style={{ color: theme.textPrimary }}
                   >
-                    <Picker.Item label="Flat" value="flat" />
-                    <Picker.Item label="Percentage" value="percentage" />
+                    <Picker.Item label="Flat" value="flat" color={theme.textPrimary} />
+                    <Picker.Item label="Percentage" value="percentage" color={theme.textPrimary} />
                   </Picker>
                 </View>
               </View>
@@ -310,11 +317,14 @@ export default function CreateCouponScreen() {
                   style={[
                     styles.input,
                     showFieldError(form.discount_value) && styles.inputError,
+                    { backgroundColor: theme.inputBackground, borderColor: theme.border, color: theme.textPrimary },
                   ]}
                   keyboardType="numeric"
                   placeholder={
                     form.discount_type === "percentage" ? "10" : "500"
                   }
+                  placeholderTextColor={theme.placeholder}
+                  selectionColor={theme.primary}
                   value={form.discount_value}
                   onChangeText={(value) => {
                     setShowErrors(false);
@@ -338,9 +348,12 @@ export default function CreateCouponScreen() {
                   style={[
                     styles.input,
                     showFieldError(form.min_days) && styles.inputError,
+                    { backgroundColor: theme.inputBackground, borderColor: theme.border, color: theme.textPrimary },
                   ]}
                   keyboardType="numeric"
                   placeholder="3"
+                  placeholderTextColor={theme.placeholder}
+                  selectionColor={theme.primary}
                   value={form.min_days}
                   onChangeText={(value) => {
                     setShowErrors(false);
@@ -361,12 +374,14 @@ export default function CreateCouponScreen() {
                   style={[
                     styles.dateButton,
                     showFieldError(form.expiry_date) && styles.inputError,
+                    { backgroundColor: theme.inputBackground, borderColor: theme.border },
                   ]}
                 >
                   <Text
                     style={[
                       styles.dateButtonText,
                       !form.expiry_date && styles.dateButtonPlaceholder,
+                      { color: form.expiry_date ? theme.textPrimary : theme.placeholder },
                     ]}
                   >
                     {form.expiry_date || "Select expiry date"}
@@ -445,7 +460,7 @@ export default function CreateCouponScreen() {
               disabled={saving}
             >
               {saving ? (
-                <ActivityIndicator color="#fff" size="small" />
+                <PremiumLoader size={24} color="#fff" showLabel={false} />
               ) : (
                 <Text style={styles.primaryButtonText}>Create coupon</Text>
               )}

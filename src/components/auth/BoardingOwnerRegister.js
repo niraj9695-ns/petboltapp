@@ -12,11 +12,12 @@ import {
   ScrollView,
   Alert,
   StyleSheet,
-  ActivityIndicator,
 } from "react-native";
 
 import * as DocumentPicker from "expo-document-picker";
 import styles from "../../styles/BoardingOwnerRegisterStyles";
+import PremiumLoader from "../PremiumLoader";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function BoardingOwnerRegister({
   setStep,
@@ -134,6 +135,7 @@ export default function BoardingOwnerRegister({
   const [signatureDate, setSignatureDate] = useState(new Date());
 
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const { theme } = useTheme();
 
   const PET_TYPES = ["dog", "cat", "bird", "rabbit", "turtle", "others"];
 
@@ -629,7 +631,7 @@ export default function BoardingOwnerRegister({
       <View
         style={{
           height: 8,
-          backgroundColor: "#e5e7eb",
+          backgroundColor: theme.border,
           borderRadius: 10,
           marginBottom: 20,
         }}
@@ -638,7 +640,7 @@ export default function BoardingOwnerRegister({
           style={{
             height: 8,
             width: `${(currentStep / 5) * 100}%`,
-            backgroundColor: "#6b21a8",
+            backgroundColor: theme.primary,
             borderRadius: 10,
           }}
         />
@@ -648,7 +650,7 @@ export default function BoardingOwnerRegister({
         style={{
           textAlign: "center",
           marginBottom: 20,
-          color: "#666",
+          color: theme.textSecondary,
           fontWeight: "600",
         }}
       >
@@ -656,7 +658,7 @@ export default function BoardingOwnerRegister({
       </Text>
 
       {serverError ? (
-        <View style={styles.errorBanner}>
+        <View style={[styles.errorBanner, { backgroundColor: theme.errorBackground, borderColor: theme.error }]}> 
           <Text style={styles.errorBannerTitle}>Registration Error</Text>
           <Text style={styles.errorBannerText}>{serverError}</Text>
         </View>
@@ -880,38 +882,65 @@ STEP 2 - CENTER DETAILS
           {errors.propertyType ? (
             <Text style={styles.errorTopText}>{errors.propertyType}</Text>
           ) : null}
-          <FloatingInput
-            label="Property Type *"
-            value={propertyType}
-            onChangeText={(text) => {
-              setPropertyType(text);
-              setErrors((prev) => ({ ...prev, propertyType: "" }));
-            }}
-          />
+          <Text style={styles.helperText}>
+            Suggested options: House, Apartment, or Facility
+          </Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={propertyType}
+              onValueChange={(value) => {
+                setPropertyType(value);
+                setErrors((prev) => ({ ...prev, propertyType: "" }));
+              }}
+            >
+              <Picker.Item label="Select property type" value="" />
+              <Picker.Item label="House" value="house" />
+              <Picker.Item label="Apartment" value="apartment" />
+              <Picker.Item label="Facility" value="facility" />
+            </Picker>
+          </View>
 
           {errors.fencingStatus ? (
             <Text style={styles.errorTopText}>{errors.fencingStatus}</Text>
           ) : null}
-          <FloatingInput
-            label="Fencing Status *"
-            value={fencingStatus}
-            onChangeText={(text) => {
-              setFencingStatus(text);
-              setErrors((prev) => ({ ...prev, fencingStatus: "" }));
-            }}
-          />
+          <Text style={styles.helperText}>
+            Suggested options: Full, Partial, or None
+          </Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={fencingStatus}
+              onValueChange={(value) => {
+                setFencingStatus(value);
+                setErrors((prev) => ({ ...prev, fencingStatus: "" }));
+              }}
+            >
+              <Picker.Item label="Select fencing status" value="" />
+              <Picker.Item label="Full" value="full" />
+              <Picker.Item label="Partial" value="partial" />
+              <Picker.Item label="None" value="none" />
+            </Picker>
+          </View>
 
           {errors.supervisionLevel ? (
             <Text style={styles.errorTopText}>{errors.supervisionLevel}</Text>
           ) : null}
-          <FloatingInput
-            label="Supervision Level *"
-            value={supervisionLevel}
-            onChangeText={(text) => {
-              setSupervisionLevel(text);
-              setErrors((prev) => ({ ...prev, supervisionLevel: "" }));
-            }}
-          />
+          <Text style={styles.helperText}>
+            Suggested options: 24x7, Limited, or Scheduled
+          </Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={supervisionLevel}
+              onValueChange={(value) => {
+                setSupervisionLevel(value);
+                setErrors((prev) => ({ ...prev, supervisionLevel: "" }));
+              }}
+            >
+              <Picker.Item label="Select supervision level" value="" />
+              <Picker.Item label="24x7" value="24x7" />
+              <Picker.Item label="Limited" value="limited" />
+              <Picker.Item label="Scheduled" value="scheduled" />
+            </Picker>
+          </View>
 
           {errors.totalCapacity ? (
             <Text style={styles.errorTopText}>{errors.totalCapacity}</Text>
@@ -951,7 +980,11 @@ STEP 2 - CENTER DETAILS
                     const updatedRows = [...petPriceRows];
                     updatedRows[index].petType = value;
                     setPetPriceRows(updatedRows);
-                    setErrors((prev) => ({ ...prev, prices: "", stepError: "" }));
+                    setErrors((prev) => ({
+                      ...prev,
+                      prices: "",
+                      stepError: "",
+                    }));
                   }}
                 >
                   <Picker.Item label="Select Pet Type" value="" />
@@ -989,7 +1022,11 @@ STEP 2 - CENTER DETAILS
                         ? updatedRows
                         : [{ petType: "", price: "" }],
                     );
-                    setErrors((prev) => ({ ...prev, prices: "", stepError: "" }));
+                    setErrors((prev) => ({
+                      ...prev,
+                      prices: "",
+                      stepError: "",
+                    }));
                   }}
                 >
                   <Text style={styles.removeRowText}>-</Text>
@@ -1077,40 +1114,56 @@ STEP 3 - SERVICES & AMENITIES
             })}
           </View>
 
-          <FloatingInput
-            label="Size / Weight Restrictions"
-            value={sizeWeightRestrictions}
-            onChangeText={setSizeWeightRestrictions}
-          />
+          <View>
+            <Text style={styles.helperText}>Example: Small, Medium, Large</Text>
+            <FloatingInput
+              label="Size / Weight Restrictions"
+              value={sizeWeightRestrictions}
+              onChangeText={setSizeWeightRestrictions}
+            />
+          </View>
 
-          <FloatingInput
-            label="Age Preferences"
-            value={agePreferences}
-            onChangeText={setAgePreferences}
-          />
+          <View>
+            <Text style={styles.helperText}>
+              Example: Puppies, Adults, Seniors
+            </Text>
+            <FloatingInput
+              label="Age Preferences"
+              value={agePreferences}
+              onChangeText={setAgePreferences}
+            />
+          </View>
 
-          <FloatingInput
-            label="Required Vaccines"
-            value={requiredVaccines}
-            onChangeText={setRequiredVaccines}
-          />
+          <View>
+            <Text style={styles.helperText}>Example: Rabies, Distemper</Text>
+            <FloatingInput
+              label="Required Vaccines"
+              value={requiredVaccines}
+              onChangeText={setRequiredVaccines}
+            />
+          </View>
 
-          <FloatingInput
-            label="Boarding Services"
-            value={boardingServices}
-            onChangeText={setBoardingServices}
-          />
+          <View>
+            <Text style={styles.helperText}>Example: Daycare, Overnight</Text>
+            <FloatingInput
+              label="Boarding Services"
+              value={boardingServices}
+              onChangeText={setBoardingServices}
+            />
+          </View>
 
-          <FloatingInput
-            label="Amenities"
-            value={amenities}
-            onChangeText={setAmenities}
-          />
+          <View>
+            <Text style={styles.helperText}>Example: Grooming, Play Area</Text>
+            <FloatingInput
+              label="Amenities"
+              value={amenities}
+              onChangeText={setAmenities}
+            />
+          </View>
 
           {errors.vaccinationPolicy ? (
             <Text style={styles.errorTopText}>{errors.vaccinationPolicy}</Text>
           ) : null}
-
           <FloatingInput
             label="Vaccination Policy *"
             value={vaccinationPolicy}
@@ -1444,7 +1497,7 @@ STEP 5 - EXTRA DETAILS & SUBMIT
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator color="#fff" />
+                <PremiumLoader size={28} color="#fff" showLabel={false} />
               ) : (
                 <Text style={styles.buttonText}>Register Boarding Owner</Text>
               )}

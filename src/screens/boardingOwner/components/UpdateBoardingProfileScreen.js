@@ -6,11 +6,11 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
-  ActivityIndicator,
   Alert,
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
+import PremiumLoader from "../../../components/PremiumLoader";
 
 import styles from "../styles/UpdateBoardingProfileStyles";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -20,6 +20,8 @@ import {
   updateOwnerProfile,
 } from "../services/boardingOwnerService";
 import { useRefresh } from "../../../context/RefreshContext";
+import BackButton from "../../../components/BackButton";
+import { boardingOwnerTheme } from "../../../styles/themeStyles";
 
 export default function UpdateBoardingProfileScreen({ navigation }) {
   const { triggerRefresh } = useRefresh();
@@ -138,7 +140,46 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
         Alert.alert("Success", "Profile Updated Successfully", [
           {
             text: "OK",
-            onPress: () => navigation.goBack(),
+            onPress: () => {
+              triggerRefresh();
+              // Delay navigation slightly so Alert can dismiss first
+              setTimeout(() => {
+                try {
+                  // climb to root navigator
+                  let root = navigation;
+                  while (root && root.getParent) {
+                    const p = root.getParent();
+                    if (!p) break;
+                    root = p;
+                  }
+
+                  if (root && root.reset) {
+                    try {
+                      root.reset({
+                        index: 0,
+                        routes: [
+                          {
+                            name: "BoardingOwner",
+                            params: {
+                              screen: "Main",
+                              params: { screen: "BoardingTabs", params: { screen: "Profile" } },
+                            },
+                          },
+                        ],
+                      });
+                      return;
+                    } catch (err) {}
+                  }
+                } catch (e) {}
+
+                try {
+                  navigation.navigate("BoardingOwner", {
+                    screen: "Main",
+                    params: { screen: "BoardingTabs", params: { screen: "Profile" } },
+                  });
+                } catch (err) {}
+              }, 80);
+            },
           },
         ]);
       } else {
@@ -153,9 +194,9 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: boardingOwnerTheme.background }}>
         <View style={styles.loader}>
-          <ActivityIndicator size="large" color="#6b21a8" />
+          <PremiumLoader size={56} color={boardingOwnerTheme.primary} label="Loading profile" fullScreen />
         </View>
       </SafeAreaView>
     );
@@ -174,43 +215,25 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.heading}>Update Boarding Profile</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 16 }}>
+            <BackButton
+              fallbackRoute={"BoardingOwner"}
+              fallbackParams={{ screen: "Main", params: { screen: "BoardingTabs", params: { screen: "Profile" } } }}
+            />
+            <Text style={styles.heading}>Update Boarding Profile</Text>
+          </View>
           <Text style={styles.subHeading}>Tap a section to edit details.</Text>
 
           {renderSection(
             "personal",
             "Personal Details",
             <>
-              <Input
-                label="Full Name"
-                value={form.full_name}
-                onChangeText={(v) => updateField("full_name", v)}
-              />
-              <Input
-                label="Email"
-                value={form.email}
-                onChangeText={(v) => updateField("email", v)}
-              />
-              <Input
-                label="Mobile Number"
-                value={form.mobile_number}
-                onChangeText={(v) => updateField("mobile_number", v)}
-              />
-              <Input
-                label="Alternate Contact Number"
-                value={form.alternate_contact_number}
-                onChangeText={(v) => updateField("alternate_contact_number", v)}
-              />
-              <Input
-                label="Emergency Contact Name"
-                value={form.emergency_contact_name}
-                onChangeText={(v) => updateField("emergency_contact_name", v)}
-              />
-              <Input
-                label="Emergency Contact Number"
-                value={form.emergency_contact_number}
-                onChangeText={(v) => updateField("emergency_contact_number", v)}
-              />
+              <Input label="Full Name" value={form.full_name} onChangeText={(v) => updateField("full_name", v)} />
+              <Input label="Email" value={form.email} onChangeText={(v) => updateField("email", v)} />
+              <Input label="Mobile Number" value={form.mobile_number} onChangeText={(v) => updateField("mobile_number", v)} />
+              <Input label="Alternate Contact Number" value={form.alternate_contact_number} onChangeText={(v) => updateField("alternate_contact_number", v)} />
+              <Input label="Emergency Contact Name" value={form.emergency_contact_name} onChangeText={(v) => updateField("emergency_contact_name", v)} />
+              <Input label="Emergency Contact Number" value={form.emergency_contact_number} onChangeText={(v) => updateField("emergency_contact_number", v)} />
             </>,
           )}
 
@@ -218,48 +241,14 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
             "business",
             "Business & Legal",
             <>
-              <Input
-                label="Business Name"
-                value={form.business_name}
-                onChangeText={(v) => updateField("business_name", v)}
-              />
-              <Input
-                label="Authorized Person"
-                value={form.authorized_person_name}
-                onChangeText={(v) => updateField("authorized_person_name", v)}
-              />
-              <Input
-                label="Digital Signature"
-                value={form.digital_signature}
-                onChangeText={(v) => updateField("digital_signature", v)}
-              />
-              <Input
-                label="Signature Date"
-                value={form.signature_date}
-                onChangeText={(v) => updateField("signature_date", v)}
-              />
-              <Input
-                label="Registration License Number"
-                value={form.registration_license_number}
-                onChangeText={(v) =>
-                  updateField("registration_license_number", v)
-                }
-              />
-              <Input
-                label="Insurance Policy Number"
-                value={form.insurance_policy_number}
-                onChangeText={(v) => updateField("insurance_policy_number", v)}
-              />
-              <Input
-                label="Insurance Provider"
-                value={form.insurance_provider_name}
-                onChangeText={(v) => updateField("insurance_provider_name", v)}
-              />
-              <Input
-                label="Insurance Expiry Date"
-                value={form.insurance_expiry_date}
-                onChangeText={(v) => updateField("insurance_expiry_date", v)}
-              />
+              <Input label="Business Name" value={form.business_name} onChangeText={(v) => updateField("business_name", v)} />
+              <Input label="Authorized Person" value={form.authorized_person_name} onChangeText={(v) => updateField("authorized_person_name", v)} />
+              <Input label="Digital Signature" value={form.digital_signature} onChangeText={(v) => updateField("digital_signature", v)} />
+              <Input label="Signature Date" value={form.signature_date} onChangeText={(v) => updateField("signature_date", v)} />
+              <Input label="Registration License Number" value={form.registration_license_number} onChangeText={(v) => updateField("registration_license_number", v)} />
+              <Input label="Insurance Policy Number" value={form.insurance_policy_number} onChangeText={(v) => updateField("insurance_policy_number", v)} />
+              <Input label="Insurance Provider" value={form.insurance_provider_name} onChangeText={(v) => updateField("insurance_provider_name", v)} />
+              <Input label="Insurance Expiry Date" value={form.insurance_expiry_date} onChangeText={(v) => updateField("insurance_expiry_date", v)} />
             </>,
           )}
 
@@ -267,44 +256,17 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
             "operations",
             "Vet & Operations",
             <>
-              <Input
-                label="Vet Clinic Name"
-                value={form.vet_clinic_name}
-                onChangeText={(v) => updateField("vet_clinic_name", v)}
-              />
-              <Input
-                label="Vet Clinic Address"
-                value={form.vet_clinic_address}
-                onChangeText={(v) => updateField("vet_clinic_address", v)}
-              />
-              <Input
-                label="Vet Clinic Contact"
-                value={form.vet_clinic_contact}
-                onChangeText={(v) => updateField("vet_clinic_contact", v)}
-              />
-              <Input
-                label="Opening Time"
-                value={form.opening_time}
-                onChangeText={(v) => updateField("opening_time", v)}
-              />
-              <Input
-                label="Closing Time"
-                value={form.closing_time}
-                onChangeText={(v) => updateField("closing_time", v)}
-              />
-              <Input
-                label="Special Instructions"
-                value={form.special_instructions}
-                onChangeText={(v) => updateField("special_instructions", v)}
-                multiline
-              />
+              <Input label="Vet Clinic Name" value={form.vet_clinic_name} onChangeText={(v) => updateField("vet_clinic_name", v)} />
+              <Input label="Vet Clinic Address" value={form.vet_clinic_address} onChangeText={(v) => updateField("vet_clinic_address", v)} />
+              <Input label="Vet Clinic Contact" value={form.vet_clinic_contact} onChangeText={(v) => updateField("vet_clinic_contact", v)} />
+              <Input label="Opening Time" value={form.opening_time} onChangeText={(v) => updateField("opening_time", v)} />
+              <Input label="Closing Time" value={form.closing_time} onChangeText={(v) => updateField("closing_time", v)} />
+              <Input label="Special Instructions" value={form.special_instructions} onChangeText={(v) => updateField("special_instructions", v)} multiline />
             </>,
           )}
 
           <TouchableOpacity style={styles.saveButton} onPress={handleUpdate}>
-            <Text style={styles.saveButtonText}>
-              {saving ? "Updating..." : "Update Profile"}
-            </Text>
+            <Text style={styles.saveButtonText}>{saving ? "Updating..." : "Update Profile"}</Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -315,12 +277,6 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
 const Input = ({ label, value, onChangeText, multiline = false }) => (
   <View style={styles.inputContainer}>
     <Text style={styles.label}>{label}</Text>
-    <TextInput
-      style={[styles.input, multiline && styles.inputMultiline]}
-      value={value}
-      onChangeText={onChangeText}
-      multiline={multiline}
-      textAlignVertical={multiline ? "top" : "center"}
-    />
+    <TextInput style={[styles.input, multiline && styles.inputMultiline]} value={value} onChangeText={onChangeText} multiline={multiline} textAlignVertical={multiline ? "top" : "center"} />
   </View>
 );

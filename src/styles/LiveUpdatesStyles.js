@@ -1,4 +1,9 @@
 import { StyleSheet } from "react-native";
+import { colors } from "./theme/colors";
+import { spacing } from "./theme/spacing";
+import { radius } from "./theme/radius";
+import { typography } from "./themeStyles";
+import { typography as baseTypography } from "./theme/typography";
 
 export default StyleSheet.create({
   section: {
@@ -7,10 +12,10 @@ export default StyleSheet.create({
     padding: 15,
   },
   title: {
-    fontSize: 22,
-    fontWeight: "bold",
+    fontSize: (typography && typography.h4 && typography.h4.fontSize) || baseTypography.h4 || 18,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
     textAlign: "center",
-    marginTop: 10,
+    marginTop: spacing.sm,
   },
   subtitle: {
     textAlign: "center",
@@ -29,23 +34,23 @@ export default StyleSheet.create({
   storyCircle: {
     width: 70,
     height: 70,
-    borderRadius: 35,
+    borderRadius: radius.round,
     borderWidth: 3,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
   },
   emoji: {
-    fontSize: 28,
+    fontSize: (typography && typography.h3 && typography.h3.fontSize) || baseTypography.h3 || 20,
   },
   storyName: {
-    fontSize: 12,
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
     marginTop: 5,
   },
   card: {
     backgroundColor: "#fff",
-    borderRadius: 20,
-    marginBottom: 15,
+    borderRadius: radius.xl,
+    marginBottom: spacing.lg,
     overflow: "hidden",
   },
   imageBox: {
@@ -72,14 +77,14 @@ export default StyleSheet.create({
     backgroundColor: "#fff",
     padding: 5,
     borderRadius: 10,
-    fontSize: 10,
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
   },
   content: {
     padding: 15,
   },
   name: {
-    fontWeight: "bold",
-    fontSize: 16,
+    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
     marginBottom: 5,
   },
   caption: {
@@ -93,13 +98,13 @@ export default StyleSheet.create({
   },
   btn: {
     backgroundColor: "#6366f1",
-    padding: 10,
-    borderRadius: 12,
+    padding: spacing.sm,
+    borderRadius: radius.md,
   },
   btnText: {
     color: "#fff",
     textAlign: "center",
-    fontWeight: "600",
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
   },
   bottomBtn: {
     backgroundColor: "#6b21a8",
@@ -111,6 +116,6 @@ export default StyleSheet.create({
   bottomText: {
     color: "#fff",
     textAlign: "center",
-    fontWeight: "600",
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
   },
 });

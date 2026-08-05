@@ -1,18 +1,25 @@
 import { StyleSheet } from "react-native";
+import { colors } from "./theme/colors";
+import { spacing } from "./theme/spacing";
+import { radius } from "./theme/radius";
+import { shadows } from "./theme/shadows";
+import { responsive } from "./theme/responsive";
+import { typography } from "./themeStyles";
+import { typography as baseTypography } from "./theme/typography";
 
 export default StyleSheet.create({
   section: {
-    paddingVertical: 30,
-    paddingHorizontal: 15,
-    backgroundColor: "#fff",
+    paddingVertical: spacing.xxl,
+    paddingHorizontal: spacing.lg,
+    backgroundColor: colors.surface,
   },
 
   title: {
-    fontSize: 28,
-    fontWeight: "bold",
+    fontSize: (typography && typography.h2 && typography.h2.fontSize) || baseTypography.h2 || 24,
+    fontWeight: (typography && typography.h2 && typography.h2.fontWeight) || baseTypography.weights.bold || "700",
     textAlign: "center",
-    marginBottom: 6,
-    color: "#1f2937",
+    marginBottom: spacing.xs,
+    color: colors.text,
   },
 
   gradientText: {
@@ -21,21 +28,21 @@ export default StyleSheet.create({
 
   subtitle: {
     textAlign: "center",
-    color: "#6b7280",
-    marginBottom: 25,
-    fontSize: 14,
+    color: colors.textMuted,
+    marginBottom: spacing.xxl,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
   },
 
   scrollContainer: {
-    paddingHorizontal: 10,
-    paddingBottom: 10,
+    paddingHorizontal: spacing.sm,
+    paddingBottom: spacing.sm,
   },
 
   card: {
-    borderRadius: 28,
-    padding: 22,
-    marginRight: 18,
-    marginTop: 10,
+    borderRadius: radius.xxl,
+    padding: spacing.xl,
+    marginRight: spacing.lg,
+    marginTop: spacing.sm,
 
     shadowColor: "#000",
     shadowOffset: {
@@ -51,13 +58,13 @@ export default StyleSheet.create({
 
   iconWrapper: {
     position: "relative",
-    marginBottom: 14,
+    marginBottom: spacing.lg,
   },
 
   iconBox: {
     width: 85,
     height: 85,
-    borderRadius: 22,
+    borderRadius: radius.xl,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -66,36 +73,36 @@ export default StyleSheet.create({
     position: "absolute",
     top: -8,
     right: -8,
-    fontSize: 22,
+    fontSize: (typography && typography.h4 && typography.h4.fontSize) || baseTypography.h4 || 18,
   },
 
   name: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: (typography && typography.title && typography.title.fontSize) || baseTypography.title || 16,
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
     color: "#1f2937",
     marginBottom: 6,
     textAlign: "center",
   },
 
   desc: {
-    fontSize: 13,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
     color: "#6b7280",
     textAlign: "center",
-    marginBottom: 18,
+    marginBottom: spacing.lg,
     minHeight: 36,
   },
 
   button: {
     width: "100%",
-    paddingVertical: 12,
-    borderRadius: 14,
+    paddingVertical: spacing.md,
+    borderRadius: radius.lg,
     justifyContent: "center",
     alignItems: "center",
   },
 
   buttonText: {
     color: "#fff",
-    fontWeight: "600",
-    fontSize: 14,
+    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
   },
 });

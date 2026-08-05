@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, TextInput, Text } from "react-native";
 import floatingInputStyles from "../../styles/FloatingInputStyles";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function FloatingInput({
   label,
@@ -13,6 +14,7 @@ export default function FloatingInput({
 }) {
   const [focused, setFocused] = useState(false);
   const [internalValue, setInternalValue] = useState(value);
+  const { theme } = useTheme();
 
   useEffect(() => {
     setInternalValue(value);
@@ -23,7 +25,16 @@ export default function FloatingInput({
 
   return (
     <View style={[floatingInputStyles.container, multiline && { height }]}>
-      <Text style={[floatingInputStyles.label, active && floatingInputStyles.labelActive]}>
+      <Text
+        style={[
+          floatingInputStyles.label,
+          active && floatingInputStyles.labelActive,
+          {
+            color: active ? theme.primary : theme.placeholder,
+            backgroundColor: theme.inputBackground,
+          },
+        ]}
+      >
         {label}
       </Text>
 
@@ -31,6 +42,11 @@ export default function FloatingInput({
         style={[
           floatingInputStyles.input,
           multiline && { height, textAlignVertical: "top" },
+          {
+            backgroundColor: theme.inputBackground,
+            borderColor: focused ? theme.primary : theme.border,
+            color: theme.textPrimary,
+          },
         ]}
         value={internalValue}
         onChangeText={(text) => {
@@ -42,6 +58,8 @@ export default function FloatingInput({
         multiline={multiline}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
+        placeholderTextColor={theme.placeholder}
+        selectionColor={theme.primary}
       />
     </View>
   );

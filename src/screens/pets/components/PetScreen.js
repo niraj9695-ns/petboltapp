@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   FlatList,
   Alert,
-  ActivityIndicator,
   RefreshControl,
 } from "react-native";
 
@@ -19,6 +18,7 @@ import * as ImagePicker from "expo-image-picker";
 import PetCard from "./PetCard";
 
 import PetFormModal from "./PetFormModal";
+import PremiumLoader from "../../../components/PremiumLoader";
 
 import petScreenStyles from "../styles/PetScreenStyles";
 
@@ -414,7 +414,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
           Alert.alert("Success", "Pet updated successfully");
 
           closeModal();
-          loadPets();
+          await loadPets();
 
           if (initialEditPetId && navigation.canGoBack()) {
             navigation.goBack();
@@ -478,7 +478,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
           Alert.alert("Success", "Pet added successfully");
 
           closeModal();
-          loadPets();
+          await loadPets();
         } else {
           Alert.alert("Error", response.data || "Add failed");
         }
@@ -514,7 +514,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
             if (success) {
               Alert.alert("Success", "Pet deleted successfully");
 
-              loadPets();
+              await loadPets();
             }
           } catch (error) {
             Alert.alert("Error", "Delete failed");
@@ -705,7 +705,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
   if (loading && pets.length === 0) {
     return (
       <View style={petScreenStyles.loaderContainer}>
-        <ActivityIndicator size="large" color="#6b21a8" />
+        <PremiumLoader size={56} color="#6b21a8" label="Loading pets" fullScreen />
       </View>
     );
   }
@@ -750,7 +750,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
 
       {loading && (pets.length > 0 || showForm) && (
         <View style={petScreenStyles.loadingOverlay}>
-          <ActivityIndicator size="large" color="#6b21a8" />
+          <PremiumLoader size={48} color="#6b21a8" label="Refreshing" />
         </View>
       )}
 
@@ -777,7 +777,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
                 disabled={loadingMore}
               >
                 {loadingMore ? (
-                  <ActivityIndicator size="small" color="#ffffff" />
+                  <PremiumLoader size={18} color="#ffffff" showLabel={false} />
                 ) : (
                   <Text style={petScreenStyles.nextPageButtonText}>
                     Next Page {currentPage + 1}

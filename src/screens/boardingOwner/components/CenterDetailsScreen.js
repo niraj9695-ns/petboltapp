@@ -3,7 +3,6 @@ import {
   View,
   Text,
   ScrollView,
-  ActivityIndicator,
   TouchableOpacity,
   Image,
   Alert,
@@ -11,10 +10,12 @@ import {
   Linking,
   useWindowDimensions,
 } from "react-native";
+import PremiumLoader from "../../../components/PremiumLoader";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../styles/CenterDetailsScreenStyles";
 import { getCenterDetails } from "../services/boardingOwnerService";
+import { boardingOwnerTheme } from "../../../styles/themeStyles";
 
 export default function CenterDetailsScreen() {
   const navigation = useNavigation();
@@ -66,9 +67,9 @@ export default function CenterDetailsScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: boardingOwnerTheme.background }}>
         <View style={styles.loader}>
-          <ActivityIndicator size="large" color="#6b21a8" />
+          <PremiumLoader size={56} color={boardingOwnerTheme.primary} label="Loading center" fullScreen />
         </View>
       </SafeAreaView>
     );
@@ -229,7 +230,7 @@ export default function CenterDetailsScreen() {
                         >
                           {petType}
                         </Text>
-                        <Text style={{ color: "#6b21a8", fontWeight: "700" }}>
+                        <Text style={{ color: boardingOwnerTheme.primary, fontWeight: "700" }}>
                           {price ? `₹${price}` : "Not set"}
                         </Text>
                       </View>
