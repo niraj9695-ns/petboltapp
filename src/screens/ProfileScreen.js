@@ -23,7 +23,7 @@ export default function ProfileScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [isGuest, setIsGuest] = useState(false);
   const { width } = useWindowDimensions();
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme();
 
   const isTablet = width >= 768;
   useEffect(() => {
@@ -195,11 +195,7 @@ export default function ProfileScreen({ navigation }) {
       }}
     >
       <LinearGradient
-        colors={
-          isDark
-            ? [theme.background, theme.cardBackground, theme.surfaceAlt]
-            : ["#fff1e6", "#ffe4f0", "#f3e8ff"]
-        }
+        colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
         style={[
           styles.container,
           {

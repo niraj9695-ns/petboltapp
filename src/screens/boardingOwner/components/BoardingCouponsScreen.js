@@ -277,7 +277,7 @@ export default function BoardingCouponsScreen() {
 
   if (loadingCenters) {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea} edges={["left","right","bottom"]}>
         <View style={styles.loaderWrap}>
           <PremiumLoader size={56} color="#6d28d9" label="Loading coupons" fullScreen />
         </View>
@@ -286,7 +286,7 @@ export default function BoardingCouponsScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={["left","right","bottom"]}>
       <KeyboardAvoidingView
         style={styles.flexOne}
         behavior={Platform.OS === "ios" ? "padding" : undefined}

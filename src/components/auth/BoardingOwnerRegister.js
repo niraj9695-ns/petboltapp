@@ -1,9 +1,7 @@
 import React, { useState } from "react";
+import * as DocumentPicker from "expo-document-picker";
 import FloatingInput from "../inputs/FloatingInput";
 import { PasswordInput } from "../inputs/PasswordInput";
-import DateInput from "../inputs/DateInput";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { Picker } from "@react-native-picker/picker";
 import {
   View,
   Text,
@@ -11,12 +9,9 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
-  StyleSheet,
 } from "react-native";
 
-import * as DocumentPicker from "expo-document-picker";
 import styles from "../../styles/BoardingOwnerRegisterStyles";
-import PremiumLoader from "../PremiumLoader";
 import { useTheme } from "../../context/ThemeContext";
 
 export default function BoardingOwnerRegister({
@@ -24,7 +19,7 @@ export default function BoardingOwnerRegister({
   setOtpType,
   setEmail: setGlobalEmail,
 }) {
-  const [currentStep, setCurrentStep] = useState(1);
+  const currentStep = 1;
 
   const [loading, setLoading] = useState(false);
 
@@ -137,6 +132,9 @@ export default function BoardingOwnerRegister({
   const [termsAccepted, setTermsAccepted] = useState(false);
   const { theme } = useTheme();
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
   const PET_TYPES = ["dog", "cat", "bird", "rabbit", "turtle", "others"];
 
   const pickAadhar = async () => {
@@ -174,170 +172,60 @@ export default function BoardingOwnerRegister({
 
   const validateStep = () => {
     const newErrors = {};
+    const cleanMobile = mobileNumber.replace(/\D/g, "");
+    const cleanAlternate = (alternateContactNumber || "").replace(/\D/g, "");
+    const cleanEmergency = (emergencyContactNumber || "").replace(/\D/g, "");
 
-    if (currentStep === 1) {
-      const cleanMobile = mobileNumber.replace(/\D/g, "");
-      const cleanAlternate = (alternateContactNumber || "").replace(/\D/g, "");
-      const cleanEmergency = (emergencyContactNumber || "").replace(/\D/g, "");
-
-      if (!fullName.trim()) {
-        newErrors.fullName = "Full name is required";
-      } else if (fullName.trim().length < 3) {
-        newErrors.fullName = "Minimum 3 characters required";
-      }
-
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email || "").trim())) {
-        newErrors.email = "Enter a valid email address";
-      }
-
-      if (!password || password.length < 8) {
-        newErrors.password = "Minimum 8 characters required";
-      }
-
-      if (!/^[6-9]\d{9}$/.test(cleanMobile)) {
-        newErrors.mobile = "Please enter a valid 10-digit mobile number";
-      }
-
-      if (cleanAlternate && !/^[6-9]\d{9}$/.test(cleanAlternate)) {
-        newErrors.alternate = "Invalid alternate number";
-      }
-
-      if (cleanAlternate && cleanAlternate === cleanMobile) {
-        newErrors.alternate =
-          "Alternate number should be different from mobile";
-      }
-
-      if (!emergencyContactName.trim()) {
-        newErrors.emergencyName = "Emergency contact name is required";
-      }
-
-      if (!/^[6-9]\d{9}$/.test(cleanEmergency)) {
-        newErrors.emergencyNumber = "Invalid emergency contact number";
-      }
-
-      if (cleanEmergency === cleanMobile) {
-        newErrors.emergencyNumber =
-          "Emergency number should be different from mobile";
-      }
-
-      if (Object.keys(newErrors).length > 0) {
-        newErrors.stepError = "Please fix the highlighted fields";
-        setErrors(newErrors);
-        return false;
-      }
-
-      // clear step errors
-      setErrors({});
-      return true;
+    if (!fullName.trim()) {
+      newErrors.fullName = "Full name is required";
+    } else if (fullName.trim().length < 3) {
+      newErrors.fullName = "Minimum 3 characters required";
     }
 
-    if (currentStep === 2) {
-      if (!address) newErrors.address = "Address is required";
-      if (!city) newErrors.city = "City is required";
-      if (!stateName) newErrors.stateName = "State is required";
-      if (!/^[0-9]{6}$/.test(pinCode))
-        newErrors.pinCode = "Enter valid 6-digit pin code";
-      if (!propertyType) newErrors.propertyType = "Property type is required";
-      if (!fencingStatus)
-        newErrors.fencingStatus = "Fencing status is required";
-      if (!supervisionLevel)
-        newErrors.supervisionLevel = "Supervision level is required";
-      if (!totalCapacity)
-        newErrors.totalCapacity = "Total capacity is required";
-
-      if (
-        petPriceRows.some(
-          (row) =>
-            !row.petType ||
-            !row.price ||
-            Number.isNaN(Number(row.price)) ||
-            Number(row.price) <= 0,
-        )
-      ) {
-        newErrors.prices =
-          "Please add valid pet prices for all selected pet types";
-      }
-
-      if (Object.keys(newErrors).length > 0) {
-        newErrors.stepError = "Please fix the highlighted fields";
-        setErrors(newErrors);
-        return false;
-      }
-
-      setErrors({});
-      return true;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email || "").trim())) {
+      newErrors.email = "Enter a valid email address";
     }
 
-    if (currentStep === 3) {
-      if (!acceptedPetTypes || acceptedPetTypes.length === 0) {
-        newErrors.acceptedPetTypes = "Select at least one accepted pet type";
-      }
-      if (!vaccinationPolicy || vaccinationPolicy.trim().length < 10) {
-        newErrors.vaccinationPolicy =
-          "Provide vaccination policy details (min 10 chars)";
-      }
-
-      if (Object.keys(newErrors).length > 0) {
-        newErrors.stepError = "Please fix the highlighted fields";
-        setErrors(newErrors);
-        return false;
-      }
-
-      setErrors({});
-      return true;
+    if (!password || password.length < 8) {
+      newErrors.password = "Minimum 8 characters required";
     }
 
-    if (currentStep === 4) {
-      if (!aadharFile) newErrors.aadhar = "Aadhar file is required";
-      if (!licenseProof) newErrors.license = "License proof is required";
-
-      if (Object.keys(newErrors).length > 0) {
-        newErrors.stepError = "Please upload required documents";
-        setErrors(newErrors);
-        return false;
-      }
-
-      setErrors({});
-      return true;
+    if (!/^[6-9]\d{9}$/.test(cleanMobile)) {
+      newErrors.mobile = "Please enter a valid 10-digit mobile number";
     }
 
-    if (currentStep === 5) {
-      if (!digitalSignature || !digitalSignature.trim())
-        newErrors.digitalSignature = "Digital signature is required";
-      if (!signatureDate)
-        newErrors.signatureDate = "Signature date is required";
-      if (!openingTime) newErrors.openingTime = "Opening time is required";
-      if (!closingTime) newErrors.closingTime = "Closing time is required";
-      if (openingTime && closingTime && closingTime <= openingTime) {
-        newErrors.closingTime = "Closing time must be after opening time";
-      }
-      if (!termsAccepted)
-        newErrors.terms = "Accept terms and conditions to continue";
-
-      if (Object.keys(newErrors).length > 0) {
-        newErrors.stepError = "Please fix the highlighted fields";
-        setErrors(newErrors);
-        return false;
-      }
-
-      setErrors({});
-      return true;
+    if (cleanAlternate && !/^[6-9]\d{9}$/.test(cleanAlternate)) {
+      newErrors.alternate = "Invalid alternate number";
     }
 
+    if (cleanAlternate && cleanAlternate === cleanMobile) {
+      newErrors.alternate = "Alternate number should be different from mobile";
+    }
+
+    if (!emergencyContactName.trim()) {
+      newErrors.emergencyName = "Emergency contact name is required";
+    }
+
+    if (!/^[6-9]\d{9}$/.test(cleanEmergency)) {
+      newErrors.emergencyNumber = "Invalid emergency contact number";
+    }
+
+    if (cleanEmergency === cleanMobile) {
+      newErrors.emergencyNumber = "Emergency number should be different from mobile";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      newErrors.stepError = "Please fix the highlighted fields";
+      setErrors(newErrors);
+      return false;
+    }
+
+    setErrors({});
     return true;
   };
 
-  const nextStep = () => {
-    if (!validateStep()) return;
-
-    setCurrentStep(currentStep + 1);
-  };
-
-  const prevStep = () => {
-    setCurrentStep(currentStep - 1);
-  };
-
   const handleRegister = async () => {
+    setServerError("");
     // validate final step before submitting
     if (!validateStep()) return;
 
@@ -628,35 +516,6 @@ export default function BoardingOwnerRegister({
       }}
       showsVerticalScrollIndicator={false}
     >
-      <View
-        style={{
-          height: 8,
-          backgroundColor: theme.border,
-          borderRadius: 10,
-          marginBottom: 20,
-        }}
-      >
-        <View
-          style={{
-            height: 8,
-            width: `${(currentStep / 5) * 100}%`,
-            backgroundColor: theme.primary,
-            borderRadius: 10,
-          }}
-        />
-      </View>
-
-      <Text
-        style={{
-          textAlign: "center",
-          marginBottom: 20,
-          color: theme.textSecondary,
-          fontWeight: "600",
-        }}
-      >
-        Step {currentStep} of 5
-      </Text>
-
       {serverError ? (
         <View style={[styles.errorBanner, { backgroundColor: theme.errorBackground, borderColor: theme.error }]}> 
           <Text style={styles.errorBannerTitle}>Registration Error</Text>
@@ -798,713 +657,12 @@ STEP 1 - OWNER DETAILS
             onChangeText={setBusinessName}
           />
 
-          <TouchableOpacity style={styles.nextButton} onPress={nextStep}>
-            <Text style={styles.buttonText}>Next</Text>
+          <TouchableOpacity style={styles.nextButton} onPress={handleRegister}>
+            <Text style={styles.buttonText}>Register Boarding Owner</Text>
           </TouchableOpacity>
         </View>
       )}
 
-      {/* =====================================
-STEP 2 - CENTER DETAILS
-===================================== */}
-
-      {currentStep === 2 && (
-        <View>
-          <Text style={styles.heading}>Boarding Center Details</Text>
-
-          {errors.stepError ? (
-            <Text style={styles.errorTopText}>{errors.stepError}</Text>
-          ) : null}
-
-          <FloatingInput
-            label="Center Name"
-            value={centerName}
-            onChangeText={setCenterName}
-          />
-
-          {errors.address ? (
-            <Text style={styles.errorTopText}>{errors.address}</Text>
-          ) : null}
-          <FloatingInput
-            label="Boarding Center Address *"
-            value={address}
-            onChangeText={(text) => {
-              setAddress(text);
-              setErrors((prev) => ({ ...prev, address: "" }));
-            }}
-            multiline
-            height={100}
-          />
-
-          <FloatingInput
-            label="Address Line 2"
-            value={addressLine2}
-            onChangeText={setAddressLine2}
-          />
-
-          {errors.city ? (
-            <Text style={styles.errorTopText}>{errors.city}</Text>
-          ) : null}
-          <FloatingInput
-            label="City *"
-            value={city}
-            onChangeText={(text) => {
-              setCity(text);
-              setErrors((prev) => ({ ...prev, city: "" }));
-            }}
-          />
-
-          {errors.stateName ? (
-            <Text style={styles.errorTopText}>{errors.stateName}</Text>
-          ) : null}
-          <FloatingInput
-            label="State *"
-            value={stateName}
-            onChangeText={(text) => {
-              setStateName(text);
-              setErrors((prev) => ({ ...prev, stateName: "" }));
-            }}
-          />
-
-          {errors.pinCode ? (
-            <Text style={styles.errorTopText}>{errors.pinCode}</Text>
-          ) : null}
-          <FloatingInput
-            label="Pin Code *"
-            value={pinCode}
-            onChangeText={(text) => {
-              setPinCode(text);
-              setErrors((prev) => ({ ...prev, pinCode: "" }));
-            }}
-            keyboardType="number-pad"
-          />
-
-          {errors.propertyType ? (
-            <Text style={styles.errorTopText}>{errors.propertyType}</Text>
-          ) : null}
-          <Text style={styles.helperText}>
-            Suggested options: House, Apartment, or Facility
-          </Text>
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={propertyType}
-              onValueChange={(value) => {
-                setPropertyType(value);
-                setErrors((prev) => ({ ...prev, propertyType: "" }));
-              }}
-            >
-              <Picker.Item label="Select property type" value="" />
-              <Picker.Item label="House" value="house" />
-              <Picker.Item label="Apartment" value="apartment" />
-              <Picker.Item label="Facility" value="facility" />
-            </Picker>
-          </View>
-
-          {errors.fencingStatus ? (
-            <Text style={styles.errorTopText}>{errors.fencingStatus}</Text>
-          ) : null}
-          <Text style={styles.helperText}>
-            Suggested options: Full, Partial, or None
-          </Text>
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={fencingStatus}
-              onValueChange={(value) => {
-                setFencingStatus(value);
-                setErrors((prev) => ({ ...prev, fencingStatus: "" }));
-              }}
-            >
-              <Picker.Item label="Select fencing status" value="" />
-              <Picker.Item label="Full" value="full" />
-              <Picker.Item label="Partial" value="partial" />
-              <Picker.Item label="None" value="none" />
-            </Picker>
-          </View>
-
-          {errors.supervisionLevel ? (
-            <Text style={styles.errorTopText}>{errors.supervisionLevel}</Text>
-          ) : null}
-          <Text style={styles.helperText}>
-            Suggested options: 24x7, Limited, or Scheduled
-          </Text>
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={supervisionLevel}
-              onValueChange={(value) => {
-                setSupervisionLevel(value);
-                setErrors((prev) => ({ ...prev, supervisionLevel: "" }));
-              }}
-            >
-              <Picker.Item label="Select supervision level" value="" />
-              <Picker.Item label="24x7" value="24x7" />
-              <Picker.Item label="Limited" value="limited" />
-              <Picker.Item label="Scheduled" value="scheduled" />
-            </Picker>
-          </View>
-
-          {errors.totalCapacity ? (
-            <Text style={styles.errorTopText}>{errors.totalCapacity}</Text>
-          ) : null}
-          <FloatingInput
-            label="Total Capacity *"
-            value={totalCapacity}
-            onChangeText={(text) => {
-              setTotalCapacity(text);
-              setErrors((prev) => ({ ...prev, totalCapacity: "" }));
-            }}
-            keyboardType="number-pad"
-          />
-
-          <FloatingInput
-            label="Center Description"
-            value={description}
-            onChangeText={setDescription}
-            multiline
-            height={100}
-          />
-
-          <Text style={styles.helperText}>
-            Add pet prices for each animal type
-          </Text>
-
-          {errors.prices ? (
-            <Text style={styles.errorTopText}>{errors.prices}</Text>
-          ) : null}
-
-          {petPriceRows.map((row, index) => (
-            <View key={index} style={styles.priceRow}>
-              <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={row.petType}
-                  onValueChange={(value) => {
-                    const updatedRows = [...petPriceRows];
-                    updatedRows[index].petType = value;
-                    setPetPriceRows(updatedRows);
-                    setErrors((prev) => ({
-                      ...prev,
-                      prices: "",
-                      stepError: "",
-                    }));
-                  }}
-                >
-                  <Picker.Item label="Select Pet Type" value="" />
-                  <Picker.Item label="Dog" value="dog" />
-                  <Picker.Item label="Cat" value="cat" />
-                  <Picker.Item label="Bird" value="bird" />
-                  <Picker.Item label="Rabbit" value="rabbit" />
-                  <Picker.Item label="Turtle" value="turtle" />
-                  <Picker.Item label="Others" value="others" />
-                </Picker>
-              </View>
-
-              <TextInput
-                style={styles.priceInput}
-                placeholder="Price"
-                value={row.price}
-                keyboardType="number-pad"
-                onChangeText={(value) => {
-                  const updatedRows = [...petPriceRows];
-                  updatedRows[index].price = value;
-                  setPetPriceRows(updatedRows);
-                  setErrors((prev) => ({ ...prev, prices: "", stepError: "" }));
-                }}
-              />
-
-              {petPriceRows.length > 1 && (
-                <TouchableOpacity
-                  style={styles.removeRowButton}
-                  onPress={() => {
-                    const updatedRows = petPriceRows.filter(
-                      (_, rowIndex) => rowIndex !== index,
-                    );
-                    setPetPriceRows(
-                      updatedRows.length > 0
-                        ? updatedRows
-                        : [{ petType: "", price: "" }],
-                    );
-                    setErrors((prev) => ({
-                      ...prev,
-                      prices: "",
-                      stepError: "",
-                    }));
-                  }}
-                >
-                  <Text style={styles.removeRowText}>-</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          ))}
-
-          <TouchableOpacity
-            style={styles.addRowButton}
-            onPress={() => {
-              setPetPriceRows([...petPriceRows, { petType: "", price: "" }]);
-              setErrors((prev) => ({ ...prev, prices: "", stepError: "" }));
-            }}
-          >
-            <Text style={styles.addRowText}>+ Add More</Text>
-          </TouchableOpacity>
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <TouchableOpacity style={styles.backButton} onPress={prevStep}>
-              <Text style={styles.buttonText}>Back</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.nextButton} onPress={nextStep}>
-              <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
-
-      {/* =====================================
-STEP 3 - SERVICES & AMENITIES
-===================================== */}
-
-      {currentStep === 3 && (
-        <View>
-          <Text style={styles.heading}>Services & Amenities</Text>
-
-          {errors.stepError ? (
-            <Text style={styles.errorTopText}>{errors.stepError}</Text>
-          ) : null}
-
-          <Text style={styles.helperText}>
-            Tap to toggle accepted pet types
-          </Text>
-
-          {errors.acceptedPetTypes ? (
-            <Text style={styles.errorTopText}>{errors.acceptedPetTypes}</Text>
-          ) : null}
-
-          <View
-            style={{ flexDirection: "row", flexWrap: "wrap", marginBottom: 12 }}
-          >
-            {PET_TYPES.map((pt) => {
-              const selected = acceptedPetTypes.includes(pt);
-              return (
-                <TouchableOpacity
-                  key={pt}
-                  style={[styles.chip, selected ? styles.chipSelected : null]}
-                  onPress={() => {
-                    if (selected) {
-                      setAcceptedPetTypes(
-                        acceptedPetTypes.filter((p) => p !== pt),
-                      );
-                    } else {
-                      setAcceptedPetTypes([...acceptedPetTypes, pt]);
-                    }
-                  }}
-                >
-                  <Text
-                    style={[
-                      styles.chipText,
-                      selected ? styles.chipSelectedText : null,
-                    ]}
-                  >
-                    {pt.charAt(0).toUpperCase() + pt.slice(1)}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-
-          <View>
-            <Text style={styles.helperText}>Example: Small, Medium, Large</Text>
-            <FloatingInput
-              label="Size / Weight Restrictions"
-              value={sizeWeightRestrictions}
-              onChangeText={setSizeWeightRestrictions}
-            />
-          </View>
-
-          <View>
-            <Text style={styles.helperText}>
-              Example: Puppies, Adults, Seniors
-            </Text>
-            <FloatingInput
-              label="Age Preferences"
-              value={agePreferences}
-              onChangeText={setAgePreferences}
-            />
-          </View>
-
-          <View>
-            <Text style={styles.helperText}>Example: Rabies, Distemper</Text>
-            <FloatingInput
-              label="Required Vaccines"
-              value={requiredVaccines}
-              onChangeText={setRequiredVaccines}
-            />
-          </View>
-
-          <View>
-            <Text style={styles.helperText}>Example: Daycare, Overnight</Text>
-            <FloatingInput
-              label="Boarding Services"
-              value={boardingServices}
-              onChangeText={setBoardingServices}
-            />
-          </View>
-
-          <View>
-            <Text style={styles.helperText}>Example: Grooming, Play Area</Text>
-            <FloatingInput
-              label="Amenities"
-              value={amenities}
-              onChangeText={setAmenities}
-            />
-          </View>
-
-          {errors.vaccinationPolicy ? (
-            <Text style={styles.errorTopText}>{errors.vaccinationPolicy}</Text>
-          ) : null}
-          <FloatingInput
-            label="Vaccination Policy *"
-            value={vaccinationPolicy}
-            onChangeText={(text) => {
-              setVaccinationPolicy(text);
-              setErrors((prev) => ({ ...prev, vaccinationPolicy: "" }));
-            }}
-            multiline
-            height={100}
-          />
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <TouchableOpacity style={styles.backButton} onPress={prevStep}>
-              <Text style={styles.buttonText}>Back</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.nextButton} onPress={nextStep}>
-              <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
-
-      {/* =====================================
-STEP 4 - DOCUMENTS
-===================================== */}
-
-      {currentStep === 4 && (
-        <View>
-          <Text style={styles.heading}>Documents Upload</Text>
-
-          {errors.stepError ? (
-            <Text style={styles.errorTopText}>{errors.stepError}</Text>
-          ) : null}
-
-          {/* AADHAR */}
-
-          {errors.aadhar ? (
-            <Text style={styles.errorTopText}>{errors.aadhar}</Text>
-          ) : null}
-          <TouchableOpacity style={styles.uploadButton} onPress={pickAadhar}>
-            <Text style={styles.uploadText}>
-              {aadharFile ? aadharFile.name : "Upload Aadhar File"}
-            </Text>
-          </TouchableOpacity>
-
-          {/* LICENSE */}
-
-          {errors.license ? (
-            <Text style={styles.errorTopText}>{errors.license}</Text>
-          ) : null}
-          <TouchableOpacity style={styles.uploadButton} onPress={pickLicense}>
-            <Text style={styles.uploadText}>
-              {licenseProof ? licenseProof.name : "Upload License Proof"}
-            </Text>
-          </TouchableOpacity>
-
-          {/* CENTER PHOTOS */}
-
-          <TouchableOpacity
-            style={styles.uploadButton}
-            onPress={pickCenterPhotos}
-          >
-            <Text style={styles.uploadText}>
-              {centerPhotos.length > 0
-                ? `${centerPhotos.length} Photos Selected`
-                : "Upload Center Photos"}
-            </Text>
-          </TouchableOpacity>
-
-          {/* TERMS */}
-
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 20,
-              marginBottom: 25,
-            }}
-            onPress={() => {
-              setTermsAccepted(!termsAccepted);
-              setErrors((prev) => ({ ...prev, terms: "", stepError: "" }));
-            }}
-          >
-            <View
-              style={{
-                width: 22,
-                height: 22,
-                borderWidth: 1,
-                borderColor: "#6b21a8",
-                marginRight: 10,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: termsAccepted ? "#6b21a8" : "#fff",
-              }}
-            >
-              {termsAccepted && (
-                <Text
-                  style={{
-                    color: "#fff",
-                    fontWeight: "bold",
-                  }}
-                >
-                  ✓
-                </Text>
-              )}
-            </View>
-
-            <Text
-              style={{
-                flex: 1,
-                color: "#444",
-              }}
-            >
-              I accept Terms & Conditions{" "}
-              <Text style={{ color: "#DC2626" }}>*</Text>
-            </Text>
-          </TouchableOpacity>
-
-          {errors.terms ? (
-            <Text style={styles.errorTopText}>{errors.terms}</Text>
-          ) : null}
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <TouchableOpacity style={styles.backButton} onPress={prevStep}>
-              <Text style={styles.buttonText}>Back</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.nextButton} onPress={nextStep}>
-              <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
-
-      {/* =====================================
-STEP 5 - EXTRA DETAILS & SUBMIT
-===================================== */}
-
-      {currentStep === 5 && (
-        <View>
-          <Text style={styles.heading}>Additional Details</Text>
-
-          {errors.stepError ? (
-            <Text style={styles.errorTopText}>{errors.stepError}</Text>
-          ) : null}
-
-          <FloatingInput
-            label="Vet Clinic Name"
-            value={vetClinicName}
-            onChangeText={setVetClinicName}
-          />
-
-          <FloatingInput
-            label="Vet Clinic Address"
-            value={vetClinicAddress}
-            onChangeText={setVetClinicAddress}
-          />
-
-          <FloatingInput
-            label="Vet Clinic Contact"
-            value={vetClinicContact}
-            onChangeText={setVetClinicContact}
-            keyboardType="phone-pad"
-          />
-
-          <FloatingInput
-            label="Registration License Number"
-            value={registrationLicenseNumber}
-            onChangeText={setRegistrationLicenseNumber}
-          />
-
-          <FloatingInput
-            label="Insurance Policy Number"
-            value={insurancePolicyNumber}
-            onChangeText={setInsurancePolicyNumber}
-          />
-
-          <FloatingInput
-            label="Insurance Provider Name"
-            value={insuranceProviderName}
-            onChangeText={setInsuranceProviderName}
-          />
-
-          <DateInput
-            label="Insurance Expiry Date"
-            value={insuranceExpiryDate}
-            onChange={(date) => setInsuranceExpiryDate(date)}
-          />
-
-          {errors.openingTime ? (
-            <Text style={styles.errorTopText}>{errors.openingTime}</Text>
-          ) : null}
-          <TouchableOpacity
-            style={styles.timePickerButton}
-            onPress={() => {
-              setShowOpeningPicker(true);
-              setErrors((prev) => ({
-                ...prev,
-                openingTime: "",
-                stepError: "",
-              }));
-            }}
-          >
-            <Text style={styles.timePickerLabel}>Opening Time</Text>
-            <Text style={styles.timePickerValue}>
-              {openingTime.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </Text>
-          </TouchableOpacity>
-
-          {showOpeningPicker && (
-            <DateTimePicker
-              value={openingTime}
-              mode="time"
-              is24Hour={true}
-              display="default"
-              onChange={(_, selectedTime) => {
-                setShowOpeningPicker(false);
-                if (selectedTime) {
-                  setOpeningTime(selectedTime);
-                }
-              }}
-            />
-          )}
-
-          {errors.closingTime ? (
-            <Text style={styles.errorTopText}>{errors.closingTime}</Text>
-          ) : null}
-          <TouchableOpacity
-            style={styles.timePickerButton}
-            onPress={() => {
-              setShowClosingPicker(true);
-              setErrors((prev) => ({
-                ...prev,
-                closingTime: "",
-                stepError: "",
-              }));
-            }}
-          >
-            <Text style={styles.timePickerLabel}>Closing Time</Text>
-            <Text style={styles.timePickerValue}>
-              {closingTime.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </Text>
-          </TouchableOpacity>
-
-          {showClosingPicker && (
-            <DateTimePicker
-              value={closingTime}
-              mode="time"
-              is24Hour={true}
-              display="default"
-              onChange={(_, selectedTime) => {
-                setShowClosingPicker(false);
-                if (selectedTime) {
-                  setClosingTime(selectedTime);
-                }
-              }}
-            />
-          )}
-
-          <FloatingInput
-            label="Special Instructions"
-            value={specialInstructions}
-            onChangeText={setSpecialInstructions}
-            multiline
-            height={100}
-          />
-
-          <FloatingInput
-            label="Authorized Person Name"
-            value={authorizedPersonName}
-            onChangeText={setAuthorizedPersonName}
-          />
-
-          {errors.digitalSignature ? (
-            <Text style={styles.errorTopText}>{errors.digitalSignature}</Text>
-          ) : null}
-          <FloatingInput
-            label="Digital Signature"
-            value={digitalSignature}
-            onChangeText={(text) => {
-              setDigitalSignature(text);
-              setErrors((prev) => ({ ...prev, digitalSignature: "" }));
-            }}
-          />
-
-          {errors.signatureDate ? (
-            <Text style={styles.errorTopText}>{errors.signatureDate}</Text>
-          ) : null}
-          <DateInput
-            label="Signature Date"
-            value={signatureDate}
-            onChange={(date) => {
-              setSignatureDate(date);
-              setErrors((prev) => ({ ...prev, signatureDate: "" }));
-            }}
-          />
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 15,
-              paddingHorizontal: 4,
-              gap: 12,
-            }}
-          >
-            <TouchableOpacity style={styles.backButton} onPress={prevStep}>
-              <Text style={styles.buttonText}>Back</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleRegister}
-              disabled={loading}
-            >
-              {loading ? (
-                <PremiumLoader size={28} color="#fff" showLabel={false} />
-              ) : (
-                <Text style={styles.buttonText}>Register Boarding Owner</Text>
-              )}
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
     </ScrollView>
   );
 }

@@ -14,11 +14,10 @@ export default StyleSheet.create({
   },
   header: {
     paddingHorizontal: 18,
-    paddingTop: 16,
-    paddingBottom: 8,
-    backgroundColor: "#fffaf7",
+    paddingVertical: 12,
+    backgroundColor: COLORS.surfaceAlt,
     borderBottomWidth: 1,
-    borderBottomColor: "#e9d5ff",
+    borderBottomColor: COLORS.border,
   },
   headerTitle: {
     fontSize: 28,

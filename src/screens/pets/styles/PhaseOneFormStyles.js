@@ -1,16 +1,8 @@
 import { StyleSheet } from "react-native";
 import { lightTheme } from "../../../theme/lightTheme";
-import { darkTheme } from "../../../theme/darkTheme";
 
-const theme = {
-  light: lightTheme,
-  dark: darkTheme,
-};
-
-const getTheme = (isDark) => theme[isDark ? "dark" : "light"];
-
-export default function createPhaseOneFormStyles(isDark = false) {
-  const palette = getTheme(isDark);
+export default function createPhaseOneFormStyles(theme = lightTheme) {
+  const palette = theme;
 
   return StyleSheet.create({
   input: {

@@ -38,13 +38,13 @@ export default function PetFormModal({
   onSubmit,
 }) {
   const [fieldErrors, setFieldErrors] = useState({});
-  const { isDark } = useTheme();
-  const petFormModalStyles = createPetFormModalStyles(isDark);
+  const { theme } = useTheme();
+  const petFormModalStyles = createPetFormModalStyles(theme);
 
   const requiredFieldsByStep = useMemo(
     () => ({
-      1: ["pet_name", "pet_type", "breed", "gender", "age"],
-      2: [],
+      1: ["pet_name", "pet_type", "breed", "gender"],
+      2: ["vaccination_certificate"],
       3: ["food_type"],
     }),
     [],

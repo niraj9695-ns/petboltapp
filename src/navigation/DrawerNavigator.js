@@ -74,7 +74,7 @@ function HeaderNotificationButton({ navigation }) {
 }
 
 function CustomDrawerContent({ navigation }) {
-  const { isDark, toggleTheme, theme } = useTheme();
+  const { theme } = useTheme();
   const [guestRole, setGuestRole] = useState(null);
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -252,7 +252,7 @@ function CustomDrawerContent({ navigation }) {
 }
 
 export default function DrawerNavigator() {
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme();
 
   return (
     <Drawer.Navigator
@@ -278,7 +278,7 @@ export default function DrawerNavigator() {
             onPress={() => navigation.toggleDrawer()}
             style={[
               drawerStyles.menuButton,
-              { backgroundColor: isDark ? "#1f2937" : "#f2f2f2" },
+              { backgroundColor: theme.surfaceAlt },
             ]}
           >
             <Ionicons name="menu" size={28} color={theme.text} />

@@ -67,7 +67,7 @@ export default function CenterDetailsScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: boardingOwnerTheme.background }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: boardingOwnerTheme.background }} edges={["left","right","bottom"]}>
         <View style={styles.loader}>
           <PremiumLoader size={56} color={boardingOwnerTheme.primary} label="Loading center" fullScreen />
         </View>
@@ -77,7 +77,7 @@ export default function CenterDetailsScreen() {
 
   if (!center) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }} edges={["left","right","bottom"]}>
         <View style={styles.loader}>
           <Text>Center details not found</Text>
         </View>
@@ -85,8 +85,8 @@ export default function CenterDetailsScreen() {
     );
   }
 
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+      return (
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }} edges={["left","right","bottom"]}>
       <ScrollView
         style={styles.container}
         contentContainerStyle={{

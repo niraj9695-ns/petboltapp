@@ -16,8 +16,7 @@ export default StyleSheet.create({
   },
   header: {
     paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 12,
+    paddingVertical: 12,
     backgroundColor: COLORS.surface,
   },
   backButton: {

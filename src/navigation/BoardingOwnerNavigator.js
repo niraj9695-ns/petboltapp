@@ -68,7 +68,7 @@ function HeaderNotificationButton({ navigation }) {
 }
 
 function BoardingOwnerDrawerContent({ navigation }) {
-  const { theme, isDark, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const [guestRole, setGuestRole] = useState(null);
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -214,7 +214,7 @@ function BoardingOwnerDrawerContent({ navigation }) {
 }
 
 export default function BoardingOwnerNavigator() {
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme();
 
   return (
     <Drawer.Navigator
@@ -247,7 +247,7 @@ export default function BoardingOwnerNavigator() {
             onPress={() => navigation.toggleDrawer()}
             style={{
               marginLeft: 15,
-              backgroundColor: isDark ? "#1f2937" : "#f2f2f2",
+              backgroundColor: theme.surfaceAlt,
               padding: 8,
               borderRadius: 10,
             }}

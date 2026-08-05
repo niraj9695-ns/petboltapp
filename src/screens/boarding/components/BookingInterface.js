@@ -17,7 +17,7 @@ import styles from "../styles/BookingInterface";
 import CustomPicker from "../../pets/components/CustomPicker";
 
 export default function BookingInterface({ navigation }) {
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme();
   const [pets, setPets] = useState(["Buddy", "Luna", "Max", "Bella"]);
   const [selectedPet, setSelectedPet] = useState("Buddy");
 
@@ -107,7 +107,7 @@ export default function BookingInterface({ navigation }) {
 
   return (
     <LinearGradient
-      colors={isDark ? ["#0f172a", "#111827", "#1e293b"] : ["#faf5ff", "#fdf2f8", "#fff7ed"]}
+      colors={["#faf5ff", "#fdf2f8", "#fff7ed"]}
       style={styles.bookingInterfaceContainer}
     >
       <ScrollView contentContainerStyle={styles.bookingInterfaceScroll}>

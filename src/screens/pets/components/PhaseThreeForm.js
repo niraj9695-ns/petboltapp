@@ -14,8 +14,8 @@ export default function PhaseThreeForm({
   setPetData,
   fieldErrors = {},
 }) {
-  const { isDark } = useTheme();
-  const phaseThreeFormStyles = createPhaseThreeFormStyles(isDark);
+  const { theme } = useTheme();
+  const phaseThreeFormStyles = createPhaseThreeFormStyles(theme);
 
   return (
     <View>

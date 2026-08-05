@@ -31,7 +31,7 @@ export default function ProfileEditScreen({ navigation }) {
   const [aadharFile, setAadharFile] = useState(null);
   const [user, setUser] = useState(null);
   const { width } = useWindowDimensions();
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme();
 
   const isTablet = width >= 768;
 
@@ -190,11 +190,7 @@ export default function ProfileEditScreen({ navigation }) {
       contentContainerStyle={{ paddingBottom: 30 }}
     >
       <LinearGradient
-        colors={
-          isDark
-            ? [theme.background, theme.cardBackground, theme.surfaceAlt]
-            : ["#fff1e6", "#ffe4f0", "#f3e8ff"]
-        }
+        colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
         style={[
           profileEditStyles.container,
           {

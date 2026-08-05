@@ -146,13 +146,28 @@ export default function OTPVerification({
 
         setTimeout(() => {
           if (navigation && user?.role) {
-            const nextRoute =
-              user.role === "boarding_owner" ? "BoardingOwner" : "PetOwner";
-
-            navigation.reset({
-              index: 0,
-              routes: [{ name: nextRoute }],
-            });
+            if (user.role === "boarding_owner") {
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: "BoardingOwner",
+                    params: {
+                      screen: "Main",
+                      params: {
+                        screen: "BoardingTabs",
+                        params: { screen: "Profile" },
+                      },
+                    },
+                  },
+                ],
+              });
+            } else {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "PetOwner" }],
+              });
+            }
           } else {
             onSuccess?.();
           }

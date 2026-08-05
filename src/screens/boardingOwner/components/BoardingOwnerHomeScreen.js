@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function BoardingOwnerHomeScreen() {
   return (
     <SafeAreaView
+      edges={["left","right","bottom"]}
       style={{
         flex: 1,
         justifyContent: "center",

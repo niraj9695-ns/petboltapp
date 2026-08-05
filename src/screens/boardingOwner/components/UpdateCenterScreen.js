@@ -443,7 +443,7 @@ export default function UpdateCenterScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }} edges={["left","right","bottom"]}>
         <View style={styles.loader}>
           <PremiumLoader size={56} color="#6b21a8" label="Loading center details" fullScreen />
         </View>
@@ -452,7 +452,7 @@ export default function UpdateCenterScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }} edges={["left","right","bottom"]}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
