@@ -22,8 +22,8 @@ export default function PhaseTwoForm({ petData, setPetData }) {
   const [showDewormingPicker, setShowDewormingPicker] = useState(false);
 
   const [showFleaTickPicker, setShowFleaTickPicker] = useState(false);
-  const { isDark } = useTheme();
-  const phaseTwoFormStyles = createPhaseTwoFormStyles(isDark);
+  const { theme } = useTheme();
+  const phaseTwoFormStyles = createPhaseTwoFormStyles(theme);
 
   const formatDate = (date) => {
     return date.toISOString().split("T")[0];

@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function BoardingDashboardScreen() {
   return (
-    <SafeAreaView
+    <SafeAreaView style={styles.safeArea} edges={["left","right","bottom"]}>
       style={{
         flex: 1,
         justifyContent: "center",

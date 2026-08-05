@@ -1,11 +1,8 @@
 import { StyleSheet } from "react-native";
 import { lightTheme } from "../../../theme/lightTheme";
-import { darkTheme } from "../../../theme/darkTheme";
 
-const theme = { light: lightTheme, dark: darkTheme };
-
-export default function createPetFormModalStyles(isDark = false) {
-  const palette = theme[isDark ? "dark" : "light"];
+export default function createPetFormModalStyles(theme = lightTheme) {
+  const palette = theme;
 
   return StyleSheet.create({
   modalContainer: {

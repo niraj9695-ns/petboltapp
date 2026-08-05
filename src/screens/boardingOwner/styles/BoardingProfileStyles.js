@@ -72,6 +72,57 @@ const styles = StyleSheet.create({
     fontSize: typography.caption.fontSize,
   },
 
+  progressCard: {
+    backgroundColor: COLORS.surface,
+    width: "100%",
+    borderRadius: 18,
+    padding: 16,
+    marginTop: 18,
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
+  },
+
+  progressHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+
+  progressTitle: {
+    color: COLORS.textMuted,
+    fontSize: typography.caption.fontSize,
+    fontWeight: typography.caption.fontWeight,
+  },
+
+  progressPercent: {
+    color: COLORS.primary,
+    fontSize: typography.body.fontSize,
+    fontWeight: typography.title.fontWeight,
+  },
+
+  progressBar: {
+    height: 10,
+    backgroundColor: COLORS.muted,
+    borderRadius: 999,
+    overflow: "hidden",
+  },
+
+  progressFill: {
+    height: "100%",
+    backgroundColor: COLORS.primary,
+    borderRadius: 999,
+  },
+
+  progressHint: {
+    marginTop: 10,
+    color: COLORS.textMuted,
+    fontSize: typography.small.fontSize,
+  },
+
   card: {
     backgroundColor: COLORS.surface,
     marginHorizontal: 16,

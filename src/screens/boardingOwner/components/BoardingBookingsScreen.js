@@ -227,7 +227,7 @@ export default function BoardingBookingsScreen({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["left","right","bottom"]}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Bookings</Text>
         <Text style={styles.headerSubtitle}>

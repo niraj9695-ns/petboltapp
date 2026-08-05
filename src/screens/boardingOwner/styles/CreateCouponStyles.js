@@ -20,8 +20,7 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: 0,
-    paddingBottom: 10,
+    paddingVertical: 10,
   },
   title: {
     fontSize: typography.h4.fontSize,

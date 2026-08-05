@@ -129,7 +129,7 @@ export default function BoardingCentersScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea} edges={["left","right","bottom"]}>
         <View style={styles.loader}>
           <PremiumLoader size={56} color={boardingOwnerTheme.primary} label="Loading centers" fullScreen />
         </View>
@@ -174,7 +174,7 @@ export default function BoardingCentersScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={["left","right","bottom"]}>
       <FlatList
         data={centers}
         key={numColumns}

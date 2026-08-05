@@ -47,7 +47,7 @@ export default function BoardingProfileScreen({ navigation }) {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: boardingOwnerTheme.background }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: boardingOwnerTheme.background }} edges={["left","right","bottom"]}>
         <View style={styles.loader}>
           <PremiumLoader size={56} color={boardingOwnerTheme.primary} label="Loading profile" fullScreen />
         </View>
@@ -57,7 +57,7 @@ export default function BoardingProfileScreen({ navigation }) {
 
   if (!profile) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }} edges={["left","right","bottom"]}>
         <View style={styles.loader}>
           <Text>Unable to load profile</Text>
         </View>
@@ -68,6 +68,47 @@ export default function BoardingProfileScreen({ navigation }) {
   const toggleSection = (section) => {
     setExpandedSection((prev) => (prev === section ? "" : section));
   };
+
+  const isFieldFilled = (value) => {
+    if (value === undefined || value === null) return false;
+    if (typeof value === "string") return value.trim().length > 0;
+    if (Array.isArray(value)) return value.length > 0;
+    if (typeof value === "object") return Object.keys(value).length > 0;
+    return !!value;
+  };
+
+  const completionItems = [
+    { key: "full_name", label: "Full Name" },
+    { key: "email", label: "Email" },
+    { key: "mobile_number", label: "Mobile Number" },
+    { key: "alternate_contact_number", label: "Alternate Contact" },
+    { key: "emergency_contact_name", label: "Emergency Contact Name" },
+    { key: "emergency_contact_number", label: "Emergency Contact Number" },
+    { key: "business_name", label: "Business Name" },
+    { key: "authorized_person_name", label: "Authorized Person" },
+    { key: "registration_license_number", label: "License Number" },
+    { key: "insurance_policy_number", label: "Insurance Policy Number" },
+    { key: "insurance_provider_name", label: "Insurance Provider" },
+    { key: "insurance_expiry_date", label: "Insurance Expiry Date" },
+    { key: "vet_clinic_name", label: "Vet Clinic Name" },
+    { key: "vet_clinic_address", label: "Vet Clinic Address" },
+    { key: "vet_clinic_contact", label: "Vet Clinic Contact" },
+    { key: "opening_time", label: "Opening Time" },
+    { key: "closing_time", label: "Closing Time" },
+    { key: "aadhar_file", label: "Aadhaar Document" },
+  ];
+
+  const completedCount = completionItems.filter((item) =>
+    isFieldFilled(profile[item.key]),
+  ).length;
+
+  const completionPercent = Math.round(
+    (completedCount / completionItems.length) * 100,
+  );
+
+  const missingItems = completionItems
+    .filter((item) => !isFieldFilled(profile[item.key]))
+    .map((item) => item.label);
 
   const renderSection = (sectionKey, title, content) => {
     const isExpanded = expandedSection === sectionKey;
@@ -111,7 +152,7 @@ export default function BoardingProfileScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }} edges={["left","right","bottom"]}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.profileCard}>
           <View style={styles.avatar}>
@@ -127,6 +168,28 @@ export default function BoardingProfileScreen({ navigation }) {
 
           <View style={styles.roleBadge}>
             <Text style={styles.roleText}>BOARDING OWNER</Text>
+          </View>
+
+          <View style={styles.progressCard}>
+            <View style={styles.progressHeader}>
+              <Text style={styles.progressTitle}>Profile completion</Text>
+              <Text style={styles.progressPercent}>{completionPercent}%</Text>
+            </View>
+            <View style={styles.progressBar}>
+              <View
+                style={[
+                  styles.progressFill,
+                  { width: `${completionPercent}%` },
+                ]}
+              />
+            </View>
+            <Text style={styles.progressHint}>
+              {completionPercent === 100
+                ? "Your boarding profile is complete."
+                : `Complete ${missingItems.length} more item${
+                    missingItems.length === 1 ? "" : "s"
+                  } to unlock more bookings.`}
+            </Text>
           </View>
         </View>
 

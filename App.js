@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import {
-  NavigationContainer,
-  DarkTheme,
-  DefaultTheme,
-} from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -14,7 +10,7 @@ import DrawerNavigator from "./src/navigation/DrawerNavigator";
 import AuthNavigator from "./src/navigation/AuthNavigator";
 import BoardingOwnerNavigator from "./src/navigation/BoardingOwnerNavigator";
 
-import { ThemeProvider, useTheme } from "./src/context/ThemeContext";
+import { ThemeProvider } from "./src/context/ThemeContext";
 import { RefreshProvider } from "./src/context/RefreshContext";
 
 import { View } from "react-native";
@@ -26,8 +22,6 @@ import { ToastHost, initializeToastAlertOverride } from "./src/utils/toast";
 const Stack = createNativeStackNavigator();
 
 function MainApp() {
-  const { isDark } = useTheme();
-
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
 
@@ -87,9 +81,22 @@ function MainApp() {
         ? "GuestPetOwner"
         : "Auth";
 
+  const navigationTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: "#F8FAFC",
+      card: "#FFFFFF",
+      text: "#111827",
+      border: "#E5E7EB",
+      primary: "#6B21A8",
+      notification: "#9333EA",
+    },
+  };
+
   return (
     <View style={{ flex: 1 }}>
-      <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
+      <NavigationContainer theme={navigationTheme}>
         <Stack.Navigator
           initialRouteName={initialRouteName}
           screenOptions={{

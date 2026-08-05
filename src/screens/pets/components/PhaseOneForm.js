@@ -31,8 +31,8 @@ export default function PhaseOneForm({
   setProfileImageIndex,
 }) {
   const [showDobPicker, setShowDobPicker] = useState(false);
-  const { isDark } = useTheme();
-  const phaseOneFormStyles = createPhaseOneFormStyles(isDark);
+  const { theme } = useTheme();
+  const phaseOneFormStyles = createPhaseOneFormStyles(theme);
 
   const handleDobConfirm = (date) => {
     const formattedDate = date.toISOString().split("T")[0];
@@ -140,7 +140,7 @@ export default function PhaseOneForm({
 
       {/* AGE */}
 
-      <FormLabel title="Age" required error={fieldErrors.age} />
+      <FormLabel title="Age (optional)" error={fieldErrors.age} />
 
       <TextInput
         placeholder="Age"

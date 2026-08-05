@@ -93,7 +93,7 @@ export default function UpdateCouponScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}> 
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["left","right","bottom"]}> 
         <View style={styles.loaderWrap}>
           <PremiumLoader size={56} color={theme.primary} label="Preparing form" fullScreen />
         </View>
@@ -102,7 +102,7 @@ export default function UpdateCouponScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={["left","right","bottom"]}>
       <KeyboardAvoidingView
         style={styles.flexOne}
         behavior={Platform.OS === "ios" ? "padding" : undefined}

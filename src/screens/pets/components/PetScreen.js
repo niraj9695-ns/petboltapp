@@ -305,18 +305,13 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
       return false;
     }
 
-    if (!petData.age) {
-      Alert.alert("Validation", "Age is required");
-      return false;
-    }
+    // Age and Date Of Birth are optional fields.
 
-    if (!petData.date_of_birth) {
-      Alert.alert("Validation", "Date Of Birth is required");
-      return false;
-    }
-
-    if (!petData.weight) {
-      Alert.alert("Validation", "Weight is required");
+    if (!petData.vaccination_certificate) {
+      Alert.alert(
+        "Validation",
+        "Vaccination Certificate is required",
+      );
       return false;
     }
 
