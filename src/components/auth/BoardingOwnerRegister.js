@@ -578,9 +578,9 @@ STEP 1 - OWNER DETAILS
             </View>
 
             <TextInput
-              style={styles.phoneInput}
+              style={[styles.phoneInput, { color: theme.textPrimary, backgroundColor: theme.inputBackground }]}
               placeholder="Enter mobile number"
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={theme.placeholder}
               keyboardType="number-pad"
               maxLength={10}
               value={mobileNumber}
@@ -602,9 +602,9 @@ STEP 1 - OWNER DETAILS
             </View>
 
             <TextInput
-              style={styles.phoneInput}
+              style={[styles.phoneInput, { color: theme.textPrimary, backgroundColor: theme.inputBackground }]}
               placeholder="Alternate Contact Number"
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={theme.placeholder}
               keyboardType="number-pad"
               maxLength={10}
               value={alternateContactNumber}
@@ -637,9 +637,9 @@ STEP 1 - OWNER DETAILS
             </View>
 
             <TextInput
-              style={styles.phoneInput}
+              style={[styles.phoneInput, { color: theme.textPrimary, backgroundColor: theme.inputBackground }]}
               placeholder="Emergency Contact Number"
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={theme.placeholder}
               keyboardType="number-pad"
               maxLength={10}
               value={emergencyContactNumber}

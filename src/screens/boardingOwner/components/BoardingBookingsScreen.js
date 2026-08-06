@@ -20,6 +20,7 @@ export default function BoardingBookingsScreen({ navigation }) {
   const { refreshKey } = useRefresh();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -36,8 +37,12 @@ export default function BoardingBookingsScreen({ navigation }) {
         ? (width - 48) / 2
         : (width - 64) / 3;
 
-  const loadBookings = useCallback(async (page = 1) => {
-    setLoading(true);
+  const loadBookings = useCallback(async (page = 1, append = false) => {
+    if (append) {
+      setLoadingMore(true);
+    } else {
+      setLoading(true);
+    }
 
     try {
       const response = await getOwnerBookings(page, 20);
@@ -59,7 +64,7 @@ export default function BoardingBookingsScreen({ navigation }) {
           1,
       );
 
-      setBookings(data);
+      setBookings((prev) => (append ? [...prev, ...data] : data));
       setCurrentPage(Number(pagination?.page || page || 1));
       setTotalPages(
         Number.isFinite(backendTotalPages) && backendTotalPages > 0
@@ -76,64 +81,15 @@ export default function BoardingBookingsScreen({ navigation }) {
         ),
       );
     } catch (error) {
-      setBookings([]);
-      setCurrentPage(1);
-      setTotalPages(1);
-      setTotalItems(0);
+      setBookings((prev) => (append ? prev : []));
+      setCurrentPage(append ? currentPage : 1);
+      setTotalPages(append ? totalPages : 1);
+      setTotalItems(append ? totalItems : 0);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
-  }, []);
-
-  const goToPage = async (page) => {
-    if (page < 1 || page > totalPages) return;
-
-    setCurrentPage(page);
-    setLoading(true);
-
-    try {
-      const response = await getOwnerBookings(page, 20);
-      const payload = response?.data || response || {};
-      const data = Array.isArray(payload?.data)
-        ? payload.data
-        : Array.isArray(payload?.bookings)
-          ? payload.bookings
-          : Array.isArray(payload)
-            ? payload
-            : [];
-      const pagination = payload?.pagination || response?.pagination || {};
-      const backendTotalPages = Number(
-        pagination?.total_pages ||
-          payload?.total_pages ||
-          response?.total_pages ||
-          1,
-      );
-
-      setBookings(data);
-      setCurrentPage(Number(pagination?.page || page || 1));
-      setTotalPages(
-        Number.isFinite(backendTotalPages) && backendTotalPages > 0
-          ? backendTotalPages
-          : 1,
-      );
-      setTotalItems(
-        Number(
-          pagination?.total ||
-            payload?.total ||
-            response?.total ||
-            data.length ||
-            0,
-        ),
-      );
-    } catch (error) {
-      setBookings([]);
-      setCurrentPage(1);
-      setTotalPages(1);
-      setTotalItems(0);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [currentPage, totalPages, totalItems]);
 
   useFocusEffect(
     useCallback(() => {
@@ -249,53 +205,23 @@ export default function BoardingBookingsScreen({ navigation }) {
             : undefined
         }
         contentContainerStyle={styles.list}
+        onEndReached={() => {
+          if (!loading && !loadingMore && currentPage < totalPages) {
+            loadBookings(currentPage + 1, true);
+          }
+        }}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          loadingMore ? (
+            <View style={styles.footerLoader}>
+              <PremiumLoader size={36} color={boardingOwnerTheme.primary} />
+            </View>
+          ) : null
+        }
         ListEmptyComponent={
           <Text style={styles.emptyText}>No bookings found</Text>
         }
       />
-      <View style={styles.paginationContainer}>
-        <TouchableOpacity
-          style={[
-            styles.paginationButton,
-            currentPage === 1 && styles.paginationButtonDisabled,
-          ]}
-          disabled={currentPage === 1}
-          onPress={() => goToPage(currentPage - 1)}
-        >
-          <Text style={styles.paginationButtonText}>Prev</Text>
-        </TouchableOpacity>
-
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <TouchableOpacity
-            key={page}
-            style={[
-              styles.pageNumberButton,
-              currentPage === page && styles.activePageNumberButton,
-            ]}
-            onPress={() => goToPage(page)}
-          >
-            <Text
-              style={[
-                styles.pageNumberButtonText,
-                currentPage === page && styles.activePageNumberButtonText,
-              ]}
-            >
-              {page}
-            </Text>
-          </TouchableOpacity>
-        ))}
-
-        <TouchableOpacity
-          style={[
-            styles.paginationButton,
-            currentPage === totalPages && styles.paginationButtonDisabled,
-          ]}
-          disabled={currentPage === totalPages}
-          onPress={() => goToPage(currentPage + 1)}
-        >
-          <Text style={styles.paginationButtonText}>Next</Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 }

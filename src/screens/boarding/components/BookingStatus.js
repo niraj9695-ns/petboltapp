@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import {
   View,
   Text,
@@ -138,6 +138,8 @@ const getBookingPetImageUrl = (booking) => {
 
 export default function BookingStatus() {
   const { width } = useWindowDimensions();
+
+  const navigation = useNavigation();
 
   const cardWidth = width >= 1200 ? 450 : width >= 768 ? 380 : width * 0.85;
 
@@ -607,7 +609,21 @@ export default function BookingStatus() {
                     <Text style={styles.secondaryButtonText}>Contact</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.secondaryButton}>
+                  <TouchableOpacity
+                    style={styles.secondaryButton}
+                    onPress={() => {
+                      const centerId =
+                        booking?.center?.id || booking?.center_id || booking?.centerId;
+                      if (!centerId) {
+                        Alert.alert("Not available", "Center details not available.");
+                        return;
+                      }
+                      navigation.navigate("Boarding", {
+                        screen: "BoardingDetails",
+                        params: { centerId },
+                      });
+                    }}
+                  >
                     <MaterialCommunityIcons
                       name="file-document"
                       size={18}

@@ -17,8 +17,9 @@ import * as DocumentPicker from "expo-document-picker";
 
 import createPhaseTwoFormStyles from "../styles/PhaseTwoFormStyles";
 import { useTheme } from "../../../context/ThemeContext";
+import FormLabel from "./FormLabel";
 
-export default function PhaseTwoForm({ petData, setPetData }) {
+export default function PhaseTwoForm({ petData, setPetData, fieldErrors = {} }) {
   const [showDewormingPicker, setShowDewormingPicker] = useState(false);
 
   const [showFleaTickPicker, setShowFleaTickPicker] = useState(false);
@@ -62,6 +63,7 @@ export default function PhaseTwoForm({ petData, setPetData }) {
     <View>
       <TextInput
         placeholder="Mother Name"
+        placeholderTextColor={theme.placeholder}
         style={phaseTwoFormStyles.input}
         value={petData.mother_name}
         onChangeText={(text) =>
@@ -74,6 +76,7 @@ export default function PhaseTwoForm({ petData, setPetData }) {
 
       <TextInput
         placeholder="Father Name"
+        placeholderTextColor={theme.placeholder}
         style={phaseTwoFormStyles.input}
         value={petData.father_name}
         onChangeText={(text) =>
@@ -86,6 +89,7 @@ export default function PhaseTwoForm({ petData, setPetData }) {
 
       <TextInput
         placeholder="Breeding Line"
+        placeholderTextColor={theme.placeholder}
         style={phaseTwoFormStyles.input}
         value={petData.breeding_line}
         onChangeText={(text) =>
@@ -98,6 +102,7 @@ export default function PhaseTwoForm({ petData, setPetData }) {
 
       <TextInput
         placeholder="Vaccination Status"
+        placeholderTextColor={theme.placeholder}
         style={phaseTwoFormStyles.input}
         value={petData.vaccination_status}
         onChangeText={(text) =>
@@ -110,6 +115,7 @@ export default function PhaseTwoForm({ petData, setPetData }) {
 
       <TextInput
         placeholder="Vaccination Details"
+        placeholderTextColor={theme.placeholder}
         multiline
         style={[phaseTwoFormStyles.input, phaseTwoFormStyles.textArea]}
         value={petData.vaccination_details}
@@ -123,6 +129,7 @@ export default function PhaseTwoForm({ petData, setPetData }) {
 
       <TextInput
         placeholder="Vaccination Notes"
+        placeholderTextColor={theme.placeholder}
         multiline
         style={[phaseTwoFormStyles.input, phaseTwoFormStyles.textArea]}
         value={petData.vaccination_notes}
@@ -134,12 +141,17 @@ export default function PhaseTwoForm({ petData, setPetData }) {
         }
       />
 
-      <Text style={phaseTwoFormStyles.sectionLabel}>
-        Vaccination Certificate
-      </Text>
+      <FormLabel
+        title="Vaccination Certificate"
+        required
+        error={fieldErrors.vaccination_certificate}
+      />
 
       <TouchableOpacity
-        style={phaseTwoFormStyles.dateInput}
+        style={[
+          phaseTwoFormStyles.dateInput,
+          fieldErrors.vaccination_certificate && phaseTwoFormStyles.inputError,
+        ]}
         onPress={pickVaccinationCertificate}
       >
         <Text style={phaseTwoFormStyles.dateInputText} numberOfLines={1}>
@@ -213,6 +225,7 @@ export default function PhaseTwoForm({ petData, setPetData }) {
 
       <TextInput
         placeholder="Medical History"
+        placeholderTextColor={theme.placeholder}
         multiline
         style={[phaseTwoFormStyles.input, phaseTwoFormStyles.textArea]}
         value={petData.medical_history}
@@ -226,6 +239,7 @@ export default function PhaseTwoForm({ petData, setPetData }) {
 
       <TextInput
         placeholder="Allergies"
+        placeholderTextColor={theme.placeholder}
         style={phaseTwoFormStyles.input}
         value={petData.allergies}
         onChangeText={(text) =>
@@ -238,6 +252,7 @@ export default function PhaseTwoForm({ petData, setPetData }) {
 
       <TextInput
         placeholder="Medical Conditions"
+        placeholderTextColor={theme.placeholder}
         multiline
         style={[phaseTwoFormStyles.input, phaseTwoFormStyles.textArea]}
         value={petData.medical_conditions}
@@ -251,6 +266,7 @@ export default function PhaseTwoForm({ petData, setPetData }) {
 
       <TextInput
         placeholder="Current Medication"
+        placeholderTextColor={theme.placeholder}
         style={phaseTwoFormStyles.input}
         value={petData.current_medication}
         onChangeText={(text) =>
@@ -263,6 +279,7 @@ export default function PhaseTwoForm({ petData, setPetData }) {
 
       <TextInput
         placeholder="Surgery History"
+        placeholderTextColor={theme.placeholder}
         multiline
         style={[phaseTwoFormStyles.input, phaseTwoFormStyles.textArea]}
         value={petData.surgery_history}

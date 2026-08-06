@@ -8,10 +8,12 @@ import {
   Linking,
   Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import PremiumLoader from "../../../components/PremiumLoader";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import petDetailsScreenStyles from "../styles/PetDetailsScreenStyles";
+import BASE_URL from "../constants/api";
 
 import { fetchPetByIdApi } from "../services/petService";
 import {
@@ -36,12 +38,26 @@ export default function PetDetailsScreen({ route, navigation }) {
   const [petData, setPetData] = useState(null);
   const [petImages, setPetImages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState(null);
+  const [guestRole, setGuestRole] = useState(null);
 
   const [expandedSection, setExpandedSection] = useState("pet");
 
   const toggleSection = (section) => {
     setExpandedSection(expandedSection === section ? null : section);
   };
+
+  useEffect(() => {
+    const loadUserRole = async () => {
+      const storedRole = await AsyncStorage.getItem("role");
+      const storedGuestRole = await AsyncStorage.getItem("guestRole");
+
+      setUserRole(storedRole);
+      setGuestRole(storedGuestRole);
+    };
+
+    loadUserRole();
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -97,6 +113,10 @@ export default function PetDetailsScreen({ route, navigation }) {
   const rawHealth = petData.health || {};
   const health = {
     ...rawHealth,
+    vaccination_certificate:
+      rawHealth.vaccination_certificate ||
+      petData.vaccination_certificate ||
+      null,
     deworming_date: rawHealth.deworming_date || petData.deworming_date || null,
     flea_tick_treatment_date:
       rawHealth.flea_tick_treatment_date ||
@@ -124,16 +144,36 @@ export default function PetDetailsScreen({ route, navigation }) {
       return;
     }
 
-    const normalizedUrl = String(url).trim();
-    const link = normalizedUrl.startsWith("http")
-      ? normalizedUrl
-      : `https://{YOUR_BASE_URL}/${normalizedUrl}`;
+    let normalizedUrl = String(url).trim();
+    if (!normalizedUrl) {
+      Alert.alert(
+        "File unavailable",
+        "No vaccination certificate link is available.",
+      );
+      return;
+    }
 
-    const supported = await Linking.canOpenURL(link);
+    if (!normalizedUrl.startsWith("http://") && !normalizedUrl.startsWith("https://")) {
+      normalizedUrl = normalizedUrl.startsWith("/")
+        ? `${BASE_URL}${normalizedUrl}`
+        : `${BASE_URL}/${normalizedUrl}`;
+    }
 
-    if (supported) {
+    const link = encodeURI(normalizedUrl);
+
+    try {
+      const supported = await Linking.canOpenURL(link);
+      if (supported) {
+        await Linking.openURL(link);
+        return;
+      }
+    } catch (error) {
+      // ignore canOpenURL errors and try openURL directly
+    }
+
+    try {
       await Linking.openURL(link);
-    } else {
+    } catch (error) {
       Alert.alert(
         "Cannot open file",
         "This certificate link cannot be opened.",
@@ -241,16 +281,20 @@ export default function PetDetailsScreen({ route, navigation }) {
 
           <Text style={petDetailsScreenStyles.headerTitle}>Pet Profile</Text>
 
-          <TouchableOpacity
-            style={petDetailsScreenStyles.headerIconButton}
-            onPress={() =>
-              navigation.navigate("EditPet", {
-                petId,
-              })
-            }
-          >
-            <Ionicons name="create-outline" size={24} color="#6b21a8" />
-          </TouchableOpacity>
+          {userRole !== "boarding_owner" && guestRole !== "boarding_owner" ? (
+            <TouchableOpacity
+              style={petDetailsScreenStyles.headerIconButton}
+              onPress={() =>
+                navigation.navigate("EditPet", {
+                  petId,
+                })
+              }
+            >
+              <Ionicons name="create-outline" size={24} color="#6b21a8" />
+            </TouchableOpacity>
+          ) : (
+            <View style={petDetailsScreenStyles.headerIconButton} />
+          )}
         </View>
         <View style={petDetailsScreenStyles.detailsHero}>
           <View style={petDetailsScreenStyles.imageWrapper}>

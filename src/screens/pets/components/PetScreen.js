@@ -413,6 +413,11 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
 
           if (initialEditPetId && navigation.canGoBack()) {
             navigation.goBack();
+          } else if (editingId) {
+            navigation.navigate("Pets", {
+              screen: "PetDetails",
+              params: { petId: editingId },
+            });
           }
         } else {
           Alert.alert("Error", response.data || "Update failed");
@@ -474,6 +479,24 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
 
           closeModal();
           await loadPets();
+
+          if (response.ok) {
+            const petId =
+              response?.data?.data?.pet_id ||
+              response?.data?.data?.id ||
+              response?.data?.pet_id ||
+              response?.data?.id ||
+              response?.pet_id ||
+              response?.id ||
+              null;
+
+            if (petId) {
+              navigation.navigate("Pets", {
+                screen: "PetDetails",
+                params: { petId },
+              });
+            }
+          }
         } else {
           Alert.alert("Error", response.data || "Add failed");
         }
@@ -763,12 +786,22 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
           />
         }
         contentContainerStyle={petScreenStyles.container}
+        onEndReached={() => {
+          if (!loading && !loadingMore && hasMorePages) {
+            loadPets(currentPage + 1, true);
+          }
+        }}
+        onEndReachedThreshold={0.5}
         ListFooterComponent={
           hasMorePages ? (
             <View style={petScreenStyles.paginationFooter}>
               <TouchableOpacity
                 style={petScreenStyles.nextPageButton}
-                onPress={() => loadPets(currentPage + 1, true)}
+                onPress={() => {
+                  if (!loading && !loadingMore && hasMorePages) {
+                    loadPets(currentPage + 1, true);
+                  }
+                }}
                 disabled={loadingMore}
               >
                 {loadingMore ? (

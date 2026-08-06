@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { useTheme } from "./src/context/ThemeContext";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -24,6 +25,7 @@ const Stack = createNativeStackNavigator();
 function MainApp() {
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
+  const { theme } = useTheme();
 
   const [guestRole, setGuestRole] = useState(null);
 
@@ -85,12 +87,12 @@ function MainApp() {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      background: "#F8FAFC",
-      card: "#FFFFFF",
-      text: "#111827",
-      border: "#E5E7EB",
-      primary: "#6B21A8",
-      notification: "#9333EA",
+      background: theme.background,
+      card: theme.cardBackground,
+      text: theme.textPrimary,
+      border: theme.border,
+      primary: theme.primary,
+      notification: theme.primary,
     },
   };
 

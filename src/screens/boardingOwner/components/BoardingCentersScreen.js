@@ -71,7 +71,7 @@ export default function BoardingCentersScreen() {
   };
 
   const goToPage = (page) => {
-    if (page < 1 || page > totalPages) return;
+    if (loading || page < 1 || page > totalPages) return;
     loadCenters(page);
   };
 
@@ -91,7 +91,7 @@ export default function BoardingCentersScreen() {
         <TouchableOpacity
           style={styles.paginationButton}
           onPress={() => goToPage(currentPage - 1)}
-          disabled={currentPage === 1}
+          disabled={loading || currentPage === 1}
         >
           <Text style={styles.paginationButtonText}>Prev</Text>
         </TouchableOpacity>
@@ -104,6 +104,7 @@ export default function BoardingCentersScreen() {
               currentPage === page && styles.activePageNumberButton,
             ]}
             onPress={() => goToPage(page)}
+            disabled={loading}
           >
             <Text
               style={[
@@ -119,7 +120,7 @@ export default function BoardingCentersScreen() {
         <TouchableOpacity
           style={styles.paginationButton}
           onPress={() => goToPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          disabled={loading || currentPage === totalPages}
         >
           <Text style={styles.paginationButtonText}>Next</Text>
         </TouchableOpacity>

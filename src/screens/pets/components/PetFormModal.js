@@ -123,7 +123,11 @@ export default function PetFormModal({
           )}
 
           {step === 2 && (
-            <PhaseTwoForm petData={petData} setPetData={setPetData} />
+            <PhaseTwoForm
+              petData={petData}
+              setPetData={setPetData}
+              fieldErrors={fieldErrors}
+            />
           )}
 
           {step === 3 && (

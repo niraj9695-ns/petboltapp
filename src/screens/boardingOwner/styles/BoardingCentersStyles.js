@@ -26,7 +26,6 @@ export default StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: COLORS.surfaceAlt,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
@@ -38,7 +37,7 @@ export default StyleSheet.create({
   },
 
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: "800",
     color: COLORS.primary,
   },
@@ -78,7 +77,7 @@ export default StyleSheet.create({
     shadowRadius: 6,
     elevation: 3,
   },
-  
+
   image: {
     width: "100%",
     height: 180,
@@ -89,15 +88,24 @@ export default StyleSheet.create({
   },
 
   centerName: {
-    fontSize: (typography && typography.title && typography.title.fontSize) || baseTypography.cardTitle || 18,
-    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
+    fontSize:
+      (typography && typography.title && typography.title.fontSize) ||
+      baseTypography.cardTitle ||
+      18,
+    fontWeight:
+      (typography && typography.title && typography.title.fontWeight) ||
+      baseTypography.weights.semibold ||
+      "600",
     color: COLORS.text,
   },
 
   location: {
     marginTop: 4,
     color: COLORS.textMuted,
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
   },
 
   button: {
@@ -111,8 +119,14 @@ export default StyleSheet.create({
 
   buttonText: {
     color: COLORS.surface,
-    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontWeight:
+      (typography && typography.title && typography.title.fontWeight) ||
+      baseTypography.weights.semibold ||
+      "600",
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
   },
 
   emptyState: {
@@ -122,13 +136,19 @@ export default StyleSheet.create({
 
   emptyText: {
     color: COLORS.textMuted,
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
   },
 
   summaryText: {
-    marginTop: 8,
+    marginTop: 0,
     color: COLORS.textMuted,
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
   },
 
   paginationContainer: {
@@ -152,7 +172,10 @@ export default StyleSheet.create({
 
   paginationButtonText: {
     color: COLORS.primary,
-    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
+    fontWeight:
+      (typography && typography.title && typography.title.fontWeight) ||
+      baseTypography.weights.semibold ||
+      "600",
   },
 
   pageNumberButton: {
@@ -173,7 +196,10 @@ export default StyleSheet.create({
 
   pageNumberButtonText: {
     color: COLORS.primary,
-    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
+    fontWeight:
+      (typography && typography.title && typography.title.fontWeight) ||
+      baseTypography.weights.semibold ||
+      "600",
   },
 
   activePageNumberButtonText: {

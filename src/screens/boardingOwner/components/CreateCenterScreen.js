@@ -25,11 +25,13 @@ import {
   createCenter,
 } from "../services/boardingOwnerService";
 import { useRefresh } from "../../../context/RefreshContext";
+import { useTheme } from "../../../context/ThemeContext";
 import styles from "../styles/CreateCenterStyles";
 
 export default function CreateCenterScreen() {
   const navigation = useNavigation();
   const { triggerRefresh } = useRefresh();
+  const { theme } = useTheme();
   const [loading, setLoading] = useState(false);
   const [centerImages, setCenterImages] = useState([]);
   const [licenseFile, setLicenseFile] = useState(null);
@@ -366,11 +368,9 @@ export default function CreateCenterScreen() {
           {
             text: "OK",
             onPress: () => {
-              if (centerId) {
-                navigation.replace("CenterDetails", { centerId, refreshKey: Date.now() });
-              } else {
-                navigation.navigate("BoardingTabs", { screen: "Centers" });
-              }
+              navigation.navigate("BoardingTabs", {
+                screen: "Centers",
+              });
             },
           },
         ]);
@@ -881,6 +881,7 @@ const Input = ({
   placeholder,
   error,
   helperText,
+  theme = boardingOwnerTheme,
 }) => (
   <View style={styles.fieldContainer}>
     <Text style={styles.label}>{label}</Text>
@@ -896,13 +897,13 @@ const Input = ({
       multiline={multiline}
       keyboardType={keyboardType}
       placeholder={placeholder}
-      placeholderTextColor="#9ca3af"
+      placeholderTextColor={theme.placeholder}
     />
     {error ? <Text style={styles.errorText}>{error}</Text> : null}
   </View>
 );
 
-const DatePickerField = ({ label, value, onPress, placeholder, error }) => (
+const DatePickerField = ({ label, value, onPress, placeholder, error, theme = boardingOwnerTheme }) => (
   <View style={styles.fieldContainer}>
     <Text style={styles.label}>{label}</Text>
     <TouchableOpacity
@@ -922,7 +923,7 @@ const DatePickerField = ({ label, value, onPress, placeholder, error }) => (
   </View>
 );
 
-const SelectField = ({ label, value, onValueChange, options, error, helperText }) => (
+const SelectField = ({ label, value, onValueChange, options, error, helperText, theme = boardingOwnerTheme }) => (
   <View style={styles.fieldContainer}>
     <Text style={styles.label}>{label}</Text>
     {helperText ? <Text style={styles.helperText}>{helperText}</Text> : null}
@@ -930,8 +931,8 @@ const SelectField = ({ label, value, onValueChange, options, error, helperText }
       <Picker
         selectedValue={value}
         onValueChange={onValueChange}
-        style={styles.picker}
-        dropdownIconColor="#6b21a8"
+        style={[styles.picker, { color: theme.textPrimary }]}
+        dropdownIconColor={theme.primary}
       >
         {options.map((option) => (
           <Picker.Item
@@ -946,15 +947,15 @@ const SelectField = ({ label, value, onValueChange, options, error, helperText }
   </View>
 );
 
-const PetPriceEditor = ({ value, onChange, onAdd, prices, onRemove, error }) => (
+const PetPriceEditor = ({ value, onChange, onAdd, prices, onRemove, error, theme = boardingOwnerTheme }) => (
   <View style={styles.fieldContainer}>
     <Text style={styles.label}>Pet Prices</Text>
     <View style={styles.selectBox}>
       <Picker
         selectedValue={value.petType}
         onValueChange={(petType) => onChange({ ...value, petType })}
-        style={styles.picker}
-        dropdownIconColor="#6b21a8"
+        style={[styles.picker, { color: theme.textPrimary }]}
+        dropdownIconColor={theme.primary}
       >
         {[
           { label: "Dog", value: "dog" },

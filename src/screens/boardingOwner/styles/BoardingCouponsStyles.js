@@ -1,9 +1,12 @@
 import { StyleSheet } from "react-native";
+import { boardingOwnerTheme } from "../../../styles/themeStyles";
+
+const COLORS = boardingOwnerTheme;
 
 export default StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f5f3ff",
+    backgroundColor: COLORS.background,
   },
   flexOne: {
     flex: 1,
@@ -22,11 +25,11 @@ export default StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: "700",
-    color: "#111827",
+    color: COLORS.text,
   },
   subtitle: {
     marginTop: 4,
-    color: "#6b7280",
+    color: COLORS.textMuted,
   },
 
   cardsContainer: {
@@ -36,14 +39,14 @@ export default StyleSheet.create({
   },
 
   pickerWrap: {
-    backgroundColor: "#f9fafb",
+    backgroundColor: COLORS.surfaceAlt,
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: COLORS.border,
     borderRadius: 12,
     overflow: "hidden",
   },
   createButton: {
-    backgroundColor: "#6b21a8",
+    backgroundColor: COLORS.primary,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 10,
@@ -56,7 +59,7 @@ export default StyleSheet.create({
     fontWeight: "700",
   },
   filterCard: {
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.surface,
     borderRadius: 16,
     padding: 14,
     marginBottom: 16,
@@ -69,11 +72,11 @@ export default StyleSheet.create({
   filterLabel: {
     marginBottom: 10,
     fontWeight: "700",
-    color: "#374151",
+    color: COLORS.text,
   },
 
   listCard: {
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.surface,
     borderRadius: 20,
     padding: 16,
     shadowColor: "#000",
@@ -91,10 +94,10 @@ export default StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "800",
-    color: "#111827",
+    color: COLORS.text,
   },
   mutedText: {
-    color: "#6b7280",
+    color: COLORS.textMuted,
     fontSize: 12,
   },
   loaderWrap: {
@@ -113,16 +116,16 @@ export default StyleSheet.create({
   },
   emptyStateText: {
     marginTop: 10,
-    color: "#6b7280",
+    color: COLORS.textMuted,
     textAlign: "center",
   },
   discountCard: {
     borderWidth: 1,
-    borderColor: "#ede9fe",
+    borderColor: COLORS.border,
     borderRadius: 16,
     padding: 14,
     marginBottom: 12,
-    backgroundColor: "#faf5ff",
+    backgroundColor: COLORS.surfaceAlt,
   },
   discountHeader: {
     flexDirection: "row",
@@ -131,17 +134,17 @@ export default StyleSheet.create({
     gap: 12,
   },
   discountTitle: {
-    color: "#111827",
+    color: COLORS.text,
     fontSize: 17,
     fontWeight: "800",
   },
   discountMeta: {
-    color: "#6b7280",
+    color: COLORS.textMuted,
     marginTop: 3,
     fontSize: 12,
   },
   discountInfo: {
-    color: "#4b5563",
+    color: COLORS.textMuted,
     marginTop: 10,
     fontSize: 13,
   },

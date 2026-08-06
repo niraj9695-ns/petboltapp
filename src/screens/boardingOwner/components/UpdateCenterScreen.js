@@ -26,12 +26,14 @@ import {
   updateCenter,
 } from "../services/boardingOwnerService";
 import { useRefresh } from "../../../context/RefreshContext";
+import { useTheme } from "../../../context/ThemeContext";
 import PremiumLoader from "../../../components/PremiumLoader";
 
 export default function UpdateCenterScreen() {
   const { width } = Dimensions.get("window");
   const navigation = useNavigation();
   const route = useRoute();
+  const { theme } = useTheme();
   const { triggerRefresh } = useRefresh();
   const { centerId } = route.params || {};
 
@@ -327,9 +329,8 @@ export default function UpdateCenterScreen() {
         {
           text: "OK",
           onPress: () =>
-            navigation.replace("CenterDetails", {
-              centerId,
-              refreshKey: Date.now(),
+            navigation.navigate("BoardingTabs", {
+              screen: "Centers",
             }),
         },
       ]);
@@ -1023,8 +1024,8 @@ const SelectField = ({ label, value, onValueChange, options }) => (
       <Picker
         selectedValue={value}
         onValueChange={onValueChange}
-        style={styles.picker}
-        dropdownIconColor="#6b21a8"
+        style={[styles.picker, { color: theme.textPrimary }]}
+        dropdownIconColor={theme.primary}
       >
         {options.map((option) => (
           <Picker.Item
@@ -1045,8 +1046,8 @@ const PetPriceEditor = ({ value, onChange, onAdd, prices, onRemove }) => (
       <Picker
         selectedValue={value.petType}
         onValueChange={(petType) => onChange({ ...value, petType })}
-        style={styles.picker}
-        dropdownIconColor="#6b21a8"
+        style={[styles.picker, { color: theme.textPrimary }]}
+        dropdownIconColor={theme.primary}
       >
         {[
           { label: "Dog", value: "dog" },

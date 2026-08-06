@@ -140,49 +140,51 @@ export default function BoardingCentersScreen({ navigation, route }) {
 
   return (
     <View style={styles.wrapper}>
-      {/* HEADER */}
+      {/* HEADER (full-bleed) */}
       <LinearGradient
         colors={["#ffffff", "#f8fafc"]}
         style={styles.headerSection}
       >
-        <View style={styles.headerContent}>
-          <View>
-            <Text style={styles.headerTitle}>Boarding Centers</Text>
-            <Text style={styles.headerSubtitle}>
-              Find the perfect place for your pet
-            </Text>
+        <View style={styles.headerInner}>
+          <View style={styles.headerContent}>
+            <View>
+              <Text style={styles.headerTitle}>Boarding Centers</Text>
+              <Text style={styles.headerSubtitle}>
+                Find the perfect place for your pet
+              </Text>
+            </View>
+            <View style={styles.centerCountBadge}>
+              <MaterialCommunityIcons
+                name="home-heart"
+                size={20}
+                color="#6b21a8"
+              />
+              <Text style={styles.centerCountText}>{centers.length}</Text>
+            </View>
           </View>
-          <View style={styles.centerCountBadge}>
-            <MaterialCommunityIcons
-              name="home-heart"
-              size={20}
-              color="#6b21a8"
-            />
-            <Text style={styles.centerCountText}>{centers.length}</Text>
-          </View>
-        </View>
 
-        {/* FILTER INFO */}
-        {(city || type) && (
-          <View style={styles.filterChipsContainer}>
-            {city && (
-              <View style={styles.filterChip}>
-                <MaterialCommunityIcons
-                  name="map-marker"
-                  size={14}
-                  color="#6b21a8"
-                />
-                <Text style={styles.filterChipText}>{city}</Text>
-              </View>
-            )}
-            {type && (
-              <View style={styles.filterChip}>
-                <MaterialCommunityIcons name="tag" size={14} color="#6b21a8" />
-                <Text style={styles.filterChipText}>{type.toUpperCase()}</Text>
-              </View>
-            )}
-          </View>
-        )}
+          {/* FILTER INFO */}
+          {(city || type) && (
+            <View style={styles.filterChipsContainer}>
+              {city && (
+                <View style={styles.filterChip}>
+                  <MaterialCommunityIcons
+                    name="map-marker"
+                    size={14}
+                    color="#6b21a8"
+                  />
+                  <Text style={styles.filterChipText}>{city}</Text>
+                </View>
+              )}
+              {type && (
+                <View style={styles.filterChip}>
+                  <MaterialCommunityIcons name="tag" size={14} color="#6b21a8" />
+                  <Text style={styles.filterChipText}>{type.toUpperCase()}</Text>
+                </View>
+              )}
+            </View>
+          )}
+        </View>
       </LinearGradient>
 
       {centers.length === 0 ? (

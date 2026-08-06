@@ -10,8 +10,9 @@ import {
 } from "react-native";
 import PremiumLoader from "../../../components/PremiumLoader";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import { Ionicons } from "@expo/vector-icons";
 import { useRefresh } from "../../../context/RefreshContext";
+import { useTheme } from "../../../context/ThemeContext";
 import styles from "../styles/BookingDetailsScreen";
 import {
   updateBookingStatus,
@@ -21,10 +22,39 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export default function BookingDetailsScreen({ route, navigation }) {
   const { triggerRefresh } = useRefresh();
+  const { theme } = useTheme();
   const [booking, setBooking] = useState(route.params.booking);
   const [rejectReason, setRejectReason] = useState("");
   const [rejectError, setRejectError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const getBookingPetId = (booking) => {
+    return (
+      booking?.pet_id ||
+      booking?.pet?.pet_id ||
+      booking?.pet?.id ||
+      booking?.pet_info?.pet_id ||
+      booking?.pet_details?.pet_id ||
+      booking?.pet_data?.pet_id ||
+      null
+    );
+  };
+
+  const bookingPetId = getBookingPetId(booking);
+
+  const handleViewPetDetails = () => {
+    if (!bookingPetId) {
+      Alert.alert(
+        "Pet unavailable",
+        "This booking does not contain a valid pet ID.",
+      );
+      return;
+    }
+
+    navigation.navigate("PetDetails", {
+      petId: bookingPetId,
+    });
+  };
 
   const { width } = useWindowDimensions();
 
@@ -36,8 +66,7 @@ export default function BookingDetailsScreen({ route, navigation }) {
   const [pickupRequired, setPickupRequired] = useState(false);
   const [dropRequired, setDropRequired] = useState(false);
 
-  const [showPickupDrop, setShowPickupDrop] = useState(false);
-  const [showRejectSection, setShowRejectSection] = useState(false);
+  const [showActions, setShowActions] = useState(false);
 
   const [dropDate, setDropDate] = useState(new Date());
   const [dropTime, setDropTime] = useState(new Date());
@@ -88,20 +117,18 @@ export default function BookingDetailsScreen({ route, navigation }) {
         driver_notes: driverNotes,
       };
 
-      
       const response = await setPickupDropTime(payload);
 
       if (response.status === "success" || response.success) {
         Alert.alert("Success", "Pickup / Drop details updated successfully.");
 
         setBooking(response.data);
-      
+
         triggerRefresh();
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      
       Alert.alert("Error", JSON.stringify(error?.response?.data || {}));
     } finally {
       setPickupLoading(false);
@@ -157,7 +184,6 @@ export default function BookingDetailsScreen({ route, navigation }) {
 
       throw new Error(response.message || "Unable to reject booking.");
     } catch (error) {
-      
       Alert.alert(
         "Reject Failed",
         error?.response?.data?.message ||
@@ -181,7 +207,7 @@ export default function BookingDetailsScreen({ route, navigation }) {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={["left","right","bottom"]}>
+    <SafeAreaView style={styles.container} edges={["left", "right", "bottom"]}>
       <ScrollView
         contentContainerStyle={[
           styles.content,
@@ -200,145 +226,200 @@ export default function BookingDetailsScreen({ route, navigation }) {
           </TouchableOpacity>
 
           <View style={styles.heroCard}>
-            <Text style={styles.heroTitle}>{booking.pet_name}</Text>
+            <TouchableOpacity onPress={handleViewPetDetails}>
+              <Text
+                style={styles.heroTitle}
+              >
+                {booking.pet_name || booking.pet?.pet_name || "Pet Details"}
+              </Text>
+            </TouchableOpacity>
             <Text style={styles.heroSubtitle}>{booking.center_name}</Text>
           </View>
 
           <View style={styles.actionPanel}>
             <TouchableOpacity
-              style={styles.sectionHeader}
-              onPress={() =>
-                !pickupDropSubmitted && setShowPickupDrop(!showPickupDrop)
-              }
+              style={styles.accordionHeader}
+              onPress={() => setShowActions(!showActions)}
             >
-              <Text style={styles.sectionTitle}>Pickup & Drop Service</Text>
+              <Text style={styles.accordionTitle}>Booking Actions</Text>
 
-              <Text style={styles.expandIcon}>
-                {pickupDropSubmitted
-                  ? "✅ Completed"
-                  : showPickupDrop
-                    ? "▲"
-                    : "▼"}
-              </Text>
+              <Ionicons
+                name={showActions ? "chevron-up" : "chevron-down"}
+                size={22}
+                color="#6b21a8"
+              />
             </TouchableOpacity>
-
-            {showPickupDrop && !pickupDropSubmitted && (
-              <>
-                <Text style={styles.label}>Pickup Required</Text>
-                <TouchableOpacity
-                  style={styles.dateButton}
-                  onPress={() => setPickupRequired(!pickupRequired)}
-                >
-                  <Text>{pickupRequired ? "✅ Yes" : "❌ No"}</Text>
-                </TouchableOpacity>
-
-                <Text style={styles.label}>Drop Required</Text>
-                <TouchableOpacity
-                  style={styles.dateButton}
-                  onPress={() => setDropRequired(!dropRequired)}
-                >
-                  <Text>{dropRequired ? "✅ Yes" : "❌ No"}</Text>
-                </TouchableOpacity>
-
-                {pickupRequired && (
-                  <>
-                    <TouchableOpacity
-                      style={styles.dateButton}
-                      onPress={() => setShowPickupDate(true)}
-                    >
-                      <Text>Pickup Date: {formatDate(pickupDate)}</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={styles.dateButton}
-                      onPress={() => setShowPickupTime(true)}
-                    >
-                      <Text>
-                        Pickup Time: {pickupTime.toLocaleTimeString()}
-                      </Text>
-                    </TouchableOpacity>
-
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Pickup Address"
-                      value={pickupAddress}
-                      onChangeText={setPickupAddress}
-                    />
-                  </>
-                )}
-
-                {dropRequired && (
-                  <>
-                    <TouchableOpacity
-                      style={styles.dateButton}
-                      onPress={() => setShowDropDate(true)}
-                    >
-                      <Text>Drop Date: {formatDate(dropDate)}</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={styles.dateButton}
-                      onPress={() => setShowDropTime(true)}
-                    >
-                      <Text>Drop Time: {dropTime.toLocaleTimeString()}</Text>
-                    </TouchableOpacity>
-
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Drop Address"
-                      value={dropAddress}
-                      onChangeText={setDropAddress}
-                    />
-                  </>
-                )}
-
-                <TextInput
-                  style={[styles.input, { minHeight: 80 }]}
-                  placeholder="Driver Notes"
-                  multiline
-                  value={driverNotes}
-                  onChangeText={setDriverNotes}
-                />
-
-                <TouchableOpacity
-                  style={styles.rejectButton}
-                  onPress={handleSetPickupDrop}
-                  disabled={pickupLoading}
-                >
-                  {pickupLoading ? (
-                    <PremiumLoader size={18} color="#fff" showLabel={false} />
-                  ) : (
-                    <Text style={styles.rejectButtonText}>
-                      Save Pickup & Drop Details
-                    </Text>
-                  )}
-                </TouchableOpacity>
-              </>
-            )}
-            {pickupDropSubmitted && (
-              <View style={styles.completedBox}>
-                <Text style={styles.completedText}>
-                  Pickup & Drop details have already been submitted and cannot
-                  be modified.
+            {showActions && (
+              <View style={styles.accordionContent}>
+                <Text style={styles.subSectionTitle}>
+                  Pickup & Drop Service
                 </Text>
-              </View>
-            )}
-          </View>
+                {pickupDropSubmitted ? (
+                  <View style={styles.completedBox}>
+                    <Text style={styles.completedText}>
+                      Pickup & Drop details have already been submitted and
+                      cannot be modified.
+                    </Text>
+                  </View>
+                ) : (
+                  <>
+                    <Text style={styles.label}>Pickup Required</Text>
+                    <View style={styles.toggleRow}>
+                      <TouchableOpacity
+                        style={[
+                          styles.toggleOption,
+                          pickupRequired && styles.toggleOptionActive,
+                        ]}
+                        onPress={() => setPickupRequired(true)}
+                      >
+                        <Text
+                          style={[
+                            styles.toggleOptionText,
+                            pickupRequired && styles.toggleOptionTextActive,
+                          ]}
+                        >
+                          Yes
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[
+                          styles.toggleOption,
+                          !pickupRequired && styles.toggleOptionActive,
+                        ]}
+                        onPress={() => setPickupRequired(false)}
+                      >
+                        <Text
+                          style={[
+                            styles.toggleOptionText,
+                            !pickupRequired && styles.toggleOptionTextActive,
+                          ]}
+                        >
+                          No
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
 
-          <View style={styles.actionPanel}>
-            <TouchableOpacity
-              style={styles.sectionHeader}
-              onPress={() => setShowRejectSection(!showRejectSection)}
-            >
-              <Text style={styles.sectionTitle}>Reject Booking</Text>
+                    <Text style={styles.label}>Drop Required</Text>
+                    <View style={styles.toggleRow}>
+                      <TouchableOpacity
+                        style={[
+                          styles.toggleOption,
+                          dropRequired && styles.toggleOptionActive,
+                        ]}
+                        onPress={() => setDropRequired(true)}
+                      >
+                        <Text
+                          style={[
+                            styles.toggleOptionText,
+                            dropRequired && styles.toggleOptionTextActive,
+                          ]}
+                        >
+                          Yes
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[
+                          styles.toggleOption,
+                          !dropRequired && styles.toggleOptionActive,
+                        ]}
+                        onPress={() => setDropRequired(false)}
+                      >
+                        <Text
+                          style={[
+                            styles.toggleOptionText,
+                            !dropRequired && styles.toggleOptionTextActive,
+                          ]}
+                        >
+                          No
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
 
-              <Text style={styles.expandIcon}>
-                {showRejectSection ? "▲" : "▼"}
-              </Text>
-            </TouchableOpacity>
+                    {pickupRequired && (
+                      <>
+                        <TouchableOpacity
+                          style={styles.dateButton}
+                          onPress={() => setShowPickupDate(true)}
+                        >
+                          <Text>Pickup Date: {formatDate(pickupDate)}</Text>
+                        </TouchableOpacity>
 
-            {showRejectSection && (
-              <>
+                        <TouchableOpacity
+                          style={styles.dateButton}
+                          onPress={() => setShowPickupTime(true)}
+                        >
+                          <Text>
+                            Pickup Time: {pickupTime.toLocaleTimeString()}
+                          </Text>
+                        </TouchableOpacity>
+
+                        <TextInput
+                          style={styles.input}
+                          placeholder="Pickup Address"
+                          value={pickupAddress}
+                          onChangeText={setPickupAddress}
+                        />
+                      </>
+                    )}
+
+                    {dropRequired && (
+                      <>
+                        <TouchableOpacity
+                          style={styles.dateButton}
+                          onPress={() => setShowDropDate(true)}
+                        >
+                          <Text>Drop Date: {formatDate(dropDate)}</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          style={styles.dateButton}
+                          onPress={() => setShowDropTime(true)}
+                        >
+                          <Text>
+                            Drop Time: {dropTime.toLocaleTimeString()}
+                          </Text>
+                        </TouchableOpacity>
+
+                        <TextInput
+                          style={styles.input}
+                          placeholder="Drop Address"
+                          value={dropAddress}
+                          onChangeText={setDropAddress}
+                        />
+                      </>
+                    )}
+
+                    <TextInput
+                      style={[styles.input, { minHeight: 80 }]}
+                      placeholder="Driver Notes"
+                      multiline
+                      value={driverNotes}
+                      onChangeText={setDriverNotes}
+                    />
+
+                    <TouchableOpacity
+                      style={styles.rejectButton}
+                      onPress={handleSetPickupDrop}
+                      disabled={pickupLoading}
+                    >
+                      {pickupLoading ? (
+                        <PremiumLoader
+                          size={18}
+                          color="#fff"
+                          showLabel={false}
+                        />
+                      ) : (
+                        <Text style={styles.rejectButtonText}>
+                          Save Pickup & Drop Details
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  </>
+                )}
+
+                <View style={styles.divider} />
+
+                <Text style={styles.subSectionTitle}>Reject Booking</Text>
                 <Text style={styles.helperText}>
                   {canReject
                     ? "If this request cannot be accepted, provide a clear reason and reject it now."
@@ -358,30 +439,33 @@ export default function BookingDetailsScreen({ route, navigation }) {
                     }
                   }}
                   placeholder="Enter rejection reason"
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor={theme.placeholder}
                   multiline
                   numberOfLines={4}
                   textAlignVertical="top"
                   editable={canReject && !loading}
                 />
-              </>
+                {rejectError ? (
+                  <Text style={styles.errorText}>{rejectError}</Text>
+                ) : null}
+                <TouchableOpacity
+                  style={[
+                    styles.rejectButton,
+                    !canReject && styles.disabledButton,
+                  ]}
+                  onPress={handleReject}
+                  disabled={!canReject || loading}
+                >
+                  {loading ? (
+                    <PremiumLoader size={18} color="#fff" showLabel={false} />
+                  ) : (
+                    <Text style={styles.rejectButtonText}>
+                      {canReject ? "Reject Booking" : "Cannot Reject"}
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </View>
             )}
-            {rejectError ? (
-              <Text style={styles.errorText}>{rejectError}</Text>
-            ) : null}
-            <TouchableOpacity
-              style={[styles.rejectButton, !canReject && styles.disabledButton]}
-              onPress={handleReject}
-              disabled={!canReject || loading}
-            >
-              {loading ? (
-                <PremiumLoader size={18} color="#fff" showLabel={false} />
-              ) : (
-                <Text style={styles.rejectButtonText}>
-                  {canReject ? "Reject Booking" : "Cannot Reject"}
-                </Text>
-              )}
-            </TouchableOpacity>
           </View>
 
           <View style={styles.card}>

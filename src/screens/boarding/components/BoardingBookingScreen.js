@@ -388,9 +388,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
           {
             text: "OK",
             onPress: () => {
-              navigation.navigate("BookingStatus", {
-                refresh: true,
-              });
+              navigation.navigate("Home");
             },
           },
         ]);

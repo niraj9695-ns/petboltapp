@@ -75,23 +75,20 @@ export default function CenterCard({
               <Text style={styles.centerCardTitle} numberOfLines={2}>
                 {item.center_name}
               </Text>
-              {item.city && (
-                <View style={styles.locationBadge}>
-                  <MaterialCommunityIcons
-                    name="map-marker"
-                    size={12}
-                    color="#6b21a8"
-                  />
-                  <Text style={styles.locationText}>
-                    {item.city}
-                    {item.state ? `, ${item.state}` : ""}
-                  </Text>
-                </View>
-              )}
             </View>
-            <Text style={styles.centerCardPrice}>
-              ₹{item.price_per_day || "N/A"}
-            </Text>
+            {item.city ? (
+              <View style={styles.centerCardLocation}>
+                <MaterialCommunityIcons
+                  name="map-marker"
+                  size={14}
+                  color="#6b21a8"
+                />
+                <Text style={styles.centerCardLocationText} numberOfLines={1}>
+                  {item.city}
+                  {item.state ? `, ${item.state}` : ""}
+                </Text>
+              </View>
+            ) : null}
           </View>
 
           {/* DESCRIPTION */}

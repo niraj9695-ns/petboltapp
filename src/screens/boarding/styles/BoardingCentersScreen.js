@@ -1,9 +1,15 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../../../styles/theme/colors";
+import { spacing } from "../../../styles/theme/spacing";
+import { radius } from "../../../styles/theme/radius";
+import { typography } from "../../../styles/themeStyles";
+import { typography as baseTypography } from "../../../styles/theme/typography";
+import { shadows } from "../../../styles/theme/shadows";
 
 export default StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: "#faf5ff",
+    backgroundColor: colors.background,
   },
 
   loaderContainer: {
@@ -15,37 +21,43 @@ export default StyleSheet.create({
 
   /* HEADER SECTION */
   headerSection: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 16,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: "#e2e8f0",
+    borderBottomColor: colors.border,
+  },
+
+  headerInner: {
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.xl,
+    backgroundColor: "transparent",
   },
 
   listContent: {
     paddingHorizontal: 16,
     paddingVertical: 16,
     paddingBottom: 24,
-    alignItems: "center",
+    alignItems: "stretch",
   },
 
   headerContent: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
 
   headerTitle: {
-    fontSize: 28,
+    fontSize: (typography && typography.heroTitle && typography.heroTitle.fontSize) || baseTypography.heroTitle || 28,
     fontWeight: "800",
-    color: "#0f172a",
-    marginBottom: 4,
+    color: colors.text,
+    marginBottom: spacing.xs,
   },
 
   headerSubtitle: {
-    fontSize: 14,
-    color: "#64748b",
+    fontSize: (typography && typography.subtitle && typography.subtitle.fontSize) || baseTypography.subtitle || 16,
+    color: colors.textMuted,
     fontWeight: "500",
   },
 

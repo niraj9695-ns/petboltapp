@@ -109,23 +109,64 @@ export default StyleSheet.create({
     backgroundColor: "#cbd5e1",
   },
   rejectButtonText: {
-    color: COLORS.white,
+    color: "#ffffff",
     fontSize: 15,
     fontWeight: "700",
   },
+  accordionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#f9f5ff",
+    padding: 15,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#e9d5ff",
+  },
 
-  actionPanel: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 20,
+  accordionTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#6b21a8",
+  },
+  accordionContent: {
+    backgroundColor: "#ffffff",
+    marginTop: 8,
+    borderRadius: 16,
     padding: 18,
-    marginTop: 24,
+    borderWidth: 1,
+    borderColor: "#e9d5ff",
+  },
+  actionPanel: {
+    marginBottom: 16,
+  },
+  toggleRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 10,
+    marginBottom: 14,
+  },
+  toggleOption: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: COLORS.border,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    elevation: 1,
+    backgroundColor: COLORS.surfaceAlt,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  toggleOptionActive: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+  },
+  toggleOptionText: {
+    color: COLORS.text,
+    fontSize: 14,
+    fontWeight: "700",
+  },
+  toggleOptionTextActive: {
+    color: COLORS.surface,
   },
   helperText: {
     fontSize: 13,
@@ -186,5 +227,17 @@ export default StyleSheet.create({
   completedText: {
     color: "#166534",
     fontWeight: "600",
+  },
+  subSectionTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#6b21a8",
+    marginBottom: 14,
+    marginTop: 4,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: COLORS.border,
+    marginVertical: 18,
   },
 });

@@ -53,6 +53,7 @@ export default function PhaseOneForm({
 
       <TextInput
         placeholder="Pet Name"
+        placeholderTextColor={theme.placeholder}
         style={[
           phaseOneFormStyles.input,
           fieldErrors.pet_name && phaseOneFormStyles.inputError,
@@ -78,6 +79,8 @@ export default function PhaseOneForm({
       >
         <Picker
           selectedValue={petData.pet_type}
+          style={{ color: theme.textPrimary }}
+          dropdownIconColor={theme.primary}
           onValueChange={(value) =>
             setPetData({
               ...petData,
@@ -99,6 +102,7 @@ export default function PhaseOneForm({
 
       <TextInput
         placeholder="Breed"
+        placeholderTextColor={theme.placeholder}
         style={[
           phaseOneFormStyles.input,
           fieldErrors.breed && phaseOneFormStyles.inputError,
@@ -124,6 +128,8 @@ export default function PhaseOneForm({
       >
         <Picker
           selectedValue={petData.gender}
+          style={{ color: theme.textPrimary }}
+          dropdownIconColor={theme.primary}
           onValueChange={(value) =>
             setPetData({
               ...petData,
@@ -144,6 +150,7 @@ export default function PhaseOneForm({
 
       <TextInput
         placeholder="Age"
+        placeholderTextColor={theme.placeholder}
         keyboardType="numeric"
         style={[
           phaseOneFormStyles.input,
@@ -189,6 +196,7 @@ export default function PhaseOneForm({
 
       <TextInput
         placeholder="Weight"
+        placeholderTextColor={theme.placeholder}
         keyboardType="numeric"
         style={[
           phaseOneFormStyles.input,
@@ -207,6 +215,7 @@ export default function PhaseOneForm({
 
       <TextInput
         placeholder="Color Marks"
+        placeholderTextColor={theme.placeholder}
         style={phaseOneFormStyles.input}
         value={petData.color_marks}
         onChangeText={(text) =>

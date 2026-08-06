@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from "react";
 import { Animated, Easing, StyleSheet, View, Text } from "react-native";
 import { BlurView } from "expo-blur";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 
 const normalizeColor = (value, fallback = "#7c3aed") => {
   if (!value || typeof value !== "string") return fallback;
@@ -27,13 +26,13 @@ const normalizeColor = (value, fallback = "#7c3aed") => {
 };
 
 export default function PremiumLoader({
-  size = 56,
+  size = 72,
   color = "#7c3aed",
   label = "Loading",
   showLabel = true,
   style,
   fullScreen = false,
-  overlayColor = "rgba(9, 14, 24, 0.38)",
+  overlayColor = "rgba(255,255,255,0.72)",
 }) {
   const spinValue = useRef(new Animated.Value(0)).current;
   const pulseValue = useRef(new Animated.Value(1)).current;
@@ -91,37 +90,20 @@ export default function PremiumLoader({
         >
           <Animated.View
             style={[
-              styles.rainbowRing,
+              styles.spinnerRing,
               {
+                borderTopColor: resolvedColor,
                 transform: [{ rotate }],
               },
             ]}
-          >
-            <LinearGradient
-              colors={[
-                "#ff0000", // red
-                "#ff7f00", // orange
-                "#ffff00", // yellow
-                "#00ff00", // green
-                "#0000ff", // blue
-                "#4b0082", // indigo
-                "#9400d3", // violet
-                "#ff0000", // back to red
-              ]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.rainbowGradient}
-            />
-          </Animated.View>
+          />
           <View style={styles.pawBadge}>
-            <Ionicons name="paw" size={size * 0.26} color={resolvedColor} />
+            <Ionicons name="paw" size={size * 0.34} color={resolvedColor} />
           </View>
         </View>
       </Animated.View>
 
-      {showLabel ? (
-        <Text style={[styles.label, { color: resolvedColor }]}>{label}</Text>
-      ) : null}
+      {showLabel ? <Text style={styles.label}>{label}</Text> : null}
     </View>
   );
 
@@ -131,9 +113,13 @@ export default function PremiumLoader({
 
   return (
     <View style={styles.overlayContainer}>
-      <BlurView intensity={24} tint="dark" style={StyleSheet.absoluteFill} />
+      <BlurView intensity={18} tint="light" style={StyleSheet.absoluteFill} />
       <View
-        style={[StyleSheet.absoluteFill, styles.overlayBackdrop, { backgroundColor: overlayColor }]}
+        style={[
+          StyleSheet.absoluteFill,
+          styles.overlayBackdrop,
+          { backgroundColor: overlayColor },
+        ]}
       />
       <View style={styles.overlayContent}>{content}</View>
     </View>
@@ -164,51 +150,33 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  outerRing: {
-    borderRadius: 999,
-    borderWidth: 3,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.12,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 6,
-    backgroundColor: "#fff",
-  },
-  innerRing: {
-    position: "absolute",
-    width: "78%",
-    height: "78%",
-    borderRadius: 999,
-    borderWidth: 3,
-    borderColor: "transparent",
-  },
   pawBadge: {
     position: "absolute",
-    width: "70%",
-    height: "70%",
+    width: "68%",
+    height: "68%",
     borderRadius: 999,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
   label: {
-    marginTop: 10,
-    fontSize: 13,
-    fontWeight: "700",
-    letterSpacing: 0.4,
+    marginTop: 18,
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#475569",
+    letterSpacing: 0.2,
   },
-  rainbowRing: {
+  spinnerRing: {
     position: "absolute",
-    width: "88%",
-    height: "88%",
+    width: "92%",
+    height: "92%",
     borderRadius: 999,
-    overflow: "hidden",
+    borderWidth: 5,
+    borderColor: "rgba(124,58,237,0.12)",
+    borderTopColor: "#7c3aed",
   },
-
-  rainbowGradient: {
-    flex: 1,
+  outerRing: {
     borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

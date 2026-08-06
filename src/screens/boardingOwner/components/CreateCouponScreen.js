@@ -105,7 +105,7 @@ export default function CreateCouponScreen() {
   };
 
   const goToCenterPage = (page) => {
-    if (page < 1 || page > centerTotalPages) return;
+    if (loading || page < 1 || page > centerTotalPages) return;
     setLoading(true);
     loadCenters(page);
   };
@@ -126,7 +126,7 @@ export default function CreateCouponScreen() {
         <TouchableOpacity
           style={styles.paginationButton}
           onPress={() => goToCenterPage(centerPage - 1)}
-          disabled={centerPage === 1}
+          disabled={loading || centerPage === 1}
         >
           <Text style={styles.paginationButtonText}>Prev</Text>
         </TouchableOpacity>
@@ -139,6 +139,7 @@ export default function CreateCouponScreen() {
               centerPage === page && styles.activePageNumberButton,
             ]}
             onPress={() => goToCenterPage(page)}
+            disabled={loading}
           >
             <Text
               style={[
@@ -154,7 +155,7 @@ export default function CreateCouponScreen() {
         <TouchableOpacity
           style={styles.paginationButton}
           onPress={() => goToCenterPage(centerPage + 1)}
-          disabled={centerPage === centerTotalPages}
+          disabled={loading || centerPage === centerTotalPages}
         >
           <Text style={styles.paginationButtonText}>Next</Text>
         </TouchableOpacity>

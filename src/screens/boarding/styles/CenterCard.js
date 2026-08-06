@@ -22,7 +22,7 @@ export default StyleSheet.create({
 
   cardContainer: {
     marginBottom: spacing.lg,
-    alignSelf: "center",
+    alignSelf: "stretch",
   },
 
   /* CENTER IMAGE */
@@ -128,6 +128,24 @@ export default StyleSheet.create({
     borderRadius: radius.sm,
     textAlign: "center",
     minWidth: 70,
+  },
+
+  centerCardLocation: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.surfaceMuted,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.sm,
+    minWidth: 90,
+    justifyContent: "center",
+  },
+
+  centerCardLocationText: {
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    color: colors.primary,
+    fontWeight: "700",
+    marginLeft: spacing.xs,
   },
 
   /* DESCRIPTION */

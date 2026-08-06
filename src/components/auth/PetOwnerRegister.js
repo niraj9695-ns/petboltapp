@@ -283,7 +283,7 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         </View>
 
         <TextInput
-          style={[petOwnerRegisterStyles.phoneInput, { color: theme.textPrimary }]}
+          style={[petOwnerRegisterStyles.phoneInput, { color: theme.textPrimary, backgroundColor: theme.inputBackground }]}
           placeholder="Enter mobile number"
           placeholderTextColor={theme.placeholder}
           keyboardType="number-pad"
@@ -309,7 +309,7 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         </View>
 
         <TextInput
-          style={[petOwnerRegisterStyles.phoneInput, { color: theme.textPrimary }]}
+          style={[petOwnerRegisterStyles.phoneInput, { color: theme.textPrimary, backgroundColor: theme.inputBackground }]}
           placeholder="Alternate Contact Number"
           placeholderTextColor={theme.placeholder}
           keyboardType="number-pad"
@@ -367,9 +367,9 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         </View>
 
         <TextInput
-          style={petOwnerRegisterStyles.phoneInput}
+          style={[petOwnerRegisterStyles.phoneInput, { color: theme.textPrimary, backgroundColor: theme.inputBackground }]}
           placeholder="Emergency Contact Number"
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor={theme.placeholder}
           keyboardType="number-pad"
           maxLength={10}
           value={emergencyContactNumber}

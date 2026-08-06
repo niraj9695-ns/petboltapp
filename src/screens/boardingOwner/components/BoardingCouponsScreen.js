@@ -22,6 +22,7 @@ import {
 } from "../services/boardingOwnerService";
 import styles from "../styles/BoardingCouponsStyles";
 import PremiumLoader from "../../../components/PremiumLoader";
+import { useTheme } from "../../../context/ThemeContext";
 
 const formatShortDate = (value) => {
   if (!value) {
@@ -53,6 +54,7 @@ const isDateExpired = (value) => {
 export default function BoardingCouponsScreen() {
   const navigation = useNavigation();
   const scrollRef = useRef(null);
+  const { theme } = useTheme();
   const { refreshKey, triggerRefresh } = useRefresh();
   const [centers, setCenters] = useState([]);
   const [discounts, setDiscounts] = useState([]);
@@ -116,6 +118,7 @@ export default function BoardingCouponsScreen() {
   }, []);
 
   const loadCenters = useCallback(async (page = 1) => {
+    setLoadingCenters(true);
     try {
       const response = await getCenters(page, 20);
       const payload = response?.data || response || {};
@@ -174,12 +177,12 @@ export default function BoardingCouponsScreen() {
   };
 
   const goToCenterPage = (page) => {
-    if (page < 1 || page > centerTotalPages) return;
+    if (loadingCenters || page < 1 || page > centerTotalPages) return;
     loadCenters(page);
   };
 
   const goToCouponPage = (page) => {
-    if (page < 1 || page > totalPages) return;
+    if (loadingDiscounts || page < 1 || page > totalPages) return;
     setCurrentPage(page);
     loadDiscounts(selectedCenterId, page);
   };
@@ -190,7 +193,7 @@ export default function BoardingCouponsScreen() {
     });
   };
 
-  const renderPagination = (page, total, onPageChange, label) => {
+  const renderPagination = (page, total, onPageChange, label, isLoading = false) => {
     if (total <= 1) return null;
 
     const pages = [];
@@ -206,7 +209,7 @@ export default function BoardingCouponsScreen() {
         <TouchableOpacity
           style={styles.paginationButton}
           onPress={() => onPageChange(page - 1)}
-          disabled={page === 1}
+          disabled={page === 1 || isLoading}
         >
           <Text style={styles.paginationButtonText}>Prev</Text>
         </TouchableOpacity>
@@ -219,6 +222,7 @@ export default function BoardingCouponsScreen() {
               page === pageNumber && styles.activePageNumberButton,
             ]}
             onPress={() => onPageChange(pageNumber)}
+            disabled={isLoading}
           >
             <Text
               style={[
@@ -234,7 +238,7 @@ export default function BoardingCouponsScreen() {
         <TouchableOpacity
           style={styles.paginationButton}
           onPress={() => onPageChange(page + 1)}
-          disabled={page === total}
+          disabled={page === total || isLoading}
         >
           <Text style={styles.paginationButtonText}>Next</Text>
         </TouchableOpacity>
@@ -277,9 +281,9 @@ export default function BoardingCouponsScreen() {
 
   if (loadingCenters) {
     return (
-      <SafeAreaView style={styles.safeArea} edges={["left","right","bottom"]}>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["left","right","bottom"]}>
         <View style={styles.loaderWrap}>
-          <PremiumLoader size={56} color="#6d28d9" label="Loading coupons" fullScreen />
+          <PremiumLoader size={56} color={theme.primary} label="Loading coupons" fullScreen />
         </View>
       </SafeAreaView>
     );
@@ -298,8 +302,8 @@ export default function BoardingCouponsScreen() {
         >
           <View style={styles.header}>
             <View>
-              <Text style={styles.title}>Coupons</Text>
-              <Text style={styles.subtitle}>
+              <Text style={[styles.title, { color: theme.textPrimary }]}>Coupons</Text>
+              <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
                 Manage date discounts for your centers
               </Text>
             </View>
@@ -313,13 +317,14 @@ export default function BoardingCouponsScreen() {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.filterCard}>
-            <Text style={styles.filterLabel}>Filter by center</Text>
-            <View style={styles.pickerWrap}>
+          <View style={[styles.filterCard, { backgroundColor: theme.cardBackground, borderColor: theme.border }]}> 
+            <Text style={[styles.filterLabel, { color: theme.textPrimary }]}>Filter by center</Text>
+            <View style={[styles.pickerWrap, { backgroundColor: theme.inputBackground, borderColor: theme.border }]}> 
               <Picker
                 selectedValue={selectedCenterId}
                 onValueChange={(value) => changeCenter(value)}
-                dropdownIconColor="#6d28d9"
+                dropdownIconColor={theme.primary}
+                style={{ color: theme.textPrimary }}
               >
                 {centers.map((center) => (
                   <Picker.Item
@@ -335,13 +340,14 @@ export default function BoardingCouponsScreen() {
               centerTotalPages,
               goToCenterPage,
               "center",
+              loadingCenters,
             )}
           </View>
 
           <View style={styles.listCard}>
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Saved coupons</Text>
-              <Text style={styles.mutedText}>
+              <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Saved coupons</Text>
+              <Text style={[styles.mutedText, { color: theme.textSecondary }]}>
                 {loadingDiscounts
                   ? "Loading..."
                   : `${discounts.length} of ${totalItems} items`}
@@ -350,11 +356,11 @@ export default function BoardingCouponsScreen() {
 
             {loadingDiscounts ? (
               <View style={styles.loaderWrapSmall}>
-                <PremiumLoader size={24} color="#6d28d9" showLabel={false} />
+                <PremiumLoader size={24} color={theme.primary} showLabel={false} />
               </View>
             ) : discounts.length === 0 ? (
               <View style={styles.emptyState}>
-                <Ionicons name="pricetag-outline" size={28} color="#7c3aed" />
+                <Ionicons name="pricetag-outline" size={28} color={theme.primary} />
                 <Text style={styles.emptyStateText}>
                   No coupons have been created for this center yet.
                 </Text>
@@ -452,6 +458,7 @@ export default function BoardingCouponsScreen() {
                   totalPages,
                   goToCouponPage,
                   "coupon",
+                  loadingDiscounts,
                 )}
               </>
             )}
