@@ -218,11 +218,11 @@ export const buildCenterFormData = (payload = {}, options = {}) => {
     formData.append("insurance_document", normalizedInsuranceProof);
   }
 
-  centerPhotos.forEach((img) => {
-    const normalizedImage = normalizeFilePayload(img, `photo_${Date.now()}`);
+  centerPhotos.forEach((img, index) => {
+    const normalizedImage = normalizeFilePayload(img, `photo_${index}`);
     if (normalizedImage) {
       formData.append("center_photos[]", normalizedImage);
-      formData.append("center_photos", normalizedImage);
+      formData.append("images[]", normalizedImage);
     }
   });
 
@@ -334,35 +334,49 @@ export const getCenterDetails = async (centerId) => {
 export const createCenter = async (formData) => {
   const headers = await getAuthHeaders();
 
-  const response = await axios.post(
-    `${BASE_URL}/api/centers/create`,
-    formData,
-    {
-      headers: {
-        ...headers,
-        "Content-Type": "multipart/form-data",
-      },
+  const response = await fetch(`${BASE_URL}/api/centers/create`, {
+    method: "POST",
+    headers: {
+      ...headers,
+      Accept: "application/json",
     },
-  );
+    body: formData,
+  });
 
-  return response.data;
+  const responseText = await response.text();
+  try {
+    return responseText ? JSON.parse(responseText) : {};
+  } catch (error) {
+    return {
+      raw: responseText,
+      status: response.status,
+      ok: response.ok,
+    };
+  }
 };
 
 export const updateCenter = async (formData) => {
   const headers = await getAuthHeaders();
 
-  const response = await axios.post(
-    `${BASE_URL}/api/centers/update`,
-    formData,
-    {
-      headers: {
-        ...headers,
-        "Content-Type": "multipart/form-data",
-      },
+  const response = await fetch(`${BASE_URL}/api/centers/update`, {
+    method: "POST",
+    headers: {
+      ...headers,
+      Accept: "application/json",
     },
-  );
+    body: formData,
+  });
 
-  return response.data;
+  const responseText = await response.text();
+  try {
+    return responseText ? JSON.parse(responseText) : {};
+  } catch (error) {
+    return {
+      raw: responseText,
+      status: response.status,
+      ok: response.ok,
+    };
+  }
 };
 
 export const deleteCenterImage = async (centerId, imagePath) => {

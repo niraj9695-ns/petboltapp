@@ -122,7 +122,7 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    paddingVertical: 12,
+    paddingVertical: 10,
     paddingHorizontal: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#f1f5f9",
@@ -153,7 +153,8 @@ export default StyleSheet.create({
     backgroundColor: "#f3f4f6",
   },
   pdfLinkRow: {
-    paddingVertical: 6,
+    flex: 1,
+    marginLeft: 12,
   },
   pdfLinkInner: {
     flexDirection: "row",
@@ -164,6 +165,8 @@ export default StyleSheet.create({
     borderRadius: 14,
     borderWidth: 1,
     borderColor: "#e5e7eb",
+    flex: 1,
+    maxWidth: "100%",
   },
   pdfIconWrapper: {
     width: 32,
@@ -175,11 +178,12 @@ export default StyleSheet.create({
     marginRight: 10,
   },
   pdfLinkText: {
+    flex: 1,
     fontSize: 12,
     fontWeight: "700",
     color: "#6b21a8",
   },
   spacer: {
-    height: 30,
+    height: 16,
   },
 });

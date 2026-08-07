@@ -156,13 +156,39 @@ export default StyleSheet.create({
   addChip: {
     backgroundColor: "#f3e8ff",
     paddingVertical: 10,
-    borderRadius: 10,
+    paddingHorizontal: 12,
+    borderRadius: 999,
     alignItems: "center",
     marginTop: 8,
+    marginRight: 8,
+    marginBottom: 8,
   },
   addChipText: {
     color: "#6b21a8",
     fontWeight: "700",
+  },
+  chip: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 999,
+    marginRight: 8,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: "#e9d5ff",
+  },
+  chipSelected: {
+    backgroundColor: "#6b21a8",
+    borderColor: "#6b21a8",
+  },
+  chipText: {
+    color: "#4c1d95",
+    fontWeight: "600",
+  },
+  chipSelectedText: {
+    color: "#fff",
   },
   priceRow: {
     flexDirection: "row",

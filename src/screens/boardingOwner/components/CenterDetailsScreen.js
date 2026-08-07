@@ -67,9 +67,17 @@ export default function CenterDetailsScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: boardingOwnerTheme.background }} edges={["left","right","bottom"]}>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: boardingOwnerTheme.background }}
+        edges={["left", "right", "bottom"]}
+      >
         <View style={styles.loader}>
-          <PremiumLoader size={56} color={boardingOwnerTheme.primary} label="Loading center" fullScreen />
+          <PremiumLoader
+            size={56}
+            color={boardingOwnerTheme.primary}
+            label="Loading center"
+            fullScreen
+          />
         </View>
       </SafeAreaView>
     );
@@ -77,7 +85,10 @@ export default function CenterDetailsScreen() {
 
   if (!center) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }} edges={["left","right","bottom"]}>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: "#f8fafc" }}
+        edges={["left", "right", "bottom"]}
+      >
         <View style={styles.loader}>
           <Text>Center details not found</Text>
         </View>
@@ -85,8 +96,11 @@ export default function CenterDetailsScreen() {
     );
   }
 
-      return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }} edges={["left","right","bottom"]}>
+  return (
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "#f8fafc" }}
+      edges={["left", "right", "bottom"]}
+    >
       <ScrollView
         style={styles.container}
         contentContainerStyle={{
@@ -155,10 +169,6 @@ export default function CenterDetailsScreen() {
               <Info label="Center Name" value={center.center_name} />
               <Info label="Description" value={center.description} />
               <Info label="Center Type" value={center.center_type} />
-              <Info
-                label="Base Price Per Day"
-                value={center.price_per_day ? `₹${center.price_per_day}` : null}
-              />
               <Info label="Daily Capacity" value={center.daily_capacity} />
               <Info label="Total Capacity" value={center.total_capacity} />
               <Info label="Address" value={center.address} />
@@ -200,12 +210,6 @@ export default function CenterDetailsScreen() {
               />
               <Info label="Opening Time" value={center.opening_time} />
               <Info label="Closing Time" value={center.closing_time} />
-              <Info label="Latitude" value={center.latitude} />
-              <Info label="Longitude" value={center.longitude} />
-              <Info
-                label="Service Area Radius"
-                value={center.service_area_radius}
-              />
               {center?.pet_type_prices &&
               Object.keys(center.pet_type_prices).length > 0 ? (
                 <View style={{ marginTop: 8, marginBottom: 4 }}>
@@ -230,7 +234,12 @@ export default function CenterDetailsScreen() {
                         >
                           {petType}
                         </Text>
-                        <Text style={{ color: boardingOwnerTheme.primary, fontWeight: "700" }}>
+                        <Text
+                          style={{
+                            color: boardingOwnerTheme.primary,
+                            fontWeight: "700",
+                          }}
+                        >
                           {price ? `₹${price}` : "Not set"}
                         </Text>
                       </View>

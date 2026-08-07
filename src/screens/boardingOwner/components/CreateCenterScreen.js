@@ -15,6 +15,7 @@ import PremiumLoader from "../../../components/PremiumLoader";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
 import { LinearGradient } from "expo-linear-gradient";
 import { boardingOwnerTheme } from "../../../styles/themeStyles";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -278,16 +279,37 @@ export default function CreateCenterScreen() {
 
   const pickImages = async () => {
     try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: "image/*",
-        multiple: true,
-        copyToCacheDirectory: true,
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!permissionResult.granted) {
+        Alert.alert("Permission needed", "Please allow access to your photos to add images.");
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsMultipleSelection: true,
+        selectionLimit: 0,
+        quality: 1,
       });
 
       if (!result.canceled) {
-        const assets = result.assets || [];
+        const assets = Array.isArray(result.assets)
+          ? result.assets
+          : result?.uri
+            ? [result]
+            : [];
+
         if (assets.length > 0) {
-          setCenterImages((prev) => [...prev, ...assets]);
+          setCenterImages((prev) => {
+            const existingUris = new Set(
+              prev.map((image) => image?.uri).filter(Boolean),
+            );
+            const nextAssets = assets.filter(
+              (asset) => asset?.uri && !existingUris.has(asset.uri),
+            );
+
+            return [...prev, ...nextAssets];
+          });
           setErrors((prev) => ({ ...prev, imageUpload: "" }));
         }
       }
@@ -364,16 +386,17 @@ export default function CreateCenterScreen() {
           response?.center?.id ||
           response?.center?.center_id;
 
-        Alert.alert("Success", "Center created successfully", [
-          {
-            text: "OK",
-            onPress: () => {
-              navigation.navigate("BoardingTabs", {
-                screen: "Centers",
-              });
-            },
-          },
-        ]);
+        if (centerId) {
+          navigation.replace("CenterDetails", {
+            centerId,
+          });
+        } else {
+          navigation.navigate("BoardingTabs", {
+            screen: "Centers",
+          });
+        }
+
+        Alert.alert("Success", "Center created successfully");
       } else {
         Alert.alert("Error", response?.message || "Failed to create center");
       }

@@ -196,7 +196,7 @@ export default function NotificationScreen({ navigation }) {
           />
         }
       >
-        <BackButton onPress={() => navigation.goBack()} />
+        <BackButton style={{ alignSelf: "flex-start" }} onPress={() => navigation.goBack()} />
 
         <View style={styles.header}>
           <View>

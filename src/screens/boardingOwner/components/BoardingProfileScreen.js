@@ -86,15 +86,8 @@ export default function BoardingProfileScreen({ navigation }) {
     { key: "emergency_contact_number", label: "Emergency Contact Number" },
     { key: "business_name", label: "Business Name" },
     { key: "authorized_person_name", label: "Authorized Person" },
-    { key: "registration_license_number", label: "License Number" },
-    { key: "insurance_policy_number", label: "Insurance Policy Number" },
-    { key: "insurance_provider_name", label: "Insurance Provider" },
-    { key: "insurance_expiry_date", label: "Insurance Expiry Date" },
-    { key: "vet_clinic_name", label: "Vet Clinic Name" },
-    { key: "vet_clinic_address", label: "Vet Clinic Address" },
-    { key: "vet_clinic_contact", label: "Vet Clinic Contact" },
-    { key: "opening_time", label: "Opening Time" },
-    { key: "closing_time", label: "Closing Time" },
+    { key: "digital_signature", label: "Digital Signature" },
+    { key: "signature_date", label: "Signature Date" },
     { key: "aadhar_file", label: "Aadhaar Document" },
   ];
 
@@ -226,44 +219,6 @@ export default function BoardingProfileScreen({ navigation }) {
             />
             <Info label="Digital Signature" value={profile.digital_signature} />
             <Info label="Signature Date" value={profile.signature_date} />
-            <Info
-              label="Registration License Number"
-              value={profile.registration_license_number}
-            />
-            <Info
-              label="Insurance Policy Number"
-              value={profile.insurance_policy_number}
-            />
-            <Info
-              label="Insurance Provider"
-              value={profile.insurance_provider_name}
-            />
-            <Info
-              label="Insurance Expiry Date"
-              value={profile.insurance_expiry_date}
-            />
-          </>,
-        )}
-
-        {renderSection(
-          "operations",
-          "Vet & Operations",
-          <>
-            <Info label="Vet Clinic Name" value={profile.vet_clinic_name} />
-            <Info
-              label="Vet Clinic Address"
-              value={profile.vet_clinic_address}
-            />
-            <Info
-              label="Vet Clinic Contact"
-              value={profile.vet_clinic_contact}
-            />
-            <Info label="Opening Time" value={profile.opening_time} />
-            <Info label="Closing Time" value={profile.closing_time} />
-            <Info
-              label="Special Instructions"
-              value={profile.special_instructions}
-            />
           </>,
         )}
 

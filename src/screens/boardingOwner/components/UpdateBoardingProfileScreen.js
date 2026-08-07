@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import * as DocumentPicker from "expo-document-picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 import {
   View,
@@ -28,6 +30,12 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [expandedSection, setExpandedSection] = useState("personal");
+  const [documentFiles, setDocumentFiles] = useState({
+    aadhar: null,
+    license: null,
+    insurance: null,
+  });
+  const [pickerConfig, setPickerConfig] = useState(null);
 
   const [form, setForm] = useState({
     full_name: "",
@@ -43,10 +51,6 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
     vet_clinic_name: "",
     vet_clinic_address: "",
     vet_clinic_contact: "",
-    registration_license_number: "",
-    insurance_policy_number: "",
-    insurance_provider_name: "",
-    insurance_expiry_date: "",
     opening_time: "",
     closing_time: "",
     special_instructions: "",
@@ -75,10 +79,6 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
         vet_clinic_name: profile.vet_clinic_name || "",
         vet_clinic_address: profile.vet_clinic_address || "",
         vet_clinic_contact: profile.vet_clinic_contact || "",
-        registration_license_number: profile.registration_license_number || "",
-        insurance_policy_number: profile.insurance_policy_number || "",
-        insurance_provider_name: profile.insurance_provider_name || "",
-        insurance_expiry_date: profile.insurance_expiry_date || "",
         opening_time: profile.opening_time || "",
         closing_time: profile.closing_time || "",
         special_instructions: profile.special_instructions || "",
@@ -101,6 +101,84 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
     setExpandedSection((prev) => (prev === section ? "" : section));
   };
 
+  const pickDocument = async (fieldKey) => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: ["application/pdf", "image/*"],
+        copyToCacheDirectory: true,
+      });
+
+      if (result.canceled) {
+        return;
+      }
+
+      const asset = result.assets?.[0];
+      if (asset) {
+        setDocumentFiles((prev) => ({ ...prev, [fieldKey]: asset }));
+      }
+    } catch (error) {
+      Alert.alert("Error", "Unable to pick document");
+    }
+  };
+
+  const normalizeDocumentFile = (file) => {
+    if (!file) return null;
+
+    const uri = file.uri || file;
+    if (!uri) return null;
+
+    const name =
+      file.name ||
+      file.fileName ||
+      file.filename ||
+      `file.${(uri.split(".").pop() || "jpg").split(/[#?]/)[0]}`;
+
+    const type =
+      file.mimeType ||
+      file.type ||
+      (name.toLowerCase().endsWith(".pdf") ? "application/pdf" : "image/jpeg");
+
+    return { uri, name, type };
+  };
+
+  const openPicker = (field, mode) => {
+    setPickerConfig({ field, mode });
+  };
+
+  const getPickerValue = (value, mode) => {
+    if (!value) return new Date();
+
+    if (mode === "time") {
+      const [hours = "0", minutes = "0"] = String(value).split(":");
+      const date = new Date();
+      date.setHours(Number(hours), Number(minutes), 0, 0);
+      return date;
+    }
+
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+  };
+
+  const handlePickerChange = (event, selectedDate) => {
+    if (event?.type === "dismissed") {
+      setPickerConfig(null);
+      return;
+    }
+
+    if (selectedDate && pickerConfig) {
+      const formattedValue =
+        pickerConfig.mode === "time"
+          ? selectedDate.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          : selectedDate.toISOString().split("T")[0];
+      updateField(pickerConfig.field, formattedValue);
+    }
+
+    setPickerConfig(null);
+  };
+
   const renderSection = (sectionKey, title, content) => {
     const isExpanded = expandedSection === sectionKey;
 
@@ -120,15 +198,63 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
     );
   };
 
+  const goToProfileScreen = () => {
+    try {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: "BoardingOwner",
+            params: {
+              screen: "Main",
+              params: {
+                screen: "BoardingTabs",
+                params: { screen: "Profile" },
+              },
+            },
+          },
+        ],
+      });
+    } catch (error) {
+      navigation.navigate("BoardingOwner", {
+        screen: "Main",
+        params: {
+          screen: "BoardingTabs",
+          params: { screen: "Profile" },
+        },
+      });
+    }
+  };
+
   const handleUpdate = async () => {
     try {
       setSaving(true);
 
       const formData = new FormData();
 
-      Object.keys(form).forEach((key) => {
-        formData.append(key, form[key]);
+      const appendValue = (key, value) => {
+        if (value === undefined || value === null) return;
+        formData.append(key, value);
+      };
+
+      Object.entries(form).forEach(([key, value]) => {
+        appendValue(key, value ?? "");
       });
+
+      const aadharFile = normalizeDocumentFile(documentFiles.aadhar);
+      if (aadharFile) {
+        formData.append("aadhar_file", aadharFile);
+      }
+
+      const licenseFile = normalizeDocumentFile(documentFiles.license);
+      if (licenseFile) {
+        formData.append("license_proof", licenseFile);
+      }
+
+      const insuranceFile = normalizeDocumentFile(documentFiles.insurance);
+      if (insuranceFile) {
+        formData.append("insurance_proof", insuranceFile);
+      }
 
       formData.append("accepted_pet_types", JSON.stringify(["Dogs"]));
       formData.append("terms_accepted", "1");
@@ -137,51 +263,8 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
 
       if (response.status === "success") {
         triggerRefresh();
-        Alert.alert("Success", "Profile Updated Successfully", [
-          {
-            text: "OK",
-            onPress: () => {
-              triggerRefresh();
-              // Delay navigation slightly so Alert can dismiss first
-              setTimeout(() => {
-                try {
-                  // climb to root navigator
-                  let root = navigation;
-                  while (root && root.getParent) {
-                    const p = root.getParent();
-                    if (!p) break;
-                    root = p;
-                  }
-
-                  if (root && root.reset) {
-                    try {
-                      root.reset({
-                        index: 0,
-                        routes: [
-                          {
-                            name: "BoardingOwner",
-                            params: {
-                              screen: "Main",
-                              params: { screen: "BoardingTabs", params: { screen: "Profile" } },
-                            },
-                          },
-                        ],
-                      });
-                      return;
-                    } catch (err) {}
-                  }
-                } catch (e) {}
-
-                try {
-                  navigation.navigate("BoardingOwner", {
-                    screen: "Main",
-                    params: { screen: "BoardingTabs", params: { screen: "Profile" } },
-                  });
-                } catch (err) {}
-              }, 80);
-            },
-          },
-        ]);
+        goToProfileScreen();
+        Alert.alert("Success", "Profile Updated Successfully");
       } else {
         Alert.alert("Error", response.message);
       }
@@ -245,23 +328,28 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
               <Input label="Authorized Person" value={form.authorized_person_name} onChangeText={(v) => updateField("authorized_person_name", v)} />
               <Input label="Digital Signature" value={form.digital_signature} onChangeText={(v) => updateField("digital_signature", v)} />
               <Input label="Signature Date" value={form.signature_date} onChangeText={(v) => updateField("signature_date", v)} />
-              <Input label="Registration License Number" value={form.registration_license_number} onChangeText={(v) => updateField("registration_license_number", v)} />
-              <Input label="Insurance Policy Number" value={form.insurance_policy_number} onChangeText={(v) => updateField("insurance_policy_number", v)} />
-              <Input label="Insurance Provider" value={form.insurance_provider_name} onChangeText={(v) => updateField("insurance_provider_name", v)} />
-              <Input label="Insurance Expiry Date" value={form.insurance_expiry_date} onChangeText={(v) => updateField("insurance_expiry_date", v)} />
             </>,
           )}
 
           {renderSection(
-            "operations",
-            "Vet & Operations",
+            "documents",
+            "Documents",
             <>
-              <Input label="Vet Clinic Name" value={form.vet_clinic_name} onChangeText={(v) => updateField("vet_clinic_name", v)} />
-              <Input label="Vet Clinic Address" value={form.vet_clinic_address} onChangeText={(v) => updateField("vet_clinic_address", v)} />
-              <Input label="Vet Clinic Contact" value={form.vet_clinic_contact} onChangeText={(v) => updateField("vet_clinic_contact", v)} />
-              <Input label="Opening Time" value={form.opening_time} onChangeText={(v) => updateField("opening_time", v)} />
-              <Input label="Closing Time" value={form.closing_time} onChangeText={(v) => updateField("closing_time", v)} />
-              <Input label="Special Instructions" value={form.special_instructions} onChangeText={(v) => updateField("special_instructions", v)} multiline />
+              <DocumentPickerRow
+                label="Aadhaar Document"
+                file={documentFiles.aadhar}
+                onPress={() => pickDocument("aadhar")}
+              />
+              <DocumentPickerRow
+                label="License Proof"
+                file={documentFiles.license}
+                onPress={() => pickDocument("license")}
+              />
+              <DocumentPickerRow
+                label="Insurance Proof"
+                file={documentFiles.insurance}
+                onPress={() => pickDocument("insurance")}
+              />
             </>,
           )}
 
@@ -270,6 +358,15 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {pickerConfig ? (
+        <DateTimePicker
+          value={getPickerValue(form[pickerConfig.field], pickerConfig.mode)}
+          mode={pickerConfig.mode}
+          display={Platform.OS === "ios" ? "spinner" : "default"}
+          onChange={handlePickerChange}
+        />
+      ) : null}
     </SafeAreaView>
   );
 }
@@ -278,5 +375,24 @@ const Input = ({ label, value, onChangeText, multiline = false }) => (
   <View style={styles.inputContainer}>
     <Text style={styles.label}>{label}</Text>
     <TextInput style={[styles.input, multiline && styles.inputMultiline]} value={value} onChangeText={onChangeText} multiline={multiline} textAlignVertical={multiline ? "top" : "center"} />
+  </View>
+);
+
+const DocumentPickerRow = ({ label, file, onPress }) => (
+  <View style={styles.inputContainer}>
+    <Text style={styles.label}>{label}</Text>
+    <TouchableOpacity style={styles.uploadButton} onPress={onPress} activeOpacity={0.9}>
+      <Text style={styles.uploadButtonText}>{file?.name || "Pick document"}</Text>
+    </TouchableOpacity>
+    <Text style={styles.uploadHint}>PDF or image files are supported.</Text>
+  </View>
+);
+
+const PickerRow = ({ label, value, onPress, placeholder }) => (
+  <View style={styles.inputContainer}>
+    <Text style={styles.label}>{label}</Text>
+    <TouchableOpacity style={styles.uploadButton} onPress={onPress} activeOpacity={0.9}>
+      <Text style={styles.uploadButtonText}>{value || placeholder}</Text>
+    </TouchableOpacity>
   </View>
 );

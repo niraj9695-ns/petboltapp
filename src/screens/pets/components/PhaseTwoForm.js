@@ -30,6 +30,21 @@ export default function PhaseTwoForm({ petData, setPetData, fieldErrors = {} }) 
     return date.toISOString().split("T")[0];
   };
 
+  const getVaccinationCertificateLabel = (certificate) => {
+    if (!certificate) return "Select PDF certificate";
+    if (typeof certificate === "string") {
+      const trimmed = certificate.trim();
+      if (!trimmed) return "Select PDF certificate";
+      return trimmed.split("/").pop();
+    }
+    return (
+      certificate?.name ||
+      certificate?.uri?.split("/").pop() ||
+      certificate?.path?.split("/").pop() ||
+      "Vaccination Certificate"
+    );
+  };
+
   const pickVaccinationCertificate = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
@@ -155,9 +170,7 @@ export default function PhaseTwoForm({ petData, setPetData, fieldErrors = {} }) 
         onPress={pickVaccinationCertificate}
       >
         <Text style={phaseTwoFormStyles.dateInputText} numberOfLines={1}>
-          {petData.vaccination_certificate?.name ||
-            petData.vaccination_certificate?.uri?.split("/").pop() ||
-            "Select PDF certificate"}
+          {getVaccinationCertificateLabel(petData.vaccination_certificate)}
         </Text>
         <Ionicons name="cloud-upload-outline" size={18} color="#6b21a8" />
       </TouchableOpacity>

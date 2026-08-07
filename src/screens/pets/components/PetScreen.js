@@ -307,7 +307,12 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
 
     // Age and Date Of Birth are optional fields.
 
-    if (!petData.vaccination_certificate) {
+    if (
+      petData.vaccination_certificate === undefined ||
+      petData.vaccination_certificate === null ||
+      (typeof petData.vaccination_certificate === "string" &&
+        !petData.vaccination_certificate.trim())
+    ) {
       Alert.alert(
         "Validation",
         "Vaccination Certificate is required",

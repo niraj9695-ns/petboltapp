@@ -16,6 +16,8 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import styles from "../styles/UpdateCenterScreenStyles";
 import { Picker } from "@react-native-picker/picker";
 import FloatingInput from "../../../components/inputs/FloatingInput";
@@ -33,7 +35,8 @@ export default function UpdateCenterScreen() {
   const { width } = Dimensions.get("window");
   const navigation = useNavigation();
   const route = useRoute();
-  const { theme } = useTheme();
+  const themeContext = useTheme();
+  const theme = themeContext?.theme || {};
   const { triggerRefresh } = useRefresh();
   const { centerId } = route.params || {};
 
@@ -63,7 +66,6 @@ export default function UpdateCenterScreen() {
     center_name: "",
     description: "",
     center_type: "",
-    price_per_day: "",
     daily_capacity: "",
     total_capacity: "",
     address: "",
@@ -88,9 +90,6 @@ export default function UpdateCenterScreen() {
     special_instructions: "",
     opening_time: "",
     closing_time: "",
-    latitude: "",
-    longitude: "",
-    service_area_radius: "",
     prices: {},
     amenities: "",
     accepted_pet_types: "",
@@ -123,7 +122,6 @@ export default function UpdateCenterScreen() {
         center_name: data?.center_name || "",
         description: data?.description || "",
         center_type: data?.center_type || "",
-        price_per_day: data?.price_per_day || "",
         daily_capacity: data?.daily_capacity || "",
         total_capacity: data?.total_capacity || "",
         address: data?.address || "",
@@ -148,9 +146,6 @@ export default function UpdateCenterScreen() {
         special_instructions: data?.special_instructions || "",
         opening_time: data?.opening_time || "",
         closing_time: data?.closing_time || "",
-        latitude: data?.latitude || "",
-        longitude: data?.longitude || "",
-        service_area_radius: data?.service_area_radius || "",
         prices: data?.pet_type_prices || data?.prices || {},
         amenities: formatListValue(data?.amenities),
         accepted_pet_types: formatListValue(data?.accepted_pet_types),
@@ -325,15 +320,26 @@ export default function UpdateCenterScreen() {
       const response = await updateCenter(formData);
       triggerRefresh();
 
-      Alert.alert("Success", "Center updated successfully", [
-        {
-          text: "OK",
-          onPress: () =>
-            navigation.navigate("BoardingTabs", {
-              screen: "Centers",
-            }),
-        },
-      ]);
+      const resolvedCenterId =
+        centerId ||
+        response?.data?.id ||
+        response?.data?.center_id ||
+        response?.id ||
+        response?.center_id ||
+        response?.center?.id ||
+        response?.center?.center_id;
+
+      if (resolvedCenterId) {
+        navigation.replace("CenterDetails", {
+          centerId: resolvedCenterId,
+        });
+      } else {
+        navigation.navigate("BoardingTabs", {
+          screen: "Centers",
+        });
+      }
+
+      Alert.alert("Success", "Center updated successfully");
     } catch (error) {
       Alert.alert("Error", "Failed to update center");
     } finally {
@@ -401,16 +407,37 @@ export default function UpdateCenterScreen() {
 
   const pickImages = async () => {
     try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: "image/*",
-        multiple: true,
-        copyToCacheDirectory: true,
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!permissionResult.granted) {
+        Alert.alert("Permission needed", "Please allow access to your photos to add images.");
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsMultipleSelection: true,
+        selectionLimit: 0,
+        quality: 1,
       });
 
       if (!result.canceled) {
-        const assets = result.assets || [];
+        const assets = Array.isArray(result.assets)
+          ? result.assets
+          : result?.uri
+            ? [result]
+            : [];
+
         if (assets.length > 0) {
-          setNewImages((prev) => [...prev, ...assets]);
+          setNewImages((prev) => {
+            const existingUris = new Set(
+              prev.map((image) => image?.uri).filter(Boolean),
+            );
+            const nextAssets = assets.filter(
+              (asset) => asset?.uri && !existingUris.has(asset.uri),
+            );
+
+            return [...prev, ...nextAssets];
+          });
           setUploadErrors((prev) => ({ ...prev, images: "" }));
         }
       }
@@ -497,12 +524,6 @@ export default function UpdateCenterScreen() {
                 multiline
               />
               <Input
-                label="Price per day"
-                value={form.price_per_day}
-                onChangeText={(v) => updateField("price_per_day", v)}
-                keyboardType="numeric"
-              />
-              <Input
                 label="Total capacity"
                 value={form.total_capacity}
                 onChangeText={(v) => updateField("total_capacity", v)}
@@ -558,12 +579,6 @@ export default function UpdateCenterScreen() {
                 onChangeText={(v) => updateField("website_url", v)}
               />
               <Input
-                label="Service Area Radius"
-                value={form.service_area_radius}
-                onChangeText={(v) => updateField("service_area_radius", v)}
-                keyboardType="numeric"
-              />
-              <Input
                 label="Registration License Number"
                 value={form.registration_license_number}
                 onChangeText={(v) =>
@@ -574,6 +589,7 @@ export default function UpdateCenterScreen() {
                 label="Property Type"
                 value={form.property_type}
                 onValueChange={(v) => updateField("property_type", v)}
+                theme={theme}
                 options={[
                   { label: "Select property type", value: "" },
                   { label: "House", value: "house" },
@@ -585,6 +601,7 @@ export default function UpdateCenterScreen() {
                 label="Fencing Status"
                 value={form.fencing_status}
                 onValueChange={(v) => updateField("fencing_status", v)}
+                theme={theme}
                 options={[
                   { label: "Select fencing", value: "" },
                   { label: "Full", value: "full" },
@@ -596,6 +613,7 @@ export default function UpdateCenterScreen() {
                 label="Supervision Level"
                 value={form.supervision_level}
                 onValueChange={(v) => updateField("supervision_level", v)}
+                theme={theme}
                 options={[
                   { label: "Select supervision", value: "" },
                   { label: "24x7", value: "24x7" },
@@ -627,6 +645,7 @@ export default function UpdateCenterScreen() {
                 onAdd={addPetPrice}
                 prices={form.prices || {}}
                 onRemove={removePetPrice}
+                theme={theme}
               />
             </SectionBlock>
 
@@ -698,17 +717,15 @@ export default function UpdateCenterScreen() {
                       <TouchableOpacity
                         key={petType}
                         style={[
-                          styles.addChip,
-                          selected
-                            ? { backgroundColor: "#6b21a8" }
-                            : null,
+                          styles.chip,
+                          selected ? styles.chipSelected : null,
                         ]}
                         onPress={() => toggleAcceptedPetType(petType)}
                       >
                         <Text
                           style={[
-                            styles.addChipText,
-                            selected ? { color: "#fff" } : null,
+                            styles.chipText,
+                            selected ? styles.chipSelectedText : null,
                           ]}
                         >
                           {petType.charAt(0).toUpperCase() + petType.slice(1)}
@@ -1017,38 +1034,45 @@ const DatePickerField = ({ label, value, onPress, placeholder }) => (
   </View>
 );
 
-const SelectField = ({ label, value, onValueChange, options }) => (
-  <View style={styles.inputContainer}>
-    <Text style={styles.label}>{label}</Text>
-    <View style={styles.selectBox}>
-      <Picker
-        selectedValue={value}
-        onValueChange={onValueChange}
-        style={[styles.picker, { color: theme.textPrimary }]}
-        dropdownIconColor={theme.primary}
-      >
-        {options.map((option) => (
-          <Picker.Item
-            key={option.value || "placeholder"}
-            label={option.label}
-            value={option.value}
-          />
-        ))}
-      </Picker>
-    </View>
-  </View>
-);
+const SelectField = ({ label, value, onValueChange, options, theme }) => {
+  const pickerTheme = theme || {};
 
-const PetPriceEditor = ({ value, onChange, onAdd, prices, onRemove }) => (
-  <View style={styles.inputContainer}>
-    <Text style={styles.label}>Pet Prices</Text>
-    <View style={styles.selectBox}>
-      <Picker
-        selectedValue={value.petType}
-        onValueChange={(petType) => onChange({ ...value, petType })}
-        style={[styles.picker, { color: theme.textPrimary }]}
-        dropdownIconColor={theme.primary}
-      >
+  return (
+    <View style={styles.inputContainer}>
+      <Text style={styles.label}>{label}</Text>
+      <View style={styles.selectBox}>
+        <Picker
+          selectedValue={value}
+          onValueChange={onValueChange}
+          style={[styles.picker, { color: pickerTheme.textPrimary || "#111827" }]}
+          dropdownIconColor={pickerTheme.primary || "#6b21a8"}
+        >
+          {options.map((option) => (
+            <Picker.Item
+              key={option.value || "placeholder"}
+              label={option.label}
+              value={option.value}
+            />
+          ))}
+        </Picker>
+      </View>
+    </View>
+  );
+};
+
+const PetPriceEditor = ({ value, onChange, onAdd, prices, onRemove, theme }) => {
+  const pickerTheme = theme || {};
+
+  return (
+    <View style={styles.inputContainer}>
+      <Text style={styles.label}>Pet Prices</Text>
+      <View style={styles.selectBox}>
+        <Picker
+          selectedValue={value.petType}
+          onValueChange={(petType) => onChange({ ...value, petType })}
+          style={[styles.picker, { color: pickerTheme.textPrimary || "#111827" }]}
+          dropdownIconColor={pickerTheme.primary || "#6b21a8"}
+        >
         {[
           { label: "Dog", value: "dog" },
           { label: "Cat", value: "cat" },
@@ -1056,40 +1080,41 @@ const PetPriceEditor = ({ value, onChange, onAdd, prices, onRemove }) => (
           { label: "Rabbit", value: "rabbit" },
           { label: "Turtle", value: "turtle" },
           { label: "Others", value: "others" },
-        ].map((option) => (
-          <Picker.Item
-            key={option.value}
-            label={option.label}
-            value={option.value}
-          />
-        ))}
-      </Picker>
-    </View>
-    <TextInput
-      style={[styles.input, { marginTop: 8 }]}
-      value={value.amount}
-      onChangeText={(amount) => onChange({ ...value, amount })}
-      placeholder="Enter price"
-      keyboardType="numeric"
-    />
-    <TouchableOpacity style={styles.addChip} onPress={onAdd}>
-      <Text style={styles.addChipText}>Add Pet Price</Text>
-    </TouchableOpacity>
-
-    {Object.entries(prices || {}).length > 0 ? (
-      <View style={{ marginTop: 10 }}>
-        {Object.entries(prices).map(([petType, amount]) => (
-          <View key={petType} style={styles.priceRow}>
-            <Text style={styles.priceRowText}>
-              {petType.charAt(0).toUpperCase() + petType.slice(1)}
-            </Text>
-            <Text style={styles.priceRowValue}>₹{amount}</Text>
-            <TouchableOpacity onPress={() => onRemove(petType)}>
-              <Text style={styles.removeText}>Remove</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
+          ].map((option) => (
+            <Picker.Item
+              key={option.value}
+              label={option.label}
+              value={option.value}
+            />
+          ))}
+        </Picker>
       </View>
-    ) : null}
-  </View>
-);
+      <TextInput
+        style={[styles.input, { marginTop: 8 }]}
+        value={value.amount}
+        onChangeText={(amount) => onChange({ ...value, amount })}
+        placeholder="Enter price"
+        keyboardType="numeric"
+      />
+      <TouchableOpacity style={styles.addChip} onPress={onAdd}>
+        <Text style={styles.addChipText}>Add Pet Price</Text>
+      </TouchableOpacity>
+
+      {Object.entries(prices || {}).length > 0 ? (
+        <View style={{ marginTop: 10 }}>
+          {Object.entries(prices).map(([petType, amount]) => (
+            <View key={petType} style={styles.priceRow}>
+              <Text style={styles.priceRowText}>
+                {petType.charAt(0).toUpperCase() + petType.slice(1)}
+              </Text>
+              <Text style={styles.priceRowValue}>₹{amount}</Text>
+              <TouchableOpacity onPress={() => onRemove(petType)}>
+                <Text style={styles.removeText}>Remove</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+      ) : null}
+    </View>
+  );
+};

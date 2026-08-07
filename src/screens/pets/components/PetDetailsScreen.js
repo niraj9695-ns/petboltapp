@@ -153,7 +153,10 @@ export default function PetDetailsScreen({ route, navigation }) {
       return;
     }
 
-    if (!normalizedUrl.startsWith("http://") && !normalizedUrl.startsWith("https://")) {
+    if (
+      !normalizedUrl.startsWith("http://") &&
+      !normalizedUrl.startsWith("https://")
+    ) {
       normalizedUrl = normalizedUrl.startsWith("/")
         ? `${BASE_URL}${normalizedUrl}`
         : `${BASE_URL}/${normalizedUrl}`;
@@ -230,8 +233,12 @@ export default function PetDetailsScreen({ route, navigation }) {
             <View style={petDetailsScreenStyles.pdfIconWrapper}>
               <Ionicons name="document-text-outline" size={18} color="#fff" />
             </View>
-            <Text style={petDetailsScreenStyles.pdfLinkText}>
-              {displayValue || String(value) || "Vaccination Certificate"}
+            <Text
+              style={petDetailsScreenStyles.pdfLinkText}
+              numberOfLines={1}
+              ellipsizeMode="middle"
+            >
+              {displayValue || "Vaccination Certificate"}
             </Text>
           </View>
         </TouchableOpacity>

@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { typography } from "../styles/themeStyles";
 import { typography as baseTypography } from "../styles/theme/typography";
 
-export default function BackButton({ onPress, label = "← Back", fallbackRoute, fallbackParams }) {
+export default function BackButton({ onPress, label = "← Back", fallbackRoute, fallbackParams, style }) {
   const navigation = useNavigation();
 
   const handlePress = useCallback(() => {
@@ -51,7 +51,7 @@ export default function BackButton({ onPress, label = "← Back", fallbackRoute,
   }, [onPress, navigation]);
 
   return (
-    <TouchableOpacity style={styles.backButton} onPress={handlePress}>
+    <TouchableOpacity style={[styles.backButton, style]} onPress={handlePress}>
       <Text style={styles.backButtonText}>{label}</Text>
     </TouchableOpacity>
   );
@@ -59,6 +59,9 @@ export default function BackButton({ onPress, label = "← Back", fallbackRoute,
 
 const styles = StyleSheet.create({
   backButton: {
+    alignSelf: "flex-start",
+    alignItems: "center",
+    flexShrink: 1,
     paddingVertical: 8,
     paddingHorizontal: 12,
     backgroundColor: "#FFFFFF",

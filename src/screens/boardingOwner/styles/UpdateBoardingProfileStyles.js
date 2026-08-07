@@ -98,6 +98,27 @@ export default StyleSheet.create({
     textAlignVertical: "top",
   },
 
+  uploadButton: {
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    backgroundColor: COLORS.surfaceAlt,
+  },
+
+  uploadButtonText: {
+    color: COLORS.primary,
+    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontWeight: (typography && typography.bodyMedium && typography.bodyMedium.fontWeight) || baseTypography.weights.medium || "500",
+  },
+
+  uploadHint: {
+    marginTop: 6,
+    color: COLORS.textMuted,
+    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+  },
+
   saveButton: {
     backgroundColor: COLORS.primary,
     marginHorizontal: 16,
