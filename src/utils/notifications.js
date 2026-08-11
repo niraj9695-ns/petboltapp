@@ -146,16 +146,27 @@ export async function fetchNotificationsFromApi({
     },
   });
 
-  const payload = await response.json();
+  const text = await response.text();
+
+  let payload = {};
+  if (text) {
+    try {
+      payload = JSON.parse(text);
+    } catch (parseError) {
+      payload = { message: text };
+    }
+  }
 
   if (!response.ok) {
-    throw new Error(payload?.message || "Unable to load notifications");
+    throw new Error(
+      payload?.message ||
+        payload?.error ||
+        `Unable to load notifications (${response.status})`,
+    );
   }
 
   const notifications =
     payload?.data?.data ?? payload?.data ?? payload?.notifications ?? [];
-
-  return Array.isArray(notifications) ? notifications : [];
 
   return Array.isArray(notifications) ? notifications : [];
 }

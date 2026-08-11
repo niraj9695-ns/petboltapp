@@ -111,6 +111,7 @@ export default function LoginForm({
       }
     } catch (error) {
       Alert.alert("Error", "Something went wrong");
+      console.error(error);
     } finally {
       setLoading(false);
     }

@@ -23,7 +23,11 @@ export default function BoardingOwnerStack() {
         component={UpdateBoardingProfileScreen}
       />
 
-      <Stack.Screen name="CenterDetails" component={CenterDetailsScreen} />
+      <Stack.Screen
+        name="CenterDetails"
+        component={CenterDetailsScreen}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen name="UpdateCenter" component={UpdateCenterScreen} />
       <Stack.Screen name="CreateCenter" component={CreateCenterScreen} />
       <Stack.Screen name="CreateCoupon" component={CreateCouponScreen} />

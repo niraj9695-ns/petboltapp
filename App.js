@@ -57,12 +57,6 @@ function MainApp() {
   useEffect(() => {
     initializeToastAlertOverride();
     checkLogin();
-
-    const interval = setInterval(() => {
-      checkLogin();
-    }, 1000);
-
-    return () => clearInterval(interval);
   }, []);
 
   if (loading) {

@@ -8,6 +8,7 @@ import {
   TextInput,
 } from "react-native";
 import PremiumLoader from "../../../components/PremiumLoader";
+import BackButton from "../../../components/BackButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 import { LinearGradient } from "expo-linear-gradient";
@@ -331,6 +332,27 @@ export default function BoardingBookingScreen({ route, navigation }) {
     setCheckOutDate(date);
   };
 
+  const navigateToHome = () => {
+    let ancestor = navigation;
+
+    while (ancestor?.getParent) {
+      ancestor = ancestor.getParent();
+      const routeNames = ancestor?.getState?.()?.routeNames;
+
+      if (routeNames?.includes("Home")) {
+        ancestor.navigate("Home");
+        return;
+      }
+
+      if (routeNames?.includes("Main")) {
+        ancestor.navigate("Main", { screen: "Home" });
+        return;
+      }
+    }
+
+    navigation.navigate("Home");
+  };
+
   const createBooking = async () => {
     try {
       if (!selectedPetId) {
@@ -387,9 +409,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
         Alert.alert("Payment Successful", "Booking confirmed", [
           {
             text: "OK",
-            onPress: () => {
-              navigation.navigate("Home");
-            },
+            onPress: navigateToHome,
           },
         ]);
       } else {
@@ -416,6 +436,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
       style={styles.bookingScreenContainer}
     >
       <ScrollView contentContainerStyle={styles.bookingScreenContent}>
+        <BackButton style={{ marginBottom: 20 }} />
         <View style={styles.bookingScreenCard}>
           <Text style={styles.bookingScreenCenterName}>{centerName}</Text>
         </View>
@@ -569,12 +590,6 @@ export default function BoardingBookingScreen({ route, navigation }) {
             multiline
             style={styles.bookingScreenInput}
           />
-        </View>
-
-        <View style={styles.bookingScreenCard}>
-          <Text>Total Days : {totalDays}</Text>
-
-          <Text style={styles.totalCostText}>Total Amount : ₹{totalCost}</Text>
         </View>
 
         {/* Pricing summary fetched from API */}

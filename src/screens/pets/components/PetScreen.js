@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 
 import {
   View,
@@ -313,10 +313,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
       (typeof petData.vaccination_certificate === "string" &&
         !petData.vaccination_certificate.trim())
     ) {
-      Alert.alert(
-        "Validation",
-        "Vaccination Certificate is required",
-      );
+      Alert.alert("Validation", "Vaccination Certificate is required");
       return false;
     }
 
@@ -725,10 +722,29 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
     editPet(initialEditPetId);
   }, [initialEditPetId, hasOpenedInitialEdit]);
 
+  useLayoutEffect(() => {
+    const parent = navigation.getParent();
+
+    parent?.setOptions({
+      tabBarStyle: showForm ? { display: "none" } : undefined,
+    });
+
+    return () => {
+      parent?.setOptions({
+        tabBarStyle: undefined,
+      });
+    };
+  }, [showForm, navigation]);
+
   if (loading && pets.length === 0) {
     return (
       <View style={petScreenStyles.loaderContainer}>
-        <PremiumLoader size={56} color="#6b21a8" label="Loading pets" fullScreen />
+        <PremiumLoader
+          size={56}
+          color="#6b21a8"
+          label="Loading pets"
+          fullScreen
+        />
       </View>
     );
   }
@@ -841,6 +857,8 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
 
       <PetFormModal
         visible={showForm}
+        animationType="slide"
+        transparent={false}
         editingId={editingId}
         step={step}
         setStep={setStep}

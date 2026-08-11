@@ -44,10 +44,12 @@ export default function CenterDetailsScreen() {
   const imageHeight = isTablet ? 380 : 260;
 
   useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+
     if (centerId) {
       loadCenter();
     }
-  }, [centerId, refreshKey]);
+  }, [centerId, refreshKey, navigation]);
 
   const toggleSection = (key) => {
     setExpandedSections((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -110,16 +112,6 @@ export default function CenterDetailsScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={{ width: contentWidth }}>
-          <View style={styles.header}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.backButton}
-            >
-              <Text style={styles.backText}>← Back</Text>
-            </TouchableOpacity>
-            <Text style={styles.title}>{center.center_name}</Text>
-          </View>
-
           <View style={styles.imageContainer}>
             <FlatList
               style={{ width: imageWidth }}
