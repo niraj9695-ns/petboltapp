@@ -23,12 +23,13 @@ export default StyleSheet.create({
     paddingVertical: 10,
   },
   title: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "700",
     color: COLORS.text,
   },
   subtitle: {
-    marginTop: 4,
+    marginTop: 2,
+    fontSize: 12,
     color: COLORS.textMuted,
   },
 
@@ -89,7 +90,7 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 14,
+    marginBottom: 10,
   },
   sectionTitle: {
     fontSize: 18,
@@ -123,7 +124,7 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 16,
-    padding: 14,
+    padding: 12,
     marginBottom: 12,
     backgroundColor: COLORS.surfaceAlt,
   },
@@ -135,7 +136,7 @@ export default StyleSheet.create({
   },
   discountTitle: {
     color: COLORS.text,
-    fontSize: 17,
+    fontSize: 14,
     fontWeight: "800",
   },
   discountMeta: {
@@ -146,7 +147,7 @@ export default StyleSheet.create({
   discountInfo: {
     color: COLORS.textMuted,
     marginTop: 10,
-    fontSize: 13,
+    fontSize: 12,
   },
   expiredText: {
     color: "#dc2626",
@@ -157,7 +158,7 @@ export default StyleSheet.create({
   statusPill: {
     borderRadius: 999,
     paddingHorizontal: 10,
-    paddingVertical: 6,
+    paddingVertical: 8,
   },
   statusPillActive: {
     backgroundColor: "#dcfce7",

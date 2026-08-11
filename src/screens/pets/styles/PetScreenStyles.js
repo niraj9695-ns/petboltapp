@@ -1,4 +1,10 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../../../styles/theme/colors";
+import { spacing } from "../../../styles/theme/spacing";
+import { radius } from "../../../styles/theme/radius";
+import { typography } from "../../../styles/themeStyles";
+import { typography as baseTypography } from "../../../styles/theme/typography";
+import { shadows } from "../../../styles/theme/shadows";
 
 export default StyleSheet.create({
   loaderContainer: {
@@ -16,23 +22,24 @@ export default StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 12,
-    marginBottom: 4,
-    backgroundColor: "#fffaf7",
+    paddingVertical: 16,
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: "#e9d5ff",
+    borderBottomColor: colors.border,
   },
+
   heading: {
-    fontSize: 28,
+    fontSize:
+      (typography && typography.heroTitle && typography.heroTitle.fontSize) ||
+      baseTypography.heroTitle ||
+      24,
     fontWeight: "800",
-    color: "#6b21a8",
-    marginLeft: 2,
+    color: "#0f172a",
   },
   addBtn: {
     backgroundColor: "#6b21a8",
-    width: 58,
-    height: 58,
+    width: 38,
+    height: 38,
     borderRadius: 18,
     justifyContent: "center",
     alignItems: "center",

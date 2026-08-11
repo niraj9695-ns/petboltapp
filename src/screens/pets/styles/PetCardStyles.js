@@ -7,7 +7,7 @@ export default StyleSheet.create({
     backgroundColor: "#fff",
     padding: 14,
     borderRadius: 18,
-    marginBottom: 14,
+    marginBottom: 10,
     elevation: 3,
     shadowColor: "#6b21a8",
     shadowOpacity: 0.08,
@@ -15,23 +15,23 @@ export default StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
   },
   petImage: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     borderRadius: 40,
   },
   rightSection: {
     flex: 1,
-    marginLeft: 15,
+    marginLeft: 25,
     justifyContent: "space-between",
   },
   petName: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     color: "#222",
   },
   iconRow: {
     flexDirection: "row",
     marginTop: 10,
-    gap: 20,
+    gap: 10,
   },
 });

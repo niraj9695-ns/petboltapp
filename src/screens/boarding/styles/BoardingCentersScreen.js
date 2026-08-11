@@ -29,15 +29,15 @@ export default StyleSheet.create({
   },
 
   headerInner: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
     backgroundColor: "transparent",
   },
 
   listContent: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    paddingBottom: 24,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    paddingBottom: 18,
     alignItems: "stretch",
   },
 

@@ -37,7 +37,7 @@ export default StyleSheet.create({
   },
 
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "800",
     color: COLORS.primary,
   },
@@ -46,8 +46,8 @@ export default StyleSheet.create({
     backgroundColor: COLORS.primary,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     borderRadius: 12,
   },
 

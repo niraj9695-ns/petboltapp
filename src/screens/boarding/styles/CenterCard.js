@@ -21,7 +21,7 @@ export default StyleSheet.create({
   },
 
   cardContainer: {
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
     alignSelf: "stretch",
   },
 
@@ -55,25 +55,6 @@ export default StyleSheet.create({
     backgroundColor: colors.surfaceMuted,
   },
 
-  typeaBadge: {
-    position: "absolute",
-    top: spacing.md,
-    right: spacing.md,
-    backgroundColor: "rgba(107, 33, 168, 0.9)",
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: radius.round,
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.3)",
-  },
-
-  typeBadgeText: {
-    color: colors.surface,
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
-    fontWeight: "700",
-    letterSpacing: 0.5,
-  },
-
   centerCardContent: {
     flex: 1,
     padding: spacing.cardPadding || spacing.lg,
@@ -94,10 +75,13 @@ export default StyleSheet.create({
   },
 
   centerCardTitle: {
-    fontSize: (typography && typography.cardTitle && typography.cardTitle.fontSize) || baseTypography.cardTitle || 18,
+    fontSize:
+      (typography && typography.cardTitle && typography.cardTitle.fontSize) ||
+      baseTypography.cardTitle ||
+      18,
     fontWeight: "800",
     color: colors.text,
-    lineHeight: 22,
+    lineHeight: 18,
     marginBottom: spacing.xs,
   },
 
@@ -112,14 +96,20 @@ export default StyleSheet.create({
   },
 
   locationText: {
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     color: colors.primary,
     fontWeight: "600",
     marginLeft: spacing.xs,
   },
 
   centerCardPrice: {
-    fontSize: (typography && typography.cardTitle && typography.cardTitle.fontSize) || baseTypography.cardTitle || 18,
+    fontSize:
+      (typography && typography.cardTitle && typography.cardTitle.fontSize) ||
+      baseTypography.cardTitle ||
+      18,
     fontWeight: "800",
     color: colors.primary,
     backgroundColor: colors.surfaceMuted,
@@ -142,7 +132,10 @@ export default StyleSheet.create({
   },
 
   centerCardLocationText: {
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     color: colors.primary,
     fontWeight: "700",
     marginLeft: spacing.xs,
@@ -150,10 +143,13 @@ export default StyleSheet.create({
 
   /* DESCRIPTION */
   centerCardDescription: {
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     color: colors.textMuted,
     lineHeight: 18,
-    marginBottom: spacing.md,
+    marginBottom: spacing.xs,
     fontWeight: "500",
   },
 
@@ -165,7 +161,10 @@ export default StyleSheet.create({
   },
 
   amenitiesPreview: {
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     color: colors.primary,
     fontWeight: "600",
     marginLeft: spacing.xs,
@@ -192,7 +191,10 @@ export default StyleSheet.create({
   },
 
   infoBadgeText: {
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
     color: colors.secondary,
     fontWeight: "600",
     marginLeft: spacing.xs,
@@ -210,7 +212,10 @@ export default StyleSheet.create({
   },
 
   centerCardButtonText: {
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     fontWeight: "700",
     color: colors.surface,
     letterSpacing: 0.3,

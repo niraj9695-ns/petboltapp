@@ -23,8 +23,8 @@ export default StyleSheet.create({
   },
 
   headerSection: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
     backgroundColor: colors.surface,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
@@ -115,29 +115,29 @@ export default StyleSheet.create({
 
   statusBadgeContainer: {
     flexDirection: "row",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
     borderRadius: 12,
     alignItems: "center",
   },
 
   bookingStatusBadgeText: {
     fontWeight: "700",
-    fontSize: 13,
-    letterSpacing: 0.3,
+    fontSize: 10,
+    letterSpacing: 0.2,
   },
 
   cardDivider: {
     height: 1,
     backgroundColor: colors.border,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
   },
 
   infoSection: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.sm,
     backgroundColor: colors.surfaceAlt,
     borderRadius: radius.lg,
     marginBottom: spacing.lg,
@@ -150,7 +150,7 @@ export default StyleSheet.create({
   infoLabel: {
     fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
     color: colors.textMuted,
-    fontWeight: "600",
+    fontWeight: "400",
     marginBottom: spacing.xs,
   },
 
@@ -169,8 +169,8 @@ export default StyleSheet.create({
   dateBox: {
     flex: 1,
     backgroundColor: colors.surface,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.sm,
     borderRadius: radius.lg,
     borderWidth: 1,
     borderColor: colors.border,
@@ -179,7 +179,7 @@ export default StyleSheet.create({
   dateLabel: {
     fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
     color: colors.textMuted,
-    fontWeight: "600",
+    fontWeight: "400",
     marginBottom: spacing.xs,
   },
 

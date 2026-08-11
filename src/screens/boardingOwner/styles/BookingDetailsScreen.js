@@ -16,7 +16,7 @@ export default StyleSheet.create({
     backgroundColor: COLORS.primary,
     borderRadius: 22,
     padding: 20,
-    marginBottom: 16,
+    marginBottom: 8,
   },
   heroTitle: {
     fontSize: typography.h4.fontSize,
@@ -26,7 +26,7 @@ export default StyleSheet.create({
   heroSubtitle: {
     color: COLORS.surface,
     fontSize: 13,
-    marginTop: 6,
+    marginTop: 4,
   },
   card: {
     backgroundColor: COLORS.surface,
@@ -44,26 +44,26 @@ export default StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
     color: COLORS.primary,
-    marginBottom: 12,
+    marginBottom: 6,
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
+    marginBottom: 8,
   },
   label: {
-    fontSize: 13,
+    fontSize: 14,
     color: COLORS.gray,
-    marginTop: 8,
+    fontWeight: "600",
+    marginTop: 6,
   },
   value: {
-    fontSize: 15,
+    fontSize: 14,
     color: COLORS.text,
-    fontWeight: "600",
     marginTop: 2,
   },
   totalPrice: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "800",
     color: COLORS.success,
     marginTop: 16,
@@ -71,8 +71,8 @@ export default StyleSheet.create({
   statusBadge: {
     alignSelf: "flex-start",
     marginTop: 14,
-    paddingHorizontal: 14,
-    paddingVertical: 7,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     borderRadius: 999,
   },
   accepted: {
@@ -162,19 +162,18 @@ export default StyleSheet.create({
   },
   toggleOptionText: {
     color: COLORS.text,
-    fontSize: 14,
-    fontWeight: "700",
+    fontSize: 12,
+    fontWeight: "600",
   },
   toggleOptionTextActive: {
     color: COLORS.surface,
   },
   helperText: {
-    fontSize: 13,
+    fontSize: 12,
     color: COLORS.gray,
     marginBottom: 12,
     lineHeight: 18,
   },
-
   errorInput: {
     borderColor: "#dc2626",
     backgroundColor: "#fef2f2",

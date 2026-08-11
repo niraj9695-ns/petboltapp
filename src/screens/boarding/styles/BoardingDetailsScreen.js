@@ -69,13 +69,16 @@ export default StyleSheet.create({
     right: spacing.md,
     backgroundColor: "rgba(15, 23, 42, 0.55)",
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
+    paddingVertical: spacing.sm,
     borderRadius: radius.round,
   },
 
   sliderCountText: {
     color: colors.surface,
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
     fontWeight: "700",
     letterSpacing: 0.4,
   },
@@ -111,14 +114,20 @@ export default StyleSheet.create({
   },
 
   title: {
-    fontSize: (typography && typography.heroTitle && typography.heroTitle.fontSize) || baseTypography.heroTitle || 28,
+    fontSize:
+      (typography && typography.heroTitle && typography.heroTitle.fontSize) ||
+      baseTypography.heroTitle ||
+      28,
     fontWeight: "800",
     color: colors.text,
-    marginBottom: spacing.md,
+    marginBottom: spacing.xs,
   },
 
   desc: {
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
     color: colors.textMuted,
     lineHeight: 24,
     marginBottom: spacing.xxl,
@@ -128,26 +137,29 @@ export default StyleSheet.create({
     backgroundColor: colors.surface,
     borderRadius: radius.xxl,
     padding: spacing.lg,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.sm,
     ...shadows.md,
   },
 
   sectionTitle: {
-    fontSize: (typography && typography.cardTitle && typography.cardTitle.fontSize) || baseTypography.cardTitle || 18,
+    fontSize:
+      (typography && typography.cardTitle && typography.cardTitle.fontSize) ||
+      baseTypography.cardTitle ||
+      18,
     fontWeight: "700",
     color: colors.text,
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
 
   infoRow: {
     flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "space-between",
-    marginBottom: 14,
+    marginBottom: 8,
   },
 
   label: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "700",
     color: "#1e293b",
     width: "38%",
@@ -155,7 +167,7 @@ export default StyleSheet.create({
 
   infoText: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 12,
     color: "#475569",
     lineHeight: 22,
     textAlign: "right",
@@ -163,7 +175,7 @@ export default StyleSheet.create({
 
   addressInfoText: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 12,
     color: "#475569",
     lineHeight: 22,
     textAlign: "left",
@@ -174,7 +186,7 @@ export default StyleSheet.create({
   },
 
   price: {
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: "800",
     color: "#6b21a8",
   },
@@ -182,14 +194,7 @@ export default StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: "#e2e8f0",
-    marginVertical: 10,
-  },
-
-  capacityStatusText: {
-    marginTop: 15,
-    textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 16,
+    marginVertical: 8,
   },
 
   amenitiesContainer: {
@@ -202,25 +207,25 @@ export default StyleSheet.create({
     backgroundColor: "#fff7ed",
     borderWidth: 1,
     borderColor: "#fdba74",
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     borderRadius: 50,
     marginRight: 10,
-    marginBottom: 10,
+    marginBottom: 6,
   },
 
   amenityText: {
     color: "#6b21a8",
     fontWeight: "700",
-    fontSize: 13,
+    fontSize: 12,
   },
 
   tagBox: {
     backgroundColor: "#e0e7ff",
     borderWidth: 1,
     borderColor: "#c7d2fe",
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     borderRadius: 50,
     marginRight: 10,
     marginBottom: 10,
@@ -229,15 +234,15 @@ export default StyleSheet.create({
   tagText: {
     color: "#4f46e5",
     fontWeight: "700",
-    fontSize: 13,
+    fontSize: 12,
   },
 
   serviceBox: {
     backgroundColor: "#dbeafe",
     borderWidth: 1,
     borderColor: "#bfdbfe",
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     borderRadius: 50,
     marginRight: 10,
     marginBottom: 10,
@@ -246,12 +251,12 @@ export default StyleSheet.create({
   serviceText: {
     color: "#0369a1",
     fontWeight: "700",
-    fontSize: 13,
+    fontSize: 12,
   },
 
   sectionSubtitle: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "700",
     color: "#1e293b",
     marginBottom: 8,
   },
@@ -265,14 +270,12 @@ export default StyleSheet.create({
 
   contactLink: {
     color: "#6b21a8",
-    textDecorationLine: "underline",
   },
 
   instructionsText: {
     fontSize: 15,
     color: "#475569",
     lineHeight: 22,
-    fontStyle: "italic",
   },
 
   licenseLink: {
@@ -315,7 +318,7 @@ export default StyleSheet.create({
   primaryBtnText: {
     color: "#ffffff",
     fontWeight: "700",
-    fontSize: 16,
+    fontSize: 14,
     letterSpacing: 0.3,
   },
 });

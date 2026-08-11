@@ -49,11 +49,6 @@ export default function CenterCard({
               colors={["rgba(0,0,0,0)", "rgba(0,0,0,0.08)", "rgba(0,0,0,0.2)"]}
               style={styles.imageOverlay}
             />
-            <View style={styles.typeaBadge}>
-              <Text style={styles.typeBadgeText}>
-                {item.center_type?.toUpperCase()}
-              </Text>
-            </View>
           </View>
         ) : (
           <LinearGradient

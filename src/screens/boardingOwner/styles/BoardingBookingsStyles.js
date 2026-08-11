@@ -18,20 +18,21 @@ export default StyleSheet.create({
     backgroundColor: COLORS.surfaceAlt,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
+    marginBottom: 10,
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: 20,
     fontWeight: "800",
     color: COLORS.primary,
   },
   headerSubtitle: {
-    fontSize: 13,
+    fontSize: 12,
     color: COLORS.gray,
     marginTop: 4,
   },
   list: {
     paddingHorizontal: 16,
-    paddingBottom: 24,
+    paddingBottom: 10,
   },
   card: {
     backgroundColor: COLORS.surface,
@@ -51,10 +52,10 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 4,
   },
   petName: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "700",
     color: COLORS.text,
     flex: 1,
@@ -63,13 +64,14 @@ export default StyleSheet.create({
   info: {
     color: COLORS.gray,
     marginBottom: 4,
-    fontSize: 14,
+    fontSize: 12,
+    fontWeight: "600",
   },
   date: {
     marginTop: 10,
     color: COLORS.primary,
     fontWeight: "700",
-    fontSize: 13,
+    fontSize: 12,
   },
   priceRow: {
     marginTop: 8,
@@ -80,7 +82,7 @@ export default StyleSheet.create({
   priceText: {
     color: COLORS.primary,
     fontWeight: "800",
-    fontSize: 15,
+    fontSize: 12,
   },
   statusBadge: {
     paddingHorizontal: 10,

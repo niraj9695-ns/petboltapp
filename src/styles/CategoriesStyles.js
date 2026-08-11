@@ -80,7 +80,7 @@ export default StyleSheet.create({
     fontSize: (typography && typography.title && typography.title.fontSize) || baseTypography.title || 16,
     fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
     color: "#1f2937",
-    marginBottom: 6,
+    marginBottom: 4,
     textAlign: "center",
   },
 
@@ -88,7 +88,7 @@ export default StyleSheet.create({
     fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
     color: "#6b7280",
     textAlign: "center",
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xs,
     minHeight: 36,
   },
 
