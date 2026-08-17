@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation, useRoute } from "@react-navigation/native";
-
+import BackButton from "../../../components/BackButton";
 import { useRefresh } from "../../../context/RefreshContext";
 import { updateDateDiscount } from "../services/boardingOwnerService";
 import styles from "../styles/UpdateCouponStyles";
@@ -93,16 +93,24 @@ export default function UpdateCouponScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["left","right","bottom"]}> 
+      <SafeAreaView
+        style={[styles.safeArea, { backgroundColor: theme.background }]}
+        edges={["left", "right", "bottom"]}
+      >
         <View style={styles.loaderWrap}>
-          <PremiumLoader size={56} color={theme.primary} label="Preparing form" fullScreen />
+          <PremiumLoader
+            size={56}
+            color={theme.primary}
+            label="Preparing form"
+            fullScreen
+          />
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={["left","right","bottom"]}>
+    <SafeAreaView style={styles.safeArea} edges={["left", "right", "bottom"]}>
       <KeyboardAvoidingView
         style={styles.flexOne}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -112,21 +120,15 @@ export default function UpdateCouponScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.backButton}
-            >
-              <Ionicons name="arrow-back" size={22} color={theme.textPrimary} />
-            </TouchableOpacity>
+            <BackButton />
 
-            <View style={{ flex: 1, marginLeft: 10 }}>
-              <Text style={[styles.title, { color: theme.textPrimary }]}>Update Coupon</Text>
-              <Text style={[styles.subtitle, { color: theme.textSecondary }]}> 
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>Update Coupon</Text>
+              <Text style={styles.subtitle}>
                 Edit the selected date discount
               </Text>
             </View>
           </View>
-
           <View style={styles.formCard}>
             <View style={styles.fieldGroup}>
               <Label
@@ -138,7 +140,11 @@ export default function UpdateCouponScreen() {
                 style={[
                   styles.input,
                   showFieldError(form.discount_value) && styles.inputError,
-                  { backgroundColor: theme.inputBackground, borderColor: theme.border, color: theme.textPrimary },
+                  {
+                    backgroundColor: theme.inputBackground,
+                    borderColor: theme.border,
+                    color: theme.textPrimary,
+                  },
                 ]}
                 keyboardType="numeric"
                 placeholder="15"
@@ -163,7 +169,11 @@ export default function UpdateCouponScreen() {
                   style={[
                     styles.input,
                     showFieldError(form.min_days) && styles.inputError,
-                    { backgroundColor: theme.inputBackground, borderColor: theme.border, color: theme.textPrimary },
+                    {
+                      backgroundColor: theme.inputBackground,
+                      borderColor: theme.border,
+                      color: theme.textPrimary,
+                    },
                   ]}
                   keyboardType="numeric"
                   placeholder="3"
@@ -189,14 +199,21 @@ export default function UpdateCouponScreen() {
                   style={[
                     styles.dateButton,
                     showFieldError(form.expiry_date) && styles.inputError,
-                    { backgroundColor: theme.inputBackground, borderColor: theme.border },
+                    {
+                      backgroundColor: theme.inputBackground,
+                      borderColor: theme.border,
+                    },
                   ]}
                 >
                   <Text
                     style={[
                       styles.dateButtonText,
                       !form.expiry_date && styles.dateButtonPlaceholder,
-                      { color: form.expiry_date ? theme.textPrimary : theme.placeholder },
+                      {
+                        color: form.expiry_date
+                          ? theme.textPrimary
+                          : theme.placeholder,
+                      },
                     ]}
                   >
                     {form.expiry_date || "Select expiry date"}

@@ -18,9 +18,16 @@ export default StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 10,
+    marginBottom: 18,
+    paddingTop: 8,
+  },
+  headerBackButton: {
+    marginRight: 12,
+  },
+  headerContent: {
+    flex: 1,
+    justifyContent: "center",
   },
   title: {
     fontSize: typography.h4.fontSize,

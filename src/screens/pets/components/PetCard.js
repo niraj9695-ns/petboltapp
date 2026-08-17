@@ -10,6 +10,7 @@ export default function PetCard({
   onEdit,
   onDelete,
   navigation,
+  cardWidth,
 }) {
   const petId = item.pet_id || item.id;
 
@@ -28,7 +29,12 @@ export default function PetCard({
 
   return (
     <TouchableOpacity
-      style={petCardStyles.card}
+      style={[
+        petCardStyles.card,
+        {
+          width: cardWidth,
+        },
+      ]}
       onPress={() =>
         navigation.navigate("PetDetails", {
           petId,

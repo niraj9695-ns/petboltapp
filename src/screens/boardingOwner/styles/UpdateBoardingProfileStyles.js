@@ -16,19 +16,32 @@ export default StyleSheet.create({
     alignItems: "center",
   },
 
+  headerContainer: {
+    paddingTop: 16,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+    alignItems: "center",
+  },
+
+  backButtonContainer: {
+    position: "absolute",
+    left: 16,
+    top: 16,
+  },
+
   heading: {
-    fontSize: (typography && typography.h4 && typography.h4.fontSize) || baseTypography.sectionTitle || 22,
-    fontWeight: (typography && typography.h4 && typography.h4.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize: typography?.h4?.fontSize || baseTypography.sectionTitle || 22,
+    fontWeight:
+      typography?.h4?.fontWeight || baseTypography.weights.bold || "700",
     color: COLORS.primaryDark,
-    marginTop: 16,
-    marginHorizontal: 16,
+    textAlign: "center",
   },
 
   subHeading: {
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontSize: typography?.caption?.fontSize || baseTypography.caption || 10,
     color: COLORS.textMuted,
-    marginHorizontal: 16,
-    marginBottom: 12,
+    textAlign: "center",
+    marginTop: 4,
   },
 
   card: {
@@ -55,8 +68,14 @@ export default StyleSheet.create({
   },
 
   sectionTitle: {
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
-    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
+    fontWeight:
+      (typography && typography.title && typography.title.fontWeight) ||
+      baseTypography.weights.semibold ||
+      "600",
     color: COLORS.primaryDark,
   },
 
@@ -78,8 +97,16 @@ export default StyleSheet.create({
   label: {
     color: COLORS.textMuted,
     marginBottom: 6,
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
-    fontWeight: (typography && typography.bodyMedium && typography.bodyMedium.fontWeight) || baseTypography.weights.medium || "500",
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
+    fontWeight:
+      (typography &&
+        typography.bodyMedium &&
+        typography.bodyMedium.fontWeight) ||
+      baseTypography.weights.medium ||
+      "500",
   },
 
   input: {
@@ -89,7 +116,10 @@ export default StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     backgroundColor: COLORS.surfaceAlt,
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     color: COLORS.text,
   },
 
@@ -109,14 +139,25 @@ export default StyleSheet.create({
 
   uploadButtonText: {
     color: COLORS.primary,
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
-    fontWeight: (typography && typography.bodyMedium && typography.bodyMedium.fontWeight) || baseTypography.weights.medium || "500",
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
+    fontWeight:
+      (typography &&
+        typography.bodyMedium &&
+        typography.bodyMedium.fontWeight) ||
+      baseTypography.weights.medium ||
+      "500",
   },
 
   uploadHint: {
     marginTop: 6,
     color: COLORS.textMuted,
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
   },
 
   saveButton: {
@@ -131,7 +172,13 @@ export default StyleSheet.create({
 
   saveButtonText: {
     color: COLORS.surface,
-    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontWeight:
+      (typography && typography.title && typography.title.fontWeight) ||
+      baseTypography.weights.semibold ||
+      "600",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
   },
 });

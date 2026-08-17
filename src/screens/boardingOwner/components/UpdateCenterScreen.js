@@ -21,6 +21,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import styles from "../styles/UpdateCenterScreenStyles";
 import { Picker } from "@react-native-picker/picker";
 import FloatingInput from "../../../components/inputs/FloatingInput";
+import BackButton from "../../../components/BackButton";
 import {
   buildCenterFormData,
   deleteCenterImage,
@@ -149,7 +150,9 @@ export default function UpdateCenterScreen() {
         prices: data?.pet_type_prices || data?.prices || {},
         amenities: formatListValue(data?.amenities),
         accepted_pet_types: formatListValue(data?.accepted_pet_types),
-        size_weight_restrictions: formatListValue(data?.size_weight_restrictions),
+        size_weight_restrictions: formatListValue(
+          data?.size_weight_restrictions,
+        ),
         age_preferences: formatListValue(data?.age_preferences),
         required_vaccines: formatListValue(data?.required_vaccines),
         boarding_services: formatListValue(data?.boarding_services),
@@ -294,13 +297,19 @@ export default function UpdateCenterScreen() {
         payload.amenities = normalizeListValue(payload.amenities);
       }
       if (typeof payload.accepted_pet_types === "string") {
-        payload.accepted_pet_types = normalizeListValue(payload.accepted_pet_types);
+        payload.accepted_pet_types = normalizeListValue(
+          payload.accepted_pet_types,
+        );
       }
       if (typeof payload.required_vaccines === "string") {
-        payload.required_vaccines = normalizeListValue(payload.required_vaccines);
+        payload.required_vaccines = normalizeListValue(
+          payload.required_vaccines,
+        );
       }
       if (typeof payload.boarding_services === "string") {
-        payload.boarding_services = normalizeListValue(payload.boarding_services);
+        payload.boarding_services = normalizeListValue(
+          payload.boarding_services,
+        );
       }
       if (typeof payload.prices === "string" && payload.prices.trim()) {
         try {
@@ -407,9 +416,13 @@ export default function UpdateCenterScreen() {
 
   const pickImages = async () => {
     try {
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permissionResult.granted) {
-        Alert.alert("Permission needed", "Please allow access to your photos to add images.");
+        Alert.alert(
+          "Permission needed",
+          "Please allow access to your photos to add images.",
+        );
         return;
       }
 
@@ -471,16 +484,27 @@ export default function UpdateCenterScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }} edges={["left","right","bottom"]}>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: "#f8fafc" }}
+        edges={["left", "right", "bottom"]}
+      >
         <View style={styles.loader}>
-          <PremiumLoader size={56} color="#6b21a8" label="Loading center details" fullScreen />
+          <PremiumLoader
+            size={56}
+            color="#6b21a8"
+            label="Loading center details"
+            fullScreen
+          />
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }} edges={["left","right","bottom"]}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "#f8fafc" }}
+      edges={["left", "right", "bottom"]}
+    >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -493,17 +517,18 @@ export default function UpdateCenterScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.backButton}
-            >
-              <Text style={styles.backText}>← Back</Text>
-            </TouchableOpacity>
-            <Text style={styles.title}>
-              {center?.center_name || "Update Center"}
-            </Text>
-          </View>
+            <BackButton style={styles.headerBackButton} />
 
+            <View style={styles.headerContent}>
+              <Text style={styles.title}>
+                {center?.center_name || "Update Center"}
+              </Text>
+
+              <Text style={styles.subtitle}>
+                Update your boarding center information
+              </Text>
+            </View>
+          </View>
           <View style={styles.card}>
             <SectionBlock
               id="basic"
@@ -709,10 +734,14 @@ export default function UpdateCenterScreen() {
               />
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Accepted Pet Types</Text>
-                <Text style={styles.uploadInfo}>Tap to select the pet types you accept</Text>
+                <Text style={styles.uploadInfo}>
+                  Tap to select the pet types you accept
+                </Text>
                 <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
                   {PET_TYPES.map((petType) => {
-                    const selected = normalizeListValue(form.accepted_pet_types).includes(petType);
+                    const selected = normalizeListValue(
+                      form.accepted_pet_types,
+                    ).includes(petType);
                     return (
                       <TouchableOpacity
                         key={petType}
@@ -737,16 +766,22 @@ export default function UpdateCenterScreen() {
               </View>
               <View style={styles.fieldContainer}>
                 <Text style={styles.label}>Size / Weight Restrictions</Text>
-                <Text style={styles.helperText}>Example: Small, Medium, Large</Text>
+                <Text style={styles.helperText}>
+                  Example: Small, Medium, Large
+                </Text>
                 <FloatingInput
                   label=""
                   value={form.size_weight_restrictions}
-                  onChangeText={(v) => updateField("size_weight_restrictions", v)}
+                  onChangeText={(v) =>
+                    updateField("size_weight_restrictions", v)
+                  }
                 />
               </View>
               <View style={styles.fieldContainer}>
                 <Text style={styles.label}>Age Preferences</Text>
-                <Text style={styles.helperText}>Example: Puppies, Adults, Seniors</Text>
+                <Text style={styles.helperText}>
+                  Example: Puppies, Adults, Seniors
+                </Text>
                 <FloatingInput
                   label=""
                   value={form.age_preferences}
@@ -755,7 +790,9 @@ export default function UpdateCenterScreen() {
               </View>
               <View style={styles.fieldContainer}>
                 <Text style={styles.label}>Required Vaccines</Text>
-                <Text style={styles.helperText}>Example: Rabies, Distemper</Text>
+                <Text style={styles.helperText}>
+                  Example: Rabies, Distemper
+                </Text>
                 <FloatingInput
                   label=""
                   value={form.required_vaccines}
@@ -764,7 +801,9 @@ export default function UpdateCenterScreen() {
               </View>
               <View style={styles.fieldContainer}>
                 <Text style={styles.label}>Boarding Services</Text>
-                <Text style={styles.helperText}>Example: Daycare, Overnight</Text>
+                <Text style={styles.helperText}>
+                  Example: Daycare, Overnight
+                </Text>
                 <FloatingInput
                   label=""
                   value={form.boarding_services}
@@ -921,7 +960,11 @@ export default function UpdateCenterScreen() {
                             }}
                           >
                             {isDeleting ? (
-                              <PremiumLoader size={20} color="#dc2626" showLabel={false} />
+                              <PremiumLoader
+                                size={20}
+                                color="#dc2626"
+                                showLabel={false}
+                              />
                             ) : (
                               <Text
                                 style={{ color: "#dc2626", fontWeight: "800" }}
@@ -947,7 +990,9 @@ export default function UpdateCenterScreen() {
             {saving ? (
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <PremiumLoader size={20} color="#fff" showLabel={false} />
-                <Text style={[styles.saveButtonText, { marginLeft: 8 }]}>Saving...</Text>
+                <Text style={[styles.saveButtonText, { marginLeft: 8 }]}>
+                  Saving...
+                </Text>
               </View>
             ) : (
               <Text style={styles.saveButtonText}>Save Changes</Text>
@@ -1044,7 +1089,10 @@ const SelectField = ({ label, value, onValueChange, options, theme }) => {
         <Picker
           selectedValue={value}
           onValueChange={onValueChange}
-          style={[styles.picker, { color: pickerTheme.textPrimary || "#111827" }]}
+          style={[
+            styles.picker,
+            { color: pickerTheme.textPrimary || "#111827" },
+          ]}
           dropdownIconColor={pickerTheme.primary || "#6b21a8"}
         >
           {options.map((option) => (
@@ -1060,7 +1108,14 @@ const SelectField = ({ label, value, onValueChange, options, theme }) => {
   );
 };
 
-const PetPriceEditor = ({ value, onChange, onAdd, prices, onRemove, theme }) => {
+const PetPriceEditor = ({
+  value,
+  onChange,
+  onAdd,
+  prices,
+  onRemove,
+  theme,
+}) => {
   const pickerTheme = theme || {};
 
   return (
@@ -1070,16 +1125,19 @@ const PetPriceEditor = ({ value, onChange, onAdd, prices, onRemove, theme }) => 
         <Picker
           selectedValue={value.petType}
           onValueChange={(petType) => onChange({ ...value, petType })}
-          style={[styles.picker, { color: pickerTheme.textPrimary || "#111827" }]}
+          style={[
+            styles.picker,
+            { color: pickerTheme.textPrimary || "#111827" },
+          ]}
           dropdownIconColor={pickerTheme.primary || "#6b21a8"}
         >
-        {[
-          { label: "Dog", value: "dog" },
-          { label: "Cat", value: "cat" },
-          { label: "Bird", value: "bird" },
-          { label: "Rabbit", value: "rabbit" },
-          { label: "Turtle", value: "turtle" },
-          { label: "Others", value: "others" },
+          {[
+            { label: "Dog", value: "dog" },
+            { label: "Cat", value: "cat" },
+            { label: "Bird", value: "bird" },
+            { label: "Rabbit", value: "rabbit" },
+            { label: "Turtle", value: "turtle" },
+            { label: "Others", value: "others" },
           ].map((option) => (
             <Picker.Item
               key={option.value}

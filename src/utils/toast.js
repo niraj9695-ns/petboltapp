@@ -333,11 +333,10 @@ const styles = StyleSheet.create({
   confirmContainer: {
     position: "absolute",
     top: "50%",
-    left: 16,
-    right: 16,
-    transform: [{ translateY: -120 }],
+    width: "90%",
     maxWidth: 520,
     alignSelf: "center",
+    transform: [{ translateY: -120 }],
   },
   confirmCard: {
     borderRadius: 20,

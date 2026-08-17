@@ -277,16 +277,27 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: boardingOwnerTheme.background }} edges={["left","right","bottom"]}>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: boardingOwnerTheme.background }}
+        edges={["left", "right", "bottom"]}
+      >
         <View style={styles.loader}>
-          <PremiumLoader size={56} color={boardingOwnerTheme.primary} label="Loading profile" fullScreen />
+          <PremiumLoader
+            size={56}
+            color={boardingOwnerTheme.primary}
+            label="Loading profile"
+            fullScreen
+          />
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }} edges={["left","right","bottom"]}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "#f8fafc" }}
+      edges={["left", "right", "bottom"]}
+    >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -298,25 +309,60 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 16 }}>
-            <BackButton
-              fallbackRoute={"BoardingOwner"}
-              fallbackParams={{ screen: "Main", params: { screen: "BoardingTabs", params: { screen: "Profile" } } }}
-            />
+          <View style={styles.headerContainer}>
+            <View style={styles.backButtonContainer}>
+              <BackButton
+                fallbackRoute={"BoardingOwner"}
+                fallbackParams={{
+                  screen: "Main",
+                  params: {
+                    screen: "BoardingTabs",
+                    params: { screen: "Profile" },
+                  },
+                }}
+              />
+            </View>
+
             <Text style={styles.heading}>Update Boarding Profile</Text>
+            <Text style={styles.subHeading}>
+              Tap a section to edit details.
+            </Text>
           </View>
-          <Text style={styles.subHeading}>Tap a section to edit details.</Text>
 
           {renderSection(
             "personal",
             "Personal Details",
             <>
-              <Input label="Full Name" value={form.full_name} onChangeText={(v) => updateField("full_name", v)} />
-              <Input label="Email" value={form.email} onChangeText={(v) => updateField("email", v)} />
-              <Input label="Mobile Number" value={form.mobile_number} onChangeText={(v) => updateField("mobile_number", v)} />
-              <Input label="Alternate Contact Number" value={form.alternate_contact_number} onChangeText={(v) => updateField("alternate_contact_number", v)} />
-              <Input label="Emergency Contact Name" value={form.emergency_contact_name} onChangeText={(v) => updateField("emergency_contact_name", v)} />
-              <Input label="Emergency Contact Number" value={form.emergency_contact_number} onChangeText={(v) => updateField("emergency_contact_number", v)} />
+              <Input
+                label="Full Name"
+                value={form.full_name}
+                onChangeText={(v) => updateField("full_name", v)}
+              />
+              <Input
+                label="Email"
+                value={form.email}
+                onChangeText={(v) => updateField("email", v)}
+              />
+              <Input
+                label="Mobile Number"
+                value={form.mobile_number}
+                onChangeText={(v) => updateField("mobile_number", v)}
+              />
+              <Input
+                label="Alternate Contact Number"
+                value={form.alternate_contact_number}
+                onChangeText={(v) => updateField("alternate_contact_number", v)}
+              />
+              <Input
+                label="Emergency Contact Name"
+                value={form.emergency_contact_name}
+                onChangeText={(v) => updateField("emergency_contact_name", v)}
+              />
+              <Input
+                label="Emergency Contact Number"
+                value={form.emergency_contact_number}
+                onChangeText={(v) => updateField("emergency_contact_number", v)}
+              />
             </>,
           )}
 
@@ -324,10 +370,26 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
             "business",
             "Business & Legal",
             <>
-              <Input label="Business Name" value={form.business_name} onChangeText={(v) => updateField("business_name", v)} />
-              <Input label="Authorized Person" value={form.authorized_person_name} onChangeText={(v) => updateField("authorized_person_name", v)} />
-              <Input label="Digital Signature" value={form.digital_signature} onChangeText={(v) => updateField("digital_signature", v)} />
-              <Input label="Signature Date" value={form.signature_date} onChangeText={(v) => updateField("signature_date", v)} />
+              <Input
+                label="Business Name"
+                value={form.business_name}
+                onChangeText={(v) => updateField("business_name", v)}
+              />
+              <Input
+                label="Authorized Person"
+                value={form.authorized_person_name}
+                onChangeText={(v) => updateField("authorized_person_name", v)}
+              />
+              <Input
+                label="Digital Signature"
+                value={form.digital_signature}
+                onChangeText={(v) => updateField("digital_signature", v)}
+              />
+              <Input
+                label="Signature Date"
+                value={form.signature_date}
+                onChangeText={(v) => updateField("signature_date", v)}
+              />
             </>,
           )}
 
@@ -354,7 +416,9 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
           )}
 
           <TouchableOpacity style={styles.saveButton} onPress={handleUpdate}>
-            <Text style={styles.saveButtonText}>{saving ? "Updating..." : "Update Profile"}</Text>
+            <Text style={styles.saveButtonText}>
+              {saving ? "Updating..." : "Update Profile"}
+            </Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -374,15 +438,27 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
 const Input = ({ label, value, onChangeText, multiline = false }) => (
   <View style={styles.inputContainer}>
     <Text style={styles.label}>{label}</Text>
-    <TextInput style={[styles.input, multiline && styles.inputMultiline]} value={value} onChangeText={onChangeText} multiline={multiline} textAlignVertical={multiline ? "top" : "center"} />
+    <TextInput
+      style={[styles.input, multiline && styles.inputMultiline]}
+      value={value}
+      onChangeText={onChangeText}
+      multiline={multiline}
+      textAlignVertical={multiline ? "top" : "center"}
+    />
   </View>
 );
 
 const DocumentPickerRow = ({ label, file, onPress }) => (
   <View style={styles.inputContainer}>
     <Text style={styles.label}>{label}</Text>
-    <TouchableOpacity style={styles.uploadButton} onPress={onPress} activeOpacity={0.9}>
-      <Text style={styles.uploadButtonText}>{file?.name || "Pick document"}</Text>
+    <TouchableOpacity
+      style={styles.uploadButton}
+      onPress={onPress}
+      activeOpacity={0.9}
+    >
+      <Text style={styles.uploadButtonText}>
+        {file?.name || "Pick document"}
+      </Text>
     </TouchableOpacity>
     <Text style={styles.uploadHint}>PDF or image files are supported.</Text>
   </View>
@@ -391,7 +467,11 @@ const DocumentPickerRow = ({ label, file, onPress }) => (
 const PickerRow = ({ label, value, onPress, placeholder }) => (
   <View style={styles.inputContainer}>
     <Text style={styles.label}>{label}</Text>
-    <TouchableOpacity style={styles.uploadButton} onPress={onPress} activeOpacity={0.9}>
+    <TouchableOpacity
+      style={styles.uploadButton}
+      onPress={onPress}
+      activeOpacity={0.9}
+    >
       <Text style={styles.uploadButtonText}>{value || placeholder}</Text>
     </TouchableOpacity>
   </View>

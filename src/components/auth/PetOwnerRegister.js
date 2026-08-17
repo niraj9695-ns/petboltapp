@@ -161,7 +161,6 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
           method: "POST",
           headers: {
             Accept: "application/json",
-            "User-Agent": "PostmanRuntime/7.29.0",
           },
           body: formData,
         },
@@ -218,7 +217,15 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
   return (
     <View>
       {serverError ? (
-        <View style={[petOwnerRegisterStyles.errorBanner, { backgroundColor: theme.errorBackground, borderColor: theme.error }]}> 
+        <View
+          style={[
+            petOwnerRegisterStyles.errorBanner,
+            {
+              backgroundColor: theme.errorBackground,
+              borderColor: theme.error,
+            },
+          ]}
+        >
           <Text style={petOwnerRegisterStyles.errorBannerTitle}>
             Registration Error
           </Text>
@@ -283,7 +290,13 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         </View>
 
         <TextInput
-          style={[petOwnerRegisterStyles.phoneInput, { color: theme.textPrimary, backgroundColor: theme.inputBackground }]}
+          style={[
+            petOwnerRegisterStyles.phoneInput,
+            {
+              color: theme.textPrimary,
+              backgroundColor: theme.inputBackground,
+            },
+          ]}
           placeholder="Enter mobile number"
           placeholderTextColor={theme.placeholder}
           keyboardType="number-pad"
@@ -309,7 +322,13 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         </View>
 
         <TextInput
-          style={[petOwnerRegisterStyles.phoneInput, { color: theme.textPrimary, backgroundColor: theme.inputBackground }]}
+          style={[
+            petOwnerRegisterStyles.phoneInput,
+            {
+              color: theme.textPrimary,
+              backgroundColor: theme.inputBackground,
+            },
+          ]}
           placeholder="Alternate Contact Number"
           placeholderTextColor={theme.placeholder}
           keyboardType="number-pad"
@@ -367,7 +386,13 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         </View>
 
         <TextInput
-          style={[petOwnerRegisterStyles.phoneInput, { color: theme.textPrimary, backgroundColor: theme.inputBackground }]}
+          style={[
+            petOwnerRegisterStyles.phoneInput,
+            {
+              color: theme.textPrimary,
+              backgroundColor: theme.inputBackground,
+            },
+          ]}
           placeholder="Emergency Contact Number"
           placeholderTextColor={theme.placeholder}
           keyboardType="number-pad"

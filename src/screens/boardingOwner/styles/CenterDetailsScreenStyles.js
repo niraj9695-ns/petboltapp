@@ -15,22 +15,27 @@ export default StyleSheet.create({
     alignItems: "center",
   },
   header: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    backgroundColor: COLORS.surface,
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
   },
-  backButton: {
-    marginBottom: 10,
+  headerBackButton: {
+    marginRight: 12,
   },
-  backText: {
-    color: COLORS.primary,
-    fontSize: typography.body.fontSize,
-    fontWeight: typography.bodyMedium.fontWeight,
+  headerContent: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  subtitle: {
+    marginTop: 4,
+    color: COLORS.textMuted,
+    fontSize: typography.caption.fontSize,
   },
   title: {
     fontSize: typography.h3.fontSize,
     fontWeight: typography.h3.fontWeight,
     color: COLORS.text,
+    lineHeight: typography.h3.fontSize * 1.2,
   },
   imageContainer: {
     position: "relative",

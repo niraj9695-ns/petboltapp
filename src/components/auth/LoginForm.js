@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../../context/ThemeContext";
 
@@ -111,7 +105,6 @@ export default function LoginForm({
       }
     } catch (error) {
       Alert.alert("Error", "Something went wrong");
-      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -178,7 +171,9 @@ export default function LoginForm({
 
   return (
     <View>
-      <Text style={[loginFormStyles.heading, { color: theme.textPrimary }]}>Login</Text>
+      <Text style={[loginFormStyles.heading, { color: theme.textPrimary }]}>
+        Login
+      </Text>
 
       {errors.email || errors.password ? (
         <Text style={loginFormStyles.errorTopText}>
@@ -216,7 +211,9 @@ export default function LoginForm({
       />
 
       <TouchableOpacity onPress={handleForgotPassword}>
-        <Text style={[loginFormStyles.forgotText, { color: theme.primary }]}>Forgot Password?</Text>
+        <Text style={[loginFormStyles.forgotText, { color: theme.primary }]}>
+          Forgot Password?
+        </Text>
       </TouchableOpacity>
 
       <TouchableOpacity

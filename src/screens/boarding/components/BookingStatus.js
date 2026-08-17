@@ -141,7 +141,7 @@ export default function BookingStatus() {
 
   const navigation = useNavigation();
 
-  const cardWidth = width >= 1200 ? 450 : width >= 768 ? 380 : width * 0.85;
+  const cardWidth = Math.min(width * 0.8, 420);
 
   const isMobile = width < 768;
 
@@ -286,7 +286,14 @@ export default function BookingStatus() {
   };
 
   return (
-    <View style={styles.bookingStatusContainer}>
+    <View
+      style={[
+        styles.bookingStatusContainer,
+        {
+          alignSelf: "center",
+        },
+      ]}
+    >
       <View style={styles.headerSection}>
         <Text style={styles.bookingStatusTitle}>Booking Status</Text>
         <Text style={styles.bookingStatusSubtitle}>
@@ -308,6 +315,7 @@ export default function BookingStatus() {
         </View>
       ) : (
         <FlatList
+          key={width}
           data={bookings}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -322,7 +330,11 @@ export default function BookingStatus() {
                   disabled={loadingMore}
                 >
                   {loadingMore ? (
-                    <PremiumLoader size={18} color="#ffffff" showLabel={false} />
+                    <PremiumLoader
+                      size={18}
+                      color="#ffffff"
+                      showLabel={false}
+                    />
                   ) : (
                     <Text style={styles.nextPageButtonText}>Load More</Text>
                   )}
@@ -613,9 +625,14 @@ export default function BookingStatus() {
                     style={styles.secondaryButton}
                     onPress={() => {
                       const centerId =
-                        booking?.center?.id || booking?.center_id || booking?.centerId;
+                        booking?.center?.id ||
+                        booking?.center_id ||
+                        booking?.centerId;
                       if (!centerId) {
-                        Alert.alert("Not available", "Center details not available.");
+                        Alert.alert(
+                          "Not available",
+                          "Center details not available.",
+                        );
                         return;
                       }
                       navigation.navigate("Boarding", {

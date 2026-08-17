@@ -18,25 +18,29 @@ export default StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 10,
+    paddingVertical: 12,
   },
+
+  titleContainer: {
+    marginLeft: 12,
+    justifyContent: "center",
+    flex: 1,
+  },
+
   title: {
     fontSize: typography.h4.fontSize,
     fontWeight: typography.h4.fontWeight,
     color: COLORS.text,
-  },
-  subtitle: {
-    marginTop: 4,
-    color: COLORS.textMuted,
-  },
-  backButton: {
-    padding: 8,
-    borderRadius: 10,
-    backgroundColor: COLORS.surfaceMuted,
+    lineHeight: 28,
   },
 
+  subtitle: {
+    marginTop: 2,
+    color: COLORS.textMuted,
+    fontSize: 12,
+    lineHeight: 18,
+  },
   formCard: {
     backgroundColor: COLORS.surface,
     borderRadius: 20,

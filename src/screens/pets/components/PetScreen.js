@@ -7,6 +7,7 @@ import {
   FlatList,
   Alert,
   RefreshControl,
+  useWindowDimensions,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -53,6 +54,18 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
 
   const [editingId, setEditingId] = useState(null);
   const [hasOpenedInitialEdit, setHasOpenedInitialEdit] = useState(false);
+
+  const { width } = useWindowDimensions();
+
+  const numColumns = width >= 1200 ? 3 : width >= 768 ? 2 : 1;
+
+  const horizontalPadding = 32;
+  const gap = 12;
+
+  const cardWidth =
+    numColumns === 1
+      ? width - horizontalPadding
+      : (width - horizontalPadding - gap * (numColumns - 1)) / numColumns;
 
   const [selectedImages, setSelectedImages] = useState([]);
   const [profileImageIndex, setProfileImageIndex] = useState(null);
@@ -800,7 +813,17 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
 
       <FlatList
         data={pets}
+        numColumns={numColumns}
+        key={numColumns}
         keyExtractor={(item, index) => String(item.pet_id || item.id || index)}
+        columnWrapperStyle={
+          numColumns > 1
+            ? {
+                justifyContent: "space-between",
+                marginBottom: 12,
+              }
+            : undefined
+        }
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -846,6 +869,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
             item={item}
             petImages={petImages}
             navigation={navigation}
+            cardWidth={cardWidth}
             onEdit={(pet) => {
               if (isGuest) {
                 promptSignIn();

@@ -113,13 +113,16 @@ export const fetchPetImagesApi = async (petId) => {
     per_page: "20",
   });
 
-  const response = await fetch(`${IMAGE_API_URL}/${petId}?${query.toString()}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: "application/json",
+  const response = await fetch(
+    `${IMAGE_API_URL}/${petId}?${query.toString()}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
     },
-  });
+  );
 
   const text = await response.text();
 

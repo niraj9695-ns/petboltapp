@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../styles/CenterDetailsScreenStyles";
 import { getCenterDetails } from "../services/boardingOwnerService";
 import { boardingOwnerTheme } from "../../../styles/themeStyles";
+import BackButton from "../../../components/BackButton";
 
 export default function CenterDetailsScreen() {
   const navigation = useNavigation();
@@ -112,6 +113,19 @@ export default function CenterDetailsScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={{ width: contentWidth }}>
+          <View style={styles.header}>
+            <BackButton style={styles.headerBackButton} />
+
+            <View style={styles.headerContent}>
+              <Text style={styles.title}>
+                {center?.center_name || "Center Details"}
+              </Text>
+
+              <Text style={styles.subtitle}>
+                View boarding center information
+              </Text>
+            </View>
+          </View>
           <View style={styles.imageContainer}>
             <FlatList
               style={{ width: imageWidth }}
