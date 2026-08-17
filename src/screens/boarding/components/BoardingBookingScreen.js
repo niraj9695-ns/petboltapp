@@ -160,7 +160,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
         startingDay: isStart,
         endingDay: isEnd,
         color: isStart || isEnd ? "#6b21a8" : "#e9d5ff",
-        textColor: "#111827",
+        textColor: isStart || isEnd ? "#ffffff" : "#111827",
       };
     });
 

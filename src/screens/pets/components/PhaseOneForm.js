@@ -29,6 +29,7 @@ export default function PhaseOneForm({
   removeImage,
   profileImageIndex,
   setProfileImageIndex,
+  fieldPositions,
 }) {
   const [showDobPicker, setShowDobPicker] = useState(false);
   const { theme } = useTheme();
@@ -48,73 +49,95 @@ export default function PhaseOneForm({
   return (
     <View>
       {/* PET NAME */}
-
-      <FormLabel title="Pet Name" required error={fieldErrors.pet_name} />
-
-      <TextInput
-        placeholder="Pet Name"
-        placeholderTextColor={theme.placeholder}
-        style={[
-          phaseOneFormStyles.input,
-          fieldErrors.pet_name && phaseOneFormStyles.inputError,
-        ]}
-        value={petData.pet_name}
-        onChangeText={(text) =>
-          setPetData({
-            ...petData,
-            pet_name: text,
-          })
-        }
-      />
-
-      {/* PET TYPE */}
-
-      <FormLabel title="Pet Type" required error={fieldErrors.pet_type} />
-
       <View
-        style={[
-          phaseOneFormStyles.pickerWrapper,
-          fieldErrors.pet_type && phaseOneFormStyles.inputError,
-        ]}
+        onLayout={(e) => {
+          fieldPositions.current.pet_name = e.nativeEvent.layout.y;
+        }}
       >
-        <Picker
-          selectedValue={petData.pet_type}
-          style={{ color: theme.textPrimary }}
-          dropdownIconColor={theme.primary}
-          onValueChange={(value) =>
+        <FormLabel title="Pet Name" required error={fieldErrors.pet_name} />
+        <TextInput
+          placeholder="Pet Name"
+          placeholderTextColor={theme.placeholder}
+          style={[
+            phaseOneFormStyles.input,
+            fieldErrors.pet_name && phaseOneFormStyles.inputError,
+          ]}
+          value={petData.pet_name}
+          onChangeText={(text) =>
             setPetData({
               ...petData,
-              pet_type: value,
+              pet_name: text,
             })
           }
+        />
+      </View>
+
+      {/* PET TYPE */}
+      <View
+        onLayout={(e) => {
+          fieldPositions.current.pet_type = e.nativeEvent.layout.y;
+        }}
+      >
+        <FormLabel title="Pet Type" required error={fieldErrors.pet_type} />
+        <View
+          style={[
+            phaseOneFormStyles.pickerWrapper,
+            fieldErrors.pet_type && phaseOneFormStyles.inputError,
+          ]}
         >
-          <Picker.Item label="Select Pet Type" value="" />
-          <Picker.Item label="Dog" value="dog" />
-          <Picker.Item label="Cat" value="cat" />
-          <Picker.Item label="Bird" value="bird" />
-          <Picker.Item label="Other" value="other" />
-        </Picker>
+          <Picker
+            selectedValue={petData.pet_type}
+            style={{
+              color: petData.pet_type ? theme.textPrimary : theme.textSecondary,
+            }}
+            dropdownIconColor={theme.primary}
+            onValueChange={(value) =>
+              setPetData({
+                ...petData,
+                pet_type: value,
+              })
+            }
+          >
+            <Picker.Item
+              label="Select Pet Type"
+              value=""
+              color={theme.textSecondary}
+            />
+            <Picker.Item label="Dog" value="dog" color={theme.textPrimary} />
+            <Picker.Item label="Cat" value="cat" color={theme.textPrimary} />
+            <Picker.Item label="Bird" value="bird" color={theme.textPrimary} />
+            <Picker.Item
+              label="Other"
+              value="other"
+              color={theme.textPrimary}
+            />
+          </Picker>
+        </View>
       </View>
 
       {/* BREED */}
-
-      <FormLabel title="Breed" required error={fieldErrors.breed} />
-
-      <TextInput
-        placeholder="Breed"
-        placeholderTextColor={theme.placeholder}
-        style={[
-          phaseOneFormStyles.input,
-          fieldErrors.breed && phaseOneFormStyles.inputError,
-        ]}
-        value={petData.breed}
-        onChangeText={(text) =>
-          setPetData({
-            ...petData,
-            breed: text,
-          })
-        }
-      />
+      <View
+        onLayout={(e) => {
+          fieldPositions.current.breed = e.nativeEvent.layout.y;
+        }}
+      >
+        <FormLabel title="Breed" required error={fieldErrors.breed} />
+        <TextInput
+          placeholder="Breed"
+          placeholderTextColor={theme.placeholder}
+          style={[
+            phaseOneFormStyles.input,
+            fieldErrors.breed && phaseOneFormStyles.inputError,
+          ]}
+          value={petData.breed}
+          onChangeText={(text) =>
+            setPetData({
+              ...petData,
+              breed: text,
+            })
+          }
+        />
+      </View>
 
       {/* GENDER */}
 
@@ -128,7 +151,9 @@ export default function PhaseOneForm({
       >
         <Picker
           selectedValue={petData.gender}
-          style={{ color: theme.textPrimary }}
+          style={{
+            color: petData.gender ? theme.textPrimary : theme.textSecondary,
+          }}
           dropdownIconColor={theme.primary}
           onValueChange={(value) =>
             setPetData({
@@ -137,10 +162,22 @@ export default function PhaseOneForm({
             })
           }
         >
-          <Picker.Item label="Select Gender" value="" />
-          <Picker.Item label="Male" value="male" />
-          <Picker.Item label="Female" value="female" />
-          <Picker.Item label="Unknown" value="unknown" />
+          <Picker.Item
+            label="Select Gender"
+            value=""
+            color={theme.textSecondary}
+          />
+          <Picker.Item label="Male" value="male" color={theme.textPrimary} />
+          <Picker.Item
+            label="Female"
+            value="female"
+            color={theme.textPrimary}
+          />
+          <Picker.Item
+            label="Unknown"
+            value="unknown"
+            color={theme.textPrimary}
+          />
         </Picker>
       </View>
 
@@ -176,10 +213,20 @@ export default function PhaseOneForm({
         ]}
         onPress={() => setShowDobPicker(true)}
       >
-        <Text style={phaseOneFormStyles.dateInputText}>
+        <Text
+          style={[
+            phaseOneFormStyles.dateInputText,
+            {
+              color: petData.date_of_birth
+                ? theme.textPrimary
+                : theme.textSecondary,
+            },
+          ]}
+        >
           {petData.date_of_birth || "Select Date Of Birth"}
         </Text>
-        <Ionicons name="calendar-outline" size={18} color="#6b21a8" />
+
+        <Ionicons name="calendar-outline" size={18} color={theme.primary} />
       </TouchableOpacity>
 
       <DateTimePickerModal
@@ -189,7 +236,6 @@ export default function PhaseOneForm({
         onConfirm={handleDobConfirm}
         onCancel={() => setShowDobPicker(false)}
       />
-
       {/* WEIGHT */}
 
       <FormLabel title="Weight (KG)" />
@@ -230,6 +276,7 @@ export default function PhaseOneForm({
 
       <TextInput
         placeholder="Microchip ID"
+        placeholderTextColor={theme.placeholder}
         style={phaseOneFormStyles.input}
         value={petData.microchip_id}
         onChangeText={(text) =>
@@ -244,6 +291,7 @@ export default function PhaseOneForm({
 
       <TextInput
         placeholder="Registration Number"
+        placeholderTextColor={theme.placeholder}
         style={phaseOneFormStyles.input}
         value={petData.registration_number}
         onChangeText={(text) =>
@@ -258,6 +306,7 @@ export default function PhaseOneForm({
 
       <TextInput
         placeholder="Additional Details"
+        placeholderTextColor={theme.placeholder}
         style={[phaseOneFormStyles.input, phaseOneFormStyles.textArea]}
         multiline
         value={petData.additional_details}

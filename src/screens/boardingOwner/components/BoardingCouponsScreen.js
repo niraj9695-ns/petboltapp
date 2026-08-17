@@ -102,9 +102,7 @@ export default function BoardingCouponsScreen() {
         Number(pagination?.total_pages || payload?.total_pages || 1) || 1,
       );
       setTotalItems(
-        Number(
-          pagination?.total || payload?.total || discountList.length || 0,
-        ),
+        Number(pagination?.total || payload?.total || discountList.length || 0),
       );
     } catch (error) {
       Alert.alert("Error", "Unable to load the coupons for this center.");
@@ -117,46 +115,49 @@ export default function BoardingCouponsScreen() {
     }
   }, []);
 
-  const loadCenters = useCallback(async (page = 1) => {
-    setLoadingCenters(true);
-    try {
-      const response = await getCenters(page, 20);
-      const payload = response?.data || response || {};
-      const centerList = Array.isArray(payload?.data)
-        ? payload.data
-        : Array.isArray(payload)
-          ? payload
-          : [];
-      const pagination = payload?.pagination || response?.pagination || {};
+  const loadCenters = useCallback(
+    async (page = 1) => {
+      setLoadingCenters(true);
+      try {
+        const response = await getCenters(page, 20);
+        const payload = response?.data || response || {};
+        const centerList = Array.isArray(payload?.data)
+          ? payload.data
+          : Array.isArray(payload)
+            ? payload
+            : [];
+        const pagination = payload?.pagination || response?.pagination || {};
 
-      setCenters(centerList);
-      setCenterPage(Number(pagination?.page || page || 1));
-      setCenterTotalPages(
-        Number(pagination?.total_pages || payload?.total_pages || 1) || 1,
-      );
-      setCenterTotalItems(
-        Number(pagination?.total || payload?.total || centerList.length || 0),
-      );
+        setCenters(centerList);
+        setCenterPage(Number(pagination?.page || page || 1));
+        setCenterTotalPages(
+          Number(pagination?.total_pages || payload?.total_pages || 1) || 1,
+        );
+        setCenterTotalItems(
+          Number(pagination?.total || payload?.total || centerList.length || 0),
+        );
 
-      const activeCenterId =
-        selectedCenterId || String(centerList[0]?.id || "");
-      const nextCenterId =
-        activeCenterId &&
-        centerList.some((center) => String(center.id) === activeCenterId)
-          ? activeCenterId
-          : String(centerList[0]?.id || "");
+        const activeCenterId =
+          selectedCenterId || String(centerList[0]?.id || "");
+        const nextCenterId =
+          activeCenterId &&
+          centerList.some((center) => String(center.id) === activeCenterId)
+            ? activeCenterId
+            : String(centerList[0]?.id || "");
 
-      setSelectedCenterId(nextCenterId);
+        setSelectedCenterId(nextCenterId);
 
-      if (nextCenterId) {
-        await loadDiscounts(nextCenterId, 1);
+        if (nextCenterId) {
+          await loadDiscounts(nextCenterId, 1);
+        }
+      } catch (error) {
+        Alert.alert("Error", "Unable to load your centers right now.");
+      } finally {
+        setLoadingCenters(false);
       }
-    } catch (error) {
-      Alert.alert("Error", "Unable to load your centers right now.");
-    } finally {
-      setLoadingCenters(false);
-    }
-  }, [loadDiscounts, selectedCenterId]);
+    },
+    [loadDiscounts, selectedCenterId],
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -193,7 +194,13 @@ export default function BoardingCouponsScreen() {
     });
   };
 
-  const renderPagination = (page, total, onPageChange, label, isLoading = false) => {
+  const renderPagination = (
+    page,
+    total,
+    onPageChange,
+    label,
+    isLoading = false,
+  ) => {
     if (total <= 1) return null;
 
     const pages = [];
@@ -281,16 +288,24 @@ export default function BoardingCouponsScreen() {
 
   if (loadingCenters) {
     return (
-      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["left","right","bottom"]}>
+      <SafeAreaView
+        style={[styles.safeArea, { backgroundColor: theme.background }]}
+        edges={["left", "right", "bottom"]}
+      >
         <View style={styles.loaderWrap}>
-          <PremiumLoader size={56} color={theme.primary} label="Loading coupons" fullScreen />
+          <PremiumLoader
+            size={56}
+            color={theme.primary}
+            label="Loading coupons"
+            fullScreen
+          />
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={["left","right","bottom"]}>
+    <SafeAreaView style={styles.safeArea} edges={["left", "right", "bottom"]}>
       <KeyboardAvoidingView
         style={styles.flexOne}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -302,8 +317,8 @@ export default function BoardingCouponsScreen() {
         >
           <View style={styles.header}>
             <View>
-              <Text style={[styles.title, { color: theme.textPrimary }]}>Coupons</Text>
-              <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
+              <Text style={styles.title}>Coupons</Text>
+              <Text style={styles.subtitle}>
                 Manage date discounts for your centers
               </Text>
             </View>
@@ -317,9 +332,27 @@ export default function BoardingCouponsScreen() {
             </TouchableOpacity>
           </View>
 
-          <View style={[styles.filterCard, { backgroundColor: theme.cardBackground, borderColor: theme.border }]}> 
-            <Text style={[styles.filterLabel, { color: theme.textPrimary }]}>Filter by center</Text>
-            <View style={[styles.pickerWrap, { backgroundColor: theme.inputBackground, borderColor: theme.border }]}> 
+          <View
+            style={[
+              styles.filterCard,
+              {
+                backgroundColor: theme.cardBackground,
+                borderColor: theme.border,
+              },
+            ]}
+          >
+            <Text style={[styles.filterLabel, { color: theme.textPrimary }]}>
+              Filter by center
+            </Text>
+            <View
+              style={[
+                styles.pickerWrap,
+                {
+                  backgroundColor: theme.inputBackground,
+                  borderColor: theme.border,
+                },
+              ]}
+            >
               <Picker
                 selectedValue={selectedCenterId}
                 onValueChange={(value) => changeCenter(value)}
@@ -346,7 +379,9 @@ export default function BoardingCouponsScreen() {
 
           <View style={styles.listCard}>
             <View style={styles.sectionHeader}>
-              <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Saved coupons</Text>
+              <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
+                Saved coupons
+              </Text>
               <Text style={[styles.mutedText, { color: theme.textSecondary }]}>
                 {loadingDiscounts
                   ? "Loading..."
@@ -356,11 +391,19 @@ export default function BoardingCouponsScreen() {
 
             {loadingDiscounts ? (
               <View style={styles.loaderWrapSmall}>
-                <PremiumLoader size={24} color={theme.primary} showLabel={false} />
+                <PremiumLoader
+                  size={24}
+                  color={theme.primary}
+                  showLabel={false}
+                />
               </View>
             ) : discounts.length === 0 ? (
               <View style={styles.emptyState}>
-                <Ionicons name="pricetag-outline" size={28} color={theme.primary} />
+                <Ionicons
+                  name="pricetag-outline"
+                  size={28}
+                  color={theme.primary}
+                />
                 <Text style={styles.emptyStateText}>
                   No coupons have been created for this center yet.
                 </Text>
@@ -371,86 +414,94 @@ export default function BoardingCouponsScreen() {
                   {discounts.map((discount) => (
                     <View
                       key={discount.id}
-                    style={[
-                      styles.discountCard,
-                      {
-                        width: isTablet ? "48%" : "100%",
-                      },
-                    ]}
-                  >
-                    <View style={styles.discountHeader}>
-                      <View>
-                        <Text style={styles.discountTitle}>
-                          {discount.discount_type === "percentage"
-                            ? `${discount.discount_value}% off`
-                            : `₹${discount.discount_value} off`}
-                        </Text>
-                        <Text style={styles.discountMeta}>
-                          Min stay: {discount.min_days} day
-                          {discount.min_days === 1 ? "" : "s"}
-                        </Text>
-                      </View>
-                      <View
-                        style={[
-                          styles.statusPill,
-                          Number(discount.is_active) === 1
-                            ? styles.statusPillActive
-                            : styles.statusPillPaused,
-                        ]}
-                      >
-                        <Text
+                      style={[
+                        styles.discountCard,
+                        {
+                          width: isTablet ? "48%" : "100%",
+                        },
+                      ]}
+                    >
+                      <View style={styles.discountHeader}>
+                        <View>
+                          <Text style={styles.discountTitle}>
+                            {discount.discount_type === "percentage"
+                              ? `${discount.discount_value}% off`
+                              : `₹${discount.discount_value} off`}
+                          </Text>
+                          <Text style={styles.discountMeta}>
+                            Min stay: {discount.min_days} day
+                            {discount.min_days === 1 ? "" : "s"}
+                          </Text>
+                        </View>
+                        <View
                           style={[
-                            styles.statusText,
+                            styles.statusPill,
                             Number(discount.is_active) === 1
-                              ? styles.statusTextActive
-                              : styles.statusTextPaused,
+                              ? styles.statusPillActive
+                              : styles.statusPillPaused,
                           ]}
                         >
-                          {Number(discount.is_active) === 1
-                            ? "Active"
-                            : "Inactive"}
+                          <Text
+                            style={[
+                              styles.statusText,
+                              Number(discount.is_active) === 1
+                                ? styles.statusTextActive
+                                : styles.statusTextPaused,
+                            ]}
+                          >
+                            {Number(discount.is_active) === 1
+                              ? "Active"
+                              : "Inactive"}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <Text style={styles.discountInfo}>
+                        Expires on {formatShortDate(discount.expiry_date)}
+                      </Text>
+                      {isDateExpired(discount.expiry_date) ? (
+                        <Text style={styles.expiredText}>
+                          This coupon has expired.
                         </Text>
+                      ) : null}
+
+                      <View style={styles.actionRow}>
+                        <TouchableOpacity
+                          style={styles.editButton}
+                          onPress={() => openUpdateForm(discount)}
+                        >
+                          <Ionicons
+                            name="create-outline"
+                            size={16}
+                            color="#fff"
+                          />
+                          <Text style={styles.actionText}>Edit</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          style={styles.deleteButton}
+                          onPress={() => deleteCoupon(discount)}
+                          disabled={deletingCouponId === discount.id}
+                        >
+                          {deletingCouponId === discount.id ? (
+                            <PremiumLoader
+                              size={18}
+                              color="#fff"
+                              showLabel={false}
+                            />
+                          ) : (
+                            <>
+                              <Ionicons
+                                name="trash-outline"
+                                size={16}
+                                color="#fff"
+                              />
+                              <Text style={styles.actionText}>Delete</Text>
+                            </>
+                          )}
+                        </TouchableOpacity>
                       </View>
                     </View>
-
-                    <Text style={styles.discountInfo}>
-                      Expires on {formatShortDate(discount.expiry_date)}
-                    </Text>
-                    {isDateExpired(discount.expiry_date) ? (
-                      <Text style={styles.expiredText}>
-                        This coupon has expired.
-                      </Text>
-                    ) : null}
-
-                    <View style={styles.actionRow}>
-                      <TouchableOpacity
-                        style={styles.editButton}
-                        onPress={() => openUpdateForm(discount)}
-                      >
-                        <Ionicons
-                          name="create-outline"
-                          size={16}
-                          color="#fff"
-                        />
-                        <Text style={styles.actionText}>Edit</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity
-                        style={styles.deleteButton}
-                        onPress={() => deleteCoupon(discount)}
-                        disabled={deletingCouponId === discount.id}
-                      >
-                        {deletingCouponId === discount.id ? (
-                          <PremiumLoader size={18} color="#fff" showLabel={false} />
-                        ) : (
-                          <>
-                            <Ionicons name="trash-outline" size={16} color="#fff" />
-                            <Text style={styles.actionText}>Delete</Text>
-                          </>
-                        )}
-                      </TouchableOpacity>
-                    </View>
-                  </View>
                   ))}
                 </View>
                 {renderPagination(

@@ -18,7 +18,6 @@ export default StyleSheet.create({
     alignItems: "center",
   },
   container: {
-    marginVertical: spacing.lg,
     borderRadius: radius.xxl,
     padding: spacing.xl,
     alignItems: "center",
@@ -44,17 +43,32 @@ export default StyleSheet.create({
     marginBottom: spacing.sm,
   },
   badgeText: {
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
-    fontWeight: (typography && typography.caption && typography.caption.fontWeight) || baseTypography.weights.semibold || "600",
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
+    fontWeight:
+      (typography && typography.caption && typography.caption.fontWeight) ||
+      baseTypography.weights.semibold ||
+      "600",
   },
   name: {
-    fontSize: (typography && typography.h3 && typography.h3.fontSize) || baseTypography.h3 || 20,
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize:
+      (typography && typography.h3 && typography.h3.fontSize) ||
+      baseTypography.h3 ||
+      20,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
     color: "#333",
     marginTop: spacing.xs,
   },
   desc: {
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     color: colors.textMuted,
     textAlign: "center",
     marginTop: spacing.xl,
@@ -87,14 +101,26 @@ export default StyleSheet.create({
   },
   primaryBtnText: {
     color: "#fff",
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
   },
 
   secondaryBtnText: {
     color: "#6b21a8",
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
   },
   infoCard: {
     width: "100%",
@@ -105,19 +131,34 @@ export default StyleSheet.create({
     marginBottom: spacing.xl,
   },
   label: {
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
     color: colors.textMuted,
-    fontWeight: (typography && typography.caption && typography.caption.fontWeight) || baseTypography.weights.semibold || "600",
+    fontWeight:
+      (typography && typography.caption && typography.caption.fontWeight) ||
+      baseTypography.weights.semibold ||
+      "600",
     marginTop: spacing.sm,
   },
   value: {
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
     color: "#222",
     marginTop: spacing.xs,
   },
   docTitle: {
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
     marginBottom: spacing.sm,
     alignSelf: "flex-start",
   },
@@ -145,18 +186,30 @@ export default StyleSheet.create({
   },
 
   documentIcon: {
-    fontSize: (typography && typography.h3 && typography.h3.fontSize) || baseTypography.h3 || 20,
+    fontSize:
+      (typography && typography.h3 && typography.h3.fontSize) ||
+      baseTypography.h3 ||
+      20,
     marginRight: spacing.md,
   },
 
   documentTitle: {
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
     color: "#111827",
   },
 
   documentSubTitle: {
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     color: colors.textMuted,
     marginTop: spacing.xs,
   },
@@ -171,8 +224,14 @@ export default StyleSheet.create({
 
   viewDocumentText: {
     color: "#FFFFFF",
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
   },
   aadharImage: {
     width: "100%",
@@ -182,7 +241,7 @@ export default StyleSheet.create({
     marginBottom: spacing.xl,
     alignSelf: "center",
   },
-  
+
   fileAction: {
     marginTop: spacing.sm,
     paddingVertical: spacing.md,
@@ -213,8 +272,14 @@ export default StyleSheet.create({
     marginBottom: spacing.xl,
   },
   guestTitle: {
-    fontSize: (typography && typography.h2 && typography.h2.fontSize) || baseTypography.h2 || 24,
-    fontWeight: (typography && typography.h2 && typography.h2.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize:
+      (typography && typography.h2 && typography.h2.fontSize) ||
+      baseTypography.h2 ||
+      24,
+    fontWeight:
+      (typography && typography.h2 && typography.h2.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
   },
   guestText: {
     textAlign: "center",
@@ -230,6 +295,9 @@ export default StyleSheet.create({
   },
   guestButtonText: {
     color: "#fff",
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
   },
 });

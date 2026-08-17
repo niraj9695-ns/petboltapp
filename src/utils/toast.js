@@ -1,7 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Alert as RNAlert, StyleSheet, Text, TouchableOpacity, View, Animated } from "react-native";
+import {
+  Alert as RNAlert,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Animated,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
 
 let activeItems = [];
 let listeners = new Set();
@@ -124,16 +132,21 @@ function ToastCard({ item }) {
         end={{ x: 1, y: 1 }}
         style={styles.toastCard}
       >
-        <View style={[styles.iconWrap, { backgroundColor: tone.iconBg }]}> 
+        <View style={[styles.iconWrap, { backgroundColor: tone.iconBg }]}>
           <Ionicons name={tone.icon} size={20} color="#fff" />
         </View>
 
         <View style={styles.textWrap}>
           {item.title ? <Text style={styles.title}>{item.title}</Text> : null}
-          {item.message ? <Text style={styles.message}>{item.message}</Text> : null}
+          {item.message ? (
+            <Text style={styles.message}>{item.message}</Text>
+          ) : null}
         </View>
 
-        <TouchableOpacity onPress={() => removeToast(item.id)} style={styles.closeButton}>
+        <TouchableOpacity
+          onPress={() => removeToast(item.id)}
+          style={styles.closeButton}
+        >
           <Ionicons name="close" size={18} color="#fff" />
         </TouchableOpacity>
       </LinearGradient>
@@ -150,40 +163,46 @@ function ConfirmCard({ item }) {
         colors={["#ffffff", "#f8fafc"]}
         style={styles.confirmCard}
       >
-        <View style={[styles.iconWrap, { backgroundColor: tone.gradient[0] }]}> 
+        <View style={[styles.iconWrap, { backgroundColor: tone.gradient[0] }]}>
           <Ionicons name={tone.icon} size={20} color="#fff" />
         </View>
 
         <View style={styles.textWrap}>
           <Text style={styles.confirmTitle}>{item.title}</Text>
-          {item.message ? <Text style={styles.confirmMessage}>{item.message}</Text> : null}
+          {item.message ? (
+            <Text style={styles.confirmMessage}>{item.message}</Text>
+          ) : null}
         </View>
 
         <View style={styles.buttonRow}>
-          {item.buttons
-            .filter(Boolean)
-            .map((button, index) => {
-              const isCancel = button.style === "cancel" || button.text?.toLowerCase() === "cancel";
-              const isDestructive = button.style === "destructive" || button.text?.toLowerCase() === "delete";
-              return (
-                <TouchableOpacity
-                  key={`${button.text || "action"}-${index}`}
-                  style={[
-                    styles.actionButton,
-                    isCancel ? styles.cancelButton : styles.primaryButton,
-                    isDestructive ? styles.destructiveButton : null,
-                  ]}
-                  onPress={() => {
-                    removeToast(item.id);
-                    if (button.onPress) {
-                      button.onPress();
-                    }
-                  }}
-                >
-                  <Text style={isCancel ? styles.cancelText : styles.primaryText}>{button.text || "OK"}</Text>
-                </TouchableOpacity>
-              );
-            })}
+          {item.buttons.filter(Boolean).map((button, index) => {
+            const isCancel =
+              button.style === "cancel" ||
+              button.text?.toLowerCase() === "cancel";
+            const isDestructive =
+              button.style === "destructive" ||
+              button.text?.toLowerCase() === "delete";
+            return (
+              <TouchableOpacity
+                key={`${button.text || "action"}-${index}`}
+                style={[
+                  styles.actionButton,
+                  isCancel ? styles.cancelButton : styles.primaryButton,
+                  isDestructive ? styles.destructiveButton : null,
+                ]}
+                onPress={() => {
+                  removeToast(item.id);
+                  if (button.onPress) {
+                    button.onPress();
+                  }
+                }}
+              >
+                <Text style={isCancel ? styles.cancelText : styles.primaryText}>
+                  {button.text || "OK"}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </LinearGradient>
     </View>
@@ -198,19 +217,29 @@ export function ToastHost() {
     return unsubscribe;
   }, []);
 
+  const toastItems = items.filter((item) => item.kind !== "confirm");
+  const confirmItems = items.filter((item) => item.kind === "confirm");
+  const hasConfirm = confirmItems.length > 0;
   if (!items.length) {
     return null;
   }
 
   return (
-    <View pointerEvents="box-none" style={styles.host}>
-      {items.map((item) => {
-        if (item.kind === "confirm") {
-          return <ConfirmCard key={item.id} item={item} />;
-        }
+    <View style={styles.host} pointerEvents={hasConfirm ? "auto" : "box-none"}>
+      {items.length > 0 && (
+        <BlurView intensity={25} tint="dark" style={styles.blurOverlay} />
+      )}
+      {toastItems.length > 0 ? (
+        <View pointerEvents="box-none" style={styles.toastStack}>
+          {toastItems.map((item) => (
+            <ToastCard key={item.id} item={item} />
+          ))}
+        </View>
+      ) : null}
 
-        return <ToastCard key={item.id} item={item} />;
-      })}
+      {confirmItems.map((item) => (
+        <ConfirmCard key={item.id} item={item} />
+      ))}
     </View>
   );
 }
@@ -221,7 +250,9 @@ export function initializeToastAlertOverride() {
       const buttonList = Array.isArray(buttons) ? buttons : [];
       const hasConfirmButtons = buttonList.some((button) => {
         const label = button?.text?.toLowerCase?.() || "";
-        return button?.style === "cancel" || label === "cancel" || label === "delete";
+        return (
+          button?.style === "cancel" || label === "cancel" || label === "delete"
+        );
       });
 
       if (hasConfirmButtons && buttonList.length > 0) {
@@ -245,13 +276,18 @@ export function initializeToastAlertOverride() {
 
 const styles = StyleSheet.create({
   host: {
-    position: "absolute",
-    top: 56,
-    left: 0,
-    right: 0,
+    ...StyleSheet.absoluteFillObject,
     zIndex: 9999,
+  },
+  blurOverlay: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  toastStack: {
+    position: "absolute",
+    top: 54,
+    left: 16,
+    right: 16,
     alignItems: "center",
-    paddingHorizontal: 16,
     pointerEvents: "box-none",
   },
   toastCard: {
@@ -295,9 +331,13 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
   confirmContainer: {
-    width: "100%",
+    position: "absolute",
+    top: "50%",
+    left: 16,
+    right: 16,
+    transform: [{ translateY: -120 }],
     maxWidth: 520,
-    marginBottom: 12,
+    alignSelf: "center",
   },
   confirmCard: {
     borderRadius: 20,

@@ -105,7 +105,7 @@ export default function TermsOfUseScreen({ navigation }) {
         {/* 13 */}
         <Text style={termsStyles.heading}>13. Contact Us</Text>
         <Text style={termsStyles.text}>
-          Cherrytails {"\n"}
+          Cheery Tails {"\n"}
           Shop No. B4, Swami Darshan Complex, {"\n"}
           Near Shiv Mandir Road, {"\n"}
           Ambernath East, Maharashtra – 421501

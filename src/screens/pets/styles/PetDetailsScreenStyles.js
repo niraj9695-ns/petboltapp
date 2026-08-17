@@ -20,7 +20,7 @@ export default StyleSheet.create({
   detailsContainer: {
     flex: 1,
     backgroundColor: "#faf5ff",
-    padding: 15,
+    padding: 10,
   },
   topHeader: {
     flexDirection: "row",
@@ -28,20 +28,29 @@ export default StyleSheet.create({
     alignItems: "center",
     marginBottom: 15,
     paddingHorizontal: 5,
+    minHeight: 52,
   },
-
-  headerIconButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: "#f9f5ff",
-    justifyContent: "center",
+  headerSide: {
+    width: 84,
     alignItems: "center",
+    justifyContent: "center",
+  },
+  headerBackButton: {
+    alignSelf: "center",
+    backgroundColor: "#ffffff",
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: "#e9d5ff",
   },
 
+  headerIconButton: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
   headerTitle: {
+    flex: 1,
+    textAlign: "center",
     fontSize: 20,
     fontWeight: "700",
     color: "#6b21a8",
@@ -88,6 +97,7 @@ export default StyleSheet.create({
     fontWeight: "700",
     color: "#6b21a8",
     marginTop: 12,
+    textAlign: "center",
   },
   accordionHeader: {
     flexDirection: "row",

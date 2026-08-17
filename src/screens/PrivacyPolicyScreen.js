@@ -18,7 +18,7 @@ export default function PrivacyPolicyScreen({ navigation }) {
         {/* WHO WE ARE */}
         <Text style={policyStyles.heading}>Who we are</Text>
         <Text style={policyStyles.text}>
-          Our website address is: cherrytails.com.
+          Our website address is: cheerytails.com.
         </Text>
 
         {/* COMMENTS */}

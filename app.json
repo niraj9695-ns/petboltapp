@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "PetBoardingApp",
-    "slug": "PetBoardingApp",
+    "name": "Cheery Tails",
+    "slug": "cheery-tails",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
@@ -21,7 +21,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.shreyasbobade27.PetBoardingApp"
+      "package": "com.cheerytails.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -19,7 +19,12 @@ import createPhaseTwoFormStyles from "../styles/PhaseTwoFormStyles";
 import { useTheme } from "../../../context/ThemeContext";
 import FormLabel from "./FormLabel";
 
-export default function PhaseTwoForm({ petData, setPetData, fieldErrors = {} }) {
+export default function PhaseTwoForm({
+  petData,
+  setPetData,
+  fieldErrors = {},
+  fieldPositions,
+}) {
   const [showDewormingPicker, setShowDewormingPicker] = useState(false);
 
   const [showFleaTickPicker, setShowFleaTickPicker] = useState(false);
@@ -156,24 +161,41 @@ export default function PhaseTwoForm({ petData, setPetData, fieldErrors = {} }) 
         }
       />
 
-      <FormLabel
-        title="Vaccination Certificate"
-        required
-        error={fieldErrors.vaccination_certificate}
-      />
-
-      <TouchableOpacity
-        style={[
-          phaseTwoFormStyles.dateInput,
-          fieldErrors.vaccination_certificate && phaseTwoFormStyles.inputError,
-        ]}
-        onPress={pickVaccinationCertificate}
+      <View
+        onLayout={(e) => {
+          fieldPositions.current.vaccination_certificate =
+            e.nativeEvent.layout.y;
+        }}
       >
-        <Text style={phaseTwoFormStyles.dateInputText} numberOfLines={1}>
-          {getVaccinationCertificateLabel(petData.vaccination_certificate)}
-        </Text>
-        <Ionicons name="cloud-upload-outline" size={18} color="#6b21a8" />
-      </TouchableOpacity>
+        <FormLabel
+          title="Vaccination Certificate"
+          required
+          error={fieldErrors.vaccination_certificate}
+        />
+        <TouchableOpacity
+          style={[
+            phaseTwoFormStyles.dateInput,
+            fieldErrors.vaccination_certificate &&
+              phaseTwoFormStyles.inputError,
+          ]}
+          onPress={pickVaccinationCertificate}
+        >
+          <Text
+            style={[
+              phaseTwoFormStyles.dateInputText,
+              {
+                color: petData.vaccination_certificate
+                  ? theme.textPrimary
+                  : theme.textSecondary,
+              },
+            ]}
+            numberOfLines={1}
+          >
+            {getVaccinationCertificateLabel(petData.vaccination_certificate)}
+          </Text>
+          <Ionicons name="cloud-upload-outline" size={18} color="#6b21a8" />
+        </TouchableOpacity>
+      </View>
 
       {/* DEWORMING DATE */}
 
@@ -183,7 +205,16 @@ export default function PhaseTwoForm({ petData, setPetData, fieldErrors = {} }) 
         style={phaseTwoFormStyles.dateInput}
         onPress={() => setShowDewormingPicker(true)}
       >
-        <Text style={phaseTwoFormStyles.dateInputText}>
+        <Text
+          style={[
+            phaseTwoFormStyles.dateInputText,
+            {
+              color: petData.deworming_date
+                ? theme.textPrimary
+                : theme.textSecondary,
+            },
+          ]}
+        >
           {petData.deworming_date || "Select Deworming Date"}
         </Text>
         <Ionicons name="calendar-outline" size={18} color="#6b21a8" />
@@ -214,7 +245,16 @@ export default function PhaseTwoForm({ petData, setPetData, fieldErrors = {} }) 
         style={phaseTwoFormStyles.dateInput}
         onPress={() => setShowFleaTickPicker(true)}
       >
-        <Text style={phaseTwoFormStyles.dateInputText}>
+        <Text
+          style={[
+            phaseTwoFormStyles.dateInputText,
+            {
+              color: petData.flea_tick_treatment_date
+                ? theme.textPrimary
+                : theme.textSecondary,
+            },
+          ]}
+        >
           {petData.flea_tick_treatment_date ||
             "Select Flea Tick Treatment Date"}
         </Text>

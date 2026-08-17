@@ -38,19 +38,36 @@ export default function PetCard({
       <Image source={{ uri: image }} style={petCardStyles.petImage} />
 
       <View style={petCardStyles.rightSection}>
-        <Text style={petCardStyles.petName}>{item.pet_name}</Text>
+        <View style={petCardStyles.topRow}>
+          <View style={petCardStyles.petInfo}>
+            <Text style={petCardStyles.petName} numberOfLines={1}>
+              {item.pet_name?.length > 12
+                ? `${item.pet_name.substring(0, 12)}...`
+                : item.pet_name}
+            </Text>
+            {item.breed?.length > 16 ? (
+              <>
+                <Text style={petCardStyles.petType}>{item.pet_type}</Text>
 
-        <View style={petCardStyles.iconRow}>
-          <TouchableOpacity onPress={() => onEdit(item)}>
-            <Ionicons name="create-outline" size={24} color="#6b21a8" />
-          </TouchableOpacity>
+                <Text style={petCardStyles.petBreed}>{item.breed}</Text>
+              </>
+            ) : (
+              <Text style={petCardStyles.petType} numberOfLines={1}>
+                {item.pet_type} • {item.breed}
+              </Text>
+            )}
+          </View>
+          <View style={petCardStyles.iconRow}>
+            <TouchableOpacity onPress={() => onEdit(item)}>
+              <Ionicons name="create-outline" size={22} color="#6b21a8" />
+            </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => onDelete(petId)}>
-            <Ionicons name="trash-outline" size={24} color="#ef4444" />
-          </TouchableOpacity>
+            <TouchableOpacity onPress={() => onDelete(petId)}>
+              <Ionicons name="trash-outline" size={22} color="#ef4444" />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
   );
 }
-

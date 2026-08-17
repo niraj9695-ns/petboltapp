@@ -1,13 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useRef } from "react";
 
-import {
-  Modal,
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { Modal, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import PremiumLoader from "../../../components/PremiumLoader";
 
 import createPetFormModalStyles from "../styles/PetFormModalStyles";
@@ -38,6 +31,9 @@ export default function PetFormModal({
   onSubmit,
 }) {
   const [fieldErrors, setFieldErrors] = useState({});
+
+  const scrollViewRef = useRef(null);
+  const fieldPositions = useRef({});
   const { theme } = useTheme();
   const petFormModalStyles = createPetFormModalStyles(theme);
 
@@ -64,16 +60,15 @@ export default function PetFormModal({
     });
 
     setFieldErrors(missing);
-
     if (Object.keys(missing).length > 0) {
-      const labels = currentRequiredFields
-        .filter((field) => missing[field])
-        .map((field) => field.replace(/_/g, " "));
+      const firstErrorField = Object.keys(missing)[0];
 
-      Alert.alert(
-        "Required fields missing",
-        `Please complete: ${labels.join(", ")}`,
-      );
+      scrollViewRef.current?.scrollTo({
+        y: fieldPositions.current[firstErrorField] || 0,
+        animated: true,
+      });
+    }
+    if (Object.keys(missing).length > 0) {
       return false;
     }
 
@@ -94,6 +89,7 @@ export default function PetFormModal({
     <Modal visible={visible} animationType="slide" transparent>
       <View style={petFormModalStyles.modalContainer}>
         <ScrollView
+          ref={scrollViewRef}
           style={petFormModalStyles.modalContent}
           showsVerticalScrollIndicator={false}
         >
@@ -119,6 +115,7 @@ export default function PetFormModal({
               removeImage={removeImage}
               profileImageIndex={profileImageIndex}
               setProfileImageIndex={setProfileImageIndex}
+              fieldPositions={fieldPositions}
             />
           )}
 
@@ -127,6 +124,7 @@ export default function PetFormModal({
               petData={petData}
               setPetData={setPetData}
               fieldErrors={fieldErrors}
+              fieldPositions={fieldPositions}
             />
           )}
 
@@ -135,6 +133,7 @@ export default function PetFormModal({
               petData={petData}
               setPetData={setPetData}
               fieldErrors={fieldErrors}
+              fieldPositions={fieldPositions}
             />
           )}
 

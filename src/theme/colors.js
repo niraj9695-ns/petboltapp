@@ -16,7 +16,7 @@ export const lightColors = {
   textSecondary: "#6B7280",
   border: "#E5E7EB",
   inputBackground: "#FFFFFF",
-  placeholder: "#9CA3AF",
+  placeholder: "#6B7280",
   primary: appColors.purple,
   primaryDark: appColors.purpleDark,
   muted: "#F3F4F6",

@@ -39,7 +39,7 @@ export default function CreateCenterScreen() {
   const [pickerConfig, setPickerConfig] = useState(null);
   const [errors, setErrors] = useState({});
   const [petPriceDraft, setPetPriceDraft] = useState({
-    petType: "dog",
+    petType: "",
     amount: "",
   });
   const [expandedSections, setExpandedSections] = useState({
@@ -173,10 +173,18 @@ export default function CreateCenterScreen() {
     if (!form.supervision_level) {
       newErrors.supervision_level = "Supervision level is required";
     }
-    if (!form.daily_capacity || Number.isNaN(dailyCapacity) || dailyCapacity <= 0) {
+    if (
+      !form.daily_capacity ||
+      Number.isNaN(dailyCapacity) ||
+      dailyCapacity <= 0
+    ) {
       newErrors.daily_capacity = "Daily capacity is required";
     }
-    if (!form.total_capacity || Number.isNaN(totalCapacity) || totalCapacity <= 0) {
+    if (
+      !form.total_capacity ||
+      Number.isNaN(totalCapacity) ||
+      totalCapacity <= 0
+    ) {
       newErrors.total_capacity = "Total capacity is required";
     }
 
@@ -279,9 +287,13 @@ export default function CreateCenterScreen() {
 
   const pickImages = async () => {
     try {
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permissionResult.granted) {
-        Alert.alert("Permission needed", "Please allow access to your photos to add images.");
+        Alert.alert(
+          "Permission needed",
+          "Please allow access to your photos to add images.",
+        );
         return;
       }
 
@@ -349,13 +361,19 @@ export default function CreateCenterScreen() {
         payload.amenities = normalizeListValue(payload.amenities);
       }
       if (typeof payload.accepted_pet_types === "string") {
-        payload.accepted_pet_types = normalizeListValue(payload.accepted_pet_types);
+        payload.accepted_pet_types = normalizeListValue(
+          payload.accepted_pet_types,
+        );
       }
       if (typeof payload.required_vaccines === "string") {
-        payload.required_vaccines = normalizeListValue(payload.required_vaccines);
+        payload.required_vaccines = normalizeListValue(
+          payload.required_vaccines,
+        );
       }
       if (typeof payload.boarding_services === "string") {
-        payload.boarding_services = normalizeListValue(payload.boarding_services);
+        payload.boarding_services = normalizeListValue(
+          payload.boarding_services,
+        );
       }
       if (typeof payload.prices === "string" && payload.prices.trim()) {
         try {
@@ -408,7 +426,7 @@ export default function CreateCenterScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["left","right","bottom"]}>
+    <SafeAreaView style={styles.container} edges={["left", "right", "bottom"]}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -491,6 +509,7 @@ export default function CreateCenterScreen() {
                 value={form.center_type}
                 onValueChange={(v) => updateField("center_type", v)}
                 options={[
+                  { label: "Select center type", value: "" },
                   { label: "Both", value: "both" },
                   { label: "Boarding", value: "boarding" },
                   { label: "Daycare", value: "daycare" },
@@ -706,7 +725,9 @@ export default function CreateCenterScreen() {
                 </Text>
                 <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
                   {PET_TYPES.map((petType) => {
-                    const selected = normalizeListValue(form.accepted_pet_types).includes(petType);
+                    const selected = normalizeListValue(
+                      form.accepted_pet_types,
+                    ).includes(petType);
                     return (
                       <TouchableOpacity
                         key={petType}
@@ -729,21 +750,29 @@ export default function CreateCenterScreen() {
                   })}
                 </View>
                 {errors.accepted_pet_types ? (
-                  <Text style={styles.errorText}>{errors.accepted_pet_types}</Text>
+                  <Text style={styles.errorText}>
+                    {errors.accepted_pet_types}
+                  </Text>
                 ) : null}
               </View>
               <View style={styles.fieldContainer}>
                 <Text style={styles.label}>Size / Weight Restrictions</Text>
-                <Text style={styles.helperText}>Example: Small, Medium, Large</Text>
+                <Text style={styles.helperText}>
+                  Example: Small, Medium, Large
+                </Text>
                 <FloatingInput
                   label=""
                   value={form.size_weight_restrictions}
-                  onChangeText={(v) => updateField("size_weight_restrictions", v)}
+                  onChangeText={(v) =>
+                    updateField("size_weight_restrictions", v)
+                  }
                 />
               </View>
               <View style={styles.fieldContainer}>
                 <Text style={styles.label}>Age Preferences</Text>
-                <Text style={styles.helperText}>Example: Puppies, Adults, Seniors</Text>
+                <Text style={styles.helperText}>
+                  Example: Puppies, Adults, Seniors
+                </Text>
                 <FloatingInput
                   label=""
                   value={form.age_preferences}
@@ -752,7 +781,9 @@ export default function CreateCenterScreen() {
               </View>
               <View style={styles.fieldContainer}>
                 <Text style={styles.label}>Required Vaccines</Text>
-                <Text style={styles.helperText}>Example: Rabies, Distemper</Text>
+                <Text style={styles.helperText}>
+                  Example: Rabies, Distemper
+                </Text>
                 <FloatingInput
                   label=""
                   value={form.required_vaccines}
@@ -761,7 +792,9 @@ export default function CreateCenterScreen() {
               </View>
               <View style={styles.fieldContainer}>
                 <Text style={styles.label}>Boarding Services</Text>
-                <Text style={styles.helperText}>Example: Daycare, Overnight</Text>
+                <Text style={styles.helperText}>
+                  Example: Daycare, Overnight
+                </Text>
                 <FloatingInput
                   label=""
                   value={form.boarding_services}
@@ -843,11 +876,18 @@ export default function CreateCenterScreen() {
             disabled={loading}
           >
             <LinearGradient
-              colors={[boardingOwnerTheme.primary, boardingOwnerTheme.secondary]}
+              colors={[
+                boardingOwnerTheme.primary,
+                boardingOwnerTheme.secondary,
+              ]}
               style={[styles.submitButton, loading && { opacity: 0.85 }]}
             >
               {loading ? (
-                <PremiumLoader size={24} color={boardingOwnerTheme.surface} showLabel={false} />
+                <PremiumLoader
+                  size={24}
+                  color={boardingOwnerTheme.surface}
+                  showLabel={false}
+                />
               ) : (
                 <Text style={styles.submitButtonText}>Create Center</Text>
               )}
@@ -926,7 +966,14 @@ const Input = ({
   </View>
 );
 
-const DatePickerField = ({ label, value, onPress, placeholder, error, theme = boardingOwnerTheme }) => (
+const DatePickerField = ({
+  label,
+  value,
+  onPress,
+  placeholder,
+  error,
+  theme = boardingOwnerTheme,
+}) => (
   <View style={styles.fieldContainer}>
     <Text style={styles.label}>{label}</Text>
     <TouchableOpacity
@@ -946,54 +993,77 @@ const DatePickerField = ({ label, value, onPress, placeholder, error, theme = bo
   </View>
 );
 
-const SelectField = ({ label, value, onValueChange, options, error, helperText, theme = boardingOwnerTheme }) => (
+const SelectField = ({
+  label,
+  value,
+  onValueChange,
+  options,
+  error,
+  helperText,
+}) => (
   <View style={styles.fieldContainer}>
     <Text style={styles.label}>{label}</Text>
+
     {helperText ? <Text style={styles.helperText}>{helperText}</Text> : null}
+
     <View style={[styles.selectBox, error ? styles.selectBoxError : null]}>
       <Picker
         selectedValue={value}
         onValueChange={onValueChange}
-        style={[styles.picker, { color: theme.textPrimary }]}
-        dropdownIconColor={theme.primary}
+        style={[
+          styles.picker,
+          {
+            color: value ? "#111827" : "#6B7280",
+          },
+        ]}
       >
         {options.map((option) => (
           <Picker.Item
             key={option.value || "placeholder"}
             label={option.label}
             value={option.value}
+            color={option.value ? "#111827" : "#6B7280"}
+            style={{ fontSize: 12 }}
           />
         ))}
       </Picker>
     </View>
+
     {error ? <Text style={styles.errorText}>{error}</Text> : null}
   </View>
 );
 
-const PetPriceEditor = ({ value, onChange, onAdd, prices, onRemove, error, theme = boardingOwnerTheme }) => (
+const PetPriceEditor = ({
+  value,
+  onChange,
+  onAdd,
+  prices,
+  onRemove,
+  error,
+  theme = boardingOwnerTheme,
+}) => (
   <View style={styles.fieldContainer}>
     <Text style={styles.label}>Pet Prices</Text>
     <View style={styles.selectBox}>
       <Picker
         selectedValue={value.petType}
         onValueChange={(petType) => onChange({ ...value, petType })}
-        style={[styles.picker, { color: theme.textPrimary }]}
-        dropdownIconColor={theme.primary}
+        style={[
+          styles.picker,
+          {
+            color: value.petType ? "#111827" : "#6B7280",
+            
+          },
+        ]}
       >
-        {[
-          { label: "Dog", value: "dog" },
-          { label: "Cat", value: "cat" },
-          { label: "Bird", value: "bird" },
-          { label: "Rabbit", value: "rabbit" },
-          { label: "Turtle", value: "turtle" },
-          { label: "Others", value: "others" },
-        ].map((option) => (
-          <Picker.Item
-            key={option.value}
-            label={option.label}
-            value={option.value}
-          />
-        ))}
+        <Picker.Item label="Select Pet Type" value="" color="#6B7280" style={{ fontSize: 12 }} />
+
+        <Picker.Item label="Dog" value="dog" color="#111827" style={{ fontSize: 12 }} />
+        <Picker.Item label="Cat" value="cat" color="#111827" style={{ fontSize: 12 }} />
+        <Picker.Item label="Bird" value="bird" color="#111827" style={{ fontSize: 12 }} />
+        <Picker.Item label="Rabbit" value="rabbit" color="#111827" style={{ fontSize: 12 }} />
+        <Picker.Item label="Turtle" value="turtle" color="#111827" style={{ fontSize: 12 }} />
+        <Picker.Item label="Others" value="others" color="#111827" style={{ fontSize: 12 }} />
       </Picker>
     </View>
     <TextInput

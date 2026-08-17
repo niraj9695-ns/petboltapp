@@ -25,7 +25,7 @@ export default StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "700",
-    color: COLORS.text,
+    color: COLORS.primary,
   },
   subtitle: {
     marginTop: 2,

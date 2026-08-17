@@ -2,13 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import BottomTabs from "./BottomTabs";
 
-import {
-  View,
-  Image,
-  Pressable,
-  Text,
-  Alert,
-} from "react-native";
+import { View, Image, Pressable, Text, Alert } from "react-native";
 
 import PremiumLoader from "../components/PremiumLoader";
 import { Ionicons } from "@expo/vector-icons";
@@ -227,10 +221,7 @@ function CustomDrawerContent({ navigation }) {
           <PremiumLoader size={24} color="#6b21a8" showLabel={false} />
         </View>
       ) : guestRole ? (
-        <Pressable
-          style={[drawerStyles.item, { marginTop: 20 }]}
-          onPress={handleSignIn}
-        >
+        <Pressable style={[drawerStyles.item]} onPress={handleSignIn}>
           <Ionicons name="log-in-outline" size={22} color="#6b21a8" />
 
           <Text style={[drawerStyles.text, { color: "#6b21a8" }]}>
@@ -238,10 +229,7 @@ function CustomDrawerContent({ navigation }) {
           </Text>
         </Pressable>
       ) : role ? (
-        <Pressable
-          style={[drawerStyles.item, { marginTop: 20 }]}
-          onPress={handleLogout}
-        >
+        <Pressable style={[drawerStyles.item]} onPress={handleLogout}>
           <Ionicons name="log-out-outline" size={22} color="red" />
 
           <Text style={[drawerStyles.text, { color: "red" }]}>Logout</Text>

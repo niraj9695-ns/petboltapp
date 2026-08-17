@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PremiumLoader from "../../../components/PremiumLoader";
+import BackButton from "../../../components/BackButton";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import petDetailsScreenStyles from "../styles/PetDetailsScreenStyles";
@@ -279,12 +280,11 @@ export default function PetDetailsScreen({ route, navigation }) {
         showsVerticalScrollIndicator={false}
       >
         <View style={petDetailsScreenStyles.topHeader}>
-          <TouchableOpacity
-            style={petDetailsScreenStyles.headerIconButton}
+          <BackButton
+            label="← Back"
             onPress={() => navigation.goBack()}
-          >
-            <Ionicons name="arrow-back" size={24} color="#6b21a8" />
-          </TouchableOpacity>
+            style={petDetailsScreenStyles.headerBackButton}
+          />
 
           <Text style={petDetailsScreenStyles.headerTitle}>Pet Profile</Text>
 

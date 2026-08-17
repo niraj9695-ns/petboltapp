@@ -13,6 +13,7 @@ export default function PhaseThreeForm({
   petData,
   setPetData,
   fieldErrors = {},
+  fieldPositions,
 }) {
   const { theme } = useTheme();
   const phaseThreeFormStyles = createPhaseThreeFormStyles(theme);
@@ -122,35 +123,55 @@ export default function PhaseThreeForm({
 
       {/* FOOD TYPE */}
 
-      <FormLabel title="Food Type" required error={fieldErrors.food_type} />
+      {/* FOOD TYPE */}
 
       <View
-        style={[
-          phaseThreeFormStyles.pickerWrapper,
-          fieldErrors.food_type && phaseThreeFormStyles.inputError,
-        ]}
+        onLayout={(e) => {
+          fieldPositions.current.food_type = e.nativeEvent.layout.y;
+        }}
       >
-        <Picker
-          selectedValue={petData.food_type}
-          style={{ color: theme.textPrimary }}
-          dropdownIconColor={theme.primary}
-          onValueChange={(value) =>
-            setPetData({
-              ...petData,
-              food_type: value,
-            })
-          }
+        <FormLabel title="Food Type" required error={fieldErrors.food_type} />
+
+        <View
+          style={[
+            phaseThreeFormStyles.pickerWrapper,
+            fieldErrors.food_type && phaseThreeFormStyles.inputError,
+          ]}
         >
-          <Picker.Item label="Select Food Type" value="" />
+          <Picker
+            selectedValue={petData.food_type}
+            style={{
+              color: petData.food_type
+                ? theme.textPrimary
+                : theme.textSecondary,
+            }}
+            dropdownIconColor={theme.primary}
+            onValueChange={(value) =>
+              setPetData({
+                ...petData,
+                food_type: value,
+              })
+            }
+          >
+            <Picker.Item
+              label="Select Food Type"
+              value=""
+              color={theme.textSecondary}
+            />
 
-          <Picker.Item label="Veg" value="veg" />
+            <Picker.Item label="Veg" value="veg" color={theme.textPrimary} />
 
-          <Picker.Item label="Non Veg" value="non_veg" />
+            <Picker.Item
+              label="Non Veg"
+              value="non_veg"
+              color={theme.textPrimary}
+            />
 
-          <Picker.Item label="Both" value="both" />
-        </Picker>
+            <Picker.Item label="Both" value="both" color={theme.textPrimary} />
+          </Picker>
+        </View>
       </View>
-
+      
       <TextInput
         placeholder="Food Brand"
         placeholderTextColor={theme.placeholder}
@@ -191,7 +212,9 @@ export default function PhaseThreeForm({
       />
 
       <View style={phaseThreeFormStyles.switchContainer}>
-        <Text style={phaseThreeFormStyles.switchLabel}>Friendly With Humans</Text>
+        <Text style={phaseThreeFormStyles.switchLabel}>
+          Friendly With Humans
+        </Text>
 
         <Switch
           value={petData.friendly_with_humans}
@@ -219,7 +242,9 @@ export default function PhaseThreeForm({
       </View>
 
       <View style={phaseThreeFormStyles.switchContainer}>
-        <Text style={phaseThreeFormStyles.switchLabel}>Aggressive Behavior</Text>
+        <Text style={phaseThreeFormStyles.switchLabel}>
+          Aggressive Behavior
+        </Text>
 
         <Switch
           value={petData.aggressive_behavior}
@@ -277,4 +302,3 @@ export default function PhaseThreeForm({
     </View>
   );
 }
-

@@ -94,7 +94,7 @@ export default StyleSheet.create({
     marginBottom: 14,
   },
   label: {
-    fontSize: typography.caption.fontSize,
+    fontSize: typography.small.fontSize,
     color: COLORS.textMuted,
     marginBottom: 6,
     fontWeight: "600",

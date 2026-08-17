@@ -307,12 +307,17 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
 
     // Age and Date Of Birth are optional fields.
 
-    if (
-      petData.vaccination_certificate === undefined ||
-      petData.vaccination_certificate === null ||
+    const hasValidCertificate =
       (typeof petData.vaccination_certificate === "string" &&
-        !petData.vaccination_certificate.trim())
-    ) {
+        petData.vaccination_certificate.trim().length > 0) ||
+      (typeof petData.vaccination_certificate === "object" &&
+        petData.vaccination_certificate !== null &&
+        (petData.vaccination_certificate.uri ||
+          petData.vaccination_certificate.path ||
+          petData.vaccination_certificate.name ||
+          petData.vaccination_certificate.type));
+
+    if (!hasValidCertificate) {
       Alert.alert("Validation", "Vaccination Certificate is required");
       return false;
     }

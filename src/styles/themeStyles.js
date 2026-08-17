@@ -65,7 +65,7 @@ export const homeStyles = StyleSheet.create({
 export const drawerStyles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: spacing.xxl,
+    paddingTop: 50,
     backgroundColor: palette.background,
   },
   item: {

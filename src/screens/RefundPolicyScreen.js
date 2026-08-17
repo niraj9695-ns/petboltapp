@@ -15,7 +15,7 @@ export default function RefundPolicyScreen({ navigation }) {
         {/* Title */}
         <Text style={refundStyles.title}>Refund & Exchange Policy</Text>
         <Text style={refundStyles.updated}>
-          At CherryTails, we’re committed to providing high-quality products and
+          At CheeryTails, we’re committed to providing high-quality products and
           a smooth shopping experience.
         </Text>
 
@@ -45,7 +45,7 @@ export default function RefundPolicyScreen({ navigation }) {
         {/* HOW TO REQUEST */}
         <Text style={refundStyles.heading}>📦 How to Request an Exchange</Text>
         <Text style={refundStyles.text}>
-          Email us at cherrytails19@gmail.com with your order number and issue
+          Email us at cheerytails2022@gmail.com with your order number and issue
           details. Attach images of the product if damaged or incorrect. Our
           team will guide you through the process.
         </Text>

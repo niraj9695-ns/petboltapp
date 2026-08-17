@@ -29,22 +29,35 @@ export default StyleSheet.create({
   },
 
   backButtonText: {
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
-    fontWeight: (typography && typography.smallMedium && typography.smallMedium.fontWeight) || baseTypography.weights.medium || "500",
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
+    fontWeight:
+      (typography &&
+        typography.smallMedium &&
+        typography.smallMedium.fontWeight) ||
+      baseTypography.weights.medium ||
+      "500",
     color: "#6b21a8",
   },
 
   editTitle: {
     flex: 1,
     textAlign: "center",
-    fontSize: (typography && typography.h4 && typography.h4.fontSize) || baseTypography.h4 || 18,
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize:
+      (typography && typography.h4 && typography.h4.fontSize) ||
+      baseTypography.h4 ||
+      18,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
     color: "#1f2937",
     marginRight: 45,
   },
 
   container: {
-    marginVertical: 15,
     borderRadius: 20,
     padding: 20,
     alignItems: "center",
@@ -69,8 +82,14 @@ export default StyleSheet.create({
   },
 
   formLabel: {
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
-    fontWeight: (typography && typography.caption && typography.caption.fontWeight) || baseTypography.weights.semibold || "600",
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
+    fontWeight:
+      (typography && typography.caption && typography.caption.fontWeight) ||
+      baseTypography.weights.semibold ||
+      "600",
     color: "#6B7280",
     marginBottom: 6,
     marginTop: 12,
@@ -84,7 +103,10 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E5E7EB",
     paddingHorizontal: 16,
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
     color: "#111827",
   },
 
@@ -106,8 +128,14 @@ export default StyleSheet.create({
 
   fileButtonText: {
     color: "#4338CA",
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
   },
 
   fileName: {
@@ -140,18 +168,30 @@ export default StyleSheet.create({
   },
 
   documentIcon: {
-    fontSize: (typography && typography.h3 && typography.h3.fontSize) || baseTypography.h3 || 20,
+    fontSize:
+      (typography && typography.h3 && typography.h3.fontSize) ||
+      baseTypography.h3 ||
+      20,
     marginRight: 12,
   },
 
   documentTitle: {
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
     color: "#111827",
   },
 
   documentSubTitle: {
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     color: "#6B7280",
     marginTop: 2,
   },
@@ -166,8 +206,14 @@ export default StyleSheet.create({
 
   viewDocumentText: {
     color: "#FFFFFF",
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
   },
 
   buttonContainer: {
@@ -191,8 +237,14 @@ export default StyleSheet.create({
 
   primaryBtnText: {
     color: "#FFFFFF",
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
   },
 
   secondaryBtn: {
@@ -207,8 +259,14 @@ export default StyleSheet.create({
 
   secondaryBtnText: {
     color: "#6b21a8",
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
   },
 
   cancelBtn: {
