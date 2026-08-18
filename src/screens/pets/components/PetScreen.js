@@ -819,7 +819,8 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
         columnWrapperStyle={
           numColumns > 1
             ? {
-                justifyContent: "space-between",
+                justifyContent: "flex-start",
+                gap: 12,
                 marginBottom: 12,
               }
             : undefined

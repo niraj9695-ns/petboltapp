@@ -290,7 +290,7 @@ export default function BookingStatus() {
       style={[
         styles.bookingStatusContainer,
         {
-          alignSelf: "center",
+          width: "100%",
         },
       ]}
     >
