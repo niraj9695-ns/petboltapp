@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, ScrollView } from "react-native";
+import { Text, ScrollView, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import policyStyles from "../styles/PrivacyPolicyScreenStyles";
 import BackButton from "../components/BackButton";
@@ -11,10 +11,16 @@ export default function PrivacyPolicyScreen({ navigation }) {
         colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
         style={policyStyles.container}
       >
-        <BackButton onPress={() => navigation.goBack()} />
-        <Text style={policyStyles.title}>Privacy Policy</Text>
-        <Text style={policyStyles.updated}>Last updated: April 2026</Text>
+        <View style={policyStyles.pageHeader}>
+          <View style={policyStyles.backButtonWrap}>
+            <BackButton onPress={() => navigation.goBack()} />
+          </View>
 
+          <View style={policyStyles.headerText}>
+            <Text style={policyStyles.title}>Privacy Policy</Text>
+            <Text style={policyStyles.updated}>Last updated: April 2026</Text>
+          </View>
+        </View>
         {/* WHO WE ARE */}
         <Text style={policyStyles.heading}>Who we are</Text>
         <Text style={policyStyles.text}>
@@ -58,7 +64,9 @@ export default function PrivacyPolicyScreen({ navigation }) {
         </Text>
 
         {/* EMBEDDED CONTENT */}
-        <Text style={policyStyles.heading}>Embedded content from other websites</Text>
+        <Text style={policyStyles.heading}>
+          Embedded content from other websites
+        </Text>
         <Text style={policyStyles.text}>
           Articles on this site may include embedded content (videos, images,
           etc.). These behave as if you visited the other website directly and
@@ -81,7 +89,9 @@ export default function PrivacyPolicyScreen({ navigation }) {
         </Text>
 
         {/* RIGHTS */}
-        <Text style={policyStyles.heading}>What rights you have over your data</Text>
+        <Text style={policyStyles.heading}>
+          What rights you have over your data
+        </Text>
         <Text style={policyStyles.text}>
           You can request an exported file of your personal data or request
           deletion of your data, except for data required for legal or security
@@ -98,4 +108,3 @@ export default function PrivacyPolicyScreen({ navigation }) {
     </ScrollView>
   );
 }
-

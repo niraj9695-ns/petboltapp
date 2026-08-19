@@ -63,6 +63,20 @@ export default StyleSheet.create({
     height: 140,
   },
 
+  backButtonOverlay: {
+    position: "absolute",
+    top: spacing.md,
+    left: spacing.md,
+    zIndex: 10,
+    elevation: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.92)",
+    borderRadius: radius.round,
+    shadowColor: "#0f172a",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+  },
+
   sliderCountBadge: {
     position: "absolute",
     top: spacing.md,

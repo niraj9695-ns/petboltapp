@@ -13,7 +13,7 @@ export default StyleSheet.create({
   },
 
   bookingScreenContent: {
-    padding: spacing.lg,
+    padding: spacing.md,
     paddingBottom: spacing.xxxl,
   },
 
@@ -26,21 +26,43 @@ export default StyleSheet.create({
     ...shadows.sm,
   },
 
+  bookingScreenHeaderCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+
+  bookingScreenBackButton: {
+    width: 100,
+    alignItems: "flex-start",
+  },
+
   bookingScreenCenterName: {
-    fontSize: (typography && typography.h1 && typography.h1.fontSize) || 34,
+    flex: 1,
+    textAlign: "center",
+    fontSize: (typography && typography.h2 && typography.h2.fontSize) || 34,
     fontWeight: "700",
     color: colors.text,
+  },
+
+  bookingScreenHeaderSpacer: {
+    width: 80,
   },
 
   bookingScreenPrice: {
     marginTop: spacing.xs,
     color: colors.primary,
     fontWeight: "700",
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
   },
 
   bookingScreenHeading: {
-    fontSize: (typography && typography.cardTitle && typography.cardTitle.fontSize) || 18,
+    fontSize:
+      (typography && typography.cardTitle && typography.cardTitle.fontSize) ||
+      18,
     fontWeight: "700",
     marginBottom: spacing.md,
     color: colors.text,
@@ -81,13 +103,19 @@ export default StyleSheet.create({
   },
 
   bookingScreenDateLabel: {
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
     color: colors.textMuted,
     marginBottom: spacing.xs,
   },
 
   bookingScreenDateValue: {
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
     fontWeight: "700",
     color: colors.text,
   },
@@ -117,7 +145,10 @@ export default StyleSheet.create({
 
   bookingScreenMarkerText: {
     color: colors.textMuted,
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
   },
 
   warningText: {
@@ -154,7 +185,10 @@ export default StyleSheet.create({
   bookingScreenBtnText: {
     color: colors.surface,
     fontWeight: "700",
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
   },
 
   availableInfoContainer: {

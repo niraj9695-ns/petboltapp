@@ -116,7 +116,6 @@ export default function BoardingDetailsScreen({ route, navigation }) {
 
   return (
     <ScrollView style={styles.wrapper} showsVerticalScrollIndicator={false}>
-      <BackButton fallbackRoute={"Booking"} />
       {/* IMAGE SLIDER */}
 
       {photoList.length > 0 ? (
@@ -154,6 +153,10 @@ export default function BoardingDetailsScreen({ route, navigation }) {
               </View>
             ))}
           </ScrollView>
+
+          <View style={styles.backButtonOverlay}>
+            <BackButton fallbackRoute="Booking" />
+          </View>
 
           <View style={styles.sliderCountBadge}>
             <Text style={styles.sliderCountText}>
@@ -294,7 +297,7 @@ export default function BoardingDetailsScreen({ route, navigation }) {
 
                 {center.size_weight_restrictions &&
                   center.size_weight_restrictions.length > 0 && (
-                    <View style={[styles.infoRow, { marginTop: 14 }]}> 
+                    <View style={[styles.infoRow, { marginTop: 14 }]}>
                       <Text style={styles.label}>Size/Weight Restrictions</Text>
                       <Text style={styles.infoText}>
                         {center.size_weight_restrictions.join(", ")} kg
@@ -304,7 +307,7 @@ export default function BoardingDetailsScreen({ route, navigation }) {
 
                 {center.age_preferences &&
                   center.age_preferences.length > 0 && (
-                    <View style={[styles.infoRow, { marginTop: 14 }]}> 
+                    <View style={[styles.infoRow, { marginTop: 14 }]}>
                       <Text style={styles.label}>Age Preference</Text>
                       <Text style={styles.infoText}>
                         {center.age_preferences.join(", ")} years

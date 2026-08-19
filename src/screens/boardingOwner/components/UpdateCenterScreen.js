@@ -520,12 +520,12 @@ export default function UpdateCenterScreen() {
             <BackButton style={styles.headerBackButton} />
 
             <View style={styles.headerContent}>
-              <Text style={styles.title}>
-                {center?.center_name || "Update Center"}
+              <Text style={styles.title} numberOfLines={1}>
+                {center?.center_name || "Center Details"}
               </Text>
 
               <Text style={styles.subtitle}>
-                Update your boarding center information
+                View boarding center information
               </Text>
             </View>
           </View>

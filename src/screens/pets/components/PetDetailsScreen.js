@@ -42,7 +42,7 @@ export default function PetDetailsScreen({ route, navigation }) {
   const [userRole, setUserRole] = useState(null);
   const [guestRole, setGuestRole] = useState(null);
 
-  const [expandedSection, setExpandedSection] = useState("pet");
+  const [expandedSection, setExpandedSection] = useState("");
 
   const toggleSection = (section) => {
     setExpandedSection(expandedSection === section ? null : section);
@@ -280,28 +280,26 @@ export default function PetDetailsScreen({ route, navigation }) {
         showsVerticalScrollIndicator={false}
       >
         <View style={petDetailsScreenStyles.topHeader}>
-          <BackButton
-            label="← Back"
-            onPress={() => navigation.goBack()}
-            style={petDetailsScreenStyles.headerBackButton}
-          />
+          <View style={petDetailsScreenStyles.headerSide}>
+            <BackButton
+              label="← Back"
+              onPress={() => navigation.goBack()}
+              style={petDetailsScreenStyles.headerBackButton}
+            />
+          </View>
 
           <Text style={petDetailsScreenStyles.headerTitle}>Pet Profile</Text>
 
-          {userRole !== "boarding_owner" && guestRole !== "boarding_owner" ? (
-            <TouchableOpacity
-              style={petDetailsScreenStyles.headerIconButton}
-              onPress={() =>
-                navigation.navigate("EditPet", {
-                  petId,
-                })
-              }
-            >
-              <Ionicons name="create-outline" size={24} color="#6b21a8" />
-            </TouchableOpacity>
-          ) : (
-            <View style={petDetailsScreenStyles.headerIconButton} />
-          )}
+          <View style={petDetailsScreenStyles.headerSide}>
+            {userRole !== "boarding_owner" && guestRole !== "boarding_owner" ? (
+              <TouchableOpacity
+                style={petDetailsScreenStyles.headerIconButton}
+                onPress={() => navigation.navigate("EditPet", { petId })}
+              >
+                <Ionicons name="create-outline" size={24} color="#6b21a8" />
+              </TouchableOpacity>
+            ) : null}
+          </View>
         </View>
         <View style={petDetailsScreenStyles.detailsHero}>
           <View style={petDetailsScreenStyles.imageWrapper}>

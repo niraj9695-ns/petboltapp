@@ -17,26 +17,37 @@ export default StyleSheet.create({
     paddingBottom: 28,
   },
   header: {
-    flexDirection: "row",
+    minHeight: 64,
+    justifyContent: "center",
     alignItems: "center",
     marginBottom: 18,
     paddingTop: 8,
+    position: "relative",
   },
+
   headerBackButton: {
-    marginRight: 12,
+    position: "absolute",
+    left: 0,
+    zIndex: 1,
   },
+
   headerContent: {
-    flex: 1,
+    alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 72,
   },
+
   title: {
     fontSize: typography.h4.fontSize,
     fontWeight: typography.h4.fontWeight,
     color: COLORS.text,
+    textAlign: "center",
   },
+
   subtitle: {
     marginTop: 4,
     color: COLORS.textMuted,
+    textAlign: "center",
   },
   backButton: {
     padding: 8,

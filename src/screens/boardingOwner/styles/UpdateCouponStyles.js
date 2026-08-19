@@ -22,10 +22,16 @@ export default StyleSheet.create({
     paddingVertical: 12,
   },
 
+  headerSide: {
+    width: 100,
+    alignItems: "flex-start",
+  },
+
   titleContainer: {
-    marginLeft: 12,
-    justifyContent: "center",
     flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 8,
   },
 
   title: {
@@ -33,6 +39,7 @@ export default StyleSheet.create({
     fontWeight: typography.h4.fontWeight,
     color: COLORS.text,
     lineHeight: 28,
+    textAlign: "center",
   },
 
   subtitle: {
@@ -40,6 +47,7 @@ export default StyleSheet.create({
     color: COLORS.textMuted,
     fontSize: 12,
     lineHeight: 18,
+    textAlign: "center",
   },
   formCard: {
     backgroundColor: COLORS.surface,

@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, ScrollView } from "react-native";
+import { Text, ScrollView, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import termsStyles from "../styles/TermsOfUseScreenStyles";
 import BackButton from "../components/BackButton";
@@ -11,11 +11,16 @@ export default function TermsOfUseScreen({ navigation }) {
         colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
         style={termsStyles.container}
       >
-        <BackButton onPress={() => navigation.goBack()} />
-        {/* Title */}
-        <Text style={termsStyles.title}>Terms of Use</Text>
-        <Text style={termsStyles.updated}>Last Updated: April 2026</Text>
+        <View style={termsStyles.pageHeader}>
+          <View style={termsStyles.backButtonWrap}>
+            <BackButton onPress={() => navigation.goBack()} />
+          </View>
 
+          <View style={termsStyles.headerText}>
+            <Text style={termsStyles.title}>Terms of Use</Text>
+            <Text style={termsStyles.updated}>Last Updated: April 2026</Text>
+          </View>
+        </View>
         {/* 1 */}
         <Text style={termsStyles.heading}>1. Acceptance of Terms</Text>
         <Text style={termsStyles.text}>
@@ -114,5 +119,3 @@ export default function TermsOfUseScreen({ navigation }) {
     </ScrollView>
   );
 }
-
-

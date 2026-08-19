@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, ScrollView } from "react-native";
+import { Text, ScrollView, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import refundStyles from "../styles/RefundPolicyScreenStyles";
 import BackButton from "../components/BackButton";
@@ -11,14 +11,16 @@ export default function RefundPolicyScreen({ navigation }) {
         colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
         style={refundStyles.container}
       >
-        <BackButton onPress={() => navigation.goBack()} />
-        {/* Title */}
-        <Text style={refundStyles.title}>Refund & Exchange Policy</Text>
-        <Text style={refundStyles.updated}>
-          At CheeryTails, we’re committed to providing high-quality products and
-          a smooth shopping experience.
-        </Text>
+        <View style={refundStyles.pageHeader}>
+          <View style={refundStyles.backButtonWrap}>
+            <BackButton onPress={() => navigation.goBack()} />
+          </View>
 
+          <View style={refundStyles.headerText}>
+            <Text style={refundStyles.title}>Refund Policy</Text>
+            <Text style={refundStyles.updated}>Last updated: April 2026</Text>
+          </View>
+        </View>
         {/* NO REFUND */}
         <Text style={refundStyles.heading}>🚫 No Refunds</Text>
         <Text style={refundStyles.text}>
@@ -62,5 +64,3 @@ export default function RefundPolicyScreen({ navigation }) {
     </ScrollView>
   );
 }
-
-

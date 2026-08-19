@@ -19,7 +19,7 @@ export default function BoardingProfileScreen({ navigation }) {
   const { refreshKey } = useRefresh();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [expandedSection, setExpandedSection] = useState("personal");
+  const [expandedSection, setExpandedSection] = useState("");
 
   const fetchProfile = async () => {
     try {

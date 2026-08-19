@@ -27,7 +27,7 @@ export default function CenterDetailsScreen() {
   const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [expandedSections, setExpandedSections] = useState({
-    basic: true,
+    basic: false,
     operations: false,
     health: false,
     amenities: false,

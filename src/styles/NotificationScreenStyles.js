@@ -18,33 +18,84 @@ export default StyleSheet.create({
   },
 
   header: {
-    flexDirection: "row",
+    position: "relative",
+    minHeight: 44,
+    justifyContent: "center",
     alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: spacing.lg,
+    marginBottom: 16,
+  },
+
+  backButtonWrap: {
+    position: "absolute",
+    left: 0,
+    zIndex: 1,
+    width: 80,
+    alignItems: "flex-start",
+  },
+
+  headerText: {
+    width: "100%",
+    alignItems: "center",
+    paddingHorizontal: 90,
   },
 
   headerActions: {
+    position: "absolute",
+    right: 0,
+    zIndex: 1,
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.sm,
+    gap: 7,
   },
 
   heading: {
-    fontSize: (typography && typography.h2 && typography.h2.fontSize) || baseTypography.h2 || 24,
-    fontWeight: (typography && typography.h2 && typography.h2.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize:
+      (typography && typography.h3 && typography.h3.fontSize) ||
+      baseTypography.h2 ||
+      24,
+    fontWeight:
+      (typography && typography.h2 && typography.h2.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
     color: "#111827",
+    textAlign: "center",
   },
 
   subHeading: {
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     color: colors.textMuted,
     marginTop: spacing.xs,
+    textAlign: "center",
+  },
+
+  iconButtonPurple: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.primary,
+    borderWidth: 1,
+    borderColor: "#ddd6fe",
+  },
+
+  iconButtonRed: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.danger,
+    borderWidth: 1,
+    borderColor: "#fecaca",
   },
 
   markAllBtn: {
     backgroundColor: colors.primary,
-    borderRadius: radius.lg,
+    borderRadius: radius.sm,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
   },
@@ -58,14 +109,26 @@ export default StyleSheet.create({
 
   markAllText: {
     color: "#ffffff",
-    fontWeight: (typography && typography.h2 && typography.h2.fontWeight) || baseTypography.weights.bold || "700",
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
   },
 
   deleteAllText: {
     color: "#ffffff",
-    fontWeight: (typography && typography.h2 && typography.h2.fontWeight) || baseTypography.weights.bold || "700",
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontWeight:
+      (typography && typography.h2 && typography.h2.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
   },
 
   infoCard: {
@@ -80,7 +143,10 @@ export default StyleSheet.create({
   infoText: {
     marginLeft: spacing.sm,
     color: colors.primary,
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     lineHeight: 20,
     flex: 1,
   },
@@ -139,14 +205,23 @@ export default StyleSheet.create({
   },
 
   title: {
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
     color: "#111827",
   },
 
   date: {
     color: colors.textMuted,
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     marginTop: spacing.xs,
   },
 
@@ -159,7 +234,10 @@ export default StyleSheet.create({
 
   bodyText: {
     color: colors.text,
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     lineHeight: 20,
   },
 
@@ -174,8 +252,14 @@ export default StyleSheet.create({
 
   loadMoreText: {
     color: "#6b21a8",
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
   },
 
   unreadDot: {
@@ -188,7 +272,10 @@ export default StyleSheet.create({
 
   actionHint: {
     color: colors.textMuted,
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
     marginTop: spacing.xs,
   },
 
@@ -203,8 +290,14 @@ export default StyleSheet.create({
 
   swipeActionText: {
     color: colors.surface,
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
     marginTop: spacing.xs,
   },
 
@@ -217,33 +310,25 @@ export default StyleSheet.create({
   emptyText: {
     marginTop: spacing.lg,
     color: colors.text,
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
-    fontWeight: (typography && typography.title && typography.title.fontWeight) || baseTypography.weights.semibold || "600",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
+    fontWeight:
+      (typography && typography.title && typography.title.fontWeight) ||
+      baseTypography.weights.semibold ||
+      "600",
   },
 
   emptySubText: {
     marginTop: spacing.sm,
     color: colors.textMuted,
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     textAlign: "center",
     maxWidth: 260,
     lineHeight: 20,
-  },
-  iconButtonPurple: {
-    width: 42,
-    height: 42,
-    borderRadius: radius.round,
-    backgroundColor: colors.primary,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  iconButtonRed: {
-    width: 42,
-    height: 42,
-    borderRadius: radius.round,
-    backgroundColor: colors.danger,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

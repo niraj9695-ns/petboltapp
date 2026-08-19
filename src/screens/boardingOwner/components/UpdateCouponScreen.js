@@ -120,7 +120,9 @@ export default function UpdateCouponScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header}>
-            <BackButton />
+            <View style={styles.headerSide}>
+              <BackButton />
+            </View>
 
             <View style={styles.titleContainer}>
               <Text style={styles.title}>Update Coupon</Text>
@@ -128,6 +130,8 @@ export default function UpdateCouponScreen() {
                 Edit the selected date discount
               </Text>
             </View>
+
+            <View style={styles.headerSide} />
           </View>
           <View style={styles.formCard}>
             <View style={styles.fieldGroup}>

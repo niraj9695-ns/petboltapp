@@ -436,11 +436,23 @@ export default function BoardingBookingScreen({ route, navigation }) {
       style={styles.bookingScreenContainer}
     >
       <ScrollView contentContainerStyle={styles.bookingScreenContent}>
-        <BackButton style={{ marginBottom: 20 }} />
-        <View style={styles.bookingScreenCard}>
-          <Text style={styles.bookingScreenCenterName}>{centerName}</Text>
-        </View>
+        <View
+          style={[styles.bookingScreenCard, styles.bookingScreenHeaderCard]}
+        >
+          <View style={styles.bookingScreenBackButton}>
+            <BackButton />
+          </View>
 
+          <Text
+            style={styles.bookingScreenCenterName}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {centerName}
+          </Text>
+
+          <View style={styles.bookingScreenHeaderSpacer} />
+        </View>
         <View style={styles.bookingScreenCard}>
           <Text style={styles.bookingScreenHeading}>Select Pet</Text>
 

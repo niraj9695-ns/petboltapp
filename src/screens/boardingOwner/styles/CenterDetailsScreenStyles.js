@@ -15,27 +15,41 @@ export default StyleSheet.create({
     alignItems: "center",
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  headerBackButton: {
-    marginRight: 12,
-  },
-  headerContent: {
-    flex: 1,
+    minHeight: 64,
     justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
+    position: "relative",
   },
-  subtitle: {
-    marginTop: 4,
-    color: COLORS.textMuted,
-    fontSize: typography.caption.fontSize,
+
+  headerBackButton: {
+    position: "absolute",
+    left: 0,
+    zIndex: 1,
   },
+
+  headerContent: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 5, // Prevents title from overlapping Back button
+  },
+
   title: {
     fontSize: typography.h3.fontSize,
     fontWeight: typography.h3.fontWeight,
     color: COLORS.text,
     lineHeight: typography.h3.fontSize * 1.2,
+    textAlign: "center",
+  },
+
+  subtitle: {
+    marginTop: 4,
+    color: COLORS.textMuted,
+    fontSize: typography.caption.fontSize,
+    textAlign: "center",
   },
   imageContainer: {
     position: "relative",

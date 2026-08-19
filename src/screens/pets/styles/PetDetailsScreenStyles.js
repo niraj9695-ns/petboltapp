@@ -24,37 +24,39 @@ export default StyleSheet.create({
   },
   topHeader: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 15,
     paddingHorizontal: 5,
     minHeight: 52,
   },
   headerSide: {
-    width: 84,
+    width: 90, // Same left and right width keeps title truly centered
     alignItems: "center",
     justifyContent: "center",
   },
+
   headerBackButton: {
-    alignSelf: "center",
     backgroundColor: "#ffffff",
     borderRadius: 12,
     borderWidth: 1,
     borderColor: "#e9d5ff",
   },
 
+  headerTitle: {
+    flex: 1,
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#6b21a8",
+    textAlign: "center",
+  },
+
   headerIconButton: {
+    width: 44,
+    height: 44,
     justifyContent: "center",
     alignItems: "center",
   },
 
-  headerTitle: {
-    flex: 1,
-    textAlign: "center",
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#6b21a8",
-  },
   detailsHero: {
     alignItems: "center",
     marginBottom: 20,

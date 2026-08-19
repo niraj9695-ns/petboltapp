@@ -196,11 +196,15 @@ export default function NotificationScreen({ navigation }) {
           />
         }
       >
-        <BackButton style={{ alignSelf: "flex-start" }} onPress={() => navigation.goBack()} />
-
         <View style={styles.header}>
-          <View>
-            <Text style={styles.heading}>Notifications</Text>
+          <View style={styles.backButtonWrap}>
+            <BackButton onPress={() => navigation.goBack()} />
+          </View>
+
+          <View style={styles.headerText}>
+            <Text style={styles.heading} numberOfLines={1}>
+              Notifications
+            </Text>
             <Text style={styles.subHeading}>
               {unreadCount} unread · {visibleNotifications.length} total
             </Text>
