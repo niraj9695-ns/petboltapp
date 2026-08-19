@@ -21,6 +21,7 @@ import { boardingOwnerTheme } from "../../../styles/themeStyles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import FloatingInput from "../../../components/inputs/FloatingInput";
+import BackButton from "../../../components/BackButton";
 import {
   buildCenterFormData,
   createCenter,
@@ -43,7 +44,7 @@ export default function CreateCenterScreen() {
     amount: "",
   });
   const [expandedSections, setExpandedSections] = useState({
-    basic: true,
+    basic: false,
     operations: false,
     vet: false,
     amenities: false,
@@ -440,19 +441,21 @@ export default function CreateCenterScreen() {
             colors={["#6b21a8", "#8b5cf6"]}
             style={styles.heroCard}
           >
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.backButton}
-            >
-              <Text style={styles.backText}>← Back</Text>
-            </TouchableOpacity>
-            <Text style={styles.heroTitle}>Create Center</Text>
-            <Text style={styles.heroSubtitle}>
-              Set up a polished boarding center profile with all the key
-              details.
-            </Text>
-          </LinearGradient>
+            <View style={styles.heroHeader}>
+              <View style={styles.heroTopRow}>
+                <BackButton style={styles.headerBackButton} />
 
+                <Text style={styles.heroTitle} numberOfLines={1}>
+                  Create Center
+                </Text>
+              </View>
+
+              <Text style={styles.heroSubtitle}>
+                Set up a polished boarding center profile with all the key
+                details.
+              </Text>
+            </View>
+          </LinearGradient>
           <View style={styles.formCard}>
             <SectionBlock
               id="basic"
@@ -1052,18 +1055,52 @@ const PetPriceEditor = ({
           styles.picker,
           {
             color: value.petType ? "#111827" : "#6B7280",
-            
           },
         ]}
       >
-        <Picker.Item label="Select Pet Type" value="" color="#6B7280" style={{ fontSize: 12 }} />
+        <Picker.Item
+          label="Select Pet Type"
+          value=""
+          color="#6B7280"
+          style={{ fontSize: 12 }}
+        />
 
-        <Picker.Item label="Dog" value="dog" color="#111827" style={{ fontSize: 12 }} />
-        <Picker.Item label="Cat" value="cat" color="#111827" style={{ fontSize: 12 }} />
-        <Picker.Item label="Bird" value="bird" color="#111827" style={{ fontSize: 12 }} />
-        <Picker.Item label="Rabbit" value="rabbit" color="#111827" style={{ fontSize: 12 }} />
-        <Picker.Item label="Turtle" value="turtle" color="#111827" style={{ fontSize: 12 }} />
-        <Picker.Item label="Others" value="others" color="#111827" style={{ fontSize: 12 }} />
+        <Picker.Item
+          label="Dog"
+          value="dog"
+          color="#111827"
+          style={{ fontSize: 12 }}
+        />
+        <Picker.Item
+          label="Cat"
+          value="cat"
+          color="#111827"
+          style={{ fontSize: 12 }}
+        />
+        <Picker.Item
+          label="Bird"
+          value="bird"
+          color="#111827"
+          style={{ fontSize: 12 }}
+        />
+        <Picker.Item
+          label="Rabbit"
+          value="rabbit"
+          color="#111827"
+          style={{ fontSize: 12 }}
+        />
+        <Picker.Item
+          label="Turtle"
+          value="turtle"
+          color="#111827"
+          style={{ fontSize: 12 }}
+        />
+        <Picker.Item
+          label="Others"
+          value="others"
+          color="#111827"
+          style={{ fontSize: 12 }}
+        />
       </Picker>
     </View>
     <TextInput

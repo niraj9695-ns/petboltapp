@@ -18,15 +18,38 @@ export default StyleSheet.create({
     padding: 20,
     marginBottom: 8,
   },
+  heroHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  heroBackButton: {
+    width: 100,
+    alignItems: "flex-start",
+  },
+
+  heroTitleWrap: {
+    flex: 1,
+    alignItems: "center",
+    paddingHorizontal: 4,
+  },
+
+  heroHeaderSpacer: {
+    width: 80,
+  },
+
   heroTitle: {
     fontSize: typography.h4.fontSize,
     fontWeight: typography.h4.fontWeight,
     color: COLORS.surface,
+    textAlign: "center",
   },
+
   heroSubtitle: {
     color: COLORS.surface,
     fontSize: 13,
     marginTop: 4,
+    textAlign: "center",
   },
   card: {
     backgroundColor: COLORS.surface,

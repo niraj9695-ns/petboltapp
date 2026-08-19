@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRefresh } from "../../../context/RefreshContext";
 import { useTheme } from "../../../context/ThemeContext";
 import styles from "../styles/BookingDetailsScreen";
+import BackButton from "../../../components/BackButton";
 import {
   updateBookingStatus,
   setPickupDropTime,
@@ -218,24 +219,27 @@ export default function BookingDetailsScreen({ route, navigation }) {
         ]}
       >
         <View style={{ width: contentWidth }}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{ marginBottom: 12 }}
-          >
-            <Text style={{ color: "#6b21a8", fontWeight: "700" }}>← Back</Text>
-          </TouchableOpacity>
-
           <View style={styles.heroCard}>
-            <TouchableOpacity onPress={handleViewPetDetails}>
-              <Text
-                style={styles.heroTitle}
-              >
-                {booking.pet_name || booking.pet?.pet_name || "Pet Details"}
-              </Text>
-            </TouchableOpacity>
-            <Text style={styles.heroSubtitle}>{booking.center_name}</Text>
-          </View>
+            <View style={styles.heroHeader}>
+              <View style={styles.heroBackButton}>
+                <BackButton />
+              </View>
 
+              <TouchableOpacity
+                style={styles.heroTitleWrap}
+                onPress={handleViewPetDetails}
+              >
+                <Text style={styles.heroTitle} numberOfLines={1}>
+                  {booking.pet_name || booking.pet?.pet_name || "Pet Details"}
+                </Text>
+                <Text style={styles.heroSubtitle} numberOfLines={1}>
+                  {booking.center_name}
+                </Text>
+              </TouchableOpacity>
+
+              <View style={styles.heroHeaderSpacer} />
+            </View>
+          </View>
           <View style={styles.actionPanel}>
             <TouchableOpacity
               style={styles.accordionHeader}

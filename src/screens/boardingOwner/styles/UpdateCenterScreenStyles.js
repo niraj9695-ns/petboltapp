@@ -14,42 +14,52 @@ export default StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
+  heroCard: {
+    borderRadius: 24,
+    padding: 20,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+
   header: {
-    minHeight: 64,
+    marginBottom: 8,
+  },
+
+  headerTopRow: {
+    position: "relative",
+    minHeight: 40,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 8,
-    position: "relative",
   },
 
   headerBackButton: {
     position: "absolute",
-    left: 10,
+    left: 0,
     zIndex: 1,
   },
 
-  headerContent: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 5, // Prevents title from overlapping Back button
-  },
-
   title: {
+    color: COLORS.surface,
     fontSize: typography.h3.fontSize,
     fontWeight: typography.h3.fontWeight,
-    color: COLORS.text,
-    lineHeight: typography.h3.fontSize * 1.2,
     textAlign: "center",
+    paddingHorizontal: 48,
   },
+
   subtitle: {
-    marginTop: 4,
-    color: COLORS.textMuted,
-    fontSize: typography.caption.fontSize,
+    color: "rgba(255, 255, 255, 0.9)",
+    fontSize: typography.small.fontSize,
     textAlign: "center",
+    lineHeight: 18,
+    marginTop: 8,
+    paddingHorizontal: 24,
   },
+
   imageContainer: {
     position: "relative",
   },

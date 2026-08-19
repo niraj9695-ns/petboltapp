@@ -16,37 +16,56 @@ export default StyleSheet.create({
     alignItems: "center",
   },
 
-  headerContainer: {
-    paddingTop: 16,
-    paddingHorizontal: 16,
+  heroCard: {
+    borderRadius: 24,
+    padding: 20,
+    marginHorizontal: 5,
     marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  headerContainer: {
+    alignItems: "center",
+  },
+
+  headerTopRow: {
+    position: "relative",
+    width: "100%",
+    minHeight: 40,
+    justifyContent: "center",
     alignItems: "center",
   },
 
   backButtonContainer: {
     position: "absolute",
-    left: 16,
-    top: 16,
+    left: 0,
+    zIndex: 1,
   },
 
   heading: {
     fontSize: typography?.h4?.fontSize || baseTypography.sectionTitle || 22,
     fontWeight:
       typography?.h4?.fontWeight || baseTypography.weights.bold || "700",
-    color: COLORS.primaryDark,
+    color: COLORS.surface,
     textAlign: "center",
+    paddingHorizontal: 48,
   },
 
   subHeading: {
     fontSize: typography?.caption?.fontSize || baseTypography.caption || 10,
-    color: COLORS.textMuted,
+    color: "rgba(255, 255, 255, 0.9)",
     textAlign: "center",
-    marginTop: 4,
+    lineHeight: 18,
+    marginTop: 8,
+    paddingHorizontal: 24,
   },
 
   card: {
     backgroundColor: COLORS.surface,
-    marginHorizontal: 16,
+    marginHorizontal: 5,
     marginBottom: 12,
     borderRadius: 18,
     borderWidth: 1,

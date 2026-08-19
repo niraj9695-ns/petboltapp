@@ -22,6 +22,7 @@ import styles from "../styles/UpdateCenterScreenStyles";
 import { Picker } from "@react-native-picker/picker";
 import FloatingInput from "../../../components/inputs/FloatingInput";
 import BackButton from "../../../components/BackButton";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   buildCenterFormData,
   deleteCenterImage,
@@ -57,7 +58,7 @@ export default function UpdateCenterScreen() {
   const [pickerConfig, setPickerConfig] = useState(null);
   const PET_TYPES = ["dog", "cat", "bird", "rabbit", "turtle", "others"];
   const [expandedSections, setExpandedSections] = useState({
-    basic: true,
+    basic: false,
     operations: false,
     health: false,
     amenities: false,
@@ -512,23 +513,31 @@ export default function UpdateCenterScreen() {
       >
         <ScrollView
           style={styles.container}
-          contentContainerStyle={{ paddingBottom: 80 }}
+          contentContainerStyle={{
+            paddingHorizontal: 8,
+            paddingTop: 8,
+          }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.header}>
-            <BackButton style={styles.headerBackButton} />
+          <LinearGradient
+            colors={["#6b21a8", "#8b5cf6"]}
+            style={styles.heroCard}
+          >
+            <View style={styles.header}>
+              <View style={styles.headerTopRow}>
+                <BackButton style={styles.headerBackButton} />
 
-            <View style={styles.headerContent}>
-              <Text style={styles.title} numberOfLines={1}>
-                {center?.center_name || "Center Details"}
-              </Text>
+                <Text style={styles.title} numberOfLines={1}>
+                  {center?.center_name || "Center Details"}
+                </Text>
+              </View>
 
               <Text style={styles.subtitle}>
                 View boarding center information
               </Text>
             </View>
-          </View>
+          </LinearGradient>
           <View style={styles.card}>
             <SectionBlock
               id="basic"

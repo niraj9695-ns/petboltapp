@@ -16,38 +16,55 @@ export default StyleSheet.create({
     paddingTop: 0,
     paddingBottom: 28,
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 12,
+  heroCard: {
+    borderRadius: 24,
+    padding: 20,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 6,
   },
 
-  headerSide: {
-    width: 100,
-    alignItems: "flex-start",
-  },
-
-  titleContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+  content: {
     paddingHorizontal: 8,
+    paddingTop: 8,
+    paddingBottom: 28,
+  },
+
+  header: {
+    alignItems: "center",
+  },
+
+  headerTopRow: {
+    position: "relative",
+    width: "100%",
+    minHeight: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  headerBackButton: {
+    position: "absolute",
+    left: 0,
+    zIndex: 1,
   },
 
   title: {
-    fontSize: typography.h4.fontSize,
-    fontWeight: typography.h4.fontWeight,
-    color: COLORS.text,
-    lineHeight: 28,
+    color: COLORS.surface,
+    fontSize: typography.h3.fontSize,
+    fontWeight: typography.h3.fontWeight,
     textAlign: "center",
+    paddingHorizontal: 48,
   },
 
   subtitle: {
-    marginTop: 2,
-    color: COLORS.textMuted,
-    fontSize: 12,
-    lineHeight: 18,
+    color: "rgba(255, 255, 255, 0.9)",
+    fontSize: typography.small.fontSize,
     textAlign: "center",
+    lineHeight: 18,
+    paddingHorizontal: 24,
   },
   formCard: {
     backgroundColor: COLORS.surface,

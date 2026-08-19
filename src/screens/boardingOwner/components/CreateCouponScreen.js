@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation, useRoute } from "@react-navigation/native";
-
+import { LinearGradient } from "expo-linear-gradient";
 import { useRefresh } from "../../../context/RefreshContext";
 import {
   createDateDiscount,
@@ -229,18 +229,24 @@ export default function CreateCouponScreen() {
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.header}>
-            <BackButton style={styles.headerBackButton} />
+          <LinearGradient
+            colors={["#6b21a8", "#8b5cf6"]}
+            style={styles.heroCard}
+          >
+            <View style={styles.header}>
+              <View style={styles.headerTopRow}>
+                <BackButton style={styles.headerBackButton} />
 
-            <View style={styles.headerContent}>
-              <Text style={[styles.title, { color: theme.textPrimary }]}>
-                Create Coupon
-              </Text>
-              <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
+                <Text style={styles.title} numberOfLines={1}>
+                  Create Coupon
+                </Text>
+              </View>
+
+              <Text style={styles.subtitle}>
                 Add a new date discount for your center
               </Text>
             </View>
-          </View>
+          </LinearGradient>
           <View style={styles.formCard}>
             <View style={styles.fieldGroup}>
               <Label

@@ -22,24 +22,40 @@ export default StyleSheet.create({
     shadowRadius: 12,
     elevation: 6,
   },
-  backButton: {
-    alignSelf: "flex-start",
-    marginBottom: 10,
+  heroHeader: {
+    alignItems: "center",
   },
-  backText: {
-    color: COLORS.surface,
-    fontWeight: typography.title.fontWeight,
-    fontSize: typography.small.fontSize,
+
+  heroTopRow: {
+    position: "relative",
+    width: "100%",
+    minHeight: 40,
+    justifyContent: "center",
+    alignItems: "center",
   },
+
+  headerBackButton: {
+    position: "absolute",
+    left: 0,
+    zIndex: 1,
+  
+  },
+
   heroTitle: {
     color: COLORS.surface,
     fontSize: typography.h3.fontSize,
     fontWeight: typography.h3.fontWeight,
-    marginBottom: 6,
+    textAlign: "center",
+    paddingHorizontal: 48,
   },
+
   heroSubtitle: {
-    color: COLORS.surface,
+    color: "rgba(255, 255, 255, 0.9)",
     fontSize: typography.small.fontSize,
+    textAlign: "center",
+    lineHeight: 18,
+    marginTop: 8,
+    paddingHorizontal: 24,
   },
   formCard: {
     backgroundColor: COLORS.surface,

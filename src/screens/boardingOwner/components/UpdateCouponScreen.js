@@ -19,6 +19,7 @@ import { updateDateDiscount } from "../services/boardingOwnerService";
 import styles from "../styles/UpdateCouponStyles";
 import PremiumLoader from "../../../components/PremiumLoader";
 import { useTheme } from "../../../context/ThemeContext";
+import { LinearGradient } from "expo-linear-gradient";
 
 const buildForm = (discount) => ({
   discount_value: String(discount?.discount_value ?? ""),
@@ -119,20 +120,25 @@ export default function UpdateCouponScreen() {
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.header}>
-            <View style={styles.headerSide}>
-              <BackButton />
-            </View>
+          <LinearGradient
+            colors={["#6b21a8", "#8b5cf6"]}
+            style={styles.heroCard}
+          >
+            <View style={styles.header}>
+              <View style={styles.headerTopRow}>
+                <BackButton style={styles.headerBackButton} />
 
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>Update Coupon</Text>
+                <Text style={styles.title} numberOfLines={1}>
+                  Update Coupon
+                </Text>
+              </View>
+
               <Text style={styles.subtitle}>
                 Edit the selected date discount
               </Text>
             </View>
+          </LinearGradient>
 
-            <View style={styles.headerSide} />
-          </View>
           <View style={styles.formCard}>
             <View style={styles.fieldGroup}>
               <Label

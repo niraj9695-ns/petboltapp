@@ -13,7 +13,7 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import PremiumLoader from "../../../components/PremiumLoader";
-
+import { LinearGradient } from "expo-linear-gradient";
 import styles from "../styles/UpdateBoardingProfileStyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -309,25 +309,35 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.headerContainer}>
-            <View style={styles.backButtonContainer}>
-              <BackButton
-                fallbackRoute={"BoardingOwner"}
-                fallbackParams={{
-                  screen: "Main",
-                  params: {
-                    screen: "BoardingTabs",
-                    params: { screen: "Profile" },
-                  },
-                }}
-              />
-            </View>
+          <LinearGradient
+            colors={["#6b21a8", "#8b5cf6"]}
+            style={styles.heroCard}
+          >
+            <View style={styles.headerContainer}>
+              <View style={styles.headerTopRow}>
+                <View style={styles.backButtonContainer}>
+                  <BackButton
+                    fallbackRoute="BoardingOwner"
+                    fallbackParams={{
+                      screen: "Main",
+                      params: {
+                        screen: "BoardingTabs",
+                        params: { screen: "Profile" },
+                      },
+                    }}
+                  />
+                </View>
 
-            <Text style={styles.heading}>Update Boarding Profile</Text>
-            <Text style={styles.subHeading}>
-              Tap a section to edit details.
-            </Text>
-          </View>
+                <Text style={styles.heading} numberOfLines={1}>
+                  Update Boarding Profile
+                </Text>
+              </View>
+
+              <Text style={styles.subHeading}>
+                Tap a section to edit details.
+              </Text>
+            </View>
+          </LinearGradient>
 
           {renderSection(
             "personal",

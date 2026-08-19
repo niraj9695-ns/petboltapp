@@ -12,17 +12,28 @@ export default StyleSheet.create({
     flex: 1,
   },
   content: {
-    paddingHorizontal: 16,
-    paddingTop: 0,
-    paddingBottom: 28,
+    padding: 8,
+    paddingBottom: 8,
+  },
+  heroCard: {
+    borderRadius: 24,
+    padding: 20,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 6,
   },
   header: {
-    minHeight: 64,
+    marginBottom: 8,
+  },
+
+  headerTopRow: {
+    position: "relative",
+    minHeight: 40,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 18,
-    paddingTop: 8,
-    position: "relative",
   },
 
   headerBackButton: {
@@ -31,28 +42,21 @@ export default StyleSheet.create({
     zIndex: 1,
   },
 
-  headerContent: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 72,
-  },
-
   title: {
-    fontSize: typography.h4.fontSize,
-    fontWeight: typography.h4.fontWeight,
-    color: COLORS.text,
+    color: COLORS.surface,
+    fontSize: typography.h3.fontSize,
+    fontWeight: typography.h3.fontWeight,
     textAlign: "center",
+    paddingHorizontal: 48,
   },
 
   subtitle: {
-    marginTop: 4,
-    color: COLORS.textMuted,
+    color: "rgba(255, 255, 255, 0.9)",
+    fontSize: typography.small.fontSize,
     textAlign: "center",
-  },
-  backButton: {
-    padding: 8,
-    borderRadius: 10,
-    backgroundColor: COLORS.surfaceMuted,
+    lineHeight: 18,
+    marginTop: 4,
+    paddingHorizontal: 24,
   },
   pickerWrap: {
     backgroundColor: "#f9fafb",
