@@ -29,7 +29,7 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
   const { triggerRefresh } = useRefresh();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [expandedSection, setExpandedSection] = useState("personal");
+  const [expandedSection, setExpandedSection] = useState("");
   const [documentFiles, setDocumentFiles] = useState({
     aadhar: null,
     license: null,
