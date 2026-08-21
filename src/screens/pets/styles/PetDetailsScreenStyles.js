@@ -196,6 +196,6 @@ export default StyleSheet.create({
     color: "#6b21a8",
   },
   spacer: {
-    height: 16,
+    height: 48,
   },
 });

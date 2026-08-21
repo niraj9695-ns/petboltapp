@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import PremiumLoader from "../../../components/PremiumLoader";
 import BackButton from "../../../components/BackButton";
 import { Ionicons } from "@expo/vector-icons";
@@ -35,6 +36,9 @@ const formatSubtitle = (type, breed) => {
 
 export default function PetDetailsScreen({ route, navigation }) {
   const { petId } = route.params;
+  const insets = useSafeAreaInsets();
+  const scrollViewRef = React.useRef(null);
+  const sectionOffsets = React.useRef({});
 
   const [petData, setPetData] = useState(null);
   const [petImages, setPetImages] = useState([]);
@@ -47,6 +51,27 @@ export default function PetDetailsScreen({ route, navigation }) {
   const toggleSection = (section) => {
     setExpandedSection(expandedSection === section ? null : section);
   };
+
+  useEffect(() => {
+    if (!expandedSection) return;
+
+    const frame = requestAnimationFrame(() => {
+      if (expandedSection === "behavior") {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+        return;
+      }
+
+      const sectionOffset = sectionOffsets.current[expandedSection];
+      if (sectionOffset === undefined) return;
+
+      scrollViewRef.current?.scrollTo({
+        y: Math.max(0, sectionOffset - 12),
+        animated: true,
+      });
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [expandedSection]);
 
   useEffect(() => {
     const loadUserRole = async () => {
@@ -257,6 +282,9 @@ export default function PetDetailsScreen({ route, navigation }) {
     <TouchableOpacity
       style={petDetailsScreenStyles.accordionHeader}
       onPress={() => toggleSection(sectionKey)}
+      onLayout={(event) => {
+        sectionOffsets.current[sectionKey] = event.nativeEvent.layout.y;
+      }}
     >
       <Text style={petDetailsScreenStyles.accordionTitle}>{title}</Text>
 
@@ -278,6 +306,8 @@ export default function PetDetailsScreen({ route, navigation }) {
       <ScrollView
         style={petDetailsScreenStyles.detailsContainer}
         showsVerticalScrollIndicator={false}
+        ref={scrollViewRef}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 48 }}
       >
         <View style={petDetailsScreenStyles.topHeader}>
           <View style={petDetailsScreenStyles.headerSide}>
