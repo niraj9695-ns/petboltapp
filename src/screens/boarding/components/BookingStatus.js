@@ -319,7 +319,11 @@ export default function BookingStatus() {
           data={bookings}
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.bookingListContainer}
+          contentContainerStyle={
+            bookings.length === 1
+              ? styles.singleCardContainer
+              : styles.bookingListContainer
+          }
           keyExtractor={(item) => item.id.toString()}
           ListFooterComponent={
             hasMorePages ? (

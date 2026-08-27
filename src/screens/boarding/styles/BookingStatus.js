@@ -31,16 +31,28 @@ export default StyleSheet.create({
   },
 
   bookingStatusTitle: {
-    fontSize: (typography && typography.heroTitle && typography.heroTitle.fontSize) || baseTypography.heroTitle || 28,
+    fontSize:
+      (typography && typography.heroTitle && typography.heroTitle.fontSize) ||
+      baseTypography.heroTitle ||
+      28,
     fontWeight: "800",
     color: colors.text,
     marginBottom: spacing.xs,
   },
 
   bookingStatusSubtitle: {
-    fontSize: (typography && typography.subtitle && typography.subtitle.fontSize) || baseTypography.subtitle || 16,
+    fontSize:
+      (typography && typography.subtitle && typography.subtitle.fontSize) ||
+      baseTypography.subtitle ||
+      16,
     color: colors.textMuted,
     fontWeight: "500",
+  },
+
+  singleCardContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   bookingListContainer: {
@@ -93,7 +105,10 @@ export default StyleSheet.create({
   },
 
   bookingStatusPetEmoji: {
-    fontSize: (typography && typography.heroTitle && typography.heroTitle.fontSize) || baseTypography.heroTitle || 28,
+    fontSize:
+      (typography && typography.heroTitle && typography.heroTitle.fontSize) ||
+      baseTypography.heroTitle ||
+      28,
   },
 
   petNameSection: {
@@ -102,13 +117,19 @@ export default StyleSheet.create({
 
   bookingStatusPetName: {
     fontWeight: "800",
-    fontSize: (typography && typography.cardTitle && typography.cardTitle.fontSize) || baseTypography.cardTitle || 18,
+    fontSize:
+      (typography && typography.cardTitle && typography.cardTitle.fontSize) ||
+      baseTypography.cardTitle ||
+      18,
     color: colors.text,
     marginBottom: spacing.xs,
   },
 
   petBreedText: {
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     color: colors.textMuted,
     fontWeight: "500",
   },
@@ -148,14 +169,20 @@ export default StyleSheet.create({
   },
 
   infoLabel: {
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
     color: colors.textMuted,
     fontWeight: "400",
     marginBottom: spacing.xs,
   },
 
   infoValue: {
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
     color: colors.text,
     fontWeight: "700",
   },
@@ -177,7 +204,10 @@ export default StyleSheet.create({
   },
 
   dateLabel: {
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
     color: colors.textMuted,
     fontWeight: "400",
     marginBottom: spacing.xs,
@@ -189,7 +219,13 @@ export default StyleSheet.create({
   },
 
   dateValue: {
-    fontSize: responsive.isTablet ? ((typography && typography.small && typography.small.fontSize) || baseTypography.small || 12) : ((typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10),
+    fontSize: responsive.isTablet
+      ? (typography && typography.small && typography.small.fontSize) ||
+        baseTypography.small ||
+        12
+      : (typography && typography.caption && typography.caption.fontSize) ||
+        baseTypography.caption ||
+        10,
     color: colors.text,
     fontWeight: "700",
   },
@@ -234,13 +270,19 @@ export default StyleSheet.create({
   },
 
   mobileDetailLabel: {
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
     color: colors.textMuted,
     fontWeight: "600",
   },
 
   mobileDetailValue: {
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
     color: colors.text,
     fontWeight: "700",
   },
