@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+
 import { colors } from "../../../styles/theme/colors";
 import { spacing } from "../../../styles/theme/spacing";
 import { radius } from "../../../styles/theme/radius";
@@ -8,6 +9,10 @@ import { typography as baseTypography } from "../../../styles/theme/typography";
 import { shadows } from "../../../styles/theme/shadows";
 
 export default StyleSheet.create({
+  /* =====================================================
+     LOADER
+  ===================================================== */
+
   loaderScreen: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: colors.background,
@@ -17,10 +22,18 @@ export default StyleSheet.create({
     zIndex: 1000,
   },
 
+  /* =====================================================
+     MAIN CONTAINER
+  ===================================================== */
+
   bookingStatusContainer: {
     flex: 1,
     backgroundColor: colors.background,
   },
+
+  /* =====================================================
+     HEADER
+  ===================================================== */
 
   headerSection: {
     paddingHorizontal: spacing.md,
@@ -35,6 +48,7 @@ export default StyleSheet.create({
       (typography && typography.heroTitle && typography.heroTitle.fontSize) ||
       baseTypography.heroTitle ||
       28,
+
     fontWeight: "800",
     color: colors.text,
     marginBottom: spacing.xs,
@@ -45,44 +59,62 @@ export default StyleSheet.create({
       (typography && typography.subtitle && typography.subtitle.fontSize) ||
       baseTypography.subtitle ||
       16,
+
     color: colors.textMuted,
     fontWeight: "500",
   },
 
-  singleCardContainer: {
-    flex: 1,
-    justifyContent: "center",
+  /* =====================================================
+     VERTICAL BOOKING LIST
+  ===================================================== */
+
+  bookingListContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 32,
+
+    /*
+     * Center cards on large screens
+     */
     alignItems: "center",
   },
 
-  bookingListContainer: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.lg,
-    paddingBottom: spacing.xxxl,
-  },
+  /* =====================================================
+     BOOKING CARD
+  ===================================================== */
 
   bookingStatusCard: {
     borderRadius: radius.xxl,
     padding: spacing.lg,
-    marginRight: spacing.lg,
+
+    /*
+     * IMPORTANT:
+     * No marginRight because list is vertical
+     */
+    marginBottom: spacing.lg,
+
     borderWidth: 1,
     borderColor: colors.border,
+
     ...shadows.md,
+
     overflow: "hidden",
   },
 
-  cardHeaderRow: {
+  /* =====================================================
+     COLLAPSED HEADER
+  ===================================================== */
+
+  bookingHeader: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 16,
+    minHeight: 72,
+    width: "100%",
   },
 
-  petInfoSection: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-  },
+  /* =====================================================
+     PET IMAGE
+  ===================================================== */
 
   bookingStatusIconBox: {
     width: 64,
@@ -111,16 +143,23 @@ export default StyleSheet.create({
       28,
   },
 
+  /* =====================================================
+     PET INFORMATION
+  ===================================================== */
+
   petNameSection: {
     flex: 1,
+    minWidth: 0,
   },
 
   bookingStatusPetName: {
     fontWeight: "800",
+
     fontSize:
       (typography && typography.cardTitle && typography.cardTitle.fontSize) ||
       baseTypography.cardTitle ||
       18,
+
     color: colors.text,
     marginBottom: spacing.xs,
   },
@@ -130,9 +169,25 @@ export default StyleSheet.create({
       (typography && typography.small && typography.small.fontSize) ||
       baseTypography.small ||
       12,
+
     color: colors.textMuted,
     fontWeight: "500",
   },
+
+  /* =====================================================
+     RIGHT SIDE
+  ===================================================== */
+
+  headerRightSection: {
+    alignItems: "flex-end",
+    justifyContent: "center",
+    marginLeft: spacing.sm,
+    gap: 8,
+  },
+
+  /* =====================================================
+     STATUS BADGE
+  ===================================================== */
 
   statusBadgeContainer: {
     flexDirection: "row",
@@ -140,6 +195,7 @@ export default StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 12,
     alignItems: "center",
+    maxWidth: 125,
   },
 
   bookingStatusBadgeText: {
@@ -148,11 +204,28 @@ export default StyleSheet.create({
     letterSpacing: 0.2,
   },
 
+  /* =====================================================
+     EXPANDED CONTENT
+  ===================================================== */
+
+  expandedContent: {
+    paddingTop: 4,
+    width: "100%",
+  },
+
+  /* =====================================================
+     DIVIDER
+  ===================================================== */
+
   cardDivider: {
     height: 1,
     backgroundColor: colors.border,
     marginBottom: spacing.md,
   },
+
+  /* =====================================================
+     BOARDING CENTER
+  ===================================================== */
 
   infoSection: {
     flexDirection: "row",
@@ -166,6 +239,7 @@ export default StyleSheet.create({
 
   infoContent: {
     flex: 1,
+    minWidth: 0,
   },
 
   infoLabel: {
@@ -173,6 +247,7 @@ export default StyleSheet.create({
       (typography && typography.caption && typography.caption.fontSize) ||
       baseTypography.caption ||
       10,
+
     color: colors.textMuted,
     fontWeight: "400",
     marginBottom: spacing.xs,
@@ -183,18 +258,25 @@ export default StyleSheet.create({
       (typography && typography.body && typography.body.fontSize) ||
       baseTypography.body ||
       14,
+
     color: colors.text,
     fontWeight: "700",
   },
+
+  /* =====================================================
+     DATES
+  ===================================================== */
 
   datesRow: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 16,
+    width: "100%",
   },
 
   dateBox: {
     flex: 1,
+    minWidth: 0,
     backgroundColor: colors.surface,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.sm,
@@ -208,6 +290,7 @@ export default StyleSheet.create({
       (typography && typography.caption && typography.caption.fontSize) ||
       baseTypography.caption ||
       10,
+
     color: colors.textMuted,
     fontWeight: "400",
     marginBottom: spacing.xs,
@@ -216,9 +299,12 @@ export default StyleSheet.create({
   dateContent: {
     flexDirection: "row",
     alignItems: "center",
+    minWidth: 0,
   },
 
   dateValue: {
+    flex: 1,
+
     fontSize: responsive.isTablet
       ? (typography && typography.small && typography.small.fontSize) ||
         baseTypography.small ||
@@ -226,15 +312,20 @@ export default StyleSheet.create({
       : (typography && typography.caption && typography.caption.fontSize) ||
         baseTypography.caption ||
         10,
+
     color: colors.text,
     fontWeight: "700",
   },
 
   dateArrow: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
     justifyContent: "center",
     alignItems: "center",
   },
+
+  /* =====================================================
+     DESKTOP DETAILS
+  ===================================================== */
 
   detailsGrid: {
     flexDirection: "row",
@@ -251,40 +342,7 @@ export default StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
     justifyContent: "center",
-  },
-
-  mobileDetailsCard: {
-    backgroundColor: colors.surfaceAlt,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: spacing.lg,
-    padding: spacing.md,
-  },
-
-  mobileDetailRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: spacing.xs,
-  },
-
-  mobileDetailLabel: {
-    fontSize:
-      (typography && typography.caption && typography.caption.fontSize) ||
-      baseTypography.caption ||
-      10,
-    color: colors.textMuted,
-    fontWeight: "600",
-  },
-
-  mobileDetailValue: {
-    fontSize:
-      (typography && typography.body && typography.body.fontSize) ||
-      baseTypography.body ||
-      14,
-    color: colors.text,
-    fontWeight: "700",
+    minWidth: 0,
   },
 
   gridDivider: {
@@ -321,6 +379,50 @@ export default StyleSheet.create({
     fontSize: 18,
   },
 
+  /* =====================================================
+     MOBILE DETAILS
+  ===================================================== */
+
+  mobileDetailsCard: {
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: spacing.lg,
+    padding: spacing.md,
+  },
+
+  mobileDetailRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: spacing.xs,
+  },
+
+  mobileDetailLabel: {
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
+
+    color: colors.textMuted,
+    fontWeight: "600",
+  },
+
+  mobileDetailValue: {
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
+
+    color: colors.text,
+    fontWeight: "700",
+  },
+
+  /* =====================================================
+     ACTIVE BOOKING PROGRESS
+  ===================================================== */
+
   progressSection: {
     marginBottom: 16,
   },
@@ -347,24 +449,22 @@ export default StyleSheet.create({
     borderRadius: 4,
   },
 
-  countdownSection: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#e0e7ff",
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderRadius: 12,
+  /* =====================================================
+     UPCOMING NOTE
+  ===================================================== */
+
+  bookingNoteText: {
+    fontSize: 13,
+    color: "#6b21a8",
+    fontWeight: "700",
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: "#c7d2fe",
+    textAlign: "center",
+    lineHeight: 19,
   },
 
-  countdownText: {
-    fontSize: 13,
-    color: "#3730a3",
-    fontWeight: "600",
-    flex: 1,
-  },
+  /* =====================================================
+     ACTION BUTTONS
+  ===================================================== */
 
   actionButtonsRow: {
     flexDirection: "row",
@@ -390,6 +490,10 @@ export default StyleSheet.create({
     color: "#6b21a8",
   },
 
+  /* =====================================================
+     EMPTY STATE
+  ===================================================== */
+
   emptyStateContainer: {
     flex: 1,
     justifyContent: "center",
@@ -413,27 +517,80 @@ export default StyleSheet.create({
     fontWeight: "500",
   },
 
+  /* =====================================================
+     PAGINATION
+  ===================================================== */
+
   paginationFooter: {
-    width: 250,
-    justifyContent: "center",
+    width: "100%",
     alignItems: "center",
-    alignSelf: "center",
-    marginHorizontal: 16,
+    justifyContent: "center",
+    paddingTop: 8,
+    paddingBottom: 20,
   },
 
   nextPageButton: {
-    width: 200,
-    marginTop: 200,
-    height: 56,
+    minWidth: 180,
+    minHeight: 50,
+
+    paddingHorizontal: 24,
+
     backgroundColor: "#6b21a8",
-    borderRadius: 16,
+
+    borderRadius: 14,
+
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+
+    gap: 8,
   },
 
   nextPageButtonText: {
     color: "#ffffff",
     fontSize: 14,
     fontWeight: "700",
+  },
+
+  pageInfoText: {
+    marginTop: 8,
+    fontSize: 12,
+    color: "#94a3b8",
+    fontWeight: "500",
+  },
+
+  /* =====================================================
+     LOADING MORE
+  ===================================================== */
+
+  loadingMoreContainer: {
+    width: "100%",
+    paddingVertical: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 10,
+  },
+
+  loadingMoreText: {
+    fontSize: 13,
+    color: "#64748b",
+    fontWeight: "600",
+  },
+
+  /* =====================================================
+     PAGINATION END
+  ===================================================== */
+
+  paginationEnd: {
+    width: "100%",
+    alignItems: "center",
+    paddingVertical: 16,
+  },
+
+  paginationEndText: {
+    fontSize: 12,
+    color: "#94a3b8",
+    fontWeight: "500",
   },
 });

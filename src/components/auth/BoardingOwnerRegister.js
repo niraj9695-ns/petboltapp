@@ -133,7 +133,8 @@ export default function BoardingOwnerRegister({
   const { theme } = useTheme();
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const PET_TYPES = ["dog", "cat", "bird", "rabbit", "turtle", "others"];
 
@@ -211,7 +212,8 @@ export default function BoardingOwnerRegister({
     }
 
     if (cleanEmergency === cleanMobile) {
-      newErrors.emergencyNumber = "Emergency number should be different from mobile";
+      newErrors.emergencyNumber =
+        "Emergency number should be different from mobile";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -517,22 +519,24 @@ export default function BoardingOwnerRegister({
       showsVerticalScrollIndicator={false}
     >
       {serverError ? (
-        <View style={[styles.errorBanner, { backgroundColor: theme.errorBackground, borderColor: theme.error }]}> 
+        <View
+          style={[
+            styles.errorBanner,
+            {
+              backgroundColor: theme.errorBackground,
+              borderColor: theme.error,
+            },
+          ]}
+        >
           <Text style={styles.errorBannerTitle}>Registration Error</Text>
           <Text style={styles.errorBannerText}>{serverError}</Text>
         </View>
       ) : null}
-      {/* =====================================
-STEP 1 - OWNER DETAILS
-===================================== */}
 
       {currentStep === 1 && (
         <View>
           <Text style={styles.heading}>Owner Details</Text>
 
-          {errors.fullName ? (
-            <Text style={styles.errorTopText}>{errors.fullName}</Text>
-          ) : null}
           <FloatingInput
             label="Full Name *"
             value={fullName}
@@ -542,9 +546,10 @@ STEP 1 - OWNER DETAILS
             }}
           />
 
-          {errors.email ? (
-            <Text style={styles.errorTopText}>{errors.email}</Text>
+          {errors.fullName ? (
+            <Text style={styles.errorTopText}>{errors.fullName}</Text>
           ) : null}
+
           <FloatingInput
             label="Email *"
             value={email}
@@ -556,9 +561,10 @@ STEP 1 - OWNER DETAILS
             autoCapitalize="none"
           />
 
-          {errors.password ? (
-            <Text style={styles.errorTopText}>{errors.password}</Text>
+          {errors.email ? (
+            <Text style={styles.errorTopText}>{errors.email}</Text>
           ) : null}
+
           <PasswordInput
             label="Password *"
             value={password}
@@ -568,8 +574,8 @@ STEP 1 - OWNER DETAILS
             }}
           />
 
-          {errors.mobile ? (
-            <Text style={styles.errorTopText}>{errors.mobile}</Text>
+          {errors.password ? (
+            <Text style={styles.errorTopText}>{errors.password}</Text>
           ) : null}
 
           <View style={styles.phoneWrapper}>
@@ -578,7 +584,13 @@ STEP 1 - OWNER DETAILS
             </View>
 
             <TextInput
-              style={[styles.phoneInput, { color: theme.textPrimary, backgroundColor: theme.inputBackground }]}
+              style={[
+                styles.phoneInput,
+                {
+                  color: theme.textPrimary,
+                  backgroundColor: theme.inputBackground,
+                },
+              ]}
               placeholder="Enter mobile number"
               placeholderTextColor={theme.placeholder}
               keyboardType="number-pad"
@@ -592,33 +604,10 @@ STEP 1 - OWNER DETAILS
             />
           </View>
 
-          {errors.alternate ? (
-            <Text style={styles.errorTopText}>{errors.alternate}</Text>
+          {errors.mobile ? (
+            <Text style={styles.errorTopText}>{errors.mobile}</Text>
           ) : null}
 
-          <View style={styles.phoneWrapper}>
-            <View style={styles.countryPicker}>
-              <Text style={styles.countryText}>+91</Text>
-            </View>
-
-            <TextInput
-              style={[styles.phoneInput, { color: theme.textPrimary, backgroundColor: theme.inputBackground }]}
-              placeholder="Alternate Contact Number"
-              placeholderTextColor={theme.placeholder}
-              keyboardType="number-pad"
-              maxLength={10}
-              value={alternateContactNumber}
-              onChangeText={(text) => {
-                const cleaned = text.replace(/\D/g, "").slice(0, 10);
-                setAlternateContactNumber(cleaned);
-                setErrors((prev) => ({ ...prev, alternate: "" }));
-              }}
-            />
-          </View>
-
-          {errors.emergencyName ? (
-            <Text style={styles.errorTopText}>{errors.emergencyName}</Text>
-          ) : null}
           <FloatingInput
             label="Emergency Contact Name *"
             value={emergencyContactName}
@@ -628,16 +617,23 @@ STEP 1 - OWNER DETAILS
             }}
           />
 
-          {errors.emergencyNumber ? (
-            <Text style={styles.errorTopText}>{errors.emergencyNumber}</Text>
+          {errors.emergencyName ? (
+            <Text style={styles.errorTopText}>{errors.emergencyName}</Text>
           ) : null}
+
           <View style={styles.phoneWrapper}>
             <View style={styles.countryPicker}>
               <Text style={styles.countryText}>+91</Text>
             </View>
 
             <TextInput
-              style={[styles.phoneInput, { color: theme.textPrimary, backgroundColor: theme.inputBackground }]}
+              style={[
+                styles.phoneInput,
+                {
+                  color: theme.textPrimary,
+                  backgroundColor: theme.inputBackground,
+                },
+              ]}
               placeholder="Emergency Contact Number"
               placeholderTextColor={theme.placeholder}
               keyboardType="number-pad"
@@ -651,6 +647,10 @@ STEP 1 - OWNER DETAILS
             />
           </View>
 
+          {errors.emergencyNumber ? (
+            <Text style={styles.errorTopText}>{errors.emergencyNumber}</Text>
+          ) : null}
+
           <FloatingInput
             label="Business Name"
             value={businessName}
@@ -662,7 +662,6 @@ STEP 1 - OWNER DETAILS
           </TouchableOpacity>
         </View>
       )}
-
     </ScrollView>
   );
 }

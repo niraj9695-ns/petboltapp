@@ -1,10 +1,17 @@
 import React, { useCallback } from "react";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { typography } from "../styles/themeStyles";
 import { typography as baseTypography } from "../styles/theme/typography";
 
-export default function BackButton({ onPress, label = "← Back", fallbackRoute, fallbackParams, style }) {
+export default function BackButton({
+  onPress,
+  label = "← Back",
+  fallbackRoute,
+  fallbackParams,
+  style,
+}) {
   const navigation = useNavigation();
 
   const handlePress = useCallback(() => {
@@ -12,7 +19,8 @@ export default function BackButton({ onPress, label = "← Back", fallbackRoute,
       // Prefer navigation.canGoBack when available
       let canBack = false;
       try {
-        const state = navigation && navigation.getState && navigation.getState();
+        const state =
+          navigation && navigation.getState && navigation.getState();
         if (navigation && navigation.canGoBack && navigation.canGoBack()) {
           canBack = true;
         } else if (state) {
@@ -21,7 +29,11 @@ export default function BackButton({ onPress, label = "← Back", fallbackRoute,
           } else if (state.routes && Array.isArray(state.routes)) {
             // check nested navigator states for back availability
             for (const r of state.routes) {
-              if (r.state && typeof r.state.index === "number" && r.state.index > 0) {
+              if (
+                r.state &&
+                typeof r.state.index === "number" &&
+                r.state.index > 0
+              ) {
                 canBack = true;
                 break;
               }
@@ -51,25 +63,41 @@ export default function BackButton({ onPress, label = "← Back", fallbackRoute,
   }, [onPress, navigation]);
 
   return (
-    <TouchableOpacity style={[styles.backButton, style]} onPress={handlePress}>
-      <Text style={styles.backButtonText}>{label}</Text>
+    <TouchableOpacity
+      style={[styles.backButton, style]}
+      onPress={handlePress}
+      activeOpacity={0.7}
+      accessibilityRole="button"
+      accessibilityLabel="Go back"
+    >
+      <MaterialCommunityIcons name="arrow-left" size={22} color="#6B21A8" />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   backButton: {
-    alignSelf: "flex-start",
+    width: 44,
+    height: 44,
+
     alignItems: "center",
-    flexShrink: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    justifyContent: "center",
+
     backgroundColor: "#FFFFFF",
-    borderRadius: 12,
-  },
-  backButtonText: {
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
-    fontWeight: (typography && typography.smallMedium && typography.smallMedium.fontWeight) || baseTypography.weights.regular || "400",
-    color: "#6b21a8",
+
+    borderRadius: 14,
+
+    borderWidth: 1,
+    borderColor: "#E9D5FF",
+
+    shadowColor: "#6B21A8",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+
+    elevation: 3,
   },
 });

@@ -235,12 +235,6 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         </View>
       ) : null}
 
-      {errors.fullName ? (
-        <Text style={petOwnerRegisterStyles.errorTopText}>
-          {errors.fullName}
-        </Text>
-      ) : null}
-
       <FloatingInput
         label="Full Name *"
         value={fullName}
@@ -250,8 +244,10 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         }}
       />
 
-      {errors.email ? (
-        <Text style={petOwnerRegisterStyles.errorTopText}>{errors.email}</Text>
+      {errors.fullName ? (
+        <Text style={petOwnerRegisterStyles.errorTopText}>
+          {errors.fullName}
+        </Text>
       ) : null}
 
       <FloatingInput
@@ -265,10 +261,8 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         autoCapitalize="none"
       />
 
-      {errors.password ? (
-        <Text style={petOwnerRegisterStyles.errorTopText}>
-          {errors.password}
-        </Text>
+      {errors.email ? (
+        <Text style={petOwnerRegisterStyles.errorTopText}>{errors.email}</Text>
       ) : null}
 
       <PasswordInput
@@ -280,8 +274,10 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         }}
       />
 
-      {errors.mobile ? (
-        <Text style={petOwnerRegisterStyles.errorTopText}>{errors.mobile}</Text>
+      {errors.password ? (
+        <Text style={petOwnerRegisterStyles.errorTopText}>
+          {errors.password}
+        </Text>
       ) : null}
 
       <View style={petOwnerRegisterStyles.phoneWrapper}>
@@ -310,42 +306,8 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         />
       </View>
 
-      {errors.alternate ? (
-        <Text style={petOwnerRegisterStyles.errorTopText}>
-          {errors.alternate}
-        </Text>
-      ) : null}
-
-      <View style={petOwnerRegisterStyles.phoneWrapper}>
-        <View style={petOwnerRegisterStyles.countryPicker}>
-          <Text style={petOwnerRegisterStyles.countryText}>+91</Text>
-        </View>
-
-        <TextInput
-          style={[
-            petOwnerRegisterStyles.phoneInput,
-            {
-              color: theme.textPrimary,
-              backgroundColor: theme.inputBackground,
-            },
-          ]}
-          placeholder="Alternate Contact Number"
-          placeholderTextColor={theme.placeholder}
-          keyboardType="number-pad"
-          maxLength={10}
-          value={alternateContactNumber}
-          onChangeText={(text) => {
-            const cleaned = text.replace(/\D/g, "").slice(0, 10);
-            setAlternateContactNumber(cleaned);
-            setErrors((prev) => ({ ...prev, alternate: "" }));
-          }}
-        />
-      </View>
-
-      {errors.address ? (
-        <Text style={petOwnerRegisterStyles.errorTopText}>
-          {errors.address}
-        </Text>
+      {errors.mobile ? (
+        <Text style={petOwnerRegisterStyles.errorTopText}>{errors.mobile}</Text>
       ) : null}
 
       <FloatingInput
@@ -359,9 +321,9 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         height={100}
       />
 
-      {errors.emergencyName ? (
+      {errors.address ? (
         <Text style={petOwnerRegisterStyles.errorTopText}>
-          {errors.emergencyName}
+          {errors.address}
         </Text>
       ) : null}
 
@@ -374,9 +336,9 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         }}
       />
 
-      {errors.emergencyNumber ? (
+      {errors.emergencyName ? (
         <Text style={petOwnerRegisterStyles.errorTopText}>
-          {errors.emergencyNumber}
+          {errors.emergencyName}
         </Text>
       ) : null}
 
@@ -406,16 +368,11 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
         />
       </View>
 
-      <TouchableOpacity
-        style={petOwnerRegisterStyles.fileButton}
-        onPress={pickAadhar}
-      >
-        <Text>
-          {aadharFile
-            ? `📄 ${aadharFile.name}`
-            : "📎 Upload Aadhaar File (Optional)"}
+      {errors.emergencyNumber ? (
+        <Text style={petOwnerRegisterStyles.errorTopText}>
+          {errors.emergencyNumber}
         </Text>
-      </TouchableOpacity>
+      ) : null}
 
       <TouchableOpacity
         style={petOwnerRegisterStyles.button}

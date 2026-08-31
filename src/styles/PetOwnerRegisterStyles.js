@@ -38,8 +38,14 @@ export default StyleSheet.create({
 
   btnText: {
     color: "#FFFFFF",
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
   },
   btnText: {
     color: "#fff",
@@ -79,8 +85,14 @@ export default StyleSheet.create({
 
   countryText: {
     color: "#6B21A8",
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
   },
 
   phoneInput: {
@@ -89,16 +101,10 @@ export default StyleSheet.create({
     paddingHorizontal: 16,
 
     color: "#111827",
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
-  },
-
-  errorTopText: {
-    color: "#DC2626",
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
-    fontWeight: (typography && typography.caption && typography.caption.fontWeight) || baseTypography.weights.semibold || "600",
-    marginTop: -8,
-    marginBottom: 8,
-    marginLeft: 4,
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
   },
 
   errorBanner: {
@@ -112,19 +118,31 @@ export default StyleSheet.create({
 
   errorBannerTitle: {
     color: "#B91C1C",
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
     marginBottom: 6,
   },
 
   errorBannerText: {
     color: "#DC2626",
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     marginTop: 2,
   },
   errorTopText: {
     color: "#DC2626",
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
-    fontWeight: (typography && typography.caption && typography.caption.fontWeight) || baseTypography.weights.semibold || "600",
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
+    fontWeight:
+      (typography && typography.caption && typography.caption.fontWeight) ||
+      baseTypography.weights.semibold ||
+      "600",
     marginBottom: 6,
     marginLeft: 4,
   },

@@ -61,9 +61,14 @@ export default StyleSheet.create({
     flex: 1,
     marginRight: 8,
   },
+  detailsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
   info: {
+    width: "50%",
+    marginBottom: 6,
     color: COLORS.gray,
-    marginBottom: 4,
     fontSize: 12,
     fontWeight: "600",
   },
@@ -111,7 +116,10 @@ export default StyleSheet.create({
     textAlign: "center",
     marginTop: 50,
     color: COLORS.textMuted,
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
   },
   paginationContainer: {
     flexDirection: "row",

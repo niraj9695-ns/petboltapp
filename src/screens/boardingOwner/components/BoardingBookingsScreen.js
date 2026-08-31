@@ -37,59 +37,62 @@ export default function BoardingBookingsScreen({ navigation }) {
         ? (width - 48) / 2
         : (width - 64) / 3;
 
-  const loadBookings = useCallback(async (page = 1, append = false) => {
-    if (append) {
-      setLoadingMore(true);
-    } else {
-      setLoading(true);
-    }
+  const loadBookings = useCallback(
+    async (page = 1, append = false) => {
+      if (append) {
+        setLoadingMore(true);
+      } else {
+        setLoading(true);
+      }
 
-    try {
-      const response = await getOwnerBookings(page, 20);
-      const payload = response?.data || response || {};
+      try {
+        const response = await getOwnerBookings(page, 20);
+        const payload = response?.data || response || {};
 
-      const data = Array.isArray(payload?.data)
-        ? payload.data
-        : Array.isArray(payload?.bookings)
-          ? payload.bookings
-          : Array.isArray(payload)
-            ? payload
-            : [];
+        const data = Array.isArray(payload?.data)
+          ? payload.data
+          : Array.isArray(payload?.bookings)
+            ? payload.bookings
+            : Array.isArray(payload)
+              ? payload
+              : [];
 
-      const pagination = payload?.pagination || response?.pagination || {};
-      const backendTotalPages = Number(
-        pagination?.total_pages ||
-          payload?.total_pages ||
-          response?.total_pages ||
-          1,
-      );
+        const pagination = payload?.pagination || response?.pagination || {};
+        const backendTotalPages = Number(
+          pagination?.total_pages ||
+            payload?.total_pages ||
+            response?.total_pages ||
+            1,
+        );
 
-      setBookings((prev) => (append ? [...prev, ...data] : data));
-      setCurrentPage(Number(pagination?.page || page || 1));
-      setTotalPages(
-        Number.isFinite(backendTotalPages) && backendTotalPages > 0
-          ? backendTotalPages
-          : 1,
-      );
-      setTotalItems(
-        Number(
-          pagination?.total ||
-            payload?.total ||
-            response?.total ||
-            data.length ||
-            0,
-        ),
-      );
-    } catch (error) {
-      setBookings((prev) => (append ? prev : []));
-      setCurrentPage(append ? currentPage : 1);
-      setTotalPages(append ? totalPages : 1);
-      setTotalItems(append ? totalItems : 0);
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
-    }
-  }, [currentPage, totalPages, totalItems]);
+        setBookings((prev) => (append ? [...prev, ...data] : data));
+        setCurrentPage(Number(pagination?.page || page || 1));
+        setTotalPages(
+          Number.isFinite(backendTotalPages) && backendTotalPages > 0
+            ? backendTotalPages
+            : 1,
+        );
+        setTotalItems(
+          Number(
+            pagination?.total ||
+              payload?.total ||
+              response?.total ||
+              data.length ||
+              0,
+          ),
+        );
+      } catch (error) {
+        setBookings((prev) => (append ? prev : []));
+        setCurrentPage(append ? currentPage : 1);
+        setTotalPages(append ? totalPages : 1);
+        setTotalItems(append ? totalItems : 0);
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
+      }
+    },
+    [currentPage, totalPages, totalItems],
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -152,16 +155,19 @@ export default function BoardingBookingsScreen({ navigation }) {
         </View>
       </View>
 
-      <Text style={styles.info}>
-        Owner: {item.user_name || item.owner_name || "-"}
-      </Text>
-      <Text style={styles.info}>
-        Pet Type: {item.pet_type || item.pet?.pet_type || "-"}
-      </Text>
-      <Text style={styles.info}>
-        Center: {item.center_name || item.center?.center_name || "-"}
-      </Text>
+      <View style={styles.detailsGrid}>
+        <Text style={styles.info}>
+          Owner: {item.user_name || item.owner_name || "-"}
+        </Text>
 
+        <Text style={styles.info}>
+          Pet Type: {item.pet_type || item.pet?.pet_type || "-"}
+        </Text>
+
+        <Text style={styles.info}>
+          Center: {item.center_name || item.center?.center_name || "-"}
+        </Text>
+      </View>
       <View style={styles.priceRow}>
         <Text style={styles.priceText}>
           ₹{item.total_price || item.price || 0}
@@ -177,13 +183,18 @@ export default function BoardingBookingsScreen({ navigation }) {
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
-        <PremiumLoader size={56} color={boardingOwnerTheme.primary} label="Loading bookings" fullScreen />
+        <PremiumLoader
+          size={56}
+          color={boardingOwnerTheme.primary}
+          label="Loading bookings"
+          fullScreen
+        />
       </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={["left","right","bottom"]}>
+    <SafeAreaView style={styles.container} edges={["left", "right", "bottom"]}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Bookings</Text>
         <Text style={styles.headerSubtitle}>
