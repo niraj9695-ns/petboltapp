@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useRefresh } from "../../../context/RefreshContext";
 import {
@@ -68,6 +69,7 @@ export default function BoardingCouponsScreen() {
   const [centerPage, setCenterPage] = useState(1);
   const [centerTotalPages, setCenterTotalPages] = useState(1);
   const [centerTotalItems, setCenterTotalItems] = useState(0);
+  const [isGuest, setIsGuest] = useState(false);
   const { width } = useWindowDimensions();
 
   const isTablet = width >= 768;
@@ -161,7 +163,20 @@ export default function BoardingCouponsScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      loadCenters(1);
+      const loadGuestOrCenters = async () => {
+        const guestRole = await AsyncStorage.getItem("guestRole");
+
+        if (guestRole) {
+          setIsGuest(true);
+          setLoadingCenters(false);
+          return;
+        }
+
+        setIsGuest(false);
+        loadCenters(1);
+      };
+
+      loadGuestOrCenters();
     }, [loadCenters]),
   );
 
@@ -260,6 +275,12 @@ export default function BoardingCouponsScreen() {
     });
   };
 
+  const handleSignIn = async () => {
+    await AsyncStorage.removeItem("guestRole");
+    setIsGuest(false);
+    navigation.navigate("Auth");
+  };
+
   const deleteCoupon = async (discount) => {
     Alert.alert(
       "Delete coupon",
@@ -299,6 +320,69 @@ export default function BoardingCouponsScreen() {
             label="Loading coupons"
             fullScreen
           />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (isGuest) {
+    return (
+      <SafeAreaView
+        style={[styles.safeArea, { backgroundColor: theme.background }]}
+        edges={["left", "right", "bottom"]}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+            backgroundColor: theme.background,
+          }}
+        >
+          <View
+            style={{
+              width: 60,
+              height: 60,
+              borderRadius: 36,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: theme.surfaceAlt,
+            }}
+          >
+            <Ionicons name="ticket-outline" size={38} color={theme.primary} />
+          </View>
+
+          <Text
+            style={{
+              textAlign: "center",
+              marginTop: 0,
+              color: theme.textSecondary,
+            }}
+          >
+            Sign in or create an account to view your coupons
+          </Text>
+          <TouchableOpacity
+            style={{
+              backgroundColor: theme.primary,
+              paddingHorizontal: 30,
+              paddingVertical: 14,
+              borderRadius: 12,
+              marginTop: 15,
+            }}
+            onPress={async () => {
+              await AsyncStorage.removeItem("guestRole");
+
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "Auth" }],
+              });
+            }}
+          >
+            <Text style={{ color: "#fff", fontWeight: "bold" }}>
+              Sign In / Sign Up
+            </Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );

@@ -7,6 +7,7 @@ import {
   Image,
   useWindowDimensions,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import PremiumLoader from "../../../components/PremiumLoader";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,12 +17,15 @@ import { useRefresh } from "../../../context/RefreshContext";
 import styles from "../styles/BoardingCentersStyles";
 import { requireAuth } from "../../../utils/guestGuard";
 import { boardingOwnerTheme } from "../../../styles/themeStyles";
+import { useTheme } from "../../../context/ThemeContext";
 
 export default function BoardingCentersScreen() {
   const navigation = useNavigation();
   const { refreshKey } = useRefresh();
+  const { theme } = useTheme();
   const [centers, setCenters] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
@@ -39,11 +43,14 @@ export default function BoardingCentersScreen() {
 
   useEffect(() => {
     const checkAccess = async () => {
-      const canAccess = await requireAuth(navigation);
-      if (!canAccess) {
+      const guestRole = await AsyncStorage.getItem("guestRole");
+      if (guestRole) {
+        setIsGuest(true);
         setLoading(false);
         return;
       }
+
+      setIsGuest(false);
       loadCenters(1);
     };
 
@@ -57,7 +64,9 @@ export default function BoardingCentersScreen() {
       const payload = response?.data || response || {};
       const data = Array.isArray(payload?.data)
         ? payload.data
-        : Array.isArray(payload) ? payload : [];
+        : Array.isArray(payload)
+          ? payload
+          : [];
       const pagination = payload?.pagination || {};
 
       setCenters(data);
@@ -130,9 +139,78 @@ export default function BoardingCentersScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.safeArea} edges={["left","right","bottom"]}>
+      <SafeAreaView style={styles.safeArea} edges={["left", "right", "bottom"]}>
         <View style={styles.loader}>
-          <PremiumLoader size={56} color={boardingOwnerTheme.primary} label="Loading centers" fullScreen />
+          <PremiumLoader
+            size={56}
+            color={boardingOwnerTheme.primary}
+            label="Loading centers"
+            fullScreen
+          />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (isGuest) {
+    return (
+      <SafeAreaView
+        style={[styles.safeArea, { backgroundColor: theme.background }]}
+        edges={["left", "right", "bottom"]}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+            backgroundColor: theme.background,
+          }}
+        >
+          <View
+            style={{
+              width: 60,
+              height: 60,
+              borderRadius: 36,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: theme.surfaceAlt,
+            }}
+          >
+            <Ionicons name="business-outline" size={38} color={theme.primary} />
+          </View>
+
+          <Text
+            style={{
+              textAlign: "center",
+              marginTop: 0,
+              color: theme.textSecondary,
+            }}
+          >
+            Sign in or create an account to view your centers
+          </Text>
+
+          <TouchableOpacity
+            style={{
+              backgroundColor: theme.primary,
+              paddingHorizontal: 30,
+              paddingVertical: 14,
+              borderRadius: 12,
+              marginTop: 15,
+            }}
+            onPress={async () => {
+              await AsyncStorage.removeItem("guestRole");
+
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "Auth" }],
+              });
+            }}
+          >
+            <Text style={{ color: "#fff", fontWeight: "bold" }}>
+              Sign In / Sign Up
+            </Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -175,7 +253,7 @@ export default function BoardingCentersScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={["left","right","bottom"]}>
+    <SafeAreaView style={styles.safeArea} edges={["left", "right", "bottom"]}>
       <FlatList
         data={centers}
         key={numColumns}
@@ -206,7 +284,11 @@ export default function BoardingCentersScreen() {
                   navigation.navigate("CreateCenter");
                 }}
               >
-                <Ionicons name="add-circle-outline" size={18} color={boardingOwnerTheme.surface} />
+                <Ionicons
+                  name="add-circle-outline"
+                  size={18}
+                  color={boardingOwnerTheme.surface}
+                />
                 <Text style={styles.createButtonText}>Create</Text>
               </TouchableOpacity>
             </View>

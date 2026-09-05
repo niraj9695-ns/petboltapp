@@ -18,7 +18,7 @@ import { View } from "react-native";
 import appStyles from "./src/styles/AppStyles";
 import PremiumLoader from "./src/components/PremiumLoader";
 import { initializePushNotifications } from "./src/utils/notifications";
-import { ToastHost, initializeToastAlertOverride } from "./src/utils/toast";
+import { ToastHost } from "./src/utils/toast";
 
 const Stack = createNativeStackNavigator();
 
@@ -55,7 +55,6 @@ function MainApp() {
   };
 
   useEffect(() => {
-    initializeToastAlertOverride();
     checkLogin();
   }, []);
 

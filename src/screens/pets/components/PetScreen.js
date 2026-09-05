@@ -37,8 +37,10 @@ import {
   deletePetImageApi,
   setPetProfileImageApi,
 } from "../services/imageService";
+import { useTheme } from "../../../context/ThemeContext";
 
 export default function PetScreen({ navigation, route, initialEditPetId }) {
+  const { theme } = useTheme();
   const [pets, setPets] = useState([]);
 
   const [petImages, setPetImages] = useState({});
@@ -158,21 +160,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
       setIsGuest(isGuestUser);
 
       if (isGuestUser) {
-        Alert.alert(
-          "Sign in required",
-          "Please sign in or create an account to manage pets.",
-          [
-            {
-              text: "Cancel",
-              style: "cancel",
-              onPress: () => navigation.goBack(),
-            },
-            {
-              text: "Sign In / Sign Up",
-              onPress: () => navigation.navigate("Auth"),
-            },
-          ],
-        );
+        setLoading(false);
         return;
       }
 
@@ -763,6 +751,64 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
           label="Loading pets"
           fullScreen
         />
+      </View>
+    );
+  }
+
+  if (isGuest) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+          backgroundColor: theme.background,
+        }}
+      >
+        <View
+          style={{
+            width: 55,
+            height: 55,
+            borderRadius: 36,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: theme.surfaceAlt,
+          }}
+        >
+          <Ionicons name="paw-outline" size={38} color={theme.primary} />
+        </View>
+
+        <Text
+          style={{
+            textAlign: "center",
+            marginTop: 0,
+            color: theme.textSecondary,
+          }}
+        >
+          Sign in or create an account to view your pets
+        </Text>
+
+        <TouchableOpacity
+          style={{
+            backgroundColor: theme.primary,
+            paddingHorizontal: 30,
+            paddingVertical: 14,
+            borderRadius: 12,
+            marginTop: 15,
+          }}
+          onPress={async () => {
+            await AsyncStorage.removeItem("guestRole");
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Auth" }],
+            });
+          }}
+        >
+          <Text style={{ color: "#fff", fontWeight: "bold" }}>
+            Sign In / Sign Up
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }

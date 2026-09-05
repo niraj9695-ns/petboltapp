@@ -108,7 +108,9 @@ export default function ProfileScreen({ navigation }) {
 
   if (loading) {
     return (
-      <View style={[styles.loaderContainer, { backgroundColor: theme.background }]}> 
+      <View
+        style={[styles.loaderContainer, { backgroundColor: theme.background }]}
+      >
         <PremiumLoader
           size={56}
           color={theme.primary}
@@ -130,14 +132,11 @@ export default function ProfileScreen({ navigation }) {
         }}
       >
         <Image
-          source={{
-            uri: "https://i.pravatar.cc/150?img=12",
-          }}
+          source={require("../../assets/GuestIcon.png")}
           style={{
             width: 100,
             height: 100,
             borderRadius: 50,
-            marginBottom: 20,
           }}
         />
 
@@ -154,30 +153,31 @@ export default function ProfileScreen({ navigation }) {
         <Text
           style={{
             textAlign: "center",
-            marginTop: 10,
+            marginTop: 5,
             color: theme.textSecondary,
           }}
         >
-          Sign in or create an account to view your profile, pets, bookings and
-          other personal information.
+          Sign in or create an account to view your profile and other personal
+          information.
         </Text>
-
         <TouchableOpacity
           style={{
             backgroundColor: theme.primary,
             paddingHorizontal: 30,
             paddingVertical: 14,
             borderRadius: 12,
-            marginTop: 25,
+            marginTop: 15,
           }}
-          onPress={handleSignIn}
+          onPress={async () => {
+            await AsyncStorage.removeItem("guestRole");
+
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Auth" }],
+            });
+          }}
         >
-          <Text
-            style={{
-              color: "#fff",
-              fontWeight: "bold",
-            }}
-          >
+          <Text style={{ color: "#fff", fontWeight: "bold" }}>
             Sign In / Sign Up
           </Text>
         </TouchableOpacity>
@@ -207,8 +207,8 @@ export default function ProfileScreen({ navigation }) {
         ]}
       >
         {/* Verification Badge */}
-        <View style={[styles.badge, { backgroundColor: theme.cardBackground }]}> 
-          <Text style={[styles.badgeText, { color: theme.textSecondary }]}> 
+        <View style={[styles.badge, { backgroundColor: theme.cardBackground }]}>
+          <Text style={[styles.badgeText, { color: theme.textSecondary }]}>
             {user?.email_verified
               ? "⭐ Verified User"
               : "⚠️ Email Not Verified"}
@@ -216,48 +216,106 @@ export default function ProfileScreen({ navigation }) {
         </View>
 
         {/* Name */}
-        <Text style={[styles.name, { color: theme.textPrimary }]}>{user?.full_name || "User"}</Text>
+        <Text style={[styles.name, { color: theme.textPrimary }]}>
+          {user?.full_name || "User"}
+        </Text>
 
-        <View style={[styles.infoCard, { backgroundColor: theme.cardBackground, borderColor: theme.border, borderWidth: 1 }]}> 
-          <Text style={[styles.label, { color: theme.textSecondary }]}>Email</Text>
-          <Text style={[styles.value, { color: theme.textPrimary }]}>{user?.email}</Text>
+        <View
+          style={[
+            styles.infoCard,
+            {
+              backgroundColor: theme.cardBackground,
+              borderColor: theme.border,
+              borderWidth: 1,
+            },
+          ]}
+        >
+          <Text style={[styles.label, { color: theme.textSecondary }]}>
+            Email
+          </Text>
+          <Text style={[styles.value, { color: theme.textPrimary }]}>
+            {user?.email}
+          </Text>
 
-          <Text style={[styles.label, { color: theme.textSecondary }]}>Mobile Number</Text>
-          <Text style={[styles.value, { color: theme.textPrimary }]}>{user?.phone}</Text>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>
+            Mobile Number
+          </Text>
+          <Text style={[styles.value, { color: theme.textPrimary }]}>
+            {user?.phone}
+          </Text>
 
-          <Text style={[styles.label, { color: theme.textSecondary }]}>Alternate Contact Number</Text>
-          <Text style={[styles.value, { color: theme.textPrimary }]}>{user?.alternate_phone}</Text>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>
+            Alternate Contact Number
+          </Text>
+          <Text style={[styles.value, { color: theme.textPrimary }]}>
+            {user?.alternate_phone}
+          </Text>
 
-          <Text style={[styles.label, { color: theme.textSecondary }]}>Residential Address</Text>
-          <Text style={[styles.value, { color: theme.textPrimary }]}>{user?.address}</Text>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>
+            Residential Address
+          </Text>
+          <Text style={[styles.value, { color: theme.textPrimary }]}>
+            {user?.address}
+          </Text>
 
-          <Text style={[styles.label, { color: theme.textSecondary }]}>Emergency Contact Name</Text>
-          <Text style={[styles.value, { color: theme.textPrimary }]}>{user?.emergency_name}</Text>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>
+            Emergency Contact Name
+          </Text>
+          <Text style={[styles.value, { color: theme.textPrimary }]}>
+            {user?.emergency_name}
+          </Text>
 
-          <Text style={[styles.label, { color: theme.textSecondary }]}>Emergency Contact Number</Text>
-          <Text style={[styles.value, { color: theme.textPrimary }]}>{user?.emergency_number}</Text>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>
+            Emergency Contact Number
+          </Text>
+          <Text style={[styles.value, { color: theme.textPrimary }]}>
+            {user?.emergency_number}
+          </Text>
 
-          <Text style={[styles.label, { color: theme.textSecondary }]}>Email Verification</Text>
-          <Text style={[styles.value, { color: theme.textPrimary }]}> 
+          <Text style={[styles.label, { color: theme.textSecondary }]}>
+            Email Verification
+          </Text>
+          <Text style={[styles.value, { color: theme.textPrimary }]}>
             {user?.email_verified ? "Verified ✅" : "Not Verified ❌"}
           </Text>
         </View>
 
         {user?.aadhar_file ? (
-          <View style={[styles.documentCard, { backgroundColor: theme.cardBackground, borderColor: theme.border, borderWidth: 1 }]}> 
+          <View
+            style={[
+              styles.documentCard,
+              {
+                backgroundColor: theme.cardBackground,
+                borderColor: theme.border,
+                borderWidth: 1,
+              },
+            ]}
+          >
             <View style={styles.documentInfo}>
               <Text style={styles.documentIcon}>🪪</Text>
 
               <View style={{ flex: 1 }}>
-                <Text style={[styles.documentTitle, { color: theme.textPrimary }]}>Aadhaar Document</Text>
-                <Text style={[styles.documentSubTitle, { color: theme.textSecondary }]}> 
+                <Text
+                  style={[styles.documentTitle, { color: theme.textPrimary }]}
+                >
+                  Aadhaar Document
+                </Text>
+                <Text
+                  style={[
+                    styles.documentSubTitle,
+                    { color: theme.textSecondary },
+                  ]}
+                >
                   Identity document uploaded
                 </Text>
               </View>
             </View>
 
             <TouchableOpacity
-              style={[styles.viewDocumentBtn, { backgroundColor: theme.primary }]}
+              style={[
+                styles.viewDocumentBtn,
+                { backgroundColor: theme.primary },
+              ]}
               onPress={() => Linking.openURL(user.aadhar_file)}
             >
               <Text style={styles.viewDocumentText}>View Aadhaar</Text>
@@ -265,20 +323,26 @@ export default function ProfileScreen({ navigation }) {
           </View>
         ) : null}
         {/* Description */}
-        <Text style={[styles.desc, { color: theme.textSecondary }]}> 
+        <Text style={[styles.desc, { color: theme.textSecondary }]}>
           Manage your pets, bookings, and preferences in one place.
         </Text>
 
         {/* Buttons */}
         <View style={styles.btnRow}>
-          <TouchableOpacity style={[styles.primaryBtn, { backgroundColor: theme.primary }]} onPress={startEditing}>
+          <TouchableOpacity
+            style={[styles.primaryBtn, { backgroundColor: theme.primary }]}
+            onPress={startEditing}
+          >
             <Text style={styles.primaryBtnText}>Edit Profile</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[
               styles.secondaryBtn,
-              { backgroundColor: theme.cardBackground, borderColor: theme.border },
+              {
+                backgroundColor: theme.cardBackground,
+                borderColor: theme.border,
+              },
             ]}
             onPress={() =>
               navigation.navigate("Pets", {

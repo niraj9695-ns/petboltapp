@@ -1,4 +1,4 @@
-import { ScrollView, RefreshControl } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 import { useState } from "react";
 import { useTheme } from "../context/ThemeContext";
 import Categories from "../components/Categories";
@@ -22,17 +22,22 @@ export default function HomeScreen({ navigation }) {
   };
 
   return (
-    <ScrollView
+    <FlatList
+      data={["home"]}
+      renderItem={() => <BookingStatus embedded />}
       style={[homeStyles.scroll, { backgroundColor: theme.background }]}
       contentContainerStyle={homeStyles.content}
       showsVerticalScrollIndicator={false}
+      ListFooterComponent={
+        <>
+          <Categories key={`cat-${refreshKey}`} />
+          <DogGallery key={`dog-${refreshKey}`} />
+        </>
+      }
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
-    >
-      <BookingStatus />
-      <Categories key={`cat-${refreshKey}`} />
-      <DogGallery key={`dog-${refreshKey}`} />
-    </ScrollView>
+      keyExtractor={(item) => item}
+    />
   );
 }

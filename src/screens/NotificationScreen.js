@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import PremiumLoader from "../components/PremiumLoader";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -21,12 +22,15 @@ import {
 } from "../utils/notifications";
 import styles from "../styles/NotificationScreenStyles";
 import BackButton from "../components/BackButton";
+import { useTheme } from "../context/ThemeContext";
 
 const PAGE_SIZE = 20;
 
 export default function NotificationScreen({ navigation }) {
+  const { theme } = useTheme();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
@@ -97,7 +101,20 @@ export default function NotificationScreen({ navigation }) {
   }, [hasMore, loadingMore, notifications.length]);
 
   useEffect(() => {
-    loadNotifications();
+    const checkGuestAndLoad = async () => {
+      const guestRole = await AsyncStorage.getItem("guestRole");
+
+      if (guestRole) {
+        setIsGuest(true);
+        setLoading(false);
+        return;
+      }
+
+      setIsGuest(false);
+      loadNotifications();
+    };
+
+    checkGuestAndLoad();
   }, [loadNotifications]);
 
   const unreadCount = notifications.reduce(
@@ -179,6 +196,68 @@ export default function NotificationScreen({ navigation }) {
   const visibleNotifications = notifications.filter(
     (n) => !dismissedAlerts.has(n.id ?? n.notification_id ?? n._id),
   );
+
+  const handleSignIn = async () => {
+    await AsyncStorage.removeItem("guestRole");
+    setIsGuest(false);
+    navigation.navigate("Auth");
+  };
+
+  if (isGuest) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+          backgroundColor: theme.background,
+        }}
+      >
+        <View
+          style={{
+            width: 60,
+            height: 60,
+            borderRadius: 36,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: theme.surfaceAlt,
+          }}
+        >
+          <Ionicons
+            name="notifications-outline"
+            size={38}
+            color={theme.primary}
+          />
+        </View>
+
+        <Text
+          style={{
+            textAlign: "center",
+            marginTop: 0,
+            color: theme.textSecondary,
+          }}
+        >
+          Sign in or create an account to view your notifications
+        </Text>
+
+        <TouchableOpacity
+          style={{
+            backgroundColor: theme.primary,
+            paddingHorizontal: 30,
+            paddingVertical: 14,
+            borderRadius: 12,
+            marginTop: 15,
+          }}
+          onPress={handleSignIn}
+        >
+          <Text style={{ color: "#fff", fontWeight: "bold" }}>
+            Sign In / Sign Up
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <LinearGradient

@@ -80,8 +80,6 @@ export default function LoginForm({
           await AsyncStorage.setItem("user", JSON.stringify(user));
         }
 
-        Alert.alert("Success", "Login successful");
-
         setEmail?.(email);
         setPassword?.(password);
 

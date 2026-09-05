@@ -5,6 +5,7 @@ import BoardingBookingsScreen from "../screens/boardingOwner/components/Boarding
 import BoardingCentersScreen from "../screens/boardingOwner/components/BoardingCentersScreen";
 import BoardingCouponsScreen from "../screens/boardingOwner/components/BoardingCouponsScreen";
 import BoardingProfileScreen from "../screens/boardingOwner/components/BoardingProfileScreen";
+import NotificationScreen from "../screens/NotificationScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -41,6 +42,17 @@ export default function BoardingOwnerTabs() {
       <Tab.Screen name="Centers" component={BoardingCentersScreen} />
 
       <Tab.Screen name="Coupons" component={BoardingCouponsScreen} />
+
+      <Tab.Screen
+        name="NotificationView"
+        component={NotificationScreen}
+        options={{
+          tabBarButton: () => null,
+          tabBarItemStyle: {
+            display: "none",
+          },
+        }}
+      />
 
       <Tab.Screen name="Profile" component={BoardingProfileScreen} />
     </Tab.Navigator>

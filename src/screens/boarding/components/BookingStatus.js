@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import BASE_URL from "../constants/api";
 import styles from "../styles/BookingStatus";
+import { useTheme } from "../../../context/ThemeContext";
 
 import { fetchMyBookingsApi } from "../services/boardingService";
 import { fetchPetImagesApi } from "../../pets/services/imageService";
@@ -203,9 +204,10 @@ const getBookingPetImageUrl = (booking) => {
    MAIN COMPONENT
 ========================================================= */
 
-export default function BookingStatus() {
+export default function BookingStatus({ embedded = false }) {
   const { width } = useWindowDimensions();
   const navigation = useNavigation();
+  const { theme } = useTheme();
 
   const isMobile = width < 768;
 
@@ -224,6 +226,7 @@ export default function BookingStatus() {
   const [petProfileImages, setPetProfileImages] = useState({});
 
   const [loading, setLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
 
@@ -341,8 +344,6 @@ export default function BookingStatus() {
 
       const result = await fetchMyBookingsApi(token, pageToLoad, 20);
 
-      console.log("Booking API response:", result);
-
       const bookingsData = Array.isArray(result?.bookings)
         ? result.bookings
         : [];
@@ -433,7 +434,20 @@ export default function BookingStatus() {
 
   useFocusEffect(
     useCallback(() => {
-      loadBookings(1, false);
+      const checkGuestAndLoad = async () => {
+        const guestRole = await AsyncStorage.getItem("guestRole");
+
+        if (guestRole) {
+          setIsGuest(true);
+          setLoading(false);
+          return;
+        }
+
+        setIsGuest(false);
+        loadBookings(1, false);
+      };
+
+      checkGuestAndLoad();
     }, []),
   );
 
@@ -575,6 +589,91 @@ export default function BookingStatus() {
       </View>
     );
   }
+
+ if (isGuest) {
+  return (
+    <View style={styles.bookingStatusContainer}>
+      {/* SAME HEADER AS NORMAL BOOKING STATUS */}
+      <View style={styles.headerSection}>
+        <Text style={styles.bookingStatusTitle}>
+          Booking Status
+        </Text>
+
+        <Text style={styles.bookingStatusSubtitle}>
+          Track all your pet's boarding reservations
+        </Text>
+      </View>
+
+      {/* GUEST CONTENT */}
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+          backgroundColor: theme.background,
+        }}
+      >
+        {/* Calendar Icon */}
+        <View
+          style={{
+            width: 60,
+            height: 60,
+            borderRadius: 36,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: theme.surfaceAlt,
+          }}
+        >
+          <MaterialCommunityIcons
+            name="calendar-check-outline"
+            size={38}
+            color={theme.primary}
+          />
+        </View>
+
+        {/* Guest Message */}
+        <Text
+          style={{
+            textAlign: "center",
+            marginTop: 0,
+            color: theme.textSecondary,
+          }}
+        >
+          Sign in or create an account to view your bookings
+        </Text>
+
+        {/* Sign In / Sign Up */}
+        <TouchableOpacity
+          style={{
+            backgroundColor: theme.primary,
+            paddingHorizontal: 30,
+            paddingVertical: 14,
+            borderRadius: 12,
+            marginTop: 15,
+          }}
+          onPress={async () => {
+            await AsyncStorage.removeItem("guestRole");
+
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Auth" }],
+            });
+          }}
+        >
+          <Text
+            style={{
+              color: "#fff",
+              fontWeight: "bold",
+            }}
+          >
+            Sign In / Sign Up
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
 
   /* =======================================================
      RENDER BOOKING CARD
@@ -1101,44 +1200,37 @@ export default function BookingStatus() {
           VERTICAL FLATLIST
       ================================================= */}
 
-      <FlatList
-        data={bookings}
-        renderItem={renderBooking}
-        keyExtractor={(item, index) => String(getBookingId(item, index))}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.bookingListContainer}
-        /*
-         * Pull to refresh
-         */
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-            colors={["#6b21a8"]}
-            tintColor="#6b21a8"
-          />
-        }
-        /*
-         * Footer contains Load More
-         */
-        ListFooterComponent={renderFooter}
-        /*
-         * Automatically detect when
-         * user reaches bottom.
-         *
-         * The button is still available,
-         * so both methods work.
-         */
-        onEndReached={loadNextPage}
-        onEndReachedThreshold={0.4}
-        /*
-         * Improves vertical FlatList performance
-         */
-        removeClippedSubviews={true}
-        initialNumToRender={5}
-        maxToRenderPerBatch={5}
-        windowSize={7}
-      />
+      {embedded ? (
+        <View style={styles.bookingListContainer}>
+          {bookings.map((booking, index) =>
+            renderBooking({ item: booking, index }),
+          )}
+          {renderFooter()}
+        </View>
+      ) : (
+        <FlatList
+          data={bookings}
+          renderItem={renderBooking}
+          keyExtractor={(item, index) => String(getBookingId(item, index))}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.bookingListContainer}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              colors={["#6b21a8"]}
+              tintColor="#6b21a8"
+            />
+          }
+          ListFooterComponent={renderFooter}
+          onEndReached={loadNextPage}
+          onEndReachedThreshold={0.4}
+          removeClippedSubviews={true}
+          initialNumToRender={5}
+          maxToRenderPerBatch={5}
+          windowSize={7}
+        />
+      )}
     </View>
   );
 }

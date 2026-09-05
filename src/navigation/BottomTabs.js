@@ -8,6 +8,7 @@ import RegisterScreen from "../components/Register";
 import PetScreen from "../screens/pets/components/PetScreen";
 import BoardingStack from "./BoardingStack";
 import PetStack from "./PetStack";
+import NotificationScreen from "../screens/NotificationScreen";
 
 import { Ionicons } from "@expo/vector-icons";
 import { palette } from "../styles/themeStyles";
@@ -47,6 +48,16 @@ export default function BottomTabs() {
 
       <Tab.Screen name="Pets" component={PetStack} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen
+        name="NotificationView"
+        component={NotificationScreen}
+        options={{
+          tabBarButton: () => null,
+          tabBarItemStyle: {
+            display: "none",
+          },
+        }}
+      />
       <Tab.Screen
         name="ProfileEdit"
         component={ProfileEditScreen}

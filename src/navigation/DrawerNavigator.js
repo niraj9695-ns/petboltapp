@@ -51,7 +51,11 @@ function HeaderNotificationButton({ navigation }) {
   return (
     <Pressable
       style={drawerStyles.headerRightButton}
-      onPress={() => navigation.navigate("Notification")}
+      onPress={() =>
+        navigation.navigate("Main", {
+          screen: "NotificationView",
+        })
+      }
     >
       <View style={drawerStyles.notificationBadgeContainer}>
         <Ionicons name="notifications-outline" size={26} color={"#111827"} />
@@ -124,8 +128,6 @@ function CustomDrawerContent({ navigation }) {
       } else {
         navigation.navigate("Auth");
       }
-
-      Alert.alert("Success", "Logged out successfully");
     } catch (error) {
       Alert.alert("Error", "Logout failed");
     }

@@ -8,7 +8,9 @@ import {
   Linking,
   Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import PremiumLoader from "../../../components/PremiumLoader";
+import ProfileScreen from "../../ProfileScreen";
 import styles from "../styles/BoardingProfileStyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRefresh } from "../../../context/RefreshContext";
@@ -20,6 +22,7 @@ export default function BoardingProfileScreen({ navigation }) {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [expandedSection, setExpandedSection] = useState("");
+  const [guestRole, setGuestRole] = useState(null);
 
   const fetchProfile = async () => {
     try {
@@ -36,14 +39,33 @@ export default function BoardingProfileScreen({ navigation }) {
   };
 
   useEffect(() => {
-    fetchProfile();
+    const loadProfile = async () => {
+      const storedGuestRole = await AsyncStorage.getItem("guestRole");
+      setGuestRole(storedGuestRole);
 
-    const unsubscribe = navigation.addListener("focus", () => {
+      if (storedGuestRole) {
+        setLoading(false);
+        return;
+      }
+
       fetchProfile();
+    };
+
+    loadProfile();
+
+    const unsubscribe = navigation.addListener("focus", async () => {
+      const storedGuestRole = await AsyncStorage.getItem("guestRole");
+      if (!storedGuestRole) {
+        fetchProfile();
+      }
     });
 
     return unsubscribe;
   }, [navigation, refreshKey]);
+
+  if (guestRole) {
+    return <ProfileScreen navigation={navigation} />;
+  }
 
   if (loading) {
     return (

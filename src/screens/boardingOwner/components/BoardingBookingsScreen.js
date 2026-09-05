@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import PremiumLoader from "../../../components/PremiumLoader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
@@ -13,13 +15,15 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useRefresh } from "../../../context/RefreshContext";
 import styles from "../styles/BoardingBookingsStyles";
 import { getOwnerBookings } from "../services/boardingOwnerService";
-import { requireAuth } from "../../../utils/guestGuard";
 import { boardingOwnerTheme } from "../../../styles/themeStyles";
+import { useTheme } from "../../../context/ThemeContext";
 
 export default function BoardingBookingsScreen({ navigation }) {
   const { refreshKey } = useRefresh();
+  const { theme } = useTheme();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -97,11 +101,14 @@ export default function BoardingBookingsScreen({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       const checkAccess = async () => {
-        const canAccess = await requireAuth(navigation);
-        if (!canAccess) {
+        const guestRole = await AsyncStorage.getItem("guestRole");
+        if (guestRole) {
+          setIsGuest(true);
           setLoading(false);
           return;
         }
+
+        setIsGuest(false);
         loadBookings();
       };
 
@@ -111,11 +118,14 @@ export default function BoardingBookingsScreen({ navigation }) {
 
   useEffect(() => {
     const checkAccess = async () => {
-      const canAccess = await requireAuth(navigation);
-      if (!canAccess) {
+      const guestRole = await AsyncStorage.getItem("guestRole");
+      if (guestRole) {
+        setIsGuest(true);
         setLoading(false);
         return;
       }
+
+      setIsGuest(false);
       loadBookings();
     };
 
@@ -190,6 +200,70 @@ export default function BoardingBookingsScreen({ navigation }) {
           fullScreen
         />
       </View>
+    );
+  }
+
+  if (isGuest) {
+    return (
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: theme.background }]}
+        edges={["left", "right", "bottom"]}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+            backgroundColor: theme.background,
+          }}
+        >
+          <View
+            style={{
+              width: 60,
+              height: 60,
+              borderRadius: 36,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: theme.surfaceAlt,
+            }}
+          >
+            <Ionicons name="calendar-outline" size={38} color={theme.primary} />
+          </View>
+
+          <Text
+            style={{
+              textAlign: "center",
+              marginTop: 0,
+              color: theme.textSecondary,
+            }}
+          >
+            Sign in or create an account to view your bookings
+          </Text>
+
+          <TouchableOpacity
+            style={{
+              backgroundColor: theme.primary,
+              paddingHorizontal: 30,
+              paddingVertical: 14,
+              borderRadius: 12,
+              marginTop: 15,
+            }}
+            onPress={async () => {
+              await AsyncStorage.removeItem("guestRole");
+
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "Auth" }],
+              });
+            }}
+          >
+            <Text style={{ color: "#fff", fontWeight: "bold" }}>
+              Sign In / Sign Up
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     );
   }
 

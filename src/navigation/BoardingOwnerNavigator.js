@@ -1,13 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-import {
-  View,
-  Text,
-  Pressable,
-  Alert,
-  Image,
-} from "react-native";
+import { View, Text, Pressable, Alert, Image } from "react-native";
 import PremiumLoader from "../components/PremiumLoader";
 import BoardingOwnerStack from "./BoardingOwnerStack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -23,7 +17,6 @@ const Drawer = createDrawerNavigator();
 
 function HeaderNotificationButton({ navigation }) {
   const [unreadCount, setUnreadCount] = useState(0);
-
   const refreshUnreadCount = useCallback(async () => {
     try {
       const items = await fetchNotificationsFromApi({ limit: 20, offset: 0 });
@@ -37,27 +30,30 @@ function HeaderNotificationButton({ navigation }) {
       setUnreadCount(0);
     }
   }, []);
-
   useEffect(() => {
     refreshUnreadCount();
-
     const unsubscribe = navigation.addListener("focus", () => {
       refreshUnreadCount();
     });
-
     return unsubscribe;
   }, [navigation, refreshUnreadCount]);
-
   return (
     <Pressable
       style={drawerStyles.headerRightButton}
-      onPress={() => navigation.navigate("Notification")}
+      onPress={() =>
+        navigation.navigate("Main", {
+          screen: "BoardingTabs",
+          params: { screen: "NotificationView" },
+        })
+      }
     >
+      
       <View style={drawerStyles.notificationBadgeContainer}>
         <Ionicons name="notifications-outline" size={26} color="#111827" />
         {unreadCount > 0 ? (
           <View style={drawerStyles.notificationBadge}>
             <Text style={drawerStyles.notificationBadgeText}>
+              
               {unreadCount > 9 ? "9+" : unreadCount}
             </Text>
           </View>
@@ -69,33 +65,66 @@ function HeaderNotificationButton({ navigation }) {
 
 function BoardingOwnerDrawerContent({ navigation }) {
   const { theme } = useTheme();
+
   const [guestRole, setGuestRole] = useState(null);
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", async () => {
+
+  const loadUserState = useCallback(async () => {
+    try {
       setLoading(true);
 
-      const guestRole = await AsyncStorage.getItem("guestRole");
+      const values = await AsyncStorage.multiGet([
+        "guestRole",
+        "role",
+        "isGuest",
+      ]);
 
-      const role = await AsyncStorage.getItem("role");
+      const storedGuestRole = values[0][1];
+      const storedRole = values[1][1];
 
-      setGuestRole(guestRole);
-      setRole(role);
-
+      setGuestRole(storedGuestRole);
+      setRole(storedRole);
+    } catch (error) {
+      console.log("Failed to load user state:", error);
+    } finally {
       setLoading(false);
-    });
+    }
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", loadUserState);
 
     return unsubscribe;
-  }, [navigation]);
-
+  }, [navigation, loadUserState]);
   const handleSignIn = async () => {
-    await AsyncStorage.removeItem("guestRole");
+    try {
+      // Immediately update UI
+      setLoading(true);
+      setGuestRole(null);
+      setRole(null);
 
-    setGuestRole(null);
-    navigation.navigate("Auth");
+      // Remove guest state
+      await AsyncStorage.multiRemove(["guestRole", "isGuest"]);
+
+      // Reset navigation to Auth
+      const parentNav = navigation.getParent?.();
+
+      if (parentNav) {
+        parentNav.reset({
+          index: 0,
+          routes: [{ name: "Auth" }],
+        });
+      } else {
+        navigation.navigate("Auth");
+      }
+    } catch (error) {
+      console.log("Sign in navigation error:", error);
+      setLoading(false);
+
+      Alert.alert("Error", "Unable to open Sign In / Sign Up");
+    }
   };
-
   const handleContinueAsGuest = async () => {
     try {
       await AsyncStorage.setItem("guestRole", "boarding_owner");
@@ -145,8 +174,6 @@ function BoardingOwnerDrawerContent({ navigation }) {
       } else {
         navigation.navigate("Auth");
       }
-
-      Alert.alert("Success", "Logged out successfully");
     } catch (error) {
       Alert.alert("Error", "Logout failed");
     }
@@ -177,7 +204,9 @@ function BoardingOwnerDrawerContent({ navigation }) {
         >
           <Ionicons name="log-in-outline" size={22} color="#6b21a8" />
 
-          <Text style={[styles.text, { color: "#6b21a8" }]}>Sign In / Sign Up</Text>
+          <Text style={[styles.text, { color: "#6b21a8" }]}>
+            Sign In / Sign Up
+          </Text>
         </Pressable>
       ) : role ? (
         <Pressable
@@ -190,22 +219,12 @@ function BoardingOwnerDrawerContent({ navigation }) {
         </Pressable>
       ) : (
         <>
-          <Pressable
-            style={[styles.item, { marginTop: 20 }]}
-            onPress={handleContinueAsGuest}
-          >
-            <Ionicons name="person-outline" size={22} color="#6b21a8" />
-
-            <Text style={[styles.text, { color: "#6b21a8" }]}>Continue as Guest</Text>
-          </Pressable>
-
-          <Pressable
-            style={[styles.item]}
-            onPress={handleSignIn}
-          >
+          <Pressable style={[styles.item]} onPress={handleSignIn}>
             <Ionicons name="log-in-outline" size={22} color="#6b21a8" />
 
-            <Text style={[styles.text, { color: "#6b21a8" }]}>Sign In / Sign Up</Text>
+            <Text style={[styles.text, { color: "#6b21a8" }]}>
+              Sign In / Sign Up
+            </Text>
           </Pressable>
         </>
       )}
