@@ -1,3 +1,4 @@
+﻿import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
 import * as DocumentPicker from "expo-document-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -8,7 +9,6 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
-  Alert,
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
@@ -84,7 +84,7 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
         special_instructions: profile.special_instructions || "",
       });
     } catch (error) {
-      Alert.alert("Error", "Unable to load profile");
+      appAlert.alert("Error", "Unable to load profile");
     } finally {
       setLoading(false);
     }
@@ -117,7 +117,7 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
         setDocumentFiles((prev) => ({ ...prev, [fieldKey]: asset }));
       }
     } catch (error) {
-      Alert.alert("Error", "Unable to pick document");
+      appAlert.alert("Error", "Unable to pick document");
     }
   };
 
@@ -190,7 +190,7 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
           activeOpacity={0.9}
         >
           <Text style={styles.sectionTitle}>{title}</Text>
-          <Text style={styles.sectionChevron}>{isExpanded ? "−" : "+"}</Text>
+          <Text style={styles.sectionChevron}>{isExpanded ? "-" : "+"}</Text>
         </TouchableOpacity>
 
         {isExpanded ? <View style={styles.sectionBody}>{content}</View> : null}
@@ -264,12 +264,12 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
       if (response.status === "success") {
         triggerRefresh();
         goToProfileScreen();
-        Alert.alert("Success", "Profile Updated Successfully");
+        appAlert.alert("Success", "Profile Updated Successfully");
       } else {
-        Alert.alert("Error", response.message);
+        appAlert.alert("Error", response.message);
       }
     } catch (error) {
-      Alert.alert("Error", "Update Failed");
+      appAlert.alert("Error", "Update Failed");
     } finally {
       setSaving(false);
     }

@@ -1,3 +1,4 @@
+﻿import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -6,7 +7,6 @@ import {
   Image,
   TouchableOpacity,
   Linking,
-  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -31,7 +31,7 @@ const getImageUrl = (image) => {
 const formatSubtitle = (type, breed) => {
   if (!type && !breed) return "";
   const base = type ? `${type.charAt(0).toUpperCase()}${type.slice(1)}` : "";
-  return breed ? `${base}${base ? " • " : ""}${breed}` : base;
+  return breed ? `${base}${base ? " | " : ""}${breed}` : base;
 };
 
 export default function PetDetailsScreen({ route, navigation }) {
@@ -163,7 +163,7 @@ export default function PetDetailsScreen({ route, navigation }) {
 
   const openUrl = async (url) => {
     if (!url) {
-      Alert.alert(
+      appAlert.alert(
         "File unavailable",
         "No vaccination certificate link is available.",
       );
@@ -172,7 +172,7 @@ export default function PetDetailsScreen({ route, navigation }) {
 
     let normalizedUrl = String(url).trim();
     if (!normalizedUrl) {
-      Alert.alert(
+      appAlert.alert(
         "File unavailable",
         "No vaccination certificate link is available.",
       );
@@ -203,7 +203,7 @@ export default function PetDetailsScreen({ route, navigation }) {
     try {
       await Linking.openURL(link);
     } catch (error) {
-      Alert.alert(
+      appAlert.alert(
         "Cannot open file",
         "This certificate link cannot be opened.",
       );
@@ -310,9 +310,9 @@ export default function PetDetailsScreen({ route, navigation }) {
         contentContainerStyle={{ paddingBottom: insets.bottom + 48 }}
       >
         <View style={petDetailsScreenStyles.topHeader}>
-          <View style={petDetailsScreenStyles.headerSide}>
+          <View style={petDetailsScreenStyles.headerLeftSide}>
             <BackButton
-              label="← Back"
+              label="< Back"
               onPress={() => navigation.goBack()}
               style={petDetailsScreenStyles.headerBackButton}
             />
@@ -320,13 +320,13 @@ export default function PetDetailsScreen({ route, navigation }) {
 
           <Text style={petDetailsScreenStyles.headerTitle}>Pet Profile</Text>
 
-          <View style={petDetailsScreenStyles.headerSide}>
+          <View style={petDetailsScreenStyles.headerRightSide}>
             {userRole !== "boarding_owner" && guestRole !== "boarding_owner" ? (
               <TouchableOpacity
                 style={petDetailsScreenStyles.headerIconButton}
                 onPress={() => navigation.navigate("EditPet", { petId })}
               >
-                <Ionicons name="create-outline" size={24} color="#6b21a8" />
+                <Ionicons name="options-outline" size={24} color="#6b21a8" />
               </TouchableOpacity>
             ) : null}
           </View>

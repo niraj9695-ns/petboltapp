@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  Alert,
   Linking,
   useWindowDimensions,
 } from "react-native";
@@ -186,6 +185,7 @@ export default function ProfileScreen({ navigation }) {
   }
 
   const currentAadharIsPdf = user?.aadhar_file?.toLowerCase().endsWith(".pdf");
+  const alternatePhone = String(user?.alternate_phone ?? "").trim();
 
   return (
     <ScrollView
@@ -209,9 +209,7 @@ export default function ProfileScreen({ navigation }) {
         {/* Verification Badge */}
         <View style={[styles.badge, { backgroundColor: theme.cardBackground }]}>
           <Text style={[styles.badgeText, { color: theme.textSecondary }]}>
-            {user?.email_verified
-              ? "⭐ Verified User"
-              : "⚠️ Email Not Verified"}
+            {user?.email_verified ? "Verified User" : "Email Not Verified"}
           </Text>
         </View>
 
@@ -244,12 +242,16 @@ export default function ProfileScreen({ navigation }) {
             {user?.phone}
           </Text>
 
-          <Text style={[styles.label, { color: theme.textSecondary }]}>
-            Alternate Contact Number
-          </Text>
-          <Text style={[styles.value, { color: theme.textPrimary }]}>
-            {user?.alternate_phone}
-          </Text>
+          {alternatePhone ? (
+            <>
+              <Text style={[styles.label, { color: theme.textSecondary }]}>
+                Alternate Contact Number
+              </Text>
+              <Text style={[styles.value, { color: theme.textPrimary }]}>
+                {alternatePhone}
+              </Text>
+            </>
+          ) : null}
 
           <Text style={[styles.label, { color: theme.textSecondary }]}>
             Residential Address
@@ -271,13 +273,6 @@ export default function ProfileScreen({ navigation }) {
           <Text style={[styles.value, { color: theme.textPrimary }]}>
             {user?.emergency_number}
           </Text>
-
-          <Text style={[styles.label, { color: theme.textSecondary }]}>
-            Email Verification
-          </Text>
-          <Text style={[styles.value, { color: theme.textPrimary }]}>
-            {user?.email_verified ? "Verified ✅" : "Not Verified ❌"}
-          </Text>
         </View>
 
         {user?.aadhar_file ? (
@@ -292,7 +287,7 @@ export default function ProfileScreen({ navigation }) {
             ]}
           >
             <View style={styles.documentInfo}>
-              <Text style={styles.documentIcon}>🪪</Text>
+              <Text style={styles.documentIcon}>PDF</Text>
 
               <View style={{ flex: 1 }}>
                 <Text

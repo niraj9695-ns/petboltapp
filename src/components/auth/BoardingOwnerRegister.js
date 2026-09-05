@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import * as DocumentPicker from "expo-document-picker";
 import FloatingInput from "../inputs/FloatingInput";
 import { PasswordInput } from "../inputs/PasswordInput";
@@ -8,7 +8,6 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Alert,
 } from "react-native";
 
 import styles from "../../styles/BoardingOwnerRegisterStyles";

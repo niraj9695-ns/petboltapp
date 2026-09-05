@@ -1,4 +1,4 @@
-import { Alert } from "react-native";
+﻿import { appAlert } from "./alert";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function isGuestUser() {
@@ -11,7 +11,7 @@ export async function getGuestRole() {
 }
 
 export function showGuestActionAlert(navigation) {
-  Alert.alert(
+  appAlert.alert(
     "Sign in required",
     "Please sign in or create an account to continue.",
     [

@@ -1,8 +1,9 @@
+﻿import { appAlert } from "../utils/alert";
 import React, { useCallback, useEffect, useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import BottomTabs from "./BottomTabs";
 
-import { View, Image, Pressable, Text, Alert } from "react-native";
+import { View, Image, Pressable, Text } from "react-native";
 
 import PremiumLoader from "../components/PremiumLoader";
 import { Ionicons } from "@expo/vector-icons";
@@ -129,7 +130,7 @@ function CustomDrawerContent({ navigation }) {
         navigation.navigate("Auth");
       }
     } catch (error) {
-      Alert.alert("Error", "Logout failed");
+      appAlert.alert("Error", "Logout failed");
     }
   };
 

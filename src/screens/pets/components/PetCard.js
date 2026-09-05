@@ -65,7 +65,7 @@ export default function PetCard({
           </View>
           <View style={petCardStyles.iconRow}>
             <TouchableOpacity onPress={() => onEdit(item)}>
-              <Ionicons name="create-outline" size={22} color="#6b21a8" />
+              <Ionicons name="options-outline" size={22} color="#6b21a8" />
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => onDelete(petId)}>

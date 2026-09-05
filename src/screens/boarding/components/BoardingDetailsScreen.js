@@ -1,3 +1,4 @@
+﻿import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
 
 import {
@@ -7,7 +8,6 @@ import {
   Image,
   TouchableOpacity,
   Linking,
-  Alert,
   useWindowDimensions,
 } from "react-native";
 
@@ -79,7 +79,7 @@ export default function BoardingDetailsScreen({ route, navigation }) {
   const handleBookingPress = async () => {
     const guestRole = await AsyncStorage.getItem("guestRole");
     if (guestRole) {
-      Alert.alert(
+      appAlert.alert(
         "Sign in required",
         "Please sign in or sign up to book this center.",
         [
@@ -219,7 +219,7 @@ export default function BoardingDetailsScreen({ route, navigation }) {
                         <Text style={styles.label}>
                           {petType.charAt(0).toUpperCase() + petType.slice(1)}
                         </Text>
-                        <Text style={styles.price}>₹{price}/day</Text>
+                        <Text style={styles.price}>{"\u20B9"}{price}/day</Text>
                       </View>
                       {Object.entries(center.pet_type_prices).slice(
                         -1,
@@ -235,7 +235,7 @@ export default function BoardingDetailsScreen({ route, navigation }) {
           <View style={styles.sectionCard}>
             <Text style={styles.sectionTitle}>Address</Text>
 
-            <Text style={styles.addressInfoText}>📍 {center.address}</Text>
+            <Text style={styles.addressInfoText}>Address: {center.address}</Text>
 
             {!!center.address_line_2 && (
               <Text style={[styles.addressInfoText, styles.addressLine]}>
@@ -381,7 +381,7 @@ export default function BoardingDetailsScreen({ route, navigation }) {
                       Linking.openURL(`tel:${center.primary_contact_number}`)
                     }
                   >
-                    <Text style={styles.label}>📞 Phone</Text>
+                    <Text style={styles.label}>Phone</Text>
                     <Text style={[styles.infoText, styles.contactLink]}>
                       {center.primary_contact_number}
                     </Text>
@@ -398,7 +398,7 @@ export default function BoardingDetailsScreen({ route, navigation }) {
                       Linking.openURL(`mailto:${center.email_address}`)
                     }
                   >
-                    <Text style={styles.label}>📧 Email</Text>
+                    <Text style={styles.label}>Email</Text>
                     <Text style={[styles.infoText, styles.contactLink]}>
                       {center.email_address}
                     </Text>
@@ -412,7 +412,7 @@ export default function BoardingDetailsScreen({ route, navigation }) {
                   style={styles.contactRow}
                   onPress={() => Linking.openURL(center.website_url)}
                 >
-                  <Text style={styles.label}>🌐 Website</Text>
+                  <Text style={styles.label}>Website</Text>
                   <Text style={[styles.infoText, styles.contactLink]}>
                     Visit Website
                   </Text>
@@ -456,7 +456,7 @@ export default function BoardingDetailsScreen({ route, navigation }) {
                   onPress={() => Linking.openURL(center.license_proof)}
                 >
                   <Text style={styles.licenseLinkText}>
-                    📄 View License Document
+                    View License Document
                   </Text>
                 </TouchableOpacity>
               )}

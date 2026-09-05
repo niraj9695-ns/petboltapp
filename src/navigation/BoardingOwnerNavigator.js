@@ -1,7 +1,8 @@
+﻿import { appAlert } from "../utils/alert";
 import React, { useCallback, useEffect, useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-import { View, Text, Pressable, Alert, Image } from "react-native";
+import { View, Text, Pressable, Image } from "react-native";
 import PremiumLoader from "../components/PremiumLoader";
 import BoardingOwnerStack from "./BoardingOwnerStack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -122,7 +123,7 @@ function BoardingOwnerDrawerContent({ navigation }) {
       console.log("Sign in navigation error:", error);
       setLoading(false);
 
-      Alert.alert("Error", "Unable to open Sign In / Sign Up");
+      appAlert.alert("Error", "Unable to open Sign In / Sign Up");
     }
   };
   const handleContinueAsGuest = async () => {
@@ -142,7 +143,7 @@ function BoardingOwnerDrawerContent({ navigation }) {
         navigation.navigate("GuestBoarding");
       }
     } catch (error) {
-      Alert.alert("Error", "Unable to continue as guest");
+      appAlert.alert("Error", "Unable to continue as guest");
     }
   };
 
@@ -175,7 +176,7 @@ function BoardingOwnerDrawerContent({ navigation }) {
         navigation.navigate("Auth");
       }
     } catch (error) {
-      Alert.alert("Error", "Logout failed");
+      appAlert.alert("Error", "Logout failed");
     }
   };
 

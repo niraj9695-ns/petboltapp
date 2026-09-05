@@ -29,9 +29,15 @@ export default StyleSheet.create({
     paddingHorizontal: 5,
     minHeight: 52,
   },
-  headerSide: {
+  headerLeftSide: {
     width: 90, // Same left and right width keeps title truly centered
-    alignItems: "center",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+  },
+
+  headerRightSide: {
+    width: 90, // Same left and right width keeps title truly centered
+    alignItems: "flex-end",
     justifyContent: "center",
   },
 

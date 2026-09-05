@@ -1,6 +1,6 @@
+﻿import { appAlert } from "../../../utils/alert";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -27,7 +27,7 @@ import { useTheme } from "../../../context/ThemeContext";
 
 const formatShortDate = (value) => {
   if (!value) {
-    return "—";
+    return "-";
   }
 
   const parsed = new Date(value);
@@ -107,7 +107,7 @@ export default function BoardingCouponsScreen() {
         Number(pagination?.total || payload?.total || discountList.length || 0),
       );
     } catch (error) {
-      Alert.alert("Error", "Unable to load the coupons for this center.");
+      appAlert.alert("Error", "Unable to load the coupons for this center.");
       setDiscounts([]);
       setCurrentPage(1);
       setTotalPages(1);
@@ -153,7 +153,7 @@ export default function BoardingCouponsScreen() {
           await loadDiscounts(nextCenterId, 1);
         }
       } catch (error) {
-        Alert.alert("Error", "Unable to load your centers right now.");
+        appAlert.alert("Error", "Unable to load your centers right now.");
       } finally {
         setLoadingCenters(false);
       }
@@ -282,7 +282,7 @@ export default function BoardingCouponsScreen() {
   };
 
   const deleteCoupon = async (discount) => {
-    Alert.alert(
+    appAlert.alert(
       "Delete coupon",
       "Are you sure you want to remove this coupon?",
       [
@@ -297,7 +297,7 @@ export default function BoardingCouponsScreen() {
               triggerRefresh();
               await loadDiscounts(selectedCenterId);
             } catch (error) {
-              Alert.alert("Error", "Unable to delete this coupon right now.");
+              appAlert.alert("Error", "Unable to delete this coupon right now.");
             } finally {
               setDeletingCouponId(null);
             }
@@ -510,7 +510,7 @@ export default function BoardingCouponsScreen() {
                           <Text style={styles.discountTitle}>
                             {discount.discount_type === "percentage"
                               ? `${discount.discount_value}% off`
-                              : `₹${discount.discount_value} off`}
+                              : `\u20B9${discount.discount_value} off`}
                           </Text>
                           <Text style={styles.discountMeta}>
                             Min stay: {discount.min_days} day

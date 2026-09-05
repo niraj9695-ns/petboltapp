@@ -1,3 +1,4 @@
+﻿import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState, useLayoutEffect } from "react";
 
 import {
@@ -5,7 +6,6 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
-  Alert,
   RefreshControl,
   useWindowDimensions,
 } from "react-native";
@@ -140,7 +140,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
   const [isGuest, setIsGuest] = useState(false);
 
   const promptSignIn = () => {
-    Alert.alert(
+    appAlert.alert(
       "Sign in required",
       "Please sign in or create an account to continue.",
       [
@@ -198,7 +198,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
 
       setPetImages((prevImages) => ({ ...prevImages, ...imagesObj }));
     } catch (error) {
-      Alert.alert("Error", "Failed to fetch pets");
+      appAlert.alert("Error", "Failed to fetch pets");
     } finally {
       setLoading(false);
       setLoadingMore(false);
@@ -218,7 +218,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
         const success = await deletePetImageApi(imageId);
 
         if (!success) {
-          Alert.alert("Error", "Failed to delete image");
+          appAlert.alert("Error", "Failed to delete image");
           return;
         }
       }
@@ -234,7 +234,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
         return currentIndex;
       });
     } catch (error) {
-      Alert.alert("Error", "Failed to remove image");
+      appAlert.alert("Error", "Failed to remove image");
     }
   };
 
@@ -244,7 +244,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
         await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (!permission.granted) {
-        Alert.alert("Permission Required", "Please allow gallery access");
+        appAlert.alert("Permission Required", "Please allow gallery access");
 
         return;
       }
@@ -259,7 +259,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
         setSelectedImages((prev) => [...prev, ...result.assets]);
       }
     } catch (error) {
-      Alert.alert("Error", "Image picker failed");
+      appAlert.alert("Error", "Image picker failed");
     }
   };
 
@@ -287,22 +287,22 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
 
   const validateForm = () => {
     if (!petData.pet_name?.trim()) {
-      Alert.alert("Validation", "Pet Name is required");
+      appAlert.alert("Validation", "Pet Name is required");
       return false;
     }
 
     if (!petData.pet_type) {
-      Alert.alert("Validation", "Pet Type is required");
+      appAlert.alert("Validation", "Pet Type is required");
       return false;
     }
 
     if (!petData.breed?.trim()) {
-      Alert.alert("Validation", "Breed is required");
+      appAlert.alert("Validation", "Breed is required");
       return false;
     }
 
     if (!petData.gender) {
-      Alert.alert("Validation", "Gender is required");
+      appAlert.alert("Validation", "Gender is required");
       return false;
     }
 
@@ -319,12 +319,12 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
           petData.vaccination_certificate.type));
 
     if (!hasValidCertificate) {
-      Alert.alert("Validation", "Vaccination Certificate is required");
+      appAlert.alert("Validation", "Vaccination Certificate is required");
       return false;
     }
 
     if (!petData.food_type) {
-      Alert.alert("Validation", "Food Type is required");
+      appAlert.alert("Validation", "Food Type is required");
       return false;
     }
 
@@ -414,7 +414,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
             }
           }
 
-          Alert.alert("Success", "Pet updated successfully");
+          appAlert.alert("Success", "Pet updated successfully");
 
           closeModal();
           await loadPets();
@@ -428,7 +428,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
             });
           }
         } else {
-          Alert.alert("Error", response.data || "Update failed");
+          appAlert.alert("Error", response.data || "Update failed");
         }
       } else {
         const response = await addPetApi(payload);
@@ -483,7 +483,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
             }
           }
 
-          Alert.alert("Success", "Pet added successfully");
+          appAlert.alert("Success", "Pet added successfully");
 
           closeModal();
           await loadPets();
@@ -506,11 +506,11 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
             }
           }
         } else {
-          Alert.alert("Error", response.data || "Add failed");
+          appAlert.alert("Error", response.data || "Add failed");
         }
       }
     } catch (error) {
-      Alert.alert("Error", "Something went wrong");
+      appAlert.alert("Error", "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -522,7 +522,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
       return;
     }
 
-    Alert.alert("Delete Pet", "Are you sure?", [
+    appAlert.alert("Delete Pet", "Are you sure?", [
       {
         text: "Cancel",
         style: "cancel",
@@ -538,12 +538,12 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
             const success = await deletePetApi(id);
 
             if (success) {
-              Alert.alert("Success", "Pet deleted successfully");
+              appAlert.alert("Success", "Pet deleted successfully");
 
               await loadPets();
             }
           } catch (error) {
-            Alert.alert("Error", "Delete failed");
+            appAlert.alert("Error", "Delete failed");
           } finally {
             setLoading(false);
           }
@@ -557,7 +557,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
       const id = pet?.pet_id || pet?.id || pet;
 
       if (!id) {
-        Alert.alert("Error", "Pet id is missing");
+        appAlert.alert("Error", "Pet id is missing");
         return;
       }
 
@@ -715,7 +715,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
 
       setShowForm(true);
     } catch (error) {
-      Alert.alert("Error", "Failed to load pet details");
+      appAlert.alert("Error", "Failed to load pet details");
     } finally {
       setLoading(false);
     }
@@ -823,7 +823,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
       {/* HEADER */}
 
       <View style={petScreenStyles.header}>
-        <Text style={petScreenStyles.heading}>My Pets 🐾</Text>
+        <Text style={petScreenStyles.heading}>My Pets</Text>
 
         <TouchableOpacity
           style={petScreenStyles.addBtn}

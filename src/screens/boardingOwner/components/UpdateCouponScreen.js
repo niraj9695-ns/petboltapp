@@ -1,6 +1,6 @@
+﻿import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -67,7 +67,7 @@ export default function UpdateCouponScreen() {
   const submitCoupon = async () => {
     if (!form.discount_value || !form.min_days || !form.expiry_date) {
       setShowErrors(true);
-      Alert.alert("Incomplete form", "Please fill all required fields.");
+      appAlert.alert("Incomplete form", "Please fill all required fields.");
       return;
     }
 
@@ -83,10 +83,10 @@ export default function UpdateCouponScreen() {
     try {
       await updateDateDiscount(route?.params?.discount?.id, payload);
       triggerRefresh();
-      Alert.alert("Success", "Coupon updated successfully.");
+      appAlert.alert("Success", "Coupon updated successfully.");
       navigation.goBack();
     } catch (error) {
-      Alert.alert("Error", "Unable to update coupon right now.");
+      appAlert.alert("Error", "Unable to update coupon right now.");
     } finally {
       setSaving(false);
     }
@@ -228,7 +228,7 @@ export default function UpdateCouponScreen() {
                   >
                     {form.expiry_date || "Select expiry date"}
                   </Text>
-                  <Text style={styles.dateButtonIcon}>📅</Text>
+                  <Text style={styles.dateButtonIcon}>Date</Text>
                 </TouchableOpacity>
               </View>
             </View>

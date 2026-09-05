@@ -1,3 +1,4 @@
+﻿import { appAlert } from "../../../utils/alert";
 import React, { useState } from "react";
 
 import {
@@ -6,7 +7,6 @@ import {
   Switch,
   Text,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -62,7 +62,7 @@ export default function PhaseTwoForm({
         const fileSize = file.size || file.fileSize || 0;
 
         if (fileSize > 5 * 1024 * 1024) {
-          Alert.alert(
+          appAlert.alert(
             "File too large",
             "Vaccination certificate must be a PDF under 5MB.",
           );
@@ -75,7 +75,7 @@ export default function PhaseTwoForm({
         });
       }
     } catch (error) {
-      Alert.alert("Error", "Unable to pick vaccination certificate");
+      appAlert.alert("Error", "Unable to pick vaccination certificate");
     }
   };
 

@@ -1,3 +1,4 @@
+﻿import { appAlert } from "../../utils/alert";
 import React, { useState, useEffect, useRef } from "react";
 
 import {
@@ -5,7 +6,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -64,7 +64,7 @@ export default function OTPVerification({
 
   const handleVerifyOtp = async () => {
     if (!otp) {
-      Alert.alert("Validation", "Please enter OTP");
+      appAlert.alert("Validation", "Please enter OTP");
 
       return;
     }
@@ -74,7 +74,7 @@ export default function OTPVerification({
 
       if (otpType === "reset_password") {
         if (!newPassword) {
-          Alert.alert("Validation", "Please enter new password");
+          appAlert.alert("Validation", "Please enter new password");
 
           return;
         }
@@ -97,11 +97,11 @@ export default function OTPVerification({
         const result = await response.json();
 
         if (result.status === true || result.status === "success") {
-          Alert.alert("Success", "Password reset successfully");
+          appAlert.alert("Success", "Password reset successfully");
 
           onBack?.();
         } else {
-          Alert.alert("Error", result.message || "Failed to reset password");
+          appAlert.alert("Error", result.message || "Failed to reset password");
         }
 
         return;
@@ -142,7 +142,7 @@ export default function OTPVerification({
           await AsyncStorage.setItem("user", JSON.stringify(user));
         }
 
-        Alert.alert("Success", "OTP Verified");
+        appAlert.alert("Success", "OTP Verified");
 
         setTimeout(() => {
           if (navigation && user?.role) {
@@ -173,10 +173,10 @@ export default function OTPVerification({
           }
         }, 100);
       } else {
-        Alert.alert("Error", result.message || "Invalid OTP");
+        appAlert.alert("Error", result.message || "Invalid OTP");
       }
     } catch (error) {
-      Alert.alert("Error", "Something went wrong");
+      appAlert.alert("Error", "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -219,10 +219,10 @@ export default function OTPVerification({
         result?.data?.verification_otp ||
         "OTP not returned";
 
-      Alert.alert("Success", "OTP Resent Successfully");
+      appAlert.alert("Success", "OTP Resent Successfully");
       setCountdown(30);
     } catch (error) {
-      Alert.alert("Error", "Failed to resend OTP");
+      appAlert.alert("Error", "Failed to resend OTP");
     } finally {
       setLoading(false);
     }

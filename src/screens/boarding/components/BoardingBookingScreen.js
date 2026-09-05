@@ -1,10 +1,10 @@
+﻿import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
-  Alert,
   TextInput,
 } from "react-native";
 import PremiumLoader from "../../../components/PremiumLoader";
@@ -57,7 +57,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
       setToken(storedToken);
 
       if (guestRole) {
-        Alert.alert(
+        appAlert.alert(
           "Sign in required",
           "Please sign in or create an account to continue booking.",
           [
@@ -89,7 +89,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
     if (value === null || value === undefined || value === "") return "-";
     const n = Number(value);
     if (Number.isNaN(n)) return String(value);
-    return `₹${n.toLocaleString("en-IN", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+    return `\u20B9${n.toLocaleString("en-IN", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
   };
 
   const normalizeBookedDates = (dates) => {
@@ -297,7 +297,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
     if (!date) return;
 
     if (await isDateBooked(date)) {
-      Alert.alert(
+      appAlert.alert(
         "Unavailable",
         `${formatDate(date)} is already booked. Please select another date.`,
       );
@@ -314,7 +314,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
     }
 
     if (date < checkInDate) {
-      Alert.alert(
+      appAlert.alert(
         "Invalid Dates",
         "End date must be on or after the start date",
       );
@@ -322,7 +322,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
     }
 
     if (hasBookedDateInRange(checkInDate, date)) {
-      Alert.alert(
+      appAlert.alert(
         "Unavailable range",
         "The selected stay overlaps unavailable dates. Please choose a different range.",
       );
@@ -356,7 +356,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
   const createBooking = async () => {
     try {
       if (!selectedPetId) {
-        Alert.alert("Error", "Please select a pet");
+        appAlert.alert("Error", "Please select a pet");
         return;
       }
 
@@ -374,7 +374,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
       });
 
       if (data?.status !== "success" && data?.status !== true) {
-        Alert.alert(
+        appAlert.alert(
           "Booking Failed",
           data?.message || "Unable to create booking",
         );
@@ -406,25 +406,25 @@ export default function BoardingBookingScreen({ route, navigation }) {
         razorpaySignature: razorpayResult.razorpay_signature,
       });
       if (verifyData?.status === "success" || verifyData?.status === true) {
-        Alert.alert("Payment Successful", "Booking confirmed", [
+        appAlert.alert("Payment Successful", "Booking confirmed", [
           {
             text: "OK",
             onPress: navigateToHome,
           },
         ]);
       } else {
-        Alert.alert(
+        appAlert.alert(
           "Verification Failed",
           verifyData?.message || "Payment verification failed",
         );
       }
     } catch (error) {
-      Alert.alert(
+      appAlert.alert(
         "Payment Error",
         `${error?.description || JSON.stringify(error)}`,
       );
 
-      Alert.alert("Payment Error", JSON.stringify(error, null, 2));
+      appAlert.alert("Payment Error", JSON.stringify(error, null, 2));
     } finally {
       setBookingLoading(false);
     }
@@ -615,7 +615,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
               <View style={styles.pricingRow}>
                 <Text style={styles.pricingLabel}>Dates</Text>
                 <Text style={styles.pricingValue}>
-                  {pricingPayload.start_date} — {pricingPayload.end_date} (
+                  {pricingPayload.start_date} - {pricingPayload.end_date} (
                   {pricingPayload.total_days} days)
                 </Text>
               </View>
@@ -677,7 +677,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
                 <View style={{ marginTop: 10 }}>
                   <Text style={styles.pricingLabel}>Applied Discount Tier</Text>
                   <Text style={styles.pricingValue}>
-                    {pricingPayload.applied_discount_tier.discount_type} •
+                    {pricingPayload.applied_discount_tier.discount_type} |
                     {pricingPayload.applied_discount_tier.discount_value} (min
                     {pricingPayload.applied_discount_tier.min_days} days)
                   </Text>

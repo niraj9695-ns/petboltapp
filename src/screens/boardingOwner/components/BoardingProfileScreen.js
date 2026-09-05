@@ -1,3 +1,4 @@
+﻿import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -6,7 +7,6 @@ import {
   Image,
   TouchableOpacity,
   Linking,
-  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PremiumLoader from "../../../components/PremiumLoader";
@@ -32,7 +32,7 @@ export default function BoardingProfileScreen({ navigation }) {
         setProfile(response.data);
       }
     } catch (error) {
-      Alert.alert("Error", "Unable to load profile");
+      appAlert.alert("Error", "Unable to load profile");
     } finally {
       setLoading(false);
     }
@@ -136,7 +136,7 @@ export default function BoardingProfileScreen({ navigation }) {
           activeOpacity={0.9}
         >
           <Text style={styles.sectionTitle}>{title}</Text>
-          <Text style={styles.sectionChevron}>{isExpanded ? "−" : "+"}</Text>
+          <Text style={styles.sectionChevron}>{isExpanded ? "-" : "+"}</Text>
         </TouchableOpacity>
 
         {isExpanded ? <View style={styles.sectionBody}>{content}</View> : null}
@@ -147,7 +147,7 @@ export default function BoardingProfileScreen({ navigation }) {
   const openDocument = async (url) => {
     try {
       if (!url) {
-        Alert.alert("Error", "Document not found");
+        appAlert.alert("Error", "Document not found");
         return;
       }
 
@@ -156,13 +156,13 @@ export default function BoardingProfileScreen({ navigation }) {
       if (supported) {
         await Linking.openURL(url);
       } else {
-        Alert.alert(
+        appAlert.alert(
           "Unable to Open",
           "No application found to open this document.",
         );
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to open document");
+      appAlert.alert("Error", "Failed to open document");
     }
   };
 

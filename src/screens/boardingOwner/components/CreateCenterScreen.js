@@ -1,3 +1,4 @@
+﻿import { appAlert } from "../../../utils/alert";
 import React, { useState } from "react";
 import {
   View,
@@ -5,7 +6,6 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
-  Alert,
   Platform,
   KeyboardAvoidingView,
   Image,
@@ -264,7 +264,7 @@ export default function CreateCenterScreen() {
 
   const addPetPrice = () => {
     if (!petPriceDraft.amount) {
-      Alert.alert("Missing price", "Enter a price for the selected pet type.");
+      appAlert.alert("Missing price", "Enter a price for the selected pet type.");
       return;
     }
 
@@ -291,7 +291,7 @@ export default function CreateCenterScreen() {
       const permissionResult =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permissionResult.granted) {
-        Alert.alert(
+        appAlert.alert(
           "Permission needed",
           "Please allow access to your photos to add images.",
         );
@@ -327,7 +327,7 @@ export default function CreateCenterScreen() {
         }
       }
     } catch (error) {
-      Alert.alert("Error", "Unable to select image.");
+      appAlert.alert("Error", "Unable to select image.");
     }
   };
 
@@ -344,13 +344,13 @@ export default function CreateCenterScreen() {
         setErrors((prev) => ({ ...prev, licenseFile: "" }));
       }
     } catch (error) {
-      Alert.alert("Error", "Unable to select document.");
+      appAlert.alert("Error", "Unable to select document.");
     }
   };
 
   const handleCreate = async () => {
     if (!validateForm()) {
-      Alert.alert("Validation Error", "Please fix the highlighted fields");
+      appAlert.alert("Validation Error", "Please fix the highlighted fields");
       return;
     }
 
@@ -415,12 +415,12 @@ export default function CreateCenterScreen() {
           });
         }
 
-        Alert.alert("Success", "Center created successfully");
+        appAlert.alert("Success", "Center created successfully");
       } else {
-        Alert.alert("Error", response?.message || "Failed to create center");
+        appAlert.alert("Error", response?.message || "Failed to create center");
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to create center");
+      appAlert.alert("Error", "Failed to create center");
     } finally {
       setLoading(false);
     }
@@ -863,7 +863,7 @@ export default function CreateCenterScreen() {
                           onPress={() => removeSelectedImage(index)}
                           activeOpacity={0.9}
                         >
-                          <Text style={styles.removeImageIcon}>✕</Text>
+                          <Text style={styles.removeImageIcon}>x</Text>
                         </TouchableOpacity>
                       </View>
                     ))}
@@ -932,7 +932,7 @@ const SectionBlock = ({
         <Text style={styles.sectionTitle}>{title}</Text>
         <Text style={styles.sectionSubtitle}>{subtitle}</Text>
       </View>
-      <Text style={styles.sectionChevron}>{expanded ? "−" : "+"}</Text>
+      <Text style={styles.sectionChevron}>{expanded ? "-" : "+"}</Text>
     </TouchableOpacity>
     {expanded ? <View style={styles.sectionBody}>{children}</View> : null}
   </View>
@@ -990,7 +990,7 @@ const DatePickerField = ({
         {value || placeholder}
       </Text>
       <Text style={styles.dateButtonIcon}>
-        {label.includes("Time") ? "🕒" : "📅"}
+        {label.includes("Time") ? "Time" : "Date"}
       </Text>
     </TouchableOpacity>
   </View>
@@ -1123,7 +1123,7 @@ const PetPriceEditor = ({
             <Text style={styles.priceRowText}>
               {petType.charAt(0).toUpperCase() + petType.slice(1)}
             </Text>
-            <Text style={styles.priceRowValue}>₹{amount}</Text>
+                        <Text style={styles.priceRowValue}>{"\u20B9"}{amount}</Text>
             <TouchableOpacity onPress={() => onRemove(petType)}>
               <Text style={styles.removeText}>Remove</Text>
             </TouchableOpacity>

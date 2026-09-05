@@ -1,3 +1,4 @@
+﻿import { appAlert } from "../../../utils/alert";
 import React, { useState, useCallback } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import {
@@ -8,7 +9,6 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   Linking,
-  Alert,
   RefreshControl,
   ActivityIndicator,
 } from "react-native";
@@ -88,14 +88,14 @@ const getBookingPetId = (booking) => {
 
 const handleCallCenter = async (phoneNumber) => {
   if (!phoneNumber) {
-    Alert.alert("Error", "Phone number not available");
+    appAlert.alert("Error", "Phone number not available");
     return;
   }
 
   try {
     await Linking.openURL(`tel:${phoneNumber}`);
   } catch (error) {
-    Alert.alert("Contact Center", `Call on: ${phoneNumber}`);
+    appAlert.alert("Contact Center", `Call on: ${phoneNumber}`);
   }
 };
 
@@ -736,7 +736,7 @@ export default function BookingStatus({ embedded = false }) {
               style={styles.bookingStatusIconBox}
             >
               <Text style={styles.bookingStatusPetEmoji}>
-                {booking?.pet?.pet_type === "dog" ? "🐶" : "🐱"}
+                {booking?.pet?.pet_type === "dog" ? "Dog" : "Cat"}
               </Text>
             </LinearGradient>
           )}
@@ -910,7 +910,7 @@ export default function BookingStatus({ embedded = false }) {
                       },
                     ]}
                   >
-                    ₹{booking?.total_price ?? 0}
+                    {"\u20B9"}{booking?.total_price ?? 0}
                   </Text>
                 </View>
               </View>
@@ -956,7 +956,7 @@ export default function BookingStatus({ embedded = false }) {
                   <Text style={styles.detailLabel}>Total Cost</Text>
 
                   <Text style={[styles.detailValue, styles.costValue]}>
-                    ₹{booking?.total_price ?? 0}
+                    {"\u20B9"}{booking?.total_price ?? 0}
                   </Text>
                 </View>
               </View>
@@ -1055,7 +1055,7 @@ export default function BookingStatus({ embedded = false }) {
                     booking?.centerId;
 
                   if (!centerId) {
-                    Alert.alert(
+                    appAlert.alert(
                       "Not available",
                       "Center details not available.",
                     );

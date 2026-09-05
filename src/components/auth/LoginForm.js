@@ -1,6 +1,7 @@
+﻿import { appAlert } from "../../utils/alert";
 import React, { useState } from "react";
 
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../../context/ThemeContext";
 
@@ -99,10 +100,10 @@ export default function LoginForm({
           }, 50);
         }
       } else {
-        Alert.alert("Error", result.message || "Invalid Credentials");
+        appAlert.alert("Error", result.message || "Invalid Credentials");
       }
     } catch (error) {
-      Alert.alert("Error", "Something went wrong");
+      appAlert.alert("Error", "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -148,7 +149,7 @@ export default function LoginForm({
         "OTP not returned";
 
       if (result.status === true || result.status === "success") {
-        Alert.alert("Success", "Reset OTP sent to email");
+        appAlert.alert("Success", "Reset OTP sent to email");
 
         setEmail?.(email);
 
@@ -158,10 +159,10 @@ export default function LoginForm({
           setStep("otp");
         }, 50);
       } else {
-        Alert.alert("Error", result.message || "Failed to send OTP");
+        appAlert.alert("Error", result.message || "Failed to send OTP");
       }
     } catch (error) {
-      Alert.alert("Error", "Something went wrong");
+      appAlert.alert("Error", "Something went wrong");
     } finally {
       setLoading(false);
     }

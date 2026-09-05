@@ -71,8 +71,8 @@ export default StyleSheet.create({
       12,
     color: colors.textMuted,
     textAlign: "center",
-    marginTop: spacing.xl,
-    marginBottom: spacing.xl,
+    marginTop: spacing.xs,
+    marginBottom: spacing.lg,
   },
   btnRow: {
     width: "100%",
@@ -128,7 +128,7 @@ export default StyleSheet.create({
     borderRadius: radius.lg,
     padding: spacing.lg,
     marginTop: spacing.xl,
-    marginBottom: spacing.xl,
+    marginBottom: spacing.xs,
   },
   label: {
     fontSize:
@@ -159,7 +159,7 @@ export default StyleSheet.create({
       (typography && typography.h3 && typography.h3.fontWeight) ||
       baseTypography.weights.bold ||
       "700",
-    marginBottom: spacing.sm,
+    marginBottom: spacing.xs,
     alignSelf: "flex-start",
   },
   documentCard: {
@@ -167,8 +167,8 @@ export default StyleSheet.create({
     backgroundColor: colors.surface,
     borderRadius: radius.xl,
     padding: spacing.lg,
-    marginTop: spacing.lg,
-    marginBottom: spacing.xl,
+    marginTop: spacing.xs,
+    marginBottom: spacing.sm,
 
     shadowColor: "#6b21a8",
     shadowOffset: {

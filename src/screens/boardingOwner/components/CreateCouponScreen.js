@@ -1,6 +1,6 @@
+﻿import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -98,7 +98,7 @@ export default function CreateCouponScreen() {
         center_id: defaultCenterId,
       }));
     } catch (error) {
-      Alert.alert("Error", "Unable to load centers.");
+      appAlert.alert("Error", "Unable to load centers.");
     } finally {
       setLoading(false);
     }
@@ -174,7 +174,7 @@ export default function CreateCouponScreen() {
 
     if (missingFields) {
       setShowErrors(true);
-      Alert.alert("Incomplete form", "Please fill all required fields.");
+      appAlert.alert("Incomplete form", "Please fill all required fields.");
       return;
     }
 
@@ -192,10 +192,10 @@ export default function CreateCouponScreen() {
     try {
       await createDateDiscount(payload);
       triggerRefresh();
-      Alert.alert("Success", "Coupon created successfully.");
+      appAlert.alert("Success", "Coupon created successfully.");
       navigation.goBack();
     } catch (error) {
-      Alert.alert("Error", "Unable to create coupon right now.");
+      appAlert.alert("Error", "Unable to create coupon right now.");
     } finally {
       setSaving(false);
     }
@@ -426,7 +426,7 @@ export default function CreateCouponScreen() {
                   >
                     {form.expiry_date || "Select expiry date"}
                   </Text>
-                  <Text style={styles.dateButtonIcon}>📅</Text>
+                  <Text style={styles.dateButtonIcon}>Date</Text>
                 </TouchableOpacity>
               </View>
             </View>

@@ -1,3 +1,4 @@
+﻿import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -5,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  Alert,
   FlatList,
   Linking,
   useWindowDimensions,
@@ -62,7 +62,7 @@ export default function CenterDetailsScreen() {
       const data = response?.data || response;
       setCenter(data);
     } catch (error) {
-      Alert.alert("Error", "Unable to load center details");
+      appAlert.alert("Error", "Unable to load center details");
     } finally {
       setLoading(false);
     }
@@ -189,7 +189,7 @@ export default function CenterDetailsScreen() {
               <Info label="Email Address" value={center.email_address} />
               <Info
                 label="Status"
-                value={center.is_active === "1" ? "🟢 Active" : "🔴 Inactive"}
+                value={center.is_active === "1" ? "Active" : "Inactive"}
               />
             </SectionBlock>
 
@@ -246,7 +246,7 @@ export default function CenterDetailsScreen() {
                             fontWeight: "700",
                           }}
                         >
-                          {price ? `₹${price}` : "Not set"}
+                          {price ? `\u20B9${price}` : "Not set"}
                         </Text>
                       </View>
                     ),
@@ -354,7 +354,7 @@ export default function CenterDetailsScreen() {
                     onPress={() => Linking.openURL(center.license_proof)}
                   >
                     <Text style={{ color: "#6b21a8", fontWeight: "700" }}>
-                      📄 View License Document
+                      View License Document
                     </Text>
                   </TouchableOpacity>
                   <Text style={styles.documentHint}>
@@ -397,7 +397,7 @@ const SectionBlock = ({
         <Text style={styles.sectionTitle}>{title}</Text>
         <Text style={styles.sectionSubtitle}>{subtitle}</Text>
       </View>
-      <Text style={styles.sectionChevron}>{expanded ? "−" : "+"}</Text>
+      <Text style={styles.sectionChevron}>{expanded ? "-" : "+"}</Text>
     </TouchableOpacity>
     {expanded ? <View style={styles.sectionBody}>{children}</View> : null}
   </View>

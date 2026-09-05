@@ -1,3 +1,4 @@
+﻿import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -5,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  Alert,
   TextInput,
   FlatList,
   Dimensions,
@@ -159,7 +159,7 @@ export default function UpdateCenterScreen() {
         boarding_services: formatListValue(data?.boarding_services),
       });
     } catch (error) {
-      Alert.alert("Error", "Unable to load center details");
+      appAlert.alert("Error", "Unable to load center details");
     } finally {
       setLoading(false);
     }
@@ -273,7 +273,7 @@ export default function UpdateCenterScreen() {
 
   const addPetPrice = () => {
     if (!petPriceDraft.amount) {
-      Alert.alert("Missing price", "Enter a price for the selected pet type.");
+      appAlert.alert("Missing price", "Enter a price for the selected pet type.");
       return;
     }
 
@@ -349,9 +349,9 @@ export default function UpdateCenterScreen() {
         });
       }
 
-      Alert.alert("Success", "Center updated successfully");
+      appAlert.alert("Success", "Center updated successfully");
     } catch (error) {
-      Alert.alert("Error", "Failed to update center");
+      appAlert.alert("Error", "Failed to update center");
     } finally {
       setSaving(false);
     }
@@ -380,11 +380,11 @@ export default function UpdateCenterScreen() {
     const imagePath = normalizeImagePath(getImageUri(image));
 
     if (!imagePath) {
-      Alert.alert("Error", "Unable to resolve the image path");
+      appAlert.alert("Error", "Unable to resolve the image path");
       return;
     }
 
-    Alert.alert("Delete Image", "Are you sure you want to delete this image?", [
+    appAlert.alert("Delete Image", "Are you sure you want to delete this image?", [
       { text: "Cancel", style: "cancel" },
       {
         text: "Delete",
@@ -397,16 +397,16 @@ export default function UpdateCenterScreen() {
             setExistingImages((prev) => prev.filter((_, i) => i !== index));
 
             if (result?.localOnly) {
-              Alert.alert(
+              appAlert.alert(
                 "Image removed locally",
                 result.message ||
                   "The image was removed from this screen because the server endpoint is unavailable.",
               );
             } else {
-              Alert.alert("Success", "Image deleted successfully");
+              appAlert.alert("Success", "Image deleted successfully");
             }
           } catch (error) {
-            Alert.alert("Error", "Failed to delete image");
+            appAlert.alert("Error", "Failed to delete image");
           } finally {
             setDeletingImageIndex(null);
           }
@@ -420,7 +420,7 @@ export default function UpdateCenterScreen() {
       const permissionResult =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permissionResult.granted) {
-        Alert.alert(
+        appAlert.alert(
           "Permission needed",
           "Please allow access to your photos to add images.",
         );
@@ -456,7 +456,7 @@ export default function UpdateCenterScreen() {
         }
       }
     } catch (error) {
-      Alert.alert("Error", "Unable to select image.");
+      appAlert.alert("Error", "Unable to select image.");
     }
   };
 
@@ -479,7 +479,7 @@ export default function UpdateCenterScreen() {
         }
       }
     } catch (error) {
-      Alert.alert("Error", "Unable to select document.");
+      appAlert.alert("Error", "Unable to select document.");
     }
   };
 
@@ -909,7 +909,7 @@ export default function UpdateCenterScreen() {
                         }}
                       >
                         <Text style={{ color: "#dc2626", fontWeight: "800" }}>
-                          ✕
+                          x
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -978,7 +978,7 @@ export default function UpdateCenterScreen() {
                               <Text
                                 style={{ color: "#dc2626", fontWeight: "800" }}
                               >
-                                ✕
+                                x
                               </Text>
                             )}
                           </TouchableOpacity>
@@ -1043,7 +1043,7 @@ const SectionBlock = ({
         <Text style={styles.sectionTitle}>{title}</Text>
         <Text style={styles.sectionSubtitle}>{subtitle}</Text>
       </View>
-      <Text style={styles.sectionChevron}>{expanded ? "−" : "+"}</Text>
+      <Text style={styles.sectionChevron}>{expanded ? "-" : "+"}</Text>
     </TouchableOpacity>
     {expanded ? <View style={styles.sectionBody}>{children}</View> : null}
   </View>
@@ -1082,7 +1082,7 @@ const DatePickerField = ({ label, value, onPress, placeholder }) => (
         {value || placeholder}
       </Text>
       <Text style={styles.dateButtonIcon}>
-        {label.includes("Time") ? "🕒" : "📅"}
+        {label.includes("Time") ? "Time" : "Date"}
       </Text>
     </TouchableOpacity>
   </View>
@@ -1174,7 +1174,7 @@ const PetPriceEditor = ({
               <Text style={styles.priceRowText}>
                 {petType.charAt(0).toUpperCase() + petType.slice(1)}
               </Text>
-              <Text style={styles.priceRowValue}>₹{amount}</Text>
+              <Text style={styles.priceRowValue}>{"\u20B9"}{amount}</Text>
               <TouchableOpacity onPress={() => onRemove(petType)}>
                 <Text style={styles.removeText}>Remove</Text>
               </TouchableOpacity>

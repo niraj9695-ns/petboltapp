@@ -1,3 +1,4 @@
+﻿import { appAlert } from "../utils/alert";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -6,7 +7,6 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  Alert,
   Linking,
   useWindowDimensions,
 } from "react-native";
@@ -90,7 +90,7 @@ export default function ProfileEditScreen({ navigation }) {
         setEmergencyNumber(details.emergency_contact_number || "");
       }
     } catch (error) {
-      Alert.alert("Error", "Unable to load your profile.");
+      appAlert.alert("Error", "Unable to load your profile.");
     } finally {
       setLoading(false);
     }
@@ -110,7 +110,7 @@ export default function ProfileEditScreen({ navigation }) {
 
   const handleSaveProfile = async () => {
     if (!fullName || !phone || !address || !emergencyName || !emergencyNumber) {
-      Alert.alert("Validation", "Please fill all required fields.");
+      appAlert.alert("Validation", "Please fill all required fields.");
       return;
     }
 
@@ -119,7 +119,7 @@ export default function ProfileEditScreen({ navigation }) {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        Alert.alert(
+        appAlert.alert(
           "Session Required",
           "Please sign in again to update your profile.",
         );
@@ -159,16 +159,16 @@ export default function ProfileEditScreen({ navigation }) {
         response.ok &&
         (result.status === true || result.status === "success")
       ) {
-        Alert.alert("Success", "Profile updated successfully.");
+        appAlert.alert("Success", "Profile updated successfully.");
         navigation.navigate("Profile");
       } else {
-        Alert.alert(
+        appAlert.alert(
           "Update Failed",
           result.message || "Unable to update profile.",
         );
       }
     } catch (error) {
-      Alert.alert("Error", "Unable to update profile. Please try again.");
+      appAlert.alert("Error", "Unable to update profile. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -206,7 +206,7 @@ export default function ProfileEditScreen({ navigation }) {
             style={[profileEditStyles.backButton, { backgroundColor: theme.cardBackground }]}
             onPress={() => navigation.navigate("Profile")}
           >
-            <Text style={[profileEditStyles.backButtonText, { color: theme.primary }]}>← Back</Text>
+            <Text style={[profileEditStyles.backButtonText, { color: theme.primary }]}>{"< Back"}</Text>
           </TouchableOpacity>
           <Text style={[profileEditStyles.editTitle, { color: theme.textPrimary }]}>Update Profile</Text>
         </View>

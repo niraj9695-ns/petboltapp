@@ -1,5 +1,6 @@
+﻿import { appAlert } from "../../utils/alert";
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 
 import * as DocumentPicker from "expo-document-picker";
 import { PasswordInput } from "../inputs/PasswordInput";
@@ -193,7 +194,7 @@ export default function PetOwnerRegister({ setStep, setOtpType, setEmail }) {
           const otpResult = await otpResponse.json();
 
           if (otpResult.status === true || otpResult.status === "success") {
-            Alert.alert("Success", "OTP sent to your email");
+            appAlert.alert("Success", "OTP sent to your email");
 
             setEmail(formEmail);
             setOtpType("register");
