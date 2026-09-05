@@ -12,7 +12,7 @@ export default StyleSheet.create({
     borderColor: "#ddd",
     borderRadius: 12,
     padding: 14,
-    marginBottom: 12,
+    marginBottom: 0,
     backgroundColor: "#fff",
     color: "#111827",
     fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,

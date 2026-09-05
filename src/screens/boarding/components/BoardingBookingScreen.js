@@ -677,8 +677,8 @@ export default function BoardingBookingScreen({ route, navigation }) {
                 <View style={{ marginTop: 10 }}>
                   <Text style={styles.pricingLabel}>Applied Discount Tier</Text>
                   <Text style={styles.pricingValue}>
-                    {pricingPayload.applied_discount_tier.discount_type} •{" "}
-                    {pricingPayload.applied_discount_tier.discount_value} (min{" "}
+                    {pricingPayload.applied_discount_tier.discount_type} •
+                    {pricingPayload.applied_discount_tier.discount_value} (min
                     {pricingPayload.applied_discount_tier.min_days} days)
                   </Text>
                 </View>

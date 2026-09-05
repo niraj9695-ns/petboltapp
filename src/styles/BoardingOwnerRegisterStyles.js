@@ -1,11 +1,18 @@
 import { StyleSheet } from "react-native";
 import { typography } from "./themeStyles";
 import { typography as baseTypography } from "./theme/typography";
+import { spacing } from "./theme/spacing";
 
 export default StyleSheet.create({
   heading: {
-    fontSize: (typography && typography.h4 && typography.h4.fontSize) || baseTypography.sectionTitle || 22,
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize:
+      (typography && typography.h4 && typography.h4.fontSize) ||
+      baseTypography.sectionTitle ||
+      22,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
     marginBottom: 20,
     color: "#222",
   },
@@ -63,7 +70,10 @@ export default StyleSheet.create({
 
   buttonText: {
     color: "#fff",
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
   },
 
   priceRow: {
@@ -108,8 +118,14 @@ export default StyleSheet.create({
 
   removeRowText: {
     color: "#dc2626",
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
   },
 
   chip: {
@@ -132,7 +148,10 @@ export default StyleSheet.create({
   chipText: {
     color: "#4c1d95",
     marginRight: 8,
-    fontWeight: (typography && typography.caption && typography.caption.fontWeight) || baseTypography.weights.semibold || "600",
+    fontWeight:
+      (typography && typography.caption && typography.caption.fontWeight) ||
+      baseTypography.weights.semibold ||
+      "600",
   },
 
   chipSelected: {
@@ -161,8 +180,16 @@ export default StyleSheet.create({
 
   timePickerValue: {
     color: "#222",
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
-    fontWeight: (typography && typography.smallMedium && typography.smallMedium.fontWeight) || baseTypography.weights.medium || "500",
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
+    fontWeight:
+      (typography &&
+        typography.smallMedium &&
+        typography.smallMedium.fontWeight) ||
+      baseTypography.weights.medium ||
+      "500",
   },
   pickerContainer: {
     flex: 1,
@@ -173,17 +200,21 @@ export default StyleSheet.create({
     overflow: "hidden",
   },
 
-  /* Phone input and error styles copied/adjusted from PetOwnerRegisterStyles */
   phoneWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    height: 58,
-    borderRadius: 16,
 
+    // Same height as PasswordInput
+    height: spacing.inputHeight,
+
+    borderRadius: 16,
     backgroundColor: "#FFFFFF",
 
     borderWidth: 1,
     borderColor: "#E5E7EB",
+
+    // Prevent +91 background from covering the rounded border
+    overflow: "hidden",
 
     shadowColor: "#B79FFF",
     shadowOpacity: 0.08,
@@ -196,19 +227,30 @@ export default StyleSheet.create({
   countryPicker: {
     width: 80,
     height: "100%",
+
     justifyContent: "center",
     alignItems: "center",
 
     borderRightWidth: 1,
     borderRightColor: "#F1F5F9",
 
+    // You can keep this because overflow:hidden
+    // will keep it inside the rounded border.
     backgroundColor: "#FAFAFF",
   },
 
   countryText: {
     color: "#6B21A8",
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
+
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
   },
 
   phoneInput: {
@@ -217,14 +259,24 @@ export default StyleSheet.create({
     paddingHorizontal: 16,
 
     color: "#111827",
-    fontSize: (typography && typography.body && typography.body.fontSize) || baseTypography.body || 14,
+
+    fontSize:
+      (typography && typography.body && typography.body.fontSize) ||
+      baseTypography.body ||
+      14,
   },
 
   errorTopText: {
     color: "#DC2626",
-    fontSize: (typography && typography.caption && typography.caption.fontSize) || baseTypography.caption || 10,
-    fontWeight: (typography && typography.caption && typography.caption.fontWeight) || baseTypography.weights.semibold || "600",
-    marginBottom: 6,
+    fontSize:
+      (typography && typography.caption && typography.caption.fontSize) ||
+      baseTypography.caption ||
+      10,
+    fontWeight:
+      (typography && typography.caption && typography.caption.fontWeight) ||
+      baseTypography.weights.semibold ||
+      "600",
+    marginBottom: 15,
     marginLeft: 4,
   },
 
@@ -261,7 +313,10 @@ export default StyleSheet.create({
 
   btnText: {
     color: "#fff",
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
   },
 
   /* Error banner (like PetOwnerRegister) */
@@ -276,13 +331,19 @@ export default StyleSheet.create({
 
   errorBannerTitle: {
     color: "#B91C1C",
-    fontWeight: (typography && typography.h3 && typography.h3.fontWeight) || baseTypography.weights.bold || "700",
+    fontWeight:
+      (typography && typography.h3 && typography.h3.fontWeight) ||
+      baseTypography.weights.bold ||
+      "700",
     marginBottom: 6,
   },
 
   errorBannerText: {
     color: "#DC2626",
-    fontSize: (typography && typography.small && typography.small.fontSize) || baseTypography.small || 12,
+    fontSize:
+      (typography && typography.small && typography.small.fontSize) ||
+      baseTypography.small ||
+      12,
     marginTop: 2,
   },
 });

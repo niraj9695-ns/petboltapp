@@ -72,7 +72,7 @@ export default function RegisterScreen({ navigation }) {
               <Text style={registerStyles.welcomeTitle}>Welcome Back!</Text>
 
               <Text style={registerStyles.welcomeSubtitle}>
-                Sign in to your account and care for your{" "}
+                Sign in to your account and care for your
                 <Text style={registerStyles.highlightText}>furry friend.</Text>
               </Text>
             </View>

@@ -19,13 +19,12 @@ export default StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.input,
-    padding: spacing.lg,
-    marginBottom: spacing.md,
-    backgroundColor: colors.surface,
-
-    color: colors.text,
+    borderColor: "#ddd",
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 10,
+    backgroundColor: "#fff",
+    color: "#111827",
     fontSize:
       (typography && typography.body && typography.body.fontSize) ||
       baseTypography.body ||

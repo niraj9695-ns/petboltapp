@@ -473,7 +473,7 @@ export default function BookingDetailsScreen({ route, navigation }) {
           </View>
 
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Guest Details</Text>
+            <Text style={styles.sectionTitle}>Owner Details</Text>
             <Text style={styles.label}>Owner</Text>
             <Text style={styles.value}>{booking.user_name}</Text>
             <Text style={styles.label}>Phone</Text>

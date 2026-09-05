@@ -37,17 +37,6 @@ export default StyleSheet.create({
   },
 
   btnText: {
-    color: "#FFFFFF",
-    fontSize:
-      (typography && typography.body && typography.body.fontSize) ||
-      baseTypography.body ||
-      14,
-    fontWeight:
-      (typography && typography.h3 && typography.h3.fontWeight) ||
-      baseTypography.weights.bold ||
-      "700",
-  },
-  btnText: {
     color: "#fff",
     fontWeight: typography.h3.fontWeight,
   },
@@ -55,13 +44,15 @@ export default StyleSheet.create({
   phoneWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    height: 58,
-    borderRadius: 16,
+    height: spacing.inputHeight,
+    borderRadius: radius.input,
 
     backgroundColor: "#FFFFFF",
 
     borderWidth: 1,
     borderColor: "#E5E7EB",
+
+    overflow: "hidden",
 
     shadowColor: "#B79FFF",
     shadowOpacity: 0.08,
@@ -80,19 +71,22 @@ export default StyleSheet.create({
     borderRightWidth: 1,
     borderRightColor: "#F1F5F9",
 
-    backgroundColor: "#FAFAFF",
+    // Remove this:
+    // backgroundColor: "#FAFAFF",
   },
 
   countryText: {
-    color: "#6B21A8",
     fontSize:
       (typography && typography.body && typography.body.fontSize) ||
       baseTypography.body ||
       14,
+
     fontWeight:
       (typography && typography.h3 && typography.h3.fontWeight) ||
       baseTypography.weights.bold ||
       "700",
+
+    color: "#6B21A8",
   },
 
   phoneInput: {
@@ -143,7 +137,7 @@ export default StyleSheet.create({
       (typography && typography.caption && typography.caption.fontWeight) ||
       baseTypography.weights.semibold ||
       "600",
-    marginBottom: 6,
+    marginBottom: 15,
     marginLeft: 4,
   },
 });

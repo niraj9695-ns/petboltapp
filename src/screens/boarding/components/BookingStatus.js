@@ -54,14 +54,14 @@ const normalizeBookingPetImage = (url) => {
 /* =========================================================
    GET BOOKING ID
 ========================================================= */
-
 const getBookingId = (booking, index = 0) => {
-  return (
-    booking?.id ??
-    booking?.booking_id ??
-    booking?.bookingId ??
-    `booking-${index}`
-  );
+  const id = booking?.id ?? booking?.booking_id ?? booking?.bookingId;
+
+  if (id !== undefined && id !== null && String(id).trim() !== "") {
+    return String(id);
+  }
+
+  return `booking-${index}`;
 };
 
 /* =========================================================
@@ -590,94 +590,88 @@ export default function BookingStatus({ embedded = false }) {
     );
   }
 
- if (isGuest) {
-  return (
-    <View style={styles.bookingStatusContainer}>
-      {/* SAME HEADER AS NORMAL BOOKING STATUS */}
-      <View style={styles.headerSection}>
-        <Text style={styles.bookingStatusTitle}>
-          Booking Status
-        </Text>
+  if (isGuest) {
+    return (
+      <View style={styles.bookingStatusContainer}>
+        {/* SAME HEADER AS NORMAL BOOKING STATUS */}
+        <View style={styles.headerSection}>
+          <Text style={styles.bookingStatusTitle}>Booking Status</Text>
 
-        <Text style={styles.bookingStatusSubtitle}>
-          Track all your pet's boarding reservations
-        </Text>
-      </View>
-
-      {/* GUEST CONTENT */}
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 20,
-          backgroundColor: theme.background,
-        }}
-      >
-        {/* Calendar Icon */}
-        <View
-          style={{
-            width: 60,
-            height: 60,
-            borderRadius: 36,
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: theme.surfaceAlt,
-          }}
-        >
-          <MaterialCommunityIcons
-            name="calendar-check-outline"
-            size={38}
-            color={theme.primary}
-          />
+          <Text style={styles.bookingStatusSubtitle}>
+            Track all your pet's boarding reservations
+          </Text>
         </View>
 
-        {/* Guest Message */}
-        <Text
+        {/* GUEST CONTENT */}
+        <View
           style={{
-            textAlign: "center",
-            marginTop: 0,
-            color: theme.textSecondary,
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+            backgroundColor: theme.background,
           }}
         >
-          Sign in or create an account to view your bookings
-        </Text>
-
-        {/* Sign In / Sign Up */}
-        <TouchableOpacity
-          style={{
-            backgroundColor: theme.primary,
-            paddingHorizontal: 30,
-            paddingVertical: 14,
-            borderRadius: 12,
-            marginTop: 15,
-          }}
-          onPress={async () => {
-            await AsyncStorage.removeItem("guestRole");
-
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "Auth" }],
-            });
-          }}
-        >
-          <Text
+          {/* Calendar Icon */}
+          <View
             style={{
-              color: "#fff",
-              fontWeight: "bold",
+              width: 60,
+              height: 60,
+              borderRadius: 36,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: theme.surfaceAlt,
             }}
           >
-            Sign In / Sign Up
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
+            <MaterialCommunityIcons
+              name="calendar-check-outline"
+              size={38}
+              color={theme.primary}
+            />
+          </View>
 
-  /* =======================================================
-     RENDER BOOKING CARD
-  ======================================================= */
+          {/* Guest Message */}
+          <Text
+            style={{
+              textAlign: "center",
+              marginTop: 0,
+              color: theme.textSecondary,
+            }}
+          >
+            Sign in or create an account to view your bookings
+          </Text>
+
+          {/* Sign In / Sign Up */}
+          <TouchableOpacity
+            style={{
+              backgroundColor: theme.primary,
+              paddingHorizontal: 30,
+              paddingVertical: 14,
+              borderRadius: 12,
+              marginTop: 15,
+            }}
+            onPress={async () => {
+              await AsyncStorage.removeItem("guestRole");
+
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "Auth" }],
+              });
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontWeight: "bold",
+              }}
+            >
+              Sign In / Sign Up
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
 
   const renderBooking = ({ item: booking, index }) => {
     const bookingId = getBookingId(booking, index);
@@ -1202,16 +1196,25 @@ export default function BookingStatus({ embedded = false }) {
 
       {embedded ? (
         <View style={styles.bookingListContainer}>
-          {bookings.map((booking, index) =>
-            renderBooking({ item: booking, index }),
-          )}
+          {bookings.map((booking, index) => {
+            const bookingId = getBookingId(booking, index);
+
+            return (
+              <React.Fragment key={`${bookingId}-${index}`}>
+                {renderBooking({ item: booking, index })}
+              </React.Fragment>
+            );
+          })}
+
           {renderFooter()}
         </View>
       ) : (
         <FlatList
           data={bookings}
           renderItem={renderBooking}
-          keyExtractor={(item, index) => String(getBookingId(item, index))}
+          keyExtractor={(item, index) =>
+            `${getBookingId(item, index)}-${index}`
+          }
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.bookingListContainer}
           refreshControl={
