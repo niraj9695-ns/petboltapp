@@ -1,10 +1,10 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "../../../styles/theme/typography";
 
 const purple = "#6B21A8";
 const ink = "#111827";
 const muted = "#6B7280";
 
-export default StyleSheet.create({
+export default StyleSheet({
   screen: { flex: 1, backgroundColor: "#FDF9FF" },
   wrapper: { flex: 1, backgroundColor: "#FDF9FF" },
   scrollContent: { paddingBottom: 92 },
@@ -172,8 +172,23 @@ export default StyleSheet.create({
     gap: 8,
   },
   sectionTitle: { color: ink, fontSize: 15, lineHeight: 23, fontWeight: "800" },
-  priceGrid: { flexDirection: "row", gap: 8 },
+  priceCarousel: { gap: 8 },
+  priceSlide: { flexDirection: "row", gap: 8 },
   priceColumn: { flex: 1, alignItems: "center", minWidth: 0 },
+  priceProgressTrack: {
+    height: 4,
+    marginTop: 12,
+    borderRadius: 2,
+    overflow: "hidden",
+    backgroundColor: "#E9D5FF",
+  },
+  priceProgressBar: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    borderRadius: 2,
+    backgroundColor: purple,
+  },
   petPlaceholder: {
     width: "100%",
     height: 73,

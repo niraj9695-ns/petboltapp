@@ -1,11 +1,11 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "./theme/typography";
 import { colors } from "./theme/colors";
 import { spacing } from "./theme/spacing";
 import { radius } from "./theme/radius";
 import { responsive } from "./theme/responsive";
 import { typography as legacyTypography } from "./themeStyles";
 
-export default StyleSheet.create({
+export default StyleSheet({
   container: {
     flex: 1,
     backgroundColor: colors.surfaceAlt,

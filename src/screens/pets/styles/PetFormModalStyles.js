@@ -1,10 +1,10 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "../../../styles/theme/typography";
 import { lightTheme } from "../../../theme/lightTheme";
 
 export default function createPetFormModalStyles(theme = lightTheme) {
   const palette = theme;
 
-  return StyleSheet.create({
+  return StyleSheet({
     modalContainer: {
       flex: 1,
       backgroundColor: palette.overlay,

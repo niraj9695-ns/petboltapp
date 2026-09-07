@@ -1,11 +1,11 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "./theme/typography";
 import { colors } from "./theme/colors";
 import { spacing } from "./theme/spacing";
 import { radius } from "./theme/radius";
 import { typography } from "./themeStyles";
 import { typography as baseTypography } from "./theme/typography";
 
-export default StyleSheet.create({
+export default StyleSheet({
   fileButton: {
     height: 58,
     borderRadius: 16,

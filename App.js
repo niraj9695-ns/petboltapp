@@ -14,11 +14,21 @@ import BoardingOwnerNavigator from "./src/navigation/BoardingOwnerNavigator";
 import { ThemeProvider } from "./src/context/ThemeContext";
 import { RefreshProvider } from "./src/context/RefreshContext";
 
-import { View } from "react-native";
+import { Text, TextInput, View } from "react-native";
+import { useFonts } from "expo-font";
+import {
+  Poppins_400Regular,
+  Poppins_500Medium,
+  Poppins_600SemiBold,
+  Poppins_700Bold,
+} from "@expo-google-fonts/poppins";
+import CormorantGaramond_700Bold from "@expo-google-fonts/cormorant-garamond/700Bold/CormorantGaramond_700Bold.ttf";
+import { Allura_400Regular } from "@expo-google-fonts/allura";
 import appStyles from "./src/styles/AppStyles";
 import PremiumLoader from "./src/components/PremiumLoader";
 import { initializePushNotifications } from "./src/utils/notifications";
 import { ToastHost } from "./src/utils/toast";
+import { textStyles } from "./src/styles/theme/typography";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +36,14 @@ function MainApp() {
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
   const { theme } = useTheme();
+  const [fontsLoaded] = useFonts({
+    Poppins_400Regular,
+    Poppins_500Medium,
+    Poppins_600SemiBold,
+    Poppins_700Bold,
+    CormorantGaramond_700Bold,
+    Allura_400Regular,
+  });
 
   const [guestRole, setGuestRole] = useState(null);
 
@@ -58,7 +76,7 @@ function MainApp() {
     checkLogin();
   }, []);
 
-  if (loading) {
+  if (loading || !fontsLoaded) {
     return (
       <View style={appStyles.loadingContainer}>
         <PremiumLoader size={64} color="#6b21a8" label="Preparing your experience" />
@@ -109,6 +127,16 @@ function MainApp() {
     </View>
   );
 }
+
+Text.defaultProps = {
+  ...Text.defaultProps,
+  style: [Text.defaultProps?.style, textStyles.body],
+};
+
+TextInput.defaultProps = {
+  ...TextInput.defaultProps,
+  style: [TextInput.defaultProps?.style, textStyles.body],
+};
 
 export default function App() {
   return (

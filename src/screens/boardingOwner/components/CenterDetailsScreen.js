@@ -1,4 +1,4 @@
-﻿import { appAlert } from "../../../utils/alert";
+import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../styles/CenterDetailsScreenStyles";
 import { getCenterDetails } from "../services/boardingOwnerService";
 import { boardingOwnerTheme } from "../../../styles/themeStyles";
+import { typography } from "../../../styles/theme/typography";
 import BackButton from "../../../components/BackButton";
 
 export default function CenterDetailsScreen() {
@@ -243,7 +244,8 @@ export default function CenterDetailsScreen() {
                         <Text
                           style={{
                             color: boardingOwnerTheme.primary,
-                            fontWeight: "700",
+                            fontFamily: typography.fonts.bold,
+                            fontWeight: typography.weights.bold,
                           }}
                         >
                           {price ? `\u20B9${price}` : "Not set"}
@@ -353,7 +355,13 @@ export default function CenterDetailsScreen() {
                     }}
                     onPress={() => Linking.openURL(center.license_proof)}
                   >
-                    <Text style={{ color: "#6b21a8", fontWeight: "700" }}>
+                    <Text
+                      style={{
+                        color: "#6b21a8",
+                        fontFamily: typography.fonts.bold,
+                        fontWeight: typography.weights.bold,
+                      }}
+                    >
                       View License Document
                     </Text>
                   </TouchableOpacity>

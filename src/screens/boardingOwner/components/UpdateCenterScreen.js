@@ -1,4 +1,4 @@
-﻿import { appAlert } from "../../../utils/alert";
+import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -23,8 +23,10 @@ import { Picker } from "@react-native-picker/picker";
 import FloatingInput from "../../../components/inputs/FloatingInput";
 import BackButton from "../../../components/BackButton";
 import { LinearGradient } from "expo-linear-gradient";
+import { typography } from "../../../styles/theme/typography";
 import {
   buildCenterFormData,
+  deletePetTypePricing,
   deleteCenterImage,
   getCenterDetails,
   updateCenter,
@@ -48,6 +50,7 @@ export default function UpdateCenterScreen() {
   const [existingImages, setExistingImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
   const [deletingImageIndex, setDeletingImageIndex] = useState(null);
+  const [deletingPetType, setDeletingPetType] = useState(null);
   const [licenseProof, setLicenseProof] = useState(null);
   const [insuranceDocument, setInsuranceDocument] = useState(null);
   const [uploadErrors, setUploadErrors] = useState({});
@@ -56,7 +59,7 @@ export default function UpdateCenterScreen() {
     amount: "",
   });
   const [pickerConfig, setPickerConfig] = useState(null);
-  const PET_TYPES = ["dog", "cat", "bird", "rabbit", "turtle", "others"];
+  const PET_TYPES = ["dog", "cat", "bird", "rabbit", "turtle", "other"];
   const [expandedSections, setExpandedSections] = useState({
     basic: false,
     operations: false,
@@ -283,10 +286,37 @@ export default function UpdateCenterScreen() {
     setPetPriceDraft({ petType: petPriceDraft.petType, amount: "" });
   };
 
-  const removePetPrice = (petType) => {
-    const nextPrices = { ...(form.prices || {}) };
-    delete nextPrices[petType];
-    updateField("prices", nextPrices);
+  const removePetPrice = async (petType) => {
+    if (!centerId || deletingPetType) return;
+
+    try {
+      setDeletingPetType(petType);
+      const response = await deletePetTypePricing(centerId, petType);
+      const remainingPrices =
+        response?.data?.pet_type_prices ||
+        response?.pet_type_prices ||
+        response?.data?.remaining_pet_type_prices ||
+        response?.remaining_pet_type_prices ||
+        response?.data?.prices ||
+        response?.prices;
+
+      if (remainingPrices && typeof remainingPrices === "object") {
+        updateField("prices", remainingPrices);
+      } else {
+        const nextPrices = { ...(form.prices || {}) };
+        delete nextPrices[petType];
+        updateField("prices", nextPrices);
+      }
+
+      appAlert.alert("Success", `${petType} pricing removed successfully.`);
+    } catch (error) {
+      appAlert.alert(
+        "Error",
+        error?.response?.data?.message || "Failed to remove pet pricing.",
+      );
+    } finally {
+      setDeletingPetType(null);
+    }
   };
 
   const handleSave = async () => {
@@ -679,6 +709,7 @@ export default function UpdateCenterScreen() {
                 onAdd={addPetPrice}
                 prices={form.prices || {}}
                 onRemove={removePetPrice}
+                deletingPetType={deletingPetType}
                 theme={theme}
               />
             </SectionBlock>
@@ -908,7 +939,13 @@ export default function UpdateCenterScreen() {
                           elevation: 3,
                         }}
                       >
-                        <Text style={{ color: "#dc2626", fontWeight: "800" }}>
+                        <Text
+                          style={{
+                            color: "#dc2626",
+                            fontFamily: typography.fonts.bold,
+                            fontWeight: typography.weights.bold,
+                          }}
+                        >
                           x
                         </Text>
                       </TouchableOpacity>
@@ -976,7 +1013,11 @@ export default function UpdateCenterScreen() {
                               />
                             ) : (
                               <Text
-                                style={{ color: "#dc2626", fontWeight: "800" }}
+                                style={{
+                                  color: "#dc2626",
+                                  fontFamily: typography.fonts.bold,
+                                  fontWeight: typography.weights.bold,
+                                }}
                               >
                                 x
                               </Text>
@@ -1123,6 +1164,7 @@ const PetPriceEditor = ({
   onAdd,
   prices,
   onRemove,
+  deletingPetType,
   theme,
 }) => {
   const pickerTheme = theme || {};
@@ -1146,7 +1188,7 @@ const PetPriceEditor = ({
             { label: "Bird", value: "bird" },
             { label: "Rabbit", value: "rabbit" },
             { label: "Turtle", value: "turtle" },
-            { label: "Others", value: "others" },
+            { label: "Others", value: "other" },
           ].map((option) => (
             <Picker.Item
               key={option.value}
@@ -1175,8 +1217,13 @@ const PetPriceEditor = ({
                 {petType.charAt(0).toUpperCase() + petType.slice(1)}
               </Text>
               <Text style={styles.priceRowValue}>{"\u20B9"}{amount}</Text>
-              <TouchableOpacity onPress={() => onRemove(petType)}>
-                <Text style={styles.removeText}>Remove</Text>
+              <TouchableOpacity
+                onPress={() => onRemove(petType)}
+                disabled={Boolean(deletingPetType)}
+              >
+                <Text style={styles.removeText}>
+                  {deletingPetType === petType ? "Removing..." : "Remove"}
+                </Text>
               </TouchableOpacity>
             </View>
           ))}

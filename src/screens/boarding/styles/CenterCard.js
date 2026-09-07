@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "../../../styles/theme/typography";
 import { responsive } from "../../../styles/theme/responsive";
 import { spacing } from "../../../styles/theme/spacing";
 import { radius } from "../../../styles/theme/radius";
@@ -9,7 +9,7 @@ import { shadows } from "../../../styles/theme/shadows";
 
 const IMAGE_HEIGHT = responsive.isTablet ? 180 : 160;
 
-export default StyleSheet.create({
+export default StyleSheet({
   centerCardWrapper: {
     flex: 1,
     borderRadius: radius.card,

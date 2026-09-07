@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "../../../styles/theme/typography";
 
 import { colors } from "../../../styles/theme/colors";
 import { spacing } from "../../../styles/theme/spacing";
@@ -8,7 +8,7 @@ import { typography } from "../../../styles/themeStyles";
 import { typography as baseTypography } from "../../../styles/theme/typography";
 import { shadows } from "../../../styles/theme/shadows";
 
-export default StyleSheet.create({
+export default StyleSheet({
   /* =====================================================
      LOADER
   ===================================================== */
@@ -595,3 +595,4 @@ export default StyleSheet.create({
     fontWeight: "500",
   },
 });
+

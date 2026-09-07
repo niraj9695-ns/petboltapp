@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "../../../styles/theme/typography";
 import { colors } from "../../../styles/theme/colors";
 import { spacing } from "../../../styles/theme/spacing";
 import { radius } from "../../../styles/theme/radius";
@@ -6,7 +6,7 @@ import { typography } from "../../../styles/themeStyles";
 import { typography as baseTypography } from "../../../styles/theme/typography";
 import { shadows } from "../../../styles/theme/shadows";
 
-export default StyleSheet.create({
+export default StyleSheet({
   loaderContainer: {
     flex: 1,
     justifyContent: "center",
@@ -84,3 +84,4 @@ export default StyleSheet.create({
     fontWeight: "700",
   },
 });
+

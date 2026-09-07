@@ -1,4 +1,4 @@
-﻿import { appAlert } from "../../../utils/alert";
+import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
 import {
   Image,

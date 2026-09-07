@@ -1,10 +1,10 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "../../../styles/theme/typography";
 import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
 import { typography as baseTypography } from "../../../styles/theme/typography";
 
 const COLORS = boardingOwnerTheme;
 
-export default StyleSheet.create({
+export default StyleSheet({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,

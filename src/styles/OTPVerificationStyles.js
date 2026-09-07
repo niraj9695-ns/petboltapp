@@ -1,8 +1,8 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "./theme/typography";
 import { typography } from "./themeStyles";
 import { typography as baseTypography } from "./theme/typography";
 
-export default StyleSheet.create({
+export default StyleSheet({
   heading: {
     fontSize: (typography && typography.h2 && typography.h2.fontSize) || baseTypography.h2 || 24,
     fontWeight: (typography && typography.h2 && typography.h2.fontWeight) || baseTypography.weights.bold || "700",

@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "./theme/typography";
 import { colors } from "./theme/colors";
 import { spacing } from "./theme/spacing";
 import { radius } from "./theme/radius";
@@ -12,7 +12,7 @@ const mutedPurple = colors.textMuted;
 const lightPurple = "#F8EEFF";
 const lightPink = "#FCE7F3";
 
-export default StyleSheet.create({
+export default StyleSheet({
   wrapper: { flex: 1 },
   scrollContent: { paddingBottom: 28 },
   loaderContainer: {

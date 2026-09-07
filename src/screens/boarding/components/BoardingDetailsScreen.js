@@ -1,6 +1,7 @@
 import { appAlert } from "../../../utils/alert";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+  Animated,
   Image,
   Linking,
   ScrollView,
@@ -108,6 +109,8 @@ export default function BoardingDetailsScreen({ route, navigation }) {
   const [, setCapacity] = useState(null);
   const [, setCapacityLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [priceProgressWidth, setPriceProgressWidth] = useState(0);
+  const priceProgress = useRef(new Animated.Value(0)).current;
   const [detailsExpanded, setDetailsExpanded] = useState(true);
   const [contactExpanded, setContactExpanded] = useState(true);
 
@@ -155,6 +158,19 @@ export default function BoardingDetailsScreen({ route, navigation }) {
     Linking.openURL(`tel:${center.primary_contact_number}`);
   const handleImageScroll = (event) =>
     setCurrentImageIndex(Math.round(event.nativeEvent.contentOffset.x / width));
+  const handlePriceScroll = (event) => {
+    const slideIndex = Math.round(
+      event.nativeEvent.contentOffset.x / priceSlideWidth,
+    );
+
+    Animated.spring(priceProgress, {
+      toValue: slideIndex,
+      useNativeDriver: true,
+      damping: 18,
+      stiffness: 140,
+      mass: 0.7,
+    }).start();
+  };
 
   const handleBookingPress = async () => {
     const guestRole = await AsyncStorage.getItem("guestRole");
@@ -220,6 +236,13 @@ export default function BoardingDetailsScreen({ route, navigation }) {
       "shield-check-outline",
     ],
   ];
+  const priceSlideWidth = Math.max(190, Math.min(width - 64, 1128));
+  const priceEntries = Object.entries(center.pet_type_prices || {});
+  const priceSlides = [];
+
+  for (let index = 0; index < priceEntries.length; index += 3) {
+    priceSlides.push(priceEntries.slice(index, index + 3));
+  }
 
   return (
     <View style={styles.screen}>
@@ -332,7 +355,7 @@ export default function BoardingDetailsScreen({ route, navigation }) {
             </Text>
             {hasCoordinates && (
               <TouchableOpacity onPress={openMap}>
-                <Text style={styles.mapLink}>View on Map ›</Text>
+                <Text style={styles.mapLink}>View on Map â€º</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -360,30 +383,74 @@ export default function BoardingDetailsScreen({ route, navigation }) {
                   />{" "}
                   Pet Type & Pricing
                 </Text>
-                <View style={styles.priceGrid}>
-                  {Object.entries(center.pet_type_prices).map(
-                    ([petType, price]) => (
-                      <View key={petType} style={styles.priceColumn}>
-                        <View style={styles.petPlaceholder}>
-                          <Text style={styles.petEmoji}>
-                            {petType.toLowerCase() === "dog"
-                              ? "🐕"
-                              : petType.toLowerCase() === "cat"
-                                ? "🐈"
-                                : "🐦"}
+                <ScrollView
+                  horizontal
+                  pagingEnabled
+                  showsHorizontalScrollIndicator={false}
+                  decelerationRate="fast"
+                  snapToInterval={priceSlideWidth}
+                  snapToAlignment="start"
+                  onMomentumScrollEnd={handlePriceScroll}
+                  contentContainerStyle={styles.priceCarousel}
+                >
+                  {priceSlides.map((slide, slideIndex) => (
+                    <View
+                      key={`price-slide-${slideIndex}`}
+                      style={[styles.priceSlide, { width: priceSlideWidth }]}
+                    >
+                      {slide.map(([petType, price]) => (
+                        <View key={petType} style={styles.priceColumn}>
+                          <View style={styles.petPlaceholder}>
+                            <Text style={styles.petEmoji}>
+                              {petType.toLowerCase() === "dog"
+                                ? "ðŸ•"
+                                : petType.toLowerCase() === "cat"
+                                  ? "ðŸˆ"
+                                  : "ðŸ¦"}
+                            </Text>
+                          </View>
+                          <Text style={styles.petName}>
+                            {formatPetName(petType)}
+                          </Text>
+                          <Text style={styles.price}>
+                            {"\u20B9"}
+                            {price}/day
                           </Text>
                         </View>
-                        <Text style={styles.petName}>
-                          {formatPetName(petType)}
-                        </Text>
-                        <Text style={styles.price}>
-                          {"\u20B9"}
-                          {price}/day
-                        </Text>
-                      </View>
-                    ),
-                  )}
-                </View>
+                      ))}
+                    </View>
+                  ))}
+                </ScrollView>
+                {priceSlides.length > 1 && (
+                  <View
+                    style={styles.priceProgressTrack}
+                    onLayout={({ nativeEvent }) =>
+                      setPriceProgressWidth(nativeEvent.layout.width)
+                    }
+                  >
+                    <Animated.View
+                      style={[
+                        styles.priceProgressBar,
+                        {
+                          width: priceProgressWidth / priceSlides.length,
+                          transform: [
+                            {
+                              translateX: priceProgress.interpolate({
+                                inputRange: priceSlides.map((_, index) => index),
+                                outputRange: priceSlides.map(
+                                  (_, index) =>
+                                    (priceProgressWidth / priceSlides.length) *
+                                    index,
+                                ),
+                                extrapolate: "clamp",
+                              }),
+                            },
+                          ],
+                        },
+                      ]}
+                    />
+                  </View>
+                )}
               </View>
             )}
           <View style={styles.card}>

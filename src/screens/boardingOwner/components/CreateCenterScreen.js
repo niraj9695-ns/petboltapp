@@ -1,4 +1,4 @@
-﻿import { appAlert } from "../../../utils/alert";
+import { appAlert } from "../../../utils/alert";
 import React, { useState } from "react";
 import {
   View,
@@ -50,7 +50,7 @@ export default function CreateCenterScreen() {
     amenities: false,
     uploads: false,
   });
-  const PET_TYPES = ["dog", "cat", "bird", "rabbit", "turtle", "others"];
+  const PET_TYPES = ["dog", "cat", "bird", "rabbit", "turtle", "other"];
   const [form, setForm] = useState({
     center_name: "",
     address: "",
@@ -1097,7 +1097,7 @@ const PetPriceEditor = ({
         />
         <Picker.Item
           label="Others"
-          value="others"
+          value="other"
           color="#111827"
           style={{ fontSize: 12 }}
         />

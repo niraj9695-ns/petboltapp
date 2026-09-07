@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet } from "./theme/typography";
 import { colors } from "./theme/colors";
 import { spacing } from "./theme/spacing";
 import { typography as themeTypography } from "./theme/typography";
@@ -52,7 +52,7 @@ export const boardingOwnerTheme = {
   info: palette.info,
 };
 
-export const homeStyles = StyleSheet.create({
+export const homeStyles = createTypographyStyleSheet({
   scroll: {
     flex: 1,
     backgroundColor: palette.background,
@@ -62,7 +62,7 @@ export const homeStyles = StyleSheet.create({
   },
 });
 
-export const drawerStyles = StyleSheet.create({
+export const drawerStyles = createTypographyStyleSheet({
   container: {
     flex: 1,
     paddingTop: 50,
@@ -126,7 +126,7 @@ export const drawerStyles = StyleSheet.create({
   },
 });
 
-export const heroStyles = StyleSheet.create({
+export const heroStyles = createTypographyStyleSheet({
   wrapper: {
     flex: 1,
   },
@@ -208,7 +208,7 @@ export const heroStyles = StyleSheet.create({
   },
 });
 
-export const categoriesStyles = StyleSheet.create({
+export const categoriesStyles = createTypographyStyleSheet({
   section: {
     paddingVertical: 5,
     paddingHorizontal: 15,
@@ -288,7 +288,7 @@ export const categoriesStyles = StyleSheet.create({
   },
 });
 
-export const dogGalleryStyles = StyleSheet.create({
+export const dogGalleryStyles = createTypographyStyleSheet({
   section: {
     paddingVertical: 20,
     backgroundColor: palette.background,
@@ -346,7 +346,7 @@ export const dogGalleryStyles = StyleSheet.create({
   },
 });
 
-export const notificationStyles = StyleSheet.create({
+export const notificationStyles = createTypographyStyleSheet({
   container: {
     flex: 1,
   },
@@ -434,7 +434,7 @@ export const notificationStyles = StyleSheet.create({
   },
 });
 
-export const statusStyles = StyleSheet.create({
+export const statusStyles = createTypographyStyleSheet({
   scroll: {
     flex: 1,
     backgroundColor: palette.background,
@@ -448,7 +448,7 @@ export const statusStyles = StyleSheet.create({
   },
 });
 
-export const appStyles = StyleSheet.create({
+export const appStyles = createTypographyStyleSheet({
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
@@ -457,7 +457,7 @@ export const appStyles = StyleSheet.create({
   },
 });
 
-export const policyStyles = StyleSheet.create({
+export const policyStyles = createTypographyStyleSheet({
   scroll: {
     flex: 1,
     backgroundColor: palette.surfaceAlt,

@@ -18,6 +18,7 @@ import styles from "../styles/BoardingCentersStyles";
 import { requireAuth } from "../../../utils/guestGuard";
 import { boardingOwnerTheme } from "../../../styles/themeStyles";
 import { useTheme } from "../../../context/ThemeContext";
+import { typography } from "../../../styles/theme/typography";
 
 export default function BoardingCentersScreen() {
   const navigation = useNavigation();
@@ -207,7 +208,13 @@ export default function BoardingCentersScreen() {
               });
             }}
           >
-            <Text style={{ color: "#fff", fontWeight: "bold" }}>
+            <Text
+              style={{
+                color: "#fff",
+                fontFamily: typography.fonts.bold,
+                fontWeight: typography.weights.bold,
+              }}
+            >
               Sign In / Sign Up
             </Text>
           </TouchableOpacity>

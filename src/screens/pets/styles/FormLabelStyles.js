@@ -1,6 +1,6 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "../../../styles/theme/typography";
 
-export default StyleSheet.create({
+export default StyleSheet({
   formLabel: {
     marginBottom: 6,
     fontWeight: "700",

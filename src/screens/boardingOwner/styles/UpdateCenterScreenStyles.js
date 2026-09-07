@@ -1,10 +1,11 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { Dimensions } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "../../../styles/theme/typography";
 import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
 
 const { width } = Dimensions.get("window");
 const COLORS = boardingOwnerTheme;
 
-export default StyleSheet.create({
+export default StyleSheet({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
@@ -299,3 +300,4 @@ export default StyleSheet.create({
     fontWeight: "700",
   },
 });
+

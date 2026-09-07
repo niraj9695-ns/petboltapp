@@ -1,4 +1,4 @@
-﻿import { appAlert } from "../../../utils/alert";
+import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -15,6 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Calendar } from "react-native-calendars";
 import styles from "../styles/BoardingBookingStyles";
 import RazorpayCheckout from "react-native-razorpay";
+import { typography } from "../../../styles/theme/typography";
 
 import {
   fetchBookedDatesApi,
@@ -691,7 +692,13 @@ export default function BoardingBookingScreen({ route, navigation }) {
                 <Text style={styles.pricingLabel}>Discount</Text>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <View style={styles.discountBadge}>
-                    <Text style={{ fontWeight: "800", color: "#92400e" }}>
+                    <Text
+                      style={{
+                        fontFamily: typography.fonts.bold,
+                        fontWeight: typography.weights.bold,
+                        color: "#92400e",
+                      }}
+                    >
                       {pricingPayload.discount_type === "percentage"
                         ? `${pricingPayload.discount_value}%`
                         : `Flat ${formatCurrency(pricingPayload.discount_value)}`}
@@ -718,7 +725,8 @@ export default function BoardingBookingScreen({ route, navigation }) {
                       color: pricingPayload.is_available
                         ? "#365314"
                         : "#7f1d1d",
-                      fontWeight: "700",
+                      fontFamily: typography.fonts.bold,
+                      fontWeight: typography.weights.bold,
                     }}
                   >
                     {pricingPayload.is_available ? "Available" : "Unavailable"}

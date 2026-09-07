@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "../../../styles/theme/typography";
 import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
 import { colors } from "../../../styles/theme/colors";
 import { spacing } from "../../../styles/theme/spacing";
@@ -7,7 +7,7 @@ import { shadows } from "../../../styles/theme/shadows";
 
 const COLORS = boardingOwnerTheme;
 
-const styles = StyleSheet.create({
+const styles = StyleSheet({
   safeArea: { flex: 1, backgroundColor: colors.background },
   container: {
     flex: 1,

@@ -1,8 +1,8 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "./theme/typography";
 import { typography } from "./themeStyles";
 import { typography as baseTypography } from "./theme/typography";
 
-export default StyleSheet.create({
+export default StyleSheet({
   section: {
     paddingHorizontal: 16,
     paddingTop: 18,

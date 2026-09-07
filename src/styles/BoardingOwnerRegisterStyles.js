@@ -1,9 +1,9 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "./theme/typography";
 import { typography } from "./themeStyles";
 import { typography as baseTypography } from "./theme/typography";
 import { spacing } from "./theme/spacing";
 
-export default StyleSheet.create({
+export default StyleSheet({
   heading: {
     fontSize:
       (typography && typography.h4 && typography.h4.fontSize) ||

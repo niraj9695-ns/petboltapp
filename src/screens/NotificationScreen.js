@@ -22,6 +22,7 @@ import {
 } from "../utils/notifications";
 import styles from "../styles/NotificationScreenStyles";
 import BackButton from "../components/BackButton";
+import { typography } from "../styles/theme/typography";
 import { useTheme } from "../context/ThemeContext";
 
 const PAGE_SIZE = 20;
@@ -251,7 +252,13 @@ export default function NotificationScreen({ navigation }) {
           }}
           onPress={handleSignIn}
         >
-          <Text style={{ color: "#fff", fontWeight: "bold" }}>
+          <Text
+            style={{
+              color: "#fff",
+              fontFamily: typography.fonts.bold,
+              fontWeight: typography.weights.bold,
+            }}
+          >
             Sign In / Sign Up
           </Text>
         </TouchableOpacity>

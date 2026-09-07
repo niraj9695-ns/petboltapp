@@ -1,4 +1,4 @@
-﻿import { appAlert } from "../../../utils/alert";
+import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState, useLayoutEffect } from "react";
 
 import {
@@ -22,6 +22,7 @@ import PetFormModal from "./PetFormModal";
 import PremiumLoader from "../../../components/PremiumLoader";
 
 import petScreenStyles from "../styles/PetScreenStyles";
+import { typography } from "../../../styles/theme/typography";
 
 import {
   fetchPetByIdApi,
@@ -805,7 +806,13 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
             });
           }}
         >
-          <Text style={{ color: "#fff", fontWeight: "bold" }}>
+          <Text
+            style={{
+              color: "#fff",
+              fontFamily: typography.fonts.bold,
+              fontWeight: typography.weights.bold,
+            }}
+          >
             Sign In / Sign Up
           </Text>
         </TouchableOpacity>

@@ -1,6 +1,6 @@
-import { StyleSheet } from "react-native";
+import { createTypographyStyleSheet as StyleSheet } from "./theme/typography";
 
-export default StyleSheet.create({
+export default StyleSheet({
   container: {
     flex: 1,
   },

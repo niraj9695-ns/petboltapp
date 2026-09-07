@@ -13,6 +13,7 @@ import { useTheme } from "../context/ThemeContext";
 import NotificationScreen from "../screens/NotificationScreen";
 import { drawerStyles } from "../styles/themeStyles";
 import { fetchNotificationsFromApi } from "../utils/notifications";
+import { typography } from "../styles/theme/typography";
 
 const Drawer = createDrawerNavigator();
 
@@ -311,6 +312,7 @@ const styles = {
 
   text: {
     fontSize: 15,
+    fontFamily: typography.fonts.medium,
     fontWeight: "500",
   },
 };

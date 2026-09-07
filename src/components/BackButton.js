@@ -1,9 +1,10 @@
 import React, { useCallback } from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { typography } from "../styles/themeStyles";
 import { typography as baseTypography } from "../styles/theme/typography";
+import { createTypographyStyleSheet as StyleSheet } from "../styles/theme/typography";
 
 export default function BackButton({
   onPress,
@@ -75,7 +76,7 @@ export default function BackButton({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet({
   backButton: {
     width: 44,
     height: 44,
@@ -101,3 +102,4 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
 });
+

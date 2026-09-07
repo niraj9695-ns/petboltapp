@@ -379,6 +379,26 @@ export const updateCenter = async (formData) => {
   }
 };
 
+export const deletePetTypePricing = async (centerId, petType) => {
+  const headers = await getAuthHeaders();
+
+  const response = await axios.post(
+    `${BASE_URL}/api/centers/delete-pet-pricing`,
+    {
+      center_id: centerId,
+      pet_type: petType,
+    },
+    {
+      headers: {
+        ...headers,
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  return response.data;
+};
+
 export const deleteCenterImage = async (centerId, imagePath) => {
   const headers = await getAuthHeaders();
 

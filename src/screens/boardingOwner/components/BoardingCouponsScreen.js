@@ -1,4 +1,4 @@
-﻿import { appAlert } from "../../../utils/alert";
+import { appAlert } from "../../../utils/alert";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -24,6 +24,7 @@ import {
 import styles from "../styles/BoardingCouponsStyles";
 import PremiumLoader from "../../../components/PremiumLoader";
 import { useTheme } from "../../../context/ThemeContext";
+import { typography } from "../../../styles/theme/typography";
 
 const formatShortDate = (value) => {
   if (!value) {
@@ -379,7 +380,13 @@ export default function BoardingCouponsScreen() {
               });
             }}
           >
-            <Text style={{ color: "#fff", fontWeight: "bold" }}>
+            <Text
+              style={{
+                color: "#fff",
+                fontFamily: typography.fonts.bold,
+                fontWeight: typography.weights.bold,
+              }}
+            >
               Sign In / Sign Up
             </Text>
           </TouchableOpacity>

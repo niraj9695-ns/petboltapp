@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, Easing, StyleSheet, View, Text } from "react-native";
+import { Animated, Easing, StyleSheet as RNStyleSheet, View, Text } from "react-native";
 import { BlurView } from "expo-blur";
+import { createTypographyStyleSheet as StyleSheet } from "../styles/theme/typography";
 import { Ionicons } from "@expo/vector-icons";
 
 const normalizeColor = (value, fallback = "#7c3aed") => {
@@ -113,10 +114,10 @@ export default function PremiumLoader({
 
   return (
     <View style={styles.overlayContainer}>
-      <BlurView intensity={18} tint="light" style={StyleSheet.absoluteFill} />
+      <BlurView intensity={18} tint="light" style={RNStyleSheet.absoluteFill} />
       <View
         style={[
-          StyleSheet.absoluteFill,
+          RNStyleSheet.absoluteFill,
           styles.overlayBackdrop,
           { backgroundColor: overlayColor },
         ]}
@@ -126,7 +127,7 @@ export default function PremiumLoader({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet({
   container: {
     alignItems: "center",
     justifyContent: "center",
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   overlayBackdrop: {
-    ...StyleSheet.absoluteFillObject,
+    ...RNStyleSheet.absoluteFillObject,
   },
   overlayContent: {
     justifyContent: "center",
@@ -180,3 +181,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+

@@ -1,4 +1,4 @@
-﻿import { appAlert } from "../../../utils/alert";
+import { appAlert } from "../../../utils/alert";
 import React, { useState, useCallback } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import {
@@ -21,6 +21,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import BASE_URL from "../constants/api";
 import styles from "../styles/BookingStatus";
 import { useTheme } from "../../../context/ThemeContext";
+import { typography } from "../../../styles/theme/typography";
 
 import { fetchMyBookingsApi } from "../services/boardingService";
 import { fetchPetImagesApi } from "../../pets/services/imageService";
@@ -662,7 +663,8 @@ export default function BookingStatus({ embedded = false }) {
             <Text
               style={{
                 color: "#fff",
-                fontWeight: "bold",
+                fontFamily: typography.fonts.bold,
+                fontWeight: typography.weights.bold,
               }}
             >
               Sign In / Sign Up

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Alert as RNAlert,
-  StyleSheet,
+  StyleSheet as RNStyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import { createTypographyStyleSheet as StyleSheet } from "../styles/theme/typography";
 
 let activeItems = [];
 let listeners = new Set();
@@ -311,9 +312,9 @@ export function initializeToastAlertOverride() {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet({
   host: {
-    ...StyleSheet.absoluteFillObject,
+    ...RNStyleSheet.absoluteFillObject,
     zIndex: 9999,
     elevation: 9999,
   },
@@ -431,3 +432,4 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
+
