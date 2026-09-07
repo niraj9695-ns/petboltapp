@@ -43,6 +43,13 @@ export default function Categories() {
       emoji: "🐕",
       comingSoon: true,
     },
+    {
+      icon: "content-cut",
+      name: "Grooming",
+      description: "Spa & styling",
+      emoji: "✂️",
+      comingSoon: true,
+    },
     // {
     //   icon: "shopping",
     //   name: "Buy & Sell",
@@ -57,13 +64,6 @@ export default function Categories() {
     //   emoji: "💝",
     //   comingSoon: true,
     // },
-    {
-      icon: "content-cut",
-      name: "Grooming",
-      description: "Spa & styling",
-      emoji: "✂️",
-      comingSoon: true,
-    },
     // {
     //   icon: "stethoscope",
     //   name: "Vet Doctors",
