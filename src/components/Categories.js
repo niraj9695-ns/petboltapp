@@ -43,20 +43,20 @@ export default function Categories() {
       emoji: "🐕",
       comingSoon: true,
     },
-    {
-      icon: "shopping",
-      name: "Buy & Sell",
-      description: "Quality pet supplies",
-      emoji: "🛍️",
-      comingSoon: true,
-    },
-    {
-      icon: "account-group-outline",
-      name: "Mating",
-      description: "Find the perfect match",
-      emoji: "💝",
-      comingSoon: true,
-    },
+    // {
+    //   icon: "shopping",
+    //   name: "Buy & Sell",
+    //   description: "Quality pet supplies",
+    //   emoji: "🛍️",
+    //   comingSoon: true,
+    // },
+    // {
+    //   icon: "account-group-outline",
+    //   name: "Mating",
+    //   description: "Find the perfect match",
+    //   emoji: "💝",
+    //   comingSoon: true,
+    // },
     {
       icon: "content-cut",
       name: "Grooming",
@@ -64,13 +64,13 @@ export default function Categories() {
       emoji: "✂️",
       comingSoon: true,
     },
-    {
-      icon: "stethoscope",
-      name: "Vet Doctors",
-      description: "Expert healthcare",
-      emoji: "👨‍⚕️",
-      comingSoon: true,
-    },
+    // {
+    //   icon: "stethoscope",
+    //   name: "Vet Doctors",
+    //   description: "Expert healthcare",
+    //   emoji: "👨‍⚕️",
+    //   comingSoon: true,
+    // },
   ];
 
   return (

@@ -1,9 +1,9 @@
-import { createTypographyStyleSheet as StyleSheet } from "../../../styles/theme/typography";
+import { StyleSheet } from "react-native";
 import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
 
 const COLORS = boardingOwnerTheme;
 
-export default StyleSheet({
+export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
@@ -50,6 +50,7 @@ export default StyleSheet({
     fontSize: 13,
     marginTop: 4,
     textAlign: "center",
+    lineHeight: 18,
   },
   card: {
     backgroundColor: COLORS.surface,
@@ -76,6 +77,10 @@ export default StyleSheet({
   detailsColumn: {
     flex: 1,
     minWidth: 0,
+  },
+  emailDetail: {
+    width: "100%",
+    marginTop: 8,
   },
   staySection: {
     width: "100%",
@@ -173,7 +178,7 @@ export default StyleSheet({
     borderColor: "#e9d5ff",
   },
   actionPanel: {
-    marginTop: 16,
+    marginTop: 8,
   },
 
   accordionHeader: {

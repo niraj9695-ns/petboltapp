@@ -235,7 +235,11 @@ export default function BookingDetailsScreen({ route, navigation }) {
                 <Text style={styles.heroTitle} numberOfLines={1}>
                   {booking.pet_name || booking.pet?.pet_name || "Pet Details"}
                 </Text>
-                <Text style={styles.heroSubtitle} numberOfLines={1}>
+                <Text
+                  style={styles.heroSubtitle}
+                  numberOfLines={2}
+                  ellipsizeMode="tail"
+                >
                   {booking.center_name}
                 </Text>
               </TouchableOpacity>
@@ -252,8 +256,6 @@ export default function BookingDetailsScreen({ route, navigation }) {
                 <Text style={styles.value}>{booking.user_name}</Text>
                 <Text style={styles.label}>Phone</Text>
                 <Text style={styles.value}>{booking.user_phone}</Text>
-                <Text style={styles.label}>Email</Text>
-                <Text style={styles.value}>{booking.user_email}</Text>
               </View>
 
               <View style={styles.detailsColumn}>
@@ -263,6 +265,11 @@ export default function BookingDetailsScreen({ route, navigation }) {
                 <Text style={styles.label}>Breed</Text>
                 <Text style={styles.value}>{booking.breed}</Text>
               </View>
+            </View>
+
+            <View style={styles.emailDetail}>
+              <Text style={styles.label}>Email</Text>
+              <Text style={styles.value}>{booking.user_email}</Text>
             </View>
 
             <View style={styles.staySection}>
