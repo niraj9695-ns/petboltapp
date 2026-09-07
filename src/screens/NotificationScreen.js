@@ -268,7 +268,7 @@ export default function NotificationScreen({ navigation }) {
 
   return (
     <LinearGradient
-      colors={["#f8fafc", "#eef2ff", "#fdf2f8"]}
+      colors={["#FDF9FF", "#FDF9FF"]}
       style={styles.container}
     >
       <ScrollView

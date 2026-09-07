@@ -822,7 +822,7 @@ export default function PetScreen({ navigation, route, initialEditPetId }) {
 
   return (
     <LinearGradient
-      colors={["#faf5ff", "#fdf2f8", "#fff7ed"]}
+      colors={["#FDF9FF", "#FDF9FF"]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={petScreenStyles.screen}

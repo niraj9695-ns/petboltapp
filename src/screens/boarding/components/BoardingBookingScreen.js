@@ -486,7 +486,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
 
   return (
     <LinearGradient
-      colors={["#faf5ff", "#fdf2f8", "#fff7ed"]}
+      colors={["#FDF9FF", "#FDF9FF"]}
       style={styles.bookingScreenContainer}
     >
       <ScrollView contentContainerStyle={styles.bookingScreenContent}>

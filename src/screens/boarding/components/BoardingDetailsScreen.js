@@ -364,7 +364,10 @@ export default function BoardingDetailsScreen({ route, navigation }) {
             </Text>
             {hasCoordinates && (
               <TouchableOpacity onPress={openMap}>
-                <Text style={styles.mapLink}>View on Map â€º</Text>
+                <View style={styles.mapLinkRow}>
+                  <Text style={styles.mapLink}>View on Map</Text>
+                  <Ionicons name="chevron-forward" size={14} color="#6b21a8" />
+                </View>
               </TouchableOpacity>
             )}
           </View>

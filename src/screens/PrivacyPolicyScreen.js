@@ -8,7 +8,7 @@ export default function PrivacyPolicyScreen({ navigation }) {
   return (
     <ScrollView style={policyStyles.scroll}>
       <LinearGradient
-        colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
+        colors={["#FDF9FF", "#FDF9FF"]}
         style={policyStyles.container}
       >
         <View style={policyStyles.pageHeader}>

@@ -486,7 +486,7 @@ export default function UpdateCenterScreen() {
   if (loading) {
     return (
       <SafeAreaView
-        style={{ flex: 1, backgroundColor: "#f8fafc" }}
+        style={{ flex: 1, backgroundColor: "#FDF9FF" }}
         edges={["left", "right", "bottom"]}
       >
         <View style={styles.loader}>
@@ -503,7 +503,7 @@ export default function UpdateCenterScreen() {
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: "#f8fafc" }}
+      style={{ flex: 1, backgroundColor: "#FDF9FF" }}
       edges={["left", "right", "bottom"]}
     >
       <KeyboardAvoidingView

@@ -8,7 +8,7 @@ export default function RefundPolicyScreen({ navigation }) {
   return (
     <ScrollView style={refundStyles.scroll}>
       <LinearGradient
-        colors={["#fff1e6", "#ffe4f0", "#f3e8ff"]}
+        colors={["#FDF9FF", "#FDF9FF"]}
         style={refundStyles.container}
       >
         <View style={refundStyles.pageHeader}>

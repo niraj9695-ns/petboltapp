@@ -138,7 +138,7 @@ export default function ProfileScreen({ navigation }) {
   if (isGuest) {
     return (
       <LinearGradient
-        colors={["#FFF8FD", "#FCE7F3", "#F3E8FF"]}
+        colors={["#FDF9FF", "#FDF9FF"]}
         style={styles.guestContainer}
       >
         <View style={styles.guestDecor}>

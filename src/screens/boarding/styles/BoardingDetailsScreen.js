@@ -121,6 +121,11 @@ export default StyleSheet({
     lineHeight: 19,
     marginHorizontal: 8,
   },
+  mapLinkRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 2,
+  },
   mapLink: { color: purple, fontSize: 12, fontWeight: "800", paddingTop: 2 },
   quickActions: { flexDirection: "row", gap: 8, marginBottom: 13 },
   quickAction: {
