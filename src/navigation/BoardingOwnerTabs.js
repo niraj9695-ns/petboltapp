@@ -6,6 +6,7 @@ import BoardingCentersScreen from "../screens/boardingOwner/components/BoardingC
 import BoardingCouponsScreen from "../screens/boardingOwner/components/BoardingCouponsScreen";
 import BoardingProfileScreen from "../screens/boardingOwner/components/BoardingProfileScreen";
 import NotificationScreen from "../screens/NotificationScreen";
+import { palette } from "../styles/themeStyles";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,7 +34,7 @@ export default function BoardingOwnerTabs() {
           return <Ionicons name={iconName} size={size} color={color} />;
         },
 
-        tabBarActiveTintColor: "#6b21a8",
+        tabBarActiveTintColor: palette.secondary,
         tabBarInactiveTintColor: "gray",
       })}
     >

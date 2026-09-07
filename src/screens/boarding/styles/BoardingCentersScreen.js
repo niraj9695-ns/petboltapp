@@ -16,7 +16,7 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#faf5ff",
+    backgroundColor: "#FDF9FF",
   },
 
   /* HEADER SECTION */

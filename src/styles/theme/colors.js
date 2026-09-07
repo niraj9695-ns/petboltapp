@@ -3,7 +3,7 @@ export const colors = {
   primaryDark: '#4c1d95',
   secondary: '#7c3aed',
   accent: '#ec4899',
-  background: '#fffaf5',
+  background: '#FDF9FF',
   surface: '#ffffff',
   surfaceAlt: '#f8fafc',
   surfaceMuted: '#f3f4f6',

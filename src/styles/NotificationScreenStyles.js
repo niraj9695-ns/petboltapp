@@ -10,6 +10,7 @@ import { typography as baseTypography } from "./theme/typography";
 export default StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#FDF9FF",
   },
 
   scroll: {

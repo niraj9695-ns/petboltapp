@@ -70,8 +70,8 @@ export default StyleSheet.create({
 
   bookingListContainer: {
     paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 32,
+    paddingTop: 8,
+    paddingBottom: 4,
 
     /*
      * Center cards on large screens
@@ -91,7 +91,7 @@ export default StyleSheet.create({
      * IMPORTANT:
      * No marginRight because list is vertical
      */
-    marginBottom: spacing.lg,
+    marginBottom: spacing.sm,
 
     borderWidth: 1,
     borderColor: colors.border,
@@ -585,7 +585,8 @@ export default StyleSheet.create({
   paginationEnd: {
     width: "100%",
     alignItems: "center",
-    paddingVertical: 16,
+    paddingTop: 4,
+    paddingBottom: 8,
   },
 
   paginationEndText: {

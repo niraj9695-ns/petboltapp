@@ -11,11 +11,11 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fdf2f8",
+    backgroundColor: "#FDF9FF",
   },
   screen: {
     flex: 1,
-    backgroundColor: "#faf5ff",
+    backgroundColor: "#FDF9FF",
   },
   header: {
     flexDirection: "row",
@@ -54,7 +54,7 @@ export default StyleSheet.create({
   container: {
     padding: 16,
     paddingBottom: 100,
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#FDF9FF",
     flexGrow: 1,
   },
   loadingOverlay: {

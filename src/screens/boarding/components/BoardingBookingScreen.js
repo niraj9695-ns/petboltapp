@@ -20,6 +20,8 @@ import {
   fetchBookedDatesApi,
   fetchPricingApi,
   createAndPayBookingApi,
+  createBookingApi,
+  payWithCashApi,
   verifyPaymentApi,
 } from "../services/boardingService";
 import { fetchPetsApi } from "../../pets/services/petService";
@@ -44,6 +46,7 @@ export default function BoardingBookingScreen({ route, navigation }) {
   const [pickerMode, setPickerMode] = useState("checkin");
 
   const [bookingLoading, setBookingLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("online");
 
   const [specialInstructions, setSpecialInstructions] = useState("");
   const [pricingData, setPricingData] = useState(null);
@@ -363,6 +366,56 @@ export default function BoardingBookingScreen({ route, navigation }) {
       const token = await AsyncStorage.getItem("token");
 
       setBookingLoading(true);
+
+      if (paymentMethod === "cash") {
+        const bookingResponse = await createBookingApi({
+          token,
+          petId: selectedPetId,
+          centerId,
+          startDate: formatDate(checkInDate),
+          endDate: formatDate(checkOutDate),
+          specialInstructions,
+        });
+
+        if (
+          bookingResponse?.status !== "success" &&
+          bookingResponse?.status !== true
+        ) {
+          appAlert.alert(
+            "Booking Failed",
+            bookingResponse?.message || "Unable to create booking",
+          );
+          return;
+        }
+
+        const bookingData = bookingResponse?.data || {};
+        const bookingId =
+          bookingData?.booking_id || bookingData?.booking?.id || bookingData?.id;
+
+        if (!bookingId) {
+          appAlert.alert("Payment Error", "The booking ID was not returned.");
+          return;
+        }
+
+        const cashResponse = await payWithCashApi({
+          token,
+          bookingId,
+          paymentMethod: "cash",
+          notes: "Cash collected at counter",
+        });
+
+        if (cashResponse?.status === "success" || cashResponse?.status === true) {
+          appAlert.alert("Payment Successful", "Booking confirmed", [
+            { text: "OK", onPress: navigateToHome },
+          ]);
+        } else {
+          appAlert.alert(
+            "Cash Payment Failed",
+            cashResponse?.message || "Unable to process cash payment",
+          );
+        }
+        return;
+      }
 
       const data = await createAndPayBookingApi({
         token,
@@ -691,13 +744,36 @@ export default function BoardingBookingScreen({ route, navigation }) {
           )}
         </View>
 
+        <View style={styles.bookingScreenCard}>
+          <Text style={styles.bookingScreenHeading}>Payment Method</Text>
+          <View style={styles.bookingScreenInputWrapper}>
+            <Picker
+              selectedValue={paymentMethod}
+              onValueChange={setPaymentMethod}
+              style={styles.bookingScreenPicker}
+            >
+              <Picker.Item label="Online payment (Razorpay)" value="online" />
+              <Picker.Item label="Cash" value="cash" />
+            </Picker>
+          </View>
+          {paymentMethod === "cash" && (
+            <Text style={styles.statusNote}>
+              Cash payment confirms the booking instantly after the request is accepted.
+            </Text>
+          )}
+        </View>
+
         <TouchableOpacity
           style={styles.bookingScreenBookBtn}
           onPress={createBooking}
           disabled={bookingLoading}
         >
           <Text style={styles.bookingScreenBtnText}>
-            {bookingLoading ? "Creating Booking..." : "Confirm Booking"}
+            {bookingLoading
+              ? "Processing..."
+              : paymentMethod === "cash"
+                ? "Confirm with Cash"
+                : "Continue to Payment"}
           </Text>
         </TouchableOpacity>
       </ScrollView>

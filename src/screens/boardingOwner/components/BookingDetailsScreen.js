@@ -121,7 +121,10 @@ export default function BookingDetailsScreen({ route, navigation }) {
       const response = await setPickupDropTime(payload);
 
       if (response.status === "success" || response.success) {
-        appAlert.alert("Success", "Pickup / Drop details updated successfully.");
+        appAlert.alert(
+          "Success",
+          "Pickup / Drop details updated successfully.",
+        );
 
         setBooking(response.data);
 
@@ -238,6 +241,71 @@ export default function BookingDetailsScreen({ route, navigation }) {
               </TouchableOpacity>
 
               <View style={styles.heroHeaderSpacer} />
+            </View>
+          </View>
+
+          <View style={styles.card}>
+            <View style={styles.detailsRow}>
+              <View style={styles.detailsColumn}>
+                <Text style={styles.sectionTitle}>Owner Details</Text>
+                <Text style={styles.label}>Owner</Text>
+                <Text style={styles.value}>{booking.user_name}</Text>
+                <Text style={styles.label}>Phone</Text>
+                <Text style={styles.value}>{booking.user_phone}</Text>
+                <Text style={styles.label}>Email</Text>
+                <Text style={styles.value}>{booking.user_email}</Text>
+              </View>
+
+              <View style={styles.detailsColumn}>
+                <Text style={styles.sectionTitle}>Pet Details</Text>
+                <Text style={styles.label}>Pet Type</Text>
+                <Text style={styles.value}>{booking.pet_type}</Text>
+                <Text style={styles.label}>Breed</Text>
+                <Text style={styles.value}>{booking.breed}</Text>
+              </View>
+            </View>
+
+            <View style={styles.staySection}>
+              <Text style={styles.sectionTitle}>Stay Details</Text>
+              <View style={styles.row}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.label}>Start Date</Text>
+                  <Text style={styles.value}>{booking.start_date}</Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.label}>End Date</Text>
+                  <Text style={styles.value}>{booking.end_date}</Text>
+                </View>
+              </View>
+              <Text style={styles.label}>Location</Text>
+              <Text style={styles.value}>
+                {booking.city}, {booking.state}
+              </Text>
+              <Text style={styles.label}>Total Days</Text>
+              <Text style={styles.value}>{booking.total_days}</Text>
+              <Text style={styles.label}>Price Per Day</Text>
+              <Text style={styles.value}>
+                {"\u20B9"}
+                {booking.price_per_day}
+              </Text>
+
+              <Text style={styles.totalPrice}>
+                Total Price: {"\u20B9"}
+                {booking.total_price}
+              </Text>
+
+              <View
+                style={[
+                  styles.statusBadge,
+                  booking.status === "accepted"
+                    ? styles.accepted
+                    : booking.status === "rejected"
+                      ? styles.rejected
+                      : styles.pending,
+                ]}
+              >
+                <Text style={styles.statusText}>{booking.status}</Text>
+              </View>
             </View>
           </View>
           <View style={styles.actionPanel}>
@@ -632,67 +700,6 @@ export default function BookingDetailsScreen({ route, navigation }) {
                 </View>
               </View>
             )}
-          </View>
-
-          <View style={styles.card}>
-            <View style={styles.detailsRow}>
-              <View style={styles.detailsColumn}>
-                <Text style={styles.sectionTitle}>Owner Details</Text>
-                <Text style={styles.label}>Owner</Text>
-                <Text style={styles.value}>{booking.user_name}</Text>
-                <Text style={styles.label}>Phone</Text>
-                <Text style={styles.value}>{booking.user_phone}</Text>
-                <Text style={styles.label}>Email</Text>
-                <Text style={styles.value}>{booking.user_email}</Text>
-              </View>
-
-              <View style={styles.detailsColumn}>
-                <Text style={styles.sectionTitle}>Pet Details</Text>
-                <Text style={styles.label}>Pet Type</Text>
-                <Text style={styles.value}>{booking.pet_type}</Text>
-                <Text style={styles.label}>Breed</Text>
-                <Text style={styles.value}>{booking.breed}</Text>
-              </View>
-            </View>
-
-            <View style={styles.staySection}>
-              <Text style={styles.sectionTitle}>Stay Details</Text>
-              <View style={styles.row}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.label}>Start Date</Text>
-                  <Text style={styles.value}>{booking.start_date}</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.label}>End Date</Text>
-                  <Text style={styles.value}>{booking.end_date}</Text>
-                </View>
-              </View>
-              <Text style={styles.label}>Location</Text>
-              <Text style={styles.value}>
-                {booking.city}, {booking.state}
-              </Text>
-              <Text style={styles.label}>Total Days</Text>
-              <Text style={styles.value}>{booking.total_days}</Text>
-              <Text style={styles.label}>Price Per Day</Text>
-              <Text style={styles.value}>{"\u20B9"}{booking.price_per_day}</Text>
-
-              <Text style={styles.totalPrice}>
-                Total Price: {"\u20B9"}{booking.total_price}
-              </Text>
-
-              <View
-                style={[
-                  styles.statusBadge,
-                  booking.status === "accepted"
-                    ? styles.accepted
-                    : booking.status === "rejected"
-                      ? styles.rejected
-                      : styles.pending,
-                ]}
-              >
-                <Text style={styles.statusText}>{booking.status}</Text>
-              </View>
-            </View>
           </View>
         </View>
       </ScrollView>

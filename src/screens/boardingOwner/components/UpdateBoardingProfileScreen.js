@@ -295,7 +295,7 @@ export default function UpdateBoardingProfileScreen({ navigation }) {
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: "#f8fafc" }}
+        style={{ flex: 1, backgroundColor: "#FDF9FF" }}
       edges={["left", "right", "bottom"]}
     >
       <KeyboardAvoidingView

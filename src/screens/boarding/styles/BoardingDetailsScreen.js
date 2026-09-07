@@ -1,338 +1,272 @@
 import { StyleSheet } from "react-native";
-import { colors } from "../../../styles/theme/colors";
-import { spacing } from "../../../styles/theme/spacing";
-import { radius } from "../../../styles/theme/radius";
-import { responsive } from "../../../styles/theme/responsive";
-import { typography } from "../../../styles/themeStyles";
-import { typography as baseTypography } from "../../../styles/theme/typography";
-import { shadows } from "../../../styles/theme/shadows";
 
-const IMAGE_HEIGHT = responsive.isTablet ? 420 : 320;
+const purple = "#6B21A8";
+const ink = "#111827";
+const muted = "#6B7280";
 
 export default StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-
-  contentWrapper: {
-    alignSelf: "center",
-    width: "100%",
-    maxWidth: responsive.contentMaxWidth,
-  },
-
-  tabletCard: {
-    width: "48%",
-  },
-
-  desktopCard: {
-    width: "48%",
-  },
-
+  screen: { flex: 1, backgroundColor: "#FDF9FF" },
+  wrapper: { flex: 1, backgroundColor: "#FDF9FF" },
+  scrollContent: { paddingBottom: 92 },
   loaderContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.surface,
+    backgroundColor: "#FDF9FF",
+    padding: 20,
   },
-
+  emptyTitle: { color: ink, fontSize: 16, fontWeight: "700", marginTop: 16 },
+  headerLogo: { width: 108, height: 48 },
+  headerActions: { flexDirection: "row", gap: 4 },
+  headerIcon: {
+    width: 38,
+    height: 38,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   sliderContainer: {
     position: "relative",
-    backgroundColor: colors.surfaceAlt,
-    borderBottomLeftRadius: radius.xxl,
-    borderBottomRightRadius: radius.xxl,
     overflow: "hidden",
+    backgroundColor: "#EDEAF5",
+    borderBottomLeftRadius: 18,
+    borderBottomRightRadius: 18,
   },
-
-  sliderImageWrapper: {
-    width: "100%",
-    height: IMAGE_HEIGHT,
-    backgroundColor: colors.border,
+  sliderImageWrapper: { backgroundColor: "#EEEAF7" },
+  sliderImage: { width: "100%", height: "100%" },
+  floatingBackButton: {
+    position: "absolute",
+    top: 16,
+    left: 14,
+    zIndex: 10,
   },
-
-  sliderImage: {
-    width: "100%",
-    height: "100%",
-  },
-
   sliderOverlay: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    height: 140,
+    height: 95,
   },
-
-  backButtonOverlay: {
-    position: "absolute",
-    top: spacing.md,
-    left: spacing.md,
-    zIndex: 10,
-    elevation: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.92)",
-    borderRadius: radius.round,
-    shadowColor: "#0f172a",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-  },
-
   sliderCountBadge: {
     position: "absolute",
-    top: spacing.md,
-    right: spacing.md,
-    backgroundColor: "rgba(15, 23, 42, 0.55)",
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.round,
+    right: 14,
+    bottom: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 15,
+    backgroundColor: "rgba(17,24,39,.65)",
   },
-
-  sliderCountText: {
-    color: colors.surface,
-    fontSize:
-      (typography && typography.caption && typography.caption.fontSize) ||
-      baseTypography.caption ||
-      10,
-    fontWeight: "700",
-    letterSpacing: 0.4,
-  },
-
+  sliderCountText: { color: "#FFFFFF", fontSize: 12, fontWeight: "700" },
   sliderDots: {
     position: "absolute",
-    bottom: spacing.md,
+    bottom: 13,
     left: 0,
     right: 0,
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center",
   },
-
   sliderDot: {
-    width: 8,
-    height: 8,
-    borderRadius: radius.round,
-    backgroundColor: "rgba(255, 255, 255, 0.35)",
-    marginHorizontal: spacing.xs,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "rgba(255,255,255,.6)",
+    marginHorizontal: 3,
   },
-
-  sliderDotActive: {
-    width: 24,
-    backgroundColor: colors.surface,
+  sliderDotActive: { width: 19, backgroundColor: "#FFFFFF" },
+  emptyImage: {
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#F1ECFA",
+    borderBottomLeftRadius: 18,
+    borderBottomRightRadius: 18,
   },
-
+  emptyImageText: {
+    color: purple,
+    fontSize: 13,
+    marginTop: 8,
+    fontWeight: "600",
+  },
   detailsContainer: {
-    padding: spacing.xl,
-    borderTopLeftRadius: radius.xxl,
-    borderTopRightRadius: radius.xxl,
-    marginTop: -spacing.xl,
+    width: "100%",
+    maxWidth: 1160,
+    alignSelf: "center",
+    padding: 16,
   },
-
-  title: {
-    fontSize:
-      (typography && typography.heroTitle && typography.heroTitle.fontSize) ||
-      baseTypography.heroTitle ||
-      28,
-    fontWeight: "800",
-    color: colors.text,
-    marginBottom: spacing.xs,
-  },
-
-  desc: {
-    fontSize:
-      (typography && typography.body && typography.body.fontSize) ||
-      baseTypography.body ||
-      14,
-    color: colors.textMuted,
-    lineHeight: 24,
-    marginBottom: spacing.xxl,
-  },
-
-  sectionCard: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.xxl,
-    padding: spacing.lg,
-    marginBottom: spacing.sm,
-    ...shadows.md,
-  },
-
-  sectionTitle: {
-    fontSize:
-      (typography && typography.cardTitle && typography.cardTitle.fontSize) ||
-      baseTypography.cardTitle ||
-      18,
-    fontWeight: "700",
-    color: colors.text,
-    marginBottom: spacing.sm,
-  },
-
-  infoRow: {
+  titleRow: {
     flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "space-between",
     marginBottom: 8,
   },
-
-  label: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#1e293b",
-    width: "38%",
+  titleCopy: { flex: 1, paddingRight: 10 },
+  title: { color: ink, fontSize: 18, lineHeight: 31, fontWeight: "800" },
+  desc: { color: muted, fontSize: 12, lineHeight: 20, marginTop: 0 },
+  rating: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingTop: 5,
+    maxWidth: "42%",
   },
-
-  infoText: {
+  ratingValue: { color: ink, fontSize: 14, fontWeight: "800", marginLeft: 4 },
+  reviewText: { color: muted, fontSize: 12, marginLeft: 3 },
+  addressRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 12,
+  },
+  addressText: {
     flex: 1,
-    fontSize: 12,
-    color: "#475569",
-    lineHeight: 22,
-    textAlign: "right",
+    color: ink,
+    fontSize: 13,
+    lineHeight: 19,
+    marginHorizontal: 8,
   },
-
-  addressInfoText: {
+  mapLink: { color: purple, fontSize: 12, fontWeight: "800", paddingTop: 2 },
+  quickActions: { flexDirection: "row", gap: 8, marginBottom: 13 },
+  quickAction: {
     flex: 1,
-    fontSize: 12,
-    color: "#475569",
-    lineHeight: 22,
-    textAlign: "left",
+    minHeight: 62,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 10,
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    borderRadius: 13,
   },
-
-  addressLine: {
-    marginTop: 4,
+  quickActionCopy: { flex: 1 },
+  quickActionTitle: { color: ink, fontSize: 12, fontWeight: "800" },
+  quickActionValue: { color: muted, fontSize: 10, marginTop: 3 },
+  card: {
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    borderRadius: 17,
+    padding: 15,
+    marginBottom: 13,
+    shadowColor: "#352050",
+    shadowOpacity: 0.06,
+    shadowRadius: 7,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
   },
-
-  price: {
-    fontSize: 12,
+  cardTitle: {
+    color: ink,
+    fontSize: 15,
+    lineHeight: 24,
     fontWeight: "800",
-    color: "#6b21a8",
+    marginBottom: 12,
   },
-
-  divider: {
-    height: 1,
-    backgroundColor: "#e2e8f0",
-    marginVertical: 8,
+  sectionHeader: {
+    minHeight: 28,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 12,
   },
-
-  amenitiesContainer: {
+  sectionHeaderTitle: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  sectionTitle: { color: ink, fontSize: 15, lineHeight: 23, fontWeight: "800" },
+  priceGrid: { flexDirection: "row", gap: 8 },
+  priceColumn: { flex: 1, alignItems: "center", minWidth: 0 },
+  petPlaceholder: {
+    width: "100%",
+    height: 73,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#F3F8FC",
+    borderRadius: 10,
+  },
+  petEmoji: { fontSize: 42 },
+  petName: { color: ink, fontSize: 12, fontWeight: "800", marginTop: 6 },
+  price: { color: purple, fontSize: 12, fontWeight: "800", marginTop: 3 },
+  featureGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  featureTile: {
+    width: "30.5%",
+    minHeight: 64,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 7,
+    backgroundColor: "#FAF7FF",
+    borderRadius: 11,
+  },
+  featureLabel: {
+    color: ink,
+    fontSize: 12,
+    lineHeight: 14,
+    fontWeight: "700",
+    textAlign: "center",
+    marginTop: 5,
+  },
+  detailGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginTop: 4,
+    borderTopWidth: 1,
+    borderTopColor: "#E5E7EB",
+    marginTop: 13,
+    paddingTop: 8,
   },
-
-  amenityBox: {
-    backgroundColor: "#fff7ed",
-    borderWidth: 1,
-    borderColor: "#fdba74",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 50,
-    marginRight: 10,
-    marginBottom: 6,
-  },
-
-  amenityText: {
-    color: "#6b21a8",
-    fontWeight: "700",
-    fontSize: 12,
-  },
-
-  tagBox: {
-    backgroundColor: "#e0e7ff",
-    borderWidth: 1,
-    borderColor: "#c7d2fe",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 50,
-    marginRight: 10,
-    marginBottom: 10,
-  },
-
-  tagText: {
-    color: "#4f46e5",
-    fontWeight: "700",
-    fontSize: 12,
-  },
-
-  serviceBox: {
-    backgroundColor: "#dbeafe",
-    borderWidth: 1,
-    borderColor: "#bfdbfe",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 50,
-    marginRight: 10,
-    marginBottom: 10,
-  },
-
-  serviceText: {
-    color: "#0369a1",
-    fontWeight: "700",
-    fontSize: 12,
-  },
-
-  sectionSubtitle: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#1e293b",
-    marginBottom: 8,
-  },
-
-  contactRow: {
+  detailItem: {
+    width: "50%",
     flexDirection: "row",
     alignItems: "flex-start",
-    justifyContent: "space-between",
-    marginBottom: 14,
+    paddingVertical: 7,
+    paddingRight: 8,
   },
-
-  contactLink: {
-    color: "#6b21a8",
-  },
-
-  instructionsText: {
-    fontSize: 15,
-    color: "#475569",
-    lineHeight: 22,
-  },
-
+  detailCopy: { flex: 1, marginLeft: 7 },
+  detailLabel: { color: ink, fontSize: 12, fontWeight: "700" },
+  detailValue: { color: muted, fontSize: 12, lineHeight: 17, marginTop: 2 },
   licenseLink: {
-    backgroundColor: "#f3e8ff",
-    borderWidth: 1,
-    borderColor: "#e9d5ff",
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderRadius: 12,
+    flexDirection: "row",
     alignItems: "center",
-    marginTop: 8,
+    justifyContent: "center",
+    gap: 7,
+    paddingTop: 12,
+    marginTop: 7,
+    borderTopWidth: 1,
+    borderTopColor: "#E5E7EB",
   },
-
-  licenseLinkText: {
-    color: "#6b21a8",
-    fontWeight: "700",
-    fontSize: 14,
+  licenseLinkText: { color: purple, fontSize: 13, fontWeight: "800" },
+  contactGrid: { flexDirection: "row" },
+  contactColumn: { flex: 1, paddingRight: 10 },
+  contactLine: { flexDirection: "row", alignItems: "center", marginBottom: 10 },
+  contactLink: { flex: 1, color: purple, fontSize: 12, marginLeft: 8 },
+  hoursColumn: {
+    width: "38%",
+    flexDirection: "row",
+    gap: 8,
+    alignItems: "flex-start",
+    borderLeftWidth: 1,
+    borderLeftColor: "#E5E7EB",
+    paddingLeft: 12,
   },
-
-  spacing: {
-    height: 20,
+  hoursTitle: { color: ink, fontSize: 13, fontWeight: "800" },
+  hoursValue: { color: muted, fontSize: 12, lineHeight: 18, marginTop: 2 },
+  instructionsText: { color: muted, fontSize: 13, lineHeight: 20 },
+  bookingBar: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 18,
+    backgroundColor: "rgba(250,247,255,.96)",
+    borderTopWidth: 1,
+    borderTopColor: "#E5E7EB",
   },
-
   primaryBtn: {
-    backgroundColor: "#6b21a8",
-    paddingVertical: 16,
-    borderRadius: 18,
+    minHeight: 51,
+    borderRadius: 13,
+    flexDirection: "row",
     alignItems: "center",
-    marginTop: 10,
-    shadowColor: "#6b21a8",
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 5,
+    justifyContent: "center",
+    gap: 8,
   },
-
-  primaryBtnText: {
-    color: "#ffffff",
-    fontWeight: "700",
-    fontSize: 14,
-    letterSpacing: 0.3,
-  },
+  primaryBtnText: { color: "#FFFFFF", fontSize: 17, fontWeight: "800" },
 });

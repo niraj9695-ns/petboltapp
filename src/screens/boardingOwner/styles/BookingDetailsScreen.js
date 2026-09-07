@@ -173,7 +173,7 @@ export default StyleSheet.create({
     borderColor: "#e9d5ff",
   },
   actionPanel: {
-    marginBottom: 16,
+    marginTop: 16,
   },
 
   accordionHeader: {

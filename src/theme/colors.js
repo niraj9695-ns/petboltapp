@@ -10,7 +10,7 @@ export const appColors = {
 };
 
 export const lightColors = {
-  background: "#F8FAFC",
+  background: "#FDF9FF",
   cardBackground: "#FFFFFF",
   textPrimary: "#111827",
   textSecondary: "#6B7280",

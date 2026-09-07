@@ -4,300 +4,303 @@ import { spacing } from "./theme/spacing";
 import { radius } from "./theme/radius";
 import { shadows } from "./theme/shadows";
 import { responsive } from "./theme/responsive";
-import { typography } from "./themeStyles";
-import { typography as baseTypography } from "./theme/typography";
+import { typography } from "./theme/typography";
+
+const purple = colors.primary;
+const darkPurple = colors.text;
+const mutedPurple = colors.textMuted;
+const lightPurple = "#F8EEFF";
+const lightPink = "#FCE7F3";
 
 export default StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
+  wrapper: { flex: 1 },
+  scrollContent: { paddingBottom: 28 },
   loaderContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
   },
-  container: {
-    borderRadius: radius.xxl,
-    padding: spacing.xl,
+  heroBackground: {
+    minHeight: 300,
+    overflow: "hidden",
+    borderBottomLeftRadius: radius.xxl + spacing.sm,
+    borderBottomRightRadius: radius.xxl + spacing.sm,
+  },
+  header: {
+    height: 74,
+    flexDirection: "row",
     alignItems: "center",
-    alignSelf: "center",
-    width: "92%",
+    justifyContent: "space-between",
+    paddingHorizontal: spacing.xxl,
   },
-  avatarWrapper: {
-    marginTop: spacing.sm,
-    marginBottom: spacing.sm,
+  headerButton: {
+    width: 46,
+    height: 46,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  logo: { width: 154, height: 64 },
+  profileHero: {
+    minHeight: 112,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
+    paddingRight: spacing.xxxl + spacing.xl,
+    position: "relative",
+  },
+  profileHeroTablet: {
+    alignSelf: "center",
+    width: "100%",
+    maxWidth: responsive.contentMaxWidth,
+    paddingHorizontal: spacing.xxxl + spacing.xxxl,
+  },
+  avatarArea: {
+    position: "relative",
+    flexShrink: 0,
+    marginRight: spacing.lg,
   },
   avatar: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    borderWidth: 3,
-    borderColor: "#fff",
-  },
-  badge: {
-    backgroundColor: colors.surface,
-    paddingVertical: spacing.xs,
-    paddingHorizontal: spacing.md,
+    width: 80,
+    height: 80,
     borderRadius: radius.round,
-    marginBottom: spacing.sm,
+    borderWidth: 4,
+    borderColor: colors.surface,
+    backgroundColor: lightPurple,
   },
-  badgeText: {
-    fontSize:
-      (typography && typography.caption && typography.caption.fontSize) ||
-      baseTypography.caption ||
-      10,
-    fontWeight:
-      (typography && typography.caption && typography.caption.fontWeight) ||
-      baseTypography.weights.semibold ||
-      "600",
+
+  profileIdentity: {
+    flex: 1,
+    minWidth: 0,
+    justifyContent: "center",
+    zIndex: 1,
+  },
+  profileOptionsButton: {
+    position: "absolute",
+    top: spacing.xxxl,
+    right: spacing.lg,
+    width: 42,
+    height: 42,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  verifiedBadge: {
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs + 2,
+    margin: 0,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs + 2,
+    borderRadius: radius.round,
+    backgroundColor: lightPink,
+    borderWidth: 1,
+    borderColor: "#F0C8EB",
+  },
+  verifiedText: {
+    color: colors.primaryDark,
+    fontSize: 10,
+    fontWeight: typography.weights.bold,
   },
   name: {
-    fontSize:
-      (typography && typography.h3 && typography.h3.fontSize) ||
-      baseTypography.h3 ||
-      20,
-    fontWeight:
-      (typography && typography.h3 && typography.h3.fontWeight) ||
-      baseTypography.weights.bold ||
-      "700",
-    color: "#333",
-    marginTop: spacing.xs,
+    fontSize: typography.cardTitle + spacing.xs,
+    lineHeight: 37,
+    fontWeight: typography.weights.bold,
+    flexShrink: 1,
   },
-  desc: {
-    fontSize:
-      (typography && typography.small && typography.small.fontSize) ||
-      baseTypography.small ||
-      12,
-    color: colors.textMuted,
-    textAlign: "center",
-    marginTop: spacing.xs,
-    marginBottom: spacing.lg,
+  heroPaw: {
+    position: "absolute",
+    right: 20,
+    bottom: 18,
+    transform: [{ rotate: "-18deg" }],
   },
-  btnRow: {
+  content: {
     width: "100%",
-    gap: spacing.md,
-    flexDirection: "row",
-    flexWrap: "wrap",
+    paddingHorizontal: responsive.horizontalPadding,
   },
-  primaryBtn: {
-    flex: 1,
-    minWidth: responsive.isTablet ? 180 : 160,
-    backgroundColor: colors.primary,
-    padding: spacing.lg,
-    borderRadius: radius.button,
-    alignItems: "center",
-  },
-
-  secondaryBtn: {
-    flex: 1,
-    minWidth: responsive.isTablet ? 180 : 160,
-    backgroundColor: colors.surface,
-    padding: spacing.lg,
-    borderRadius: radius.button,
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#ddd",
-  },
-  primaryBtnText: {
-    color: "#fff",
-    fontWeight:
-      (typography && typography.h3 && typography.h3.fontWeight) ||
-      baseTypography.weights.bold ||
-      "700",
-    fontSize:
-      (typography && typography.body && typography.body.fontSize) ||
-      baseTypography.body ||
-      14,
-  },
-
-  secondaryBtnText: {
-    color: "#6b21a8",
-    fontWeight:
-      (typography && typography.h3 && typography.h3.fontWeight) ||
-      baseTypography.weights.bold ||
-      "700",
-    fontSize:
-      (typography && typography.body && typography.body.fontSize) ||
-      baseTypography.body ||
-      14,
+  contentTablet: {
+    maxWidth: responsive.contentMaxWidth,
+    alignSelf: "center",
+    paddingHorizontal: spacing.xxxl - spacing.xs,
   },
   infoCard: {
     width: "100%",
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    padding: spacing.lg,
-    marginTop: spacing.xl,
-    marginBottom: spacing.xs,
+    paddingHorizontal: spacing.md + 5,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.xxl + spacing.xs,
+    borderWidth: 1,
+    ...shadows.sm,
   },
-  label: {
-    fontSize:
-      (typography && typography.caption && typography.caption.fontSize) ||
-      baseTypography.caption ||
-      10,
-    color: colors.textMuted,
-    fontWeight:
-      (typography && typography.caption && typography.caption.fontWeight) ||
-      baseTypography.weights.semibold ||
-      "600",
-    marginTop: spacing.sm,
-  },
-  value: {
-    fontSize:
-      (typography && typography.body && typography.body.fontSize) ||
-      baseTypography.body ||
-      14,
-    color: "#222",
-    marginTop: spacing.xs,
-  },
-  docTitle: {
-    fontSize:
-      (typography && typography.body && typography.body.fontSize) ||
-      baseTypography.body ||
-      14,
-    fontWeight:
-      (typography && typography.h3 && typography.h3.fontWeight) ||
-      baseTypography.weights.bold ||
-      "700",
-    marginBottom: spacing.xs,
-    alignSelf: "flex-start",
-  },
-  documentCard: {
-    width: "100%",
-    backgroundColor: colors.surface,
-    borderRadius: radius.xl,
-    padding: spacing.lg,
-    marginTop: spacing.xs,
-    marginBottom: spacing.sm,
-
-    shadowColor: "#6b21a8",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    elevation: 4,
-  },
-
-  documentInfo: {
+  infoRow: {
+    minHeight: 76,
     flexDirection: "row",
     alignItems: "center",
-  },
-
-  documentIcon: {
-    fontSize:
-      (typography && typography.h3 && typography.h3.fontSize) ||
-      baseTypography.h3 ||
-      20,
-    marginRight: spacing.md,
-  },
-
-  documentTitle: {
-    fontSize:
-      (typography && typography.body && typography.body.fontSize) ||
-      baseTypography.body ||
-      14,
-    fontWeight:
-      (typography && typography.h3 && typography.h3.fontWeight) ||
-      baseTypography.weights.bold ||
-      "700",
-    color: "#111827",
-  },
-
-  documentSubTitle: {
-    fontSize:
-      (typography && typography.small && typography.small.fontSize) ||
-      baseTypography.small ||
-      12,
-    color: colors.textMuted,
-    marginTop: spacing.xs,
-  },
-
-  viewDocumentBtn: {
-    marginTop: spacing.lg,
-    backgroundColor: colors.primary,
-    borderRadius: radius.lg,
     paddingVertical: spacing.md,
+  },
+  infoRowDivider: { borderBottomWidth: 1, borderBottomColor: colors.border },
+  infoIcon: {
+    width: spacing.xl + spacing.xl,
+    height: spacing.xl + spacing.xl,
+    borderRadius: radius.round,
     alignItems: "center",
+    justifyContent: "center",
+    marginRight: spacing.md + 2,
   },
-
-  viewDocumentText: {
-    color: "#FFFFFF",
-    fontWeight:
-      (typography && typography.h3 && typography.h3.fontWeight) ||
-      baseTypography.weights.bold ||
-      "700",
-    fontSize:
-      (typography && typography.small && typography.small.fontSize) ||
-      baseTypography.small ||
-      12,
+  infoCopy: { flex: 1, minWidth: 0 },
+  label: {
+    fontSize: typography.small,
+    lineHeight: 18,
+    fontWeight: typography.weights.semibold,
+    marginBottom: spacing.xs - 1,
   },
-  aadharImage: {
-    width: "100%",
-    maxWidth: 500,
-    height: 260,
-    borderRadius: radius.lg,
-    marginBottom: spacing.xl,
-    alignSelf: "center",
+  value: {
+    fontSize: 12,
+    lineHeight: 22,
+    fontWeight: typography.weights.medium,
   },
-
-  fileAction: {
+  documentCard: {
     marginTop: spacing.sm,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    borderRadius: radius.button,
-    backgroundColor: colors.surfaceMuted,
-    width: "100%",
+    padding: spacing.md + 1,
+    borderRadius: radius.xxl + spacing.xs,
+    borderWidth: 1,
+    ...shadows.sm,
+  },
+  documentHeader: { flexDirection: "row", alignItems: "center", minHeight: 64 },
+  pdfIcon: {
+    width: 62,
+    height: 62,
+    borderRadius: radius.lg + spacing.xs,
     alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: lightPurple,
+    marginRight: spacing.md + 2,
   },
-  fileActionText: {
-    color: "#2563eb",
-    fontWeight: "600",
+  documentCopy: { flex: 1 },
+  documentTitle: {
+    fontSize: typography.subtitle + 2,
+    lineHeight: 24,
+    fontWeight: typography.weights.bold,
   },
-  cancelBtn: {
-    backgroundColor: colors.surface,
-    borderColor: colors.borderStrong,
+  documentSubTitle: {
+    fontSize: typography.small + 2,
+    lineHeight: 20,
+    marginTop: spacing.xs - 1,
+  },
+  viewDocumentBtn: {
+    borderRadius: radius.xxl,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: spacing.sm + 1,
+    marginTop: spacing.lg,
+  },
+  viewDocumentText: {
+    color: "#6A1B9A",
+    fontSize: typography.subtitle,
+    fontWeight: typography.weights.bold,
+  },
+
+  primaryButton: {
+    height: spacing.buttonHeight + spacing.sm + 1,
+    borderRadius: radius.xxl,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: spacing.sm + 2,
+  },
+  primaryButtonText: {
+    color: colors.surface,
+    fontSize: typography.subtitle + 2,
+    fontWeight: typography.weights.bold,
+  },
+  petsCard: {
+    minHeight: 78,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: spacing.md + 1,
+    marginTop: spacing.sm,
+    borderRadius: radius.xxl + 1,
+    borderWidth: 1,
+    ...shadows.sm,
+  },
+  petsIcon: {
+    width: 50,
+    height: 50,
+    borderRadius: radius.round,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: lightPurple,
+    marginRight: spacing.md + 2,
+  },
+  petsTitle: {
+    flex: 1,
+    fontSize: typography.subtitle + 2,
+    fontWeight: typography.weights.bold,
+  },
+
+  descriptionText: {
+    flex: 1,
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: "bold",
   },
   guestContainer: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-    padding: spacing.xl,
+    justifyContent: "center",
+    padding: 28,
+  },
+  guestDecor: {
+    position: "absolute",
+    top: 80,
+    right: 20,
+    transform: [{ rotate: "20deg" }],
   },
   guestAvatar: {
-    width: 100,
-    height: 100,
-    borderRadius: radius.round,
-    marginBottom: spacing.xl,
+    width: 118,
+    height: 118,
+    borderRadius: 59,
+    borderWidth: 4,
+    borderColor: "#FFFFFF",
+    marginBottom: 18,
   },
+  guestBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 13,
+    paddingVertical: 7,
+    borderRadius: 18,
+    backgroundColor: "#FCE7F3",
+  },
+  guestBadgeText: { color: "#7B2CBF", fontSize: 13, fontWeight: "700" },
   guestTitle: {
-    fontSize:
-      (typography && typography.h2 && typography.h2.fontSize) ||
-      baseTypography.h2 ||
-      24,
-    fontWeight:
-      (typography && typography.h2 && typography.h2.fontWeight) ||
-      baseTypography.weights.bold ||
-      "700",
+    color: darkPurple,
+    fontSize: typography.screenTitle + spacing.xs - 1,
+    fontWeight: typography.weights.bold,
+    marginTop: spacing.md + 2,
   },
   guestText: {
+    maxWidth: 360,
+    color: mutedPurple,
+    fontSize: typography.subtitle - 1,
+    lineHeight: 22,
     textAlign: "center",
-    marginTop: spacing.sm,
-    color: colors.textMuted,
+    marginTop: spacing.sm + 1,
   },
+  guestButtonWrap: { width: "100%", maxWidth: 360, marginTop: spacing.xxl + 1 },
   guestButton: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: spacing.xxl,
-    paddingVertical: spacing.lg,
-    borderRadius: radius.button,
-    marginTop: spacing.xxl,
+    height: spacing.buttonHeight + spacing.sm,
+    borderRadius: radius.xxl - 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: spacing.sm + 1,
   },
   guestButtonText: {
-    color: "#fff",
-    fontWeight:
-      (typography && typography.h3 && typography.h3.fontWeight) ||
-      baseTypography.weights.bold ||
-      "700",
+    color: colors.surface,
+    fontSize: typography.subtitle,
+    fontWeight: typography.weights.bold,
   },
 });

@@ -1,39 +1,115 @@
-﻿import { appAlert } from "../../../utils/alert";
+import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
-
 import {
-  View,
-  Text,
-  ScrollView,
   Image,
-  TouchableOpacity,
   Linking,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
   useWindowDimensions,
 } from "react-native";
-
-import PremiumLoader from "../../../components/PremiumLoader";
-import BackButton from "../../../components/BackButton";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import BackButton from "../../../components/BackButton";
+import PremiumLoader from "../../../components/PremiumLoader";
 import styles from "../styles/BoardingDetailsScreen";
 import {
   fetchBoardingCenterByIdApi,
   fetchCapacityApi,
 } from "../services/boardingService";
 
+const formatPetName = (name) => name.charAt(0).toUpperCase() + name.slice(1);
+
+function SectionHeader({ icon, title, expanded, onPress }) {
+  return (
+    <TouchableOpacity
+      style={styles.sectionHeader}
+      onPress={onPress}
+      activeOpacity={0.8}
+    >
+      <View style={styles.sectionHeaderTitle}>
+        {icon}
+        <Text style={styles.sectionTitle}>{title}</Text>
+      </View>
+      <Ionicons
+        name={expanded ? "chevron-up" : "chevron-down"}
+        size={20}
+        color="#111827"
+      />
+    </TouchableOpacity>
+  );
+}
+
+function QuickAction({ icon, title, value, onPress }) {
+  return (
+    <TouchableOpacity
+      style={styles.quickAction}
+      onPress={onPress}
+      activeOpacity={0.8}
+    >
+      {icon}
+      <View style={styles.quickActionCopy}>
+        <Text style={styles.quickActionTitle} numberOfLines={1}>
+          {title}
+        </Text>
+        {!!value && (
+          <Text style={styles.quickActionValue} numberOfLines={1}>
+            {value}
+          </Text>
+        )}
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+function FeatureTile({ label, index }) {
+  const icons = [
+    "home-outline",
+    "sunny-outline",
+    "cut-outline",
+    "videocam-outline",
+    "play-outline",
+    "snow-outline",
+  ];
+  return (
+    <View style={styles.featureTile}>
+      <Ionicons
+        name={icons[index % icons.length]}
+        size={22}
+        color={index % 3 === 1 ? "#e6a400" : "#6b21a8"}
+      />
+      <Text style={styles.featureLabel} numberOfLines={2}>
+        {label}
+      </Text>
+    </View>
+  );
+}
+
+function DetailItem({ label, value, icon }) {
+  if (!value) return null;
+  return (
+    <View style={styles.detailItem}>
+      {icon}
+      <View style={styles.detailCopy}>
+        <Text style={styles.detailLabel}>{label}</Text>
+        <Text style={styles.detailValue}>{value}</Text>
+      </View>
+    </View>
+  );
+}
+
 export default function BoardingDetailsScreen({ route, navigation }) {
   const { width } = useWindowDimensions();
-
-  const isTablet = width >= 768;
-  const isDesktop = width >= 1200;
   const { centerId } = route.params;
-
   const [center, setCenter] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [capacity, setCapacity] = useState(null);
-  const [capacityLoading, setCapacityLoading] = useState(true);
+  const [, setCapacity] = useState(null);
+  const [, setCapacityLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [detailsExpanded, setDetailsExpanded] = useState(true);
+  const [contactExpanded, setContactExpanded] = useState(true);
 
   useEffect(() => {
     fetchDetails();
@@ -43,11 +119,9 @@ export default function BoardingDetailsScreen({ route, navigation }) {
   const loadCapacity = async () => {
     try {
       setCapacityLoading(true);
-
-      const data = await fetchCapacityApi(centerId);
-
-      setCapacity(data);
+      setCapacity(await fetchCapacityApi(centerId));
     } catch (error) {
+      /* Capacity is optional here. */
     } finally {
       setCapacityLoading(false);
     }
@@ -55,9 +129,9 @@ export default function BoardingDetailsScreen({ route, navigation }) {
 
   const fetchDetails = async () => {
     try {
-      const data = await fetchBoardingCenterByIdApi(centerId);
-      setCenter(data);
+      setCenter(await fetchBoardingCenterByIdApi(centerId));
     } catch (error) {
+      setCenter(null);
     } finally {
       setLoading(false);
     }
@@ -68,13 +142,19 @@ export default function BoardingDetailsScreen({ route, navigation }) {
     : Array.isArray(center?.center_photos)
       ? center.center_photos
       : [];
-
-  const handleImageScroll = (event) => {
-    const index = Math.round(event.nativeEvent.contentOffset.x / width);
-    if (index !== currentImageIndex) {
-      setCurrentImageIndex(index);
-    }
-  };
+  const rating =
+    center?.rating || center?.average_rating || center?.rating_average;
+  const reviewCount = center?.review_count || center?.reviews_count;
+  const hasCoordinates = center?.latitude != null && center?.longitude != null;
+  const mapUrl = hasCoordinates
+    ? `https://maps.google.com/?q=${center.latitude},${center.longitude}`
+    : null;
+  const openMap = () => mapUrl && Linking.openURL(mapUrl);
+  const openPhone = () =>
+    center?.primary_contact_number &&
+    Linking.openURL(`tel:${center.primary_contact_number}`);
+  const handleImageScroll = (event) =>
+    setCurrentImageIndex(Math.round(event.nativeEvent.contentOffset.x / width));
 
   const handleBookingPress = async () => {
     const guestRole = await AsyncStorage.getItem("guestRole");
@@ -92,7 +172,6 @@ export default function BoardingDetailsScreen({ route, navigation }) {
       );
       return;
     }
-
     navigation.navigate("BoardingBooking", {
       centerId: center.id,
       centerName: center.center_name,
@@ -101,7 +180,7 @@ export default function BoardingDetailsScreen({ route, navigation }) {
     });
   };
 
-  if (loading) {
+  if (loading)
     return (
       <View style={styles.loaderContainer}>
         <PremiumLoader
@@ -112,369 +191,349 @@ export default function BoardingDetailsScreen({ route, navigation }) {
         />
       </View>
     );
-  }
+  if (!center)
+    return (
+      <View style={styles.loaderContainer}>
+        <BackButton fallbackRoute="Booking" />
+        <Text style={styles.emptyTitle}>Boarding center unavailable</Text>
+      </View>
+    );
+
+  const featureValues = [
+    ...(center.boarding_services || []),
+    ...(center.amenities || []),
+  ].filter(Boolean);
+  const detailItems = [
+    ["Type", center.property_type, "home-outline"],
+    ["Fencing", center.fencing_status, "fence"],
+    ["Supervision", center.supervision_level, "eye-outline"],
+    [
+      "License Number",
+      center.registration_license_number,
+      "file-document-outline",
+    ],
+    [
+      "Vaccines Required",
+      Array.isArray(center.required_vaccines)
+        ? center.required_vaccines.join(", ")
+        : center.required_vaccines,
+      "shield-check-outline",
+    ],
+  ];
 
   return (
-    <ScrollView style={styles.wrapper} showsVerticalScrollIndicator={false}>
-      {/* IMAGE SLIDER */}
-
-      {photoList.length > 0 ? (
-        <View style={styles.sliderContainer}>
-          <ScrollView
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onMomentumScrollEnd={handleImageScroll}
-          >
-            {photoList.map((img, index) => (
-              <View
-                key={`${img}-${index}`}
-                style={[
-                  styles.sliderImageWrapper,
-                  {
-                    width,
-                    height: width >= 1200 ? 500 : width >= 768 ? 420 : 320,
-                  },
-                ]}
-              >
-                <Image
-                  source={{ uri: img }}
-                  style={styles.sliderImage}
-                  resizeMode="cover"
-                />
-                <LinearGradient
-                  colors={[
-                    "rgba(15, 23, 42, 0)",
-                    "rgba(15, 23, 42, 0.22)",
-                    "rgba(15, 23, 42, 0.58)",
-                  ]}
-                  style={styles.sliderOverlay}
-                />
-              </View>
-            ))}
-          </ScrollView>
-
-          <View style={styles.backButtonOverlay}>
-            <BackButton fallbackRoute="Booking" />
-          </View>
-
-          <View style={styles.sliderCountBadge}>
-            <Text style={styles.sliderCountText}>
-              {currentImageIndex + 1} / {photoList.length}
-            </Text>
-          </View>
-
-          {photoList.length > 1 && (
-            <View style={styles.sliderDots}>
-              {photoList.map((_, index) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.sliderDot,
-                    index === currentImageIndex && styles.sliderDotActive,
-                  ]}
-                />
-              ))}
-            </View>
-          )}
-        </View>
-      ) : (
-        <View style={styles.loaderContainer}>
-          <Text style={styles.desc}>No images available</Text>
-        </View>
-      )}
-
-      <View
-        style={{
-          alignItems: "center",
-        }}
+    <View style={styles.screen}>
+      <ScrollView
+        style={styles.wrapper}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
       >
-        <LinearGradient
-          colors={["#faf5ff", "#fdf2f8", "#fff7ed"]}
-          style={[
-            styles.detailsContainer,
-            {
-              width: "100%",
-              maxWidth: 1100,
-            },
-          ]}
-        >
-          {/* TITLE */}
-
-          <Text style={styles.title}>{center.center_name}</Text>
-
-          <Text style={styles.desc}>{center.description}</Text>
-
-          {/* PET TYPE PRICING */}
-
-          {center.pet_type_prices &&
-            Object.keys(center.pet_type_prices).length > 0 && (
-              <View style={styles.sectionCard}>
-                <Text style={styles.sectionTitle}>Pet Type Pricing</Text>
-
-                {Object.entries(center.pet_type_prices).map(
-                  ([petType, price]) => (
-                    <View key={petType}>
-                      <View style={styles.infoRow}>
-                        <Text style={styles.label}>
-                          {petType.charAt(0).toUpperCase() + petType.slice(1)}
-                        </Text>
-                        <Text style={styles.price}>{"\u20B9"}{price}/day</Text>
-                      </View>
-                      {Object.entries(center.pet_type_prices).slice(
-                        -1,
-                      )[0][0] !== petType && <View style={styles.divider} />}
-                    </View>
-                  ),
-                )}
-              </View>
-            )}
-
-          {/* ADDRESS */}
-
-          <View style={styles.sectionCard}>
-            <Text style={styles.sectionTitle}>Address</Text>
-
-            <Text style={styles.addressInfoText}>Address: {center.address}</Text>
-
-            {!!center.address_line_2 && (
-              <Text style={[styles.addressInfoText, styles.addressLine]}>
-                {center.address_line_2}
-              </Text>
-            )}
-
-            <Text style={[styles.addressInfoText, styles.addressLine]}>
-              {center.city}, {center.state} - {center.zip_code}
-            </Text>
-          </View>
-
-          {/* TIMINGS */}
-
-          <View style={styles.sectionCard}>
-            <Text style={styles.sectionTitle}>Working Hours</Text>
-
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>Timings</Text>
-
-              <Text style={styles.infoText}>
-                {center.opening_time} - {center.closing_time}
-              </Text>
-            </View>
-          </View>
-
-          {/* AMENITIES */}
-
-          {center.amenities && center.amenities.length > 0 && (
-            <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>Amenities</Text>
-
-              <View style={styles.amenitiesContainer}>
-                {center.amenities.map((item, index) => (
-                  <View key={index} style={styles.amenityBox}>
-                    <Text style={styles.amenityText}>{item}</Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
-
-          {/* SERVICES OFFERED */}
-
-          {center.boarding_services && center.boarding_services.length > 0 && (
-            <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>Services Offered</Text>
-
-              <View style={styles.amenitiesContainer}>
-                {center.boarding_services.map((service, index) => (
-                  <View key={index} style={styles.serviceBox}>
-                    <Text style={styles.serviceText}>{service}</Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
-
-          {/* PROPERTY DETAILS */}
-
-          {(center.property_type ||
-            center.fencing_status ||
-            center.supervision_level) && (
-            <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>Property Details</Text>
-
-              {center.property_type && (
-                <>
-                  <View style={styles.infoRow}>
-                    <Text style={styles.label}>Type</Text>
-                    <Text style={styles.infoText}>{center.property_type}</Text>
-                  </View>
-                  <View style={styles.divider} />
-                </>
-              )}
-
-              {center.fencing_status && (
-                <>
-                  <View style={styles.infoRow}>
-                    <Text style={styles.label}>Fencing</Text>
-                    <Text style={styles.infoText}>{center.fencing_status}</Text>
-                  </View>
-                  <View style={styles.divider} />
-                </>
-              )}
-
-              {center.supervision_level && (
-                <View style={styles.infoRow}>
-                  <Text style={styles.label}>Supervision</Text>
-                  <Text style={styles.infoText}>
-                    {center.supervision_level}
-                  </Text>
-                </View>
-              )}
-            </View>
-          )}
-
-          {/* VACCINATION & HEALTH POLICY */}
-
-          {(center.vaccination_policy || center.required_vaccines) && (
-            <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>
-                Health & Vaccination Policy
-              </Text>
-
-              {center.vaccination_policy && (
-                <>
-                  <View style={styles.infoRow}>
-                    <Text style={styles.label}>Policy</Text>
-                    <Text style={styles.infoText}>
-                      {center.vaccination_policy}
-                    </Text>
-                  </View>
-                  <View style={styles.divider} />
-                </>
-              )}
-
-              {center.required_vaccines &&
-                center.required_vaccines.length > 0 && (
-                  <View style={styles.infoRow}>
-                    <Text style={styles.label}>Vaccines Required</Text>
-                    <Text style={styles.infoText}>
-                      {center.required_vaccines.join(", ")}
-                    </Text>
-                  </View>
-                )}
-            </View>
-          )}
-
-          {/* CONTACT INFORMATION */}
-
-          {(center.primary_contact_number ||
-            center.email_address ||
-            center.website_url) && (
-            <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>Contact Information</Text>
-
-              {center.primary_contact_number && (
-                <>
-                  <TouchableOpacity
-                    style={styles.contactRow}
-                    onPress={() =>
-                      Linking.openURL(`tel:${center.primary_contact_number}`)
-                    }
-                  >
-                    <Text style={styles.label}>Phone</Text>
-                    <Text style={[styles.infoText, styles.contactLink]}>
-                      {center.primary_contact_number}
-                    </Text>
-                  </TouchableOpacity>
-                  <View style={styles.divider} />
-                </>
-              )}
-
-              {center.email_address && (
-                <>
-                  <TouchableOpacity
-                    style={styles.contactRow}
-                    onPress={() =>
-                      Linking.openURL(`mailto:${center.email_address}`)
-                    }
-                  >
-                    <Text style={styles.label}>Email</Text>
-                    <Text style={[styles.infoText, styles.contactLink]}>
-                      {center.email_address}
-                    </Text>
-                  </TouchableOpacity>
-                  {center.website_url && <View style={styles.divider} />}
-                </>
-              )}
-
-              {center.website_url && (
-                <TouchableOpacity
-                  style={styles.contactRow}
-                  onPress={() => Linking.openURL(center.website_url)}
+        {photoList.length > 0 ? (
+          <View style={styles.sliderContainer}>
+            <BackButton
+              fallbackRoute="Booking"
+              style={styles.floatingBackButton}
+            />
+            <ScrollView
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onMomentumScrollEnd={handleImageScroll}
+            >
+              {photoList.map((img, index) => (
+                <View
+                  key={`${img}-${index}`}
+                  style={[
+                    styles.sliderImageWrapper,
+                    {
+                      width,
+                      height: width >= 1200 ? 480 : width >= 768 ? 390 : 275,
+                    },
+                  ]}
                 >
-                  <Text style={styles.label}>Website</Text>
-                  <Text style={[styles.infoText, styles.contactLink]}>
-                    Visit Website
-                  </Text>
-                </TouchableOpacity>
+                  <Image
+                    source={{ uri: img }}
+                    style={styles.sliderImage}
+                    resizeMode="cover"
+                  />
+                  <LinearGradient
+                    colors={["transparent", "rgba(15,23,42,.58)"]}
+                    style={styles.sliderOverlay}
+                  />
+                </View>
+              ))}
+            </ScrollView>
+            <View style={styles.sliderCountBadge}>
+              <Text style={styles.sliderCountText}>
+                {currentImageIndex + 1} / {photoList.length}
+              </Text>
+            </View>
+            {photoList.length > 1 && (
+              <View style={styles.sliderDots}>
+                {photoList.map((_, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.sliderDot,
+                      index === currentImageIndex && styles.sliderDotActive,
+                    ]}
+                  />
+                ))}
+              </View>
+            )}
+          </View>
+        ) : (
+          <View
+            style={[styles.emptyImage, { height: width >= 768 ? 300 : 240 }]}
+          >
+            <BackButton
+              fallbackRoute="Booking"
+              style={styles.floatingBackButton}
+            />
+            <MaterialCommunityIcons
+              name="image-off-outline"
+              size={45}
+              color="#b39bd0"
+            />
+            <Text style={styles.emptyImageText}>Photos coming soon</Text>
+          </View>
+        )}
+        <View style={styles.detailsContainer}>
+          <View style={styles.titleRow}>
+            <View style={styles.titleCopy}>
+              <Text style={styles.title}>{center.center_name}</Text>
+              {!!center.description && (
+                <Text style={styles.desc}>{center.description}</Text>
               )}
             </View>
-          )}
-
-          {/* SPECIAL INSTRUCTIONS */}
-
-          {center.special_instructions && (
-            <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>Special Instructions</Text>
+            {!!rating && (
+              <View style={styles.rating}>
+                <Ionicons name="star" size={18} color="#fbbf24" />
+                <Text style={styles.ratingValue}>{rating}</Text>
+                {!!reviewCount && (
+                  <Text style={styles.reviewText}>({reviewCount} reviews)</Text>
+                )}
+              </View>
+            )}
+          </View>
+          <View style={styles.addressRow}>
+            <Ionicons name="location" size={21} color="#6b21a8" />
+            <Text style={styles.addressText}>
+              {[
+                center.address,
+                center.address_line_2,
+                center.city,
+                center.state && center.zip_code
+                  ? `${center.state} - ${center.zip_code}`
+                  : center.state,
+              ]
+                .filter(Boolean)
+                .join(", ")}
+            </Text>
+            {hasCoordinates && (
+              <TouchableOpacity onPress={openMap}>
+                <Text style={styles.mapLink}>View on Map ›</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          <View style={styles.quickActions}>
+            <QuickAction
+              icon={<Ionicons name="time-outline" size={24} color="#6b21a8" />}
+              title="Open Now"
+              value={`${center.opening_time || ""} - ${center.closing_time || ""}`}
+            />
+            <QuickAction
+              icon={<Ionicons name="call" size={22} color="#6b21a8" />}
+              title="Call"
+              value={center.primary_contact_number}
+              onPress={openPhone}
+            />
+          </View>
+          {!!center.pet_type_prices &&
+            Object.keys(center.pet_type_prices).length > 0 && (
+              <View style={styles.card}>
+                <Text style={styles.cardTitle}>
+                  <MaterialCommunityIcons
+                    name="paw"
+                    size={16}
+                    color="#6b21a8"
+                  />{" "}
+                  Pet Type & Pricing
+                </Text>
+                <View style={styles.priceGrid}>
+                  {Object.entries(center.pet_type_prices).map(
+                    ([petType, price]) => (
+                      <View key={petType} style={styles.priceColumn}>
+                        <View style={styles.petPlaceholder}>
+                          <Text style={styles.petEmoji}>
+                            {petType.toLowerCase() === "dog"
+                              ? "🐕"
+                              : petType.toLowerCase() === "cat"
+                                ? "🐈"
+                                : "🐦"}
+                          </Text>
+                        </View>
+                        <Text style={styles.petName}>
+                          {formatPetName(petType)}
+                        </Text>
+                        <Text style={styles.price}>
+                          {"\u20B9"}
+                          {price}/day
+                        </Text>
+                      </View>
+                    ),
+                  )}
+                </View>
+              </View>
+            )}
+          <View style={styles.card}>
+            <SectionHeader
+              icon={
+                <MaterialCommunityIcons
+                  name="cog-outline"
+                  size={16}
+                  color="#6b21a8"
+                />
+              }
+              title="Services, Facilities & Details"
+              expanded={detailsExpanded}
+              onPress={() => setDetailsExpanded((value) => !value)}
+            />
+            {detailsExpanded && (
+              <>
+                <View style={styles.featureGrid}>
+                  {featureValues.map((value, index) => (
+                    <FeatureTile
+                      key={`${value}-${index}`}
+                      label={value}
+                      index={index}
+                    />
+                  ))}
+                </View>
+                <View style={styles.detailGrid}>
+                  {detailItems.map(([label, value, icon]) => (
+                    <DetailItem
+                      key={label}
+                      label={label}
+                      value={value}
+                      icon={
+                        <MaterialCommunityIcons
+                          name={icon}
+                          size={16}
+                          color="#6b21a8"
+                        />
+                      }
+                    />
+                  ))}
+                </View>
+                {!!center.license_proof && (
+                  <TouchableOpacity
+                    style={styles.licenseLink}
+                    onPress={() => Linking.openURL(center.license_proof)}
+                  >
+                    <MaterialCommunityIcons
+                      name="file-eye-outline"
+                      size={19}
+                      color="#6b21a8"
+                    />
+                    <Text style={styles.licenseLinkText}>
+                      View License Document
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </>
+            )}
+          </View>
+          <View style={styles.card}>
+            <SectionHeader
+              icon={<Ionicons name="call-outline" size={16} color="#6b21a8" />}
+              title="Contact & Hours"
+              expanded={contactExpanded}
+              onPress={() => setContactExpanded((value) => !value)}
+            />
+            {contactExpanded && (
+              <View style={styles.contactGrid}>
+                <View style={styles.contactColumn}>
+                  {!!center.primary_contact_number && (
+                    <TouchableOpacity
+                      style={styles.contactLine}
+                      onPress={openPhone}
+                    >
+                      <Ionicons name="call-outline" size={18} color="#6b21a8" />
+                      <Text style={styles.contactLink}>
+                        {center.primary_contact_number}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  {!!center.email_address && (
+                    <TouchableOpacity
+                      style={styles.contactLine}
+                      onPress={() =>
+                        Linking.openURL(`mailto:${center.email_address}`)
+                      }
+                    >
+                      <Ionicons name="mail-outline" size={18} color="#6b21a8" />
+                      <Text style={styles.contactLink}>
+                        {center.email_address}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  {!!center.website_url && (
+                    <TouchableOpacity
+                      style={styles.contactLine}
+                      onPress={() => Linking.openURL(center.website_url)}
+                    >
+                      <Ionicons
+                        name="globe-outline"
+                        size={18}
+                        color="#6b21a8"
+                      />
+                      <Text style={styles.contactLink}>Visit Website</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+                <View style={styles.hoursColumn}>
+                  <Ionicons name="time-outline" size={23} color="#6b21a8" />
+                  <View>
+                    <Text style={styles.hoursTitle}>Open Hours</Text>
+                    <Text style={styles.hoursValue}>
+                      {center.opening_time} - {center.closing_time}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            )}
+          </View>
+          {!!center.special_instructions && (
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>
+                <Ionicons
+                  name="information-circle-outline"
+                  size={16}
+                  color="#6b21a8"
+                />{" "}
+                Special Instructions
+              </Text>
               <Text style={styles.instructionsText}>
                 {center.special_instructions}
               </Text>
             </View>
           )}
-
-          {/* LICENSE INFORMATION */}
-
-          {(center.registration_license_number || center.license_proof) && (
-            <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>Registration & License</Text>
-
-              {center.registration_license_number && (
-                <>
-                  <View style={styles.infoRow}>
-                    <Text style={styles.label}>License Number</Text>
-                    <Text style={styles.infoText}>
-                      {center.registration_license_number}
-                    </Text>
-                  </View>
-                  {center.license_proof && <View style={styles.divider} />}
-                </>
-              )}
-
-              {center.license_proof && (
-                <TouchableOpacity
-                  style={styles.licenseLink}
-                  onPress={() => Linking.openURL(center.license_proof)}
-                >
-                  <Text style={styles.licenseLinkText}>
-                    View License Document
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          )}
-
-          {/* BOOKING BUTTON */}
-
-          <TouchableOpacity
+        </View>
+      </ScrollView>
+      <View style={styles.bookingBar}>
+        <TouchableOpacity onPress={handleBookingPress} activeOpacity={0.85}>
+          <LinearGradient
+            colors={["#6b21a8", "#7e22ce"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
             style={styles.primaryBtn}
-            onPress={handleBookingPress}
           >
+            <Ionicons name="calendar-outline" size={23} color="#fff" />
             <Text style={styles.primaryBtnText}>Book Now</Text>
-          </TouchableOpacity>
-
-          <View style={styles.spacing} />
-        </LinearGradient>
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 }

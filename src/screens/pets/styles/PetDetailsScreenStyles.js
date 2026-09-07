@@ -5,13 +5,13 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fdf2f8",
+    backgroundColor: "#FDF9FF",
   },
   detailsLoader: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fdf2f8",
+    backgroundColor: "#FDF9FF",
   },
   emptyText: {
     fontSize: 16,
@@ -19,7 +19,7 @@ export default StyleSheet.create({
   },
   detailsContainer: {
     flex: 1,
-    backgroundColor: "#faf5ff",
+    backgroundColor: "#FDF9FF",
     padding: 10,
   },
   topHeader: {

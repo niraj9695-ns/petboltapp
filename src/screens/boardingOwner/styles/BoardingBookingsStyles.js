@@ -15,7 +15,7 @@ export default StyleSheet.create({
   header: {
     paddingHorizontal: 18,
     paddingVertical: 12,
-    backgroundColor: COLORS.surfaceAlt,
+    backgroundColor: COLORS.background,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
     marginBottom: 10,

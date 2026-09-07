@@ -2,6 +2,7 @@ import {
   BOARDING_API_URL,
   AVAILABILITY_API_URL,
   BOOKING_API_URL,
+  PAYMENT_API_URL,
 } from "../constants/api";
 
 export const fetchBoardingCentersApi = async (
@@ -122,6 +123,62 @@ export const createAndPayBookingApi = async ({
   formData.append("special_instructions", specialInstructions || "");
 
   const response = await fetch(`${BOOKING_API_URL}/create-and-pay`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+    },
+    body: formData,
+  });
+
+  return response.json();
+};
+
+export const createBookingApi = async ({
+  token,
+  petId,
+  centerId,
+  startDate,
+  endDate,
+  specialInstructions,
+}) => {
+  const formData = new FormData();
+
+  formData.append("pet_id", String(petId));
+  formData.append("center_id", String(centerId));
+  formData.append("start_date", startDate);
+  formData.append("end_date", endDate);
+  formData.append("special_instructions", specialInstructions || "");
+
+  const response = await fetch(`${BOOKING_API_URL}/create`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+    },
+    body: formData,
+  });
+
+  return response.json();
+};
+
+export const payWithCashApi = async ({
+  token,
+  bookingId,
+  paymentMethod = "cash",
+  amountReceived,
+  notes,
+}) => {
+  const formData = new FormData();
+
+  formData.append("booking_id", String(bookingId));
+  formData.append("payment_method", paymentMethod);
+  if (amountReceived !== undefined && amountReceived !== "") {
+    formData.append("amount_received", String(amountReceived));
+  }
+  if (notes) formData.append("notes", notes);
+
+  const response = await fetch(`${PAYMENT_API_URL}/cash`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,

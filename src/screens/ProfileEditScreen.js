@@ -206,7 +206,7 @@ export default function ProfileEditScreen({ navigation }) {
             style={[profileEditStyles.backButton, { backgroundColor: theme.cardBackground }]}
             onPress={() => navigation.navigate("Profile")}
           >
-            <Text style={[profileEditStyles.backButtonText, { color: theme.primary }]}>{"< Back"}</Text>
+            <Text style={[profileEditStyles.backButtonText, { color: theme.primary }]}>{"← Back"}</Text>
           </TouchableOpacity>
           <Text style={[profileEditStyles.editTitle, { color: theme.textPrimary }]}>Update Profile</Text>
         </View>

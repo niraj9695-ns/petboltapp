@@ -1,13 +1,14 @@
 ﻿import { appAlert } from "../../../utils/alert";
 import React, { useEffect, useState } from "react";
 import {
+  Image,
   View,
   Text,
   ScrollView,
-  Image,
   TouchableOpacity,
   Linking,
 } from "react-native";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PremiumLoader from "../../../components/PremiumLoader";
 import ProfileScreen from "../../ProfileScreen";
@@ -16,6 +17,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRefresh } from "../../../context/RefreshContext";
 import { getOwnerProfile } from "../services/boardingOwnerService";
 import { boardingOwnerTheme } from "../../../styles/themeStyles";
+
+const palette = {
+  primaryText: boardingOwnerTheme.text || "#24104F",
+  secondary: boardingOwnerTheme.textMuted || "#716B91",
+  purple: boardingOwnerTheme.primary || "#7B2CBF",
+  card: boardingOwnerTheme.surface || "#FFFFFF",
+  border: boardingOwnerTheme.border || "#F0E7F7",
+  iconBackground: "#F8EEFF",
+};
 
 export default function BoardingProfileScreen({ navigation }) {
   const { refreshKey } = useRefresh();
@@ -69,9 +79,17 @@ export default function BoardingProfileScreen({ navigation }) {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: boardingOwnerTheme.background }} edges={["left","right","bottom"]}>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: boardingOwnerTheme.background }}
+        edges={["left", "right", "bottom"]}
+      >
         <View style={styles.loader}>
-          <PremiumLoader size={56} color={boardingOwnerTheme.primary} label="Loading profile" fullScreen />
+          <PremiumLoader
+            size={56}
+            color={boardingOwnerTheme.primary}
+            label="Loading profile"
+            fullScreen
+          />
         </View>
       </SafeAreaView>
     );
@@ -79,7 +97,10 @@ export default function BoardingProfileScreen({ navigation }) {
 
   if (!profile) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }} edges={["left","right","bottom"]}>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: "#FDF9FF" }}
+        edges={["left", "right", "bottom"]}
+      >
         <View style={styles.loader}>
           <Text>Unable to load profile</Text>
         </View>
@@ -125,18 +146,32 @@ export default function BoardingProfileScreen({ navigation }) {
     .filter((item) => !isFieldFilled(profile[item.key]))
     .map((item) => item.label);
 
-  const renderSection = (sectionKey, title, content) => {
+  const renderSection = (sectionKey, title, icon, content) => {
     const isExpanded = expandedSection === sectionKey;
 
     return (
-      <View style={styles.card}>
+      <View
+        style={[
+          styles.card,
+          { backgroundColor: palette.card, borderColor: palette.border },
+        ]}
+      >
         <TouchableOpacity
           style={styles.sectionHeader}
           onPress={() => toggleSection(sectionKey)}
           activeOpacity={0.9}
         >
-          <Text style={styles.sectionTitle}>{title}</Text>
-          <Text style={styles.sectionChevron}>{isExpanded ? "-" : "+"}</Text>
+          <View style={styles.sectionHeading}>
+            <View style={styles.sectionIcon}>{icon}</View>
+            <Text style={[styles.sectionTitle, { color: palette.primaryText }]}>
+              {title}
+            </Text>
+          </View>
+          <Ionicons
+            name={isExpanded ? "chevron-up" : "chevron-down"}
+            size={20}
+            color={palette.purple}
+          />
         </TouchableOpacity>
 
         {isExpanded ? <View style={styles.sectionBody}>{content}</View> : null}
@@ -167,28 +202,72 @@ export default function BoardingProfileScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }} edges={["left","right","bottom"]}>
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <View style={styles.profileCard}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {profile?.full_name?.charAt(0)?.toUpperCase() || "B"}
+    <SafeAreaView style={styles.safeArea} edges={["left", "right", "bottom"]}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.profileHero}>
+          <View style={styles.avatarArea}>
+            <Image
+              source={
+                profile.profile_image
+                  ? { uri: profile.profile_image }
+                  : require("../../../../assets/ProfileIcon.png")
+              }
+              style={styles.avatar}
+            />
+          </View>
+
+          <View style={styles.profileIdentity}>
+            <View style={styles.roleBadge}>
+              <Ionicons name="checkmark" size={15} color="#6A1B9A" />
+              <Text style={styles.roleText}>Verified User</Text>
+            </View>
+            <Text
+              style={[styles.name, { color: palette.primaryText }]}
+              numberOfLines={2}
+            >
+              {profile?.full_name || "Boarding Owner"}
             </Text>
           </View>
 
-          <Text style={styles.name}>
-            {profile?.full_name || "Boarding Owner"}
-          </Text>
-          <Text style={styles.email}>{profile?.email}</Text>
+          <TouchableOpacity
+            style={styles.profileOptionsButton}
+            onPress={() => navigation.navigate("UpdateBoardingProfile")}
+            activeOpacity={0.8}
+            accessibilityLabel="Edit profile"
+          >
+            <Ionicons name="options-outline" size={24} color={palette.purple} />
+          </TouchableOpacity>
+        </View>
 
-          <View style={styles.roleBadge}>
-            <Text style={styles.roleText}>BOARDING OWNER</Text>
-          </View>
-
-          <View style={styles.progressCard}>
+        <View style={styles.content}>
+          <View
+            style={[
+              styles.progressCard,
+              { backgroundColor: palette.card, borderColor: palette.border },
+            ]}
+          >
             <View style={styles.progressHeader}>
-              <Text style={styles.progressTitle}>Profile completion</Text>
-              <Text style={styles.progressPercent}>{completionPercent}%</Text>
+              <View style={styles.progressTitleRow}>
+                <View style={styles.progressIcon}>
+                  <Ionicons
+                    name="checkmark-circle-outline"
+                    size={18}
+                    color={palette.purple}
+                  />
+                </View>
+                <Text
+                  style={[styles.progressTitle, { color: palette.primaryText }]}
+                >
+                  Profile completion
+                </Text>
+              </View>
+              <Text style={[styles.progressPercent, { color: palette.purple }]}>
+                {completionPercent}%
+              </Text>
             </View>
             <View style={styles.progressBar}>
               <View
@@ -198,97 +277,172 @@ export default function BoardingProfileScreen({ navigation }) {
                 ]}
               />
             </View>
-            <Text style={styles.progressHint}>
+            <Text style={[styles.progressHint, { color: palette.secondary }]}>
               {completionPercent === 100
                 ? "Your boarding profile is complete."
-                : `Complete ${missingItems.length} more item${
-                    missingItems.length === 1 ? "" : "s"
-                  } to unlock more bookings.`}
+                : `Complete ${missingItems.length} more item${missingItems.length === 1 ? "" : "s"} to unlock more bookings.`}
             </Text>
           </View>
-        </View>
 
-        {renderSection(
-          "personal",
-          "Personal Details",
-          <>
-            <Info label="Full Name" value={profile.full_name} />
-            <Info label="Email" value={profile.email} />
-            <Info label="Mobile Number" value={profile.mobile_number} />
-            <Info
-              label="Alternate Contact Number"
-              value={profile.alternate_contact_number}
-            />
-            <Info
-              label="Emergency Contact Name"
-              value={profile.emergency_contact_name}
-            />
-            <Info
-              label="Emergency Contact Number"
-              value={profile.emergency_contact_number}
-            />
-          </>,
-        )}
-
-        {renderSection(
-          "business",
-          "Business & Legal",
-          <>
-            <Info label="Business Name" value={profile.business_name} />
-            <Info
-              label="Authorized Person"
-              value={profile.authorized_person_name}
-            />
-            <Info label="Digital Signature" value={profile.digital_signature} />
-            <Info label="Signature Date" value={profile.signature_date} />
-          </>,
-        )}
-
-        {renderSection(
-          "documents",
-          "Documents",
-          profile?.aadhar_file ? (
+          {renderSection(
+            "personal",
+            "Personal Details",
+            <Ionicons name="person-outline" size={18} color={palette.purple} />,
             <>
-              <TouchableOpacity
-                style={styles.documentBtn}
-                onPress={() => openDocument(profile.aadhar_file)}
-              >
-                <Text style={styles.documentBtnText}>
-                  View Aadhaar Document
+              <Info
+                icon="person-outline"
+                label="Full Name"
+                value={profile.full_name}
+              />
+              <Info icon="mail-outline" label="Email" value={profile.email} />
+              <Info
+                icon="call-outline"
+                label="Mobile Number"
+                value={profile.mobile_number}
+              />
+              <Info
+                icon="phone-portrait-outline"
+                label="Alternate Contact Number"
+                value={profile.alternate_contact_number}
+              />
+              <Info
+                icon="person-add-outline"
+                label="Emergency Contact Name"
+                value={profile.emergency_contact_name}
+              />
+              <Info
+                icon="alert-circle-outline"
+                label="Emergency Contact Number"
+                value={profile.emergency_contact_number}
+              />
+            </>,
+          )}
+
+          {renderSection(
+            "business",
+            "Business & Legal",
+            <MaterialCommunityIcons
+              name="briefcase-outline"
+              size={18}
+              color={palette.purple}
+            />,
+            <>
+              <Info
+                icon="business-outline"
+                label="Business Name"
+                value={profile.business_name}
+              />
+              <Info
+                icon="person-outline"
+                label="Authorized Person"
+                value={profile.authorized_person_name}
+              />
+              <Info
+                icon="create-outline"
+                label="Digital Signature"
+                value={profile.digital_signature}
+              />
+              <Info
+                icon="calendar-outline"
+                label="Signature Date"
+                value={profile.signature_date}
+              />
+            </>,
+          )}
+
+          {renderSection(
+            "documents",
+            "Documents",
+            <MaterialCommunityIcons
+              name="file-document-outline"
+              size={18}
+              color={palette.purple}
+            />,
+            profile?.aadhar_file ? (
+              <View style={styles.documentCard}>
+                <View style={styles.documentHeader}>
+                  <View style={styles.documentIcon}>
+                    <MaterialCommunityIcons
+                      name="file-pdf-box"
+                      size={32}
+                      color={palette.purple}
+                    />
+                  </View>
+                  <View style={styles.documentCopy}>
+                    <Text
+                      style={[
+                        styles.documentTitle,
+                        { color: palette.primaryText },
+                      ]}
+                    >
+                      Aadhaar Document
+                    </Text>
+                    <Text
+                      style={[
+                        styles.documentHint,
+                        { color: palette.secondary },
+                      ]}
+                    >
+                      Identity document uploaded
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  style={styles.documentBtn}
+                  onPress={() => openDocument(profile.aadhar_file)}
+                  activeOpacity={0.85}
+                >
+                  <Ionicons name="eye-outline" size={17} color="#FFFFFF" />
+                  <Text style={styles.documentBtnText}>
+                    View Aadhaar Document
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={styles.emptyDocument}>
+                <MaterialCommunityIcons
+                  name="file-alert-outline"
+                  size={22}
+                  color={palette.secondary}
+                />
+                <Text style={[styles.emptyText, { color: palette.secondary }]}>
+                  No Aadhaar document uploaded.
                 </Text>
-              </TouchableOpacity>
-              <Text style={styles.documentHint}>File Type: PDF</Text>
-            </>
-          ) : (
-            <Text style={styles.emptyText}>No Aadhaar document uploaded.</Text>
-          ),
-        )}
+              </View>
+            ),
+          )}
 
-        {profile.profile_image
-          ? renderSection(
-              "image",
-              "Profile Image",
-              <Image
-                source={{ uri: profile.profile_image }}
-                style={styles.profileImage}
-              />,
-            )
-          : null}
-
-        <TouchableOpacity
-          style={styles.editBtn}
-          onPress={() => navigation.navigate("UpdateBoardingProfile")}
-        >
-          <Text style={styles.editText}>Edit Profile</Text>
-        </TouchableOpacity>
+          {profile.profile_image
+            ? renderSection(
+                "image",
+                "Profile Image",
+                <Ionicons
+                  name="image-outline"
+                  size={18}
+                  color={palette.purple}
+                />,
+                <Image
+                  source={{ uri: profile.profile_image }}
+                  style={styles.profileImage}
+                />,
+              )
+            : null}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-const Info = ({ label, value }) => (
+const Info = ({ icon, label, value }) => (
   <View style={styles.infoRow}>
-    <Text style={styles.label}>{label}</Text>
-    <Text style={styles.value}>{value || "-"}</Text>
+    <View style={styles.infoIcon}>
+      <Ionicons name={icon} size={17} color={palette.purple} />
+    </View>
+    <View style={styles.infoCopy}>
+      <Text style={[styles.label, { color: palette.secondary }]}>{label}</Text>
+      <Text style={[styles.value, { color: palette.primaryText }]}>
+        {value || "-"}
+      </Text>
+    </View>
   </View>
 );
