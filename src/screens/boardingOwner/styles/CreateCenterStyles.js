@@ -2,6 +2,7 @@ import { createTypographyStyleSheet as StyleSheet } from "../../../styles/theme/
 import { boardingOwnerTheme, typography } from "../../../styles/themeStyles";
 
 const COLORS = boardingOwnerTheme;
+const FIELD_HEIGHT = 50;
 
 export default StyleSheet({
   container: {
@@ -38,7 +39,6 @@ export default StyleSheet({
     position: "absolute",
     left: 0,
     zIndex: 1,
-  
   },
 
   heroTitle: {
@@ -107,7 +107,7 @@ export default StyleSheet({
     marginTop: 10,
   },
   fieldContainer: {
-    marginBottom: 14,
+    marginBottom: 16,
   },
   label: {
     fontSize: typography.small.fontSize,
@@ -118,7 +118,8 @@ export default StyleSheet({
   helperText: {
     color: COLORS.textMuted,
     fontSize: 12,
-    marginBottom: 8,
+    marginBottom: 6,
+    lineHeight: 16,
   },
   errorText: {
     color: "#dc2626",
@@ -127,11 +128,11 @@ export default StyleSheet({
     marginBottom: 8,
   },
   input: {
+    height: 50,
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 14,
     paddingHorizontal: 14,
-    paddingVertical: 12,
     backgroundColor: COLORS.surfaceAlt,
     fontSize: typography.body.fontSize,
     color: COLORS.text,
@@ -163,16 +164,18 @@ export default StyleSheet({
     color: "#fff",
   },
   multilineInput: {
-    minHeight: 96,
+    height: 100,
+    paddingTop: 14,
+    paddingBottom: 14,
     textAlignVertical: "top",
   },
   dateButton: {
+    height: 50,
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: COLORS.border,
     borderRadius: 14,
     paddingHorizontal: 14,
-    paddingVertical: 13,
-    backgroundColor: "#f9fafb",
+    backgroundColor: COLORS.surfaceAlt,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -193,17 +196,22 @@ export default StyleSheet({
     marginLeft: 8,
   },
   selectBox: {
+    height: 50,
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: COLORS.border,
     borderRadius: 14,
-    backgroundColor: "#f9fafb",
+    backgroundColor: COLORS.surfaceAlt,
     overflow: "hidden",
+    justifyContent: "center",
   },
   selectBoxError: {
     borderColor: "#f87171",
   },
   picker: {
-    color: "#111827",
+    height: 50,
+    color: COLORS.text,
+    marginHorizontal: 0,
+    paddingHorizontal: 0,
   },
   addChip: {
     backgroundColor: "#f3e8ff",

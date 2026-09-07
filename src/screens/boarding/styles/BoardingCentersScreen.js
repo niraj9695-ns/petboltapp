@@ -1,4 +1,4 @@
-import { createTypographyStyleSheet as StyleSheet } from "../../../styles/theme/typography";
+import { StyleSheet } from "react-native";
 import { colors } from "../../../styles/theme/colors";
 import { spacing } from "../../../styles/theme/spacing";
 import { radius } from "../../../styles/theme/radius";
@@ -6,7 +6,7 @@ import { typography } from "../../../styles/themeStyles";
 import { typography as baseTypography } from "../../../styles/theme/typography";
 import { shadows } from "../../../styles/theme/shadows";
 
-export default StyleSheet({
+export default StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: colors.background,
@@ -16,7 +16,7 @@ export default StyleSheet({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FDF9FF",
+    backgroundColor: "#faf5ff",
   },
 
   /* HEADER SECTION */
@@ -49,14 +49,20 @@ export default StyleSheet({
   },
 
   headerTitle: {
-    fontSize: (typography && typography.heroTitle && typography.heroTitle.fontSize) || baseTypography.heroTitle || 28,
+    fontSize:
+      (typography && typography.heroTitle && typography.heroTitle.fontSize) ||
+      baseTypography.heroTitle ||
+      28,
     fontWeight: "800",
     color: colors.text,
     marginBottom: spacing.xs,
   },
 
   headerSubtitle: {
-    fontSize: (typography && typography.subtitle && typography.subtitle.fontSize) || baseTypography.subtitle || 16,
+    fontSize:
+      (typography && typography.subtitle && typography.subtitle.fontSize) ||
+      baseTypography.subtitle ||
+      16,
     color: colors.textMuted,
     fontWeight: "500",
   },

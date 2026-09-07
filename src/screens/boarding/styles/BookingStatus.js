@@ -45,7 +45,7 @@ export default StyleSheet({
 
   bookingStatusTitle: {
     fontSize:
-      (typography && typography.heroTitle && typography.heroTitle.fontSize) ||
+      (typography && typography.subTitle && typography.subTitle.fontSize) ||
       baseTypography.heroTitle ||
       28,
 

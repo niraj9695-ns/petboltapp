@@ -104,7 +104,7 @@ export default StyleSheet({
     fontWeight: typography.weights.bold,
   },
   name: {
-    fontSize: typography.cardTitle + spacing.xs,
+    fontSize: 15,
     lineHeight: 37,
     fontWeight: typography.weights.bold,
     flexShrink: 1,
@@ -178,7 +178,7 @@ export default StyleSheet({
   },
   documentCopy: { flex: 1 },
   documentTitle: {
-    fontSize: typography.subtitle + 2,
+    fontSize: 15,
     lineHeight: 24,
     fontWeight: typography.weights.bold,
   },
@@ -197,7 +197,7 @@ export default StyleSheet({
   },
   viewDocumentText: {
     color: "#6A1B9A",
-    fontSize: typography.subtitle,
+    fontSize: 12,
     fontWeight: typography.weights.bold,
   },
 

@@ -300,4 +300,3 @@ export default StyleSheet({
     fontWeight: "700",
   },
 });
-

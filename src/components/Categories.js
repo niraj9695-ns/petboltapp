@@ -24,7 +24,7 @@ export default function Categories() {
       return;
     }
 
-    navigation.navigate("Boarding", {
+    navigation.navigate("Booking", {
       screen: "BoardingCenters",
     });
   };

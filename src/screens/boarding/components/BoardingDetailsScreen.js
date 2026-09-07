@@ -23,6 +23,15 @@ import {
 
 const formatPetName = (name) => name.charAt(0).toUpperCase() + name.slice(1);
 
+const PET_EMOJIS = {
+  dog: "🐶",
+  cat: "🐱",
+  bird: "🐦",
+  rabbit: "🐰",
+  turtle: "🐢",
+  other: "🐾",
+};
+
 function SectionHeader({ icon, title, expanded, onPress }) {
   return (
     <TouchableOpacity
@@ -402,11 +411,7 @@ export default function BoardingDetailsScreen({ route, navigation }) {
                         <View key={petType} style={styles.priceColumn}>
                           <View style={styles.petPlaceholder}>
                             <Text style={styles.petEmoji}>
-                              {petType.toLowerCase() === "dog"
-                                ? "ðŸ•"
-                                : petType.toLowerCase() === "cat"
-                                  ? "ðŸˆ"
-                                  : "ðŸ¦"}
+                              {PET_EMOJIS[petType.toLowerCase()] || "🐾"}
                             </Text>
                           </View>
                           <Text style={styles.petName}>
